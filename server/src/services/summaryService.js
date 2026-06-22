@@ -4,8 +4,18 @@ const roundToTwoDecimals = (value) => {
   return Number(value.toFixed(2));
 };
 
-const getMonthlySummary = async () => {
-  const summary = await getMonthlySummaryData();
+const getMonthlySummary = async (month) => {
+  if (!month) {
+    throw new Error("El parámetro month es obligatorio. Ejemplo: 2026-06");
+  }
+
+  const monthRegex = /^\d{4}-\d{2}$/;
+
+  if (!monthRegex.test(month)) {
+    throw new Error("El parámetro month debe tener formato YYYY-MM");
+  }
+
+  const summary = await getMonthlySummaryData(month);
 
   const totalCash = Number(summary.totalCash);
   const totalCard = Number(summary.totalCard);
