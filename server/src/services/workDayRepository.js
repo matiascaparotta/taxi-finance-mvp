@@ -37,7 +37,29 @@ const createWorkDay = async (workDayData) => {
 
   return result.insertId;
 };
+const getAllWorkDays = async () => {
+    const [rows] = await pool.query(
+      `
+      SELECT
+        id,
+        date,
+        start_km AS startKm,
+        end_km AS endKm,
+        cash,
+        card,
+        fuel_own AS fuelOwn,
+        fuel_jose AS fuelJose,
+        created_at AS createdAt,
+        updated_at AS updatedAt
+      FROM work_days
+      ORDER BY date DESC, id DESC
+      `
+    );
+  
+    return rows;
+  };
 
-module.exports = {
-  createWorkDay,
-};
+  module.exports = {
+    createWorkDay,
+    getAllWorkDays,
+  };

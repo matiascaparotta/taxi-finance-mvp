@@ -1,5 +1,4 @@
-const { createWorkDay } = require("./workDayRepository");
-
+const { createWorkDay, getAllWorkDays } = require("./workDayRepository");
 const MONTHLY_PAYROLL_COST = 330;
 const DEFAULT_WORKED_DAYS_IN_MONTH = 22;
 
@@ -21,7 +20,11 @@ const processWorkDay = async (workDayData) => {
   if (cash < 0 || card < 0 || fuelOwn < 0 || fuelJose < 0) {
     throw new Error("Los importes no pueden ser negativos");
   }
-
+  const getWorkDays = async () => {
+    const workDays = await getAllWorkDays();
+  
+    return workDays;
+  };
   const workedKm = endKm - startKm;
   const totalGenerated = roundToTwoDecimals(cash + card);
 
@@ -50,7 +53,13 @@ const processWorkDay = async (workDayData) => {
     netProfit,
   };
 };
+const getWorkDays = async () => {
+  const workDays = await getAllWorkDays();
+
+  return workDays;
+};
 
 module.exports = {
   processWorkDay,
+  getWorkDays,
 };
