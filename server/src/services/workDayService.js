@@ -1,3 +1,5 @@
+const { createWorkDay } = require("./workDayRepository");
+
 const MONTHLY_PAYROLL_COST = 330;
 const DEFAULT_WORKED_DAYS_IN_MONTH = 22;
 
@@ -5,7 +7,7 @@ const roundToTwoDecimals = (value) => {
   return Number(value.toFixed(2));
 };
 
-const processWorkDay = (workDayData) => {
+const processWorkDay = async (workDayData) => {
   const { date, startKm, endKm, cash, card, fuelOwn, fuelJose = 0 } = workDayData;
 
   if (!date) {
@@ -22,6 +24,7 @@ const processWorkDay = (workDayData) => {
 
   const workedKm = endKm - startKm;
   const totalGenerated = roundToTwoDecimals(cash + card);
+
   const dailyPayrollCost = roundToTwoDecimals(
     MONTHLY_PAYROLL_COST / DEFAULT_WORKED_DAYS_IN_MONTH
   );
@@ -30,7 +33,10 @@ const processWorkDay = (workDayData) => {
     (totalGenerated - fuelOwn - dailyPayrollCost) / 2
   );
 
+  const workDayId = await createWorkDay(workDayData);
+
   return {
+    id: workDayId,
     date,
     startKm,
     endKm,

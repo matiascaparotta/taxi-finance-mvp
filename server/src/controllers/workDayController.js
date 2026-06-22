@@ -1,12 +1,12 @@
 const { processWorkDay } = require("../services/workDayService");
 
-const createWorkDay = (req, res) => {
+const createWorkDay = async (req, res) => {
   try {
-    const result = processWorkDay(req.body);
+    const result = await processWorkDay(req.body);
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
-      message: "Jornada procesada correctamente",
+      message: "Jornada guardada correctamente",
       data: result,
     });
   } catch (error) {
