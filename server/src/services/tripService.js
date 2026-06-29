@@ -2,78 +2,61 @@ const {
   createTrip,
   getTripsByWorkDayId,
   updateTripById,
+  deleteTripById,
 } = require("../repositories/tripRepository");
 
 const createTripService = async (tripData) => {
   const { workDayId, amount, paymentType } = tripData;
 
-  if (!workDayId) {
-    throw new Error("El workDayId es obligatorio");
-  }
-
-  if (!amount) {
-    throw new Error("El importe del viaje es obligatorio");
-  }
-
-  if (amount <= 0) {
-    throw new Error("El importe debe ser mayor a 0");
-  }
-
-  if (!paymentType) {
-    throw new Error("El método de pago es obligatorio");
-  }
-
+  if (!workDayId) throw new Error("El workDayId es obligatorio");
+  if (!amount) throw new Error("El importe del viaje es obligatorio");
+  if (amount <= 0) throw new Error("El importe debe ser mayor a 0");
+  if (!paymentType) throw new Error("El método de pago es obligatorio");
   if (!["cash", "card"].includes(paymentType)) {
     throw new Error("El método de pago debe ser cash o card");
   }
 
-  const trip = await createTrip(tripData);
-
-  return trip;
+  return await createTrip(tripData);
 };
 
 const getTripsByWorkDayService = async (workDayId) => {
-  if (!workDayId) {
-    throw new Error("El workDayId es obligatorio");
-  }
+  if (!workDayId) throw new Error("El workDayId es obligatorio");
 
-  const trips = await getTripsByWorkDayId(workDayId);
-
-  return trips;
+  return await getTripsByWorkDayId(workDayId);
 };
+
 const updateTripService = async (tripId, tripData) => {
-  if (!tripId) {
-    throw new Error("El id del viaje es obligatorio");
-  }
+  if (!tripId) throw new Error("El id del viaje es obligatorio");
 
   const { amount, paymentType } = tripData;
 
-  if (!amount) {
-    throw new Error("El importe del viaje es obligatorio");
-  }
-
-  if (amount <= 0) {
-    throw new Error("El importe debe ser mayor a 0");
-  }
-
-  if (!paymentType) {
-    throw new Error("El método de pago es obligatorio");
-  }
-
+  if (!amount) throw new Error("El importe del viaje es obligatorio");
+  if (amount <= 0) throw new Error("El importe debe ser mayor a 0");
+  if (!paymentType) throw new Error("El método de pago es obligatorio");
   if (!["cash", "card"].includes(paymentType)) {
     throw new Error("El método de pago debe ser cash o card");
   }
 
   const updatedTrip = await updateTripById(tripId, tripData);
 
-  if (!updatedTrip) {
-    throw new Error("Viaje no encontrado");
-  }
+  if (!updatedTrip) throw new Error("Viaje no encontrado");
 
   return updatedTrip;
 };
+
+const deleteTripService = async (tripId) => {
+  if (!tripId) throw new Error("El id del viaje es obligatorio");
+
+  const deletedTrip = await deleteTripById(tripId);
+
+  if (!deletedTrip) throw new Error("Viaje no encontrado");
+
+  return deletedTrip;
+};
+
 module.exports = {
   createTripService,
   getTripsByWorkDayService,
   updateTripService,
+  deleteTripService,
 };

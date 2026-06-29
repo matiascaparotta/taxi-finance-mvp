@@ -4,6 +4,7 @@ const {
   createTripController,
   getTripsByWorkDayController,
   updateTripController,
+  deleteTripController,
 } = require("../controllers/tripController");
 
 const router = express.Router();
@@ -16,5 +17,8 @@ router.post("/", createTripController);
 
 // Editar un viaje existente
 router.put("/:id", updateTripController);
+
+// Eliminar un viaje existente
+router.delete("/:id", deleteTripController);
 
 module.exports = router;

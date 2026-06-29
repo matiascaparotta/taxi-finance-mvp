@@ -2,7 +2,9 @@ const {
   createTripService,
   getTripsByWorkDayService,
   updateTripService,
+  deleteTripService,
 } = require("../services/tripService");
+
 const createTripController = async (req, res) => {
   try {
     const trip = await createTripService(req.body);
@@ -55,9 +57,28 @@ const updateTripController = async (req, res) => {
     });
   }
 };
+const deleteTripController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedTrip = await deleteTripService(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Viaje eliminado correctamente",
+      data: deletedTrip,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createTripController,
   getTripsByWorkDayController,
   updateTripController,
+  deleteTripController,
 };

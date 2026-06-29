@@ -125,9 +125,42 @@ const updateTripById = async (tripId, tripData) => {
 
   return rows[0];
 };
+const deleteTripById = async (tripId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      work_day_id AS workDayId,
+      amount,
+      payment_type AS paymentType,
+      note,
+      cash_adjustment AS cashAdjustment,
+      adjustment_reason AS adjustmentReason,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM trips
+    WHERE id = ?
+    `,
+    [tripId]
+  );
 
+  if (rows.length === 0) {
+    return null;
+  }
+
+  await pool.query(
+    `
+    DELETE FROM trips
+    WHERE id = ?
+    `,
+    [tripId]
+  );
+
+  return rows[0];
+};
 module.exports = {
   createTrip,
   getTripsByWorkDayId,
   updateTripById,
+  deleteTripById,
 };
