@@ -3,6 +3,7 @@ const {
     createWorkDay,
     getAllWorkDays,
   } = require("../controllers/workDayController");
+  
 const router = express.Router();
 router.get("/", getAllWorkDays);
 router.post("/", createWorkDay);
