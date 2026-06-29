@@ -1,6 +1,7 @@
 const {
   createTripService,
   getTripsByWorkDayService,
+  updateTripService,
 } = require("../services/tripService");
 const createTripController = async (req, res) => {
   try {
@@ -36,8 +37,27 @@ const getTripsByWorkDayController = async (req, res) => {
     });
   }
 };
+const updateTripController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedTrip = await updateTripService(id, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Viaje actualizado correctamente",
+      data: updatedTrip,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createTripController,
   getTripsByWorkDayController,
+  updateTripController,
 };
