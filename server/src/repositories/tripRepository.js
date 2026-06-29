@@ -1,4 +1,5 @@
 const pool = require("../config/database");
+
 const createTrip = async (tripData) => {
   const {
     workDayId,
@@ -52,6 +53,30 @@ const createTrip = async (tripData) => {
   return rows[0];
 };
 
+const getTripsByWorkDayId = async (workDayId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      work_day_id AS workDayId,
+      amount,
+      payment_type AS paymentType,
+      note,
+      cash_adjustment AS cashAdjustment,
+      adjustment_reason AS adjustmentReason,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM trips
+    WHERE work_day_id = ?
+    ORDER BY created_at ASC
+    `,
+    [workDayId]
+  );
+
+  return rows;
+};
+
 module.exports = {
   createTrip,
+  getTripsByWorkDayId,
 };

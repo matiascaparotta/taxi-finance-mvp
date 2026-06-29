@@ -1,4 +1,7 @@
-const { createTrip } = require("./tripRepository");
+const {
+  createTrip,
+  getTripsByWorkDayId,
+} = require("../repositories/tripRepository");
 
 const createTripService = async (tripData) => {
   const { workDayId, amount, paymentType } = tripData;
@@ -28,6 +31,17 @@ const createTripService = async (tripData) => {
   return trip;
 };
 
+const getTripsByWorkDayService = async (workDayId) => {
+  if (!workDayId) {
+    throw new Error("El workDayId es obligatorio");
+  }
+
+  const trips = await getTripsByWorkDayId(workDayId);
+
+  return trips;
+};
+
 module.exports = {
   createTripService,
+  getTripsByWorkDayService,
 };

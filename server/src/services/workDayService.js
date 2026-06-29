@@ -1,5 +1,4 @@
-const { createWorkDay, getAllWorkDays } = require("./workDayRepository");
-const MONTHLY_PAYROLL_COST = 330;
+const { createWorkDay, getAllWorkDays } = require("../repositories/workDayRepository");
 const DEFAULT_WORKED_DAYS_IN_MONTH = 22;
 
 const roundToTwoDecimals = (value) => {

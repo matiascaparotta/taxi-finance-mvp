@@ -1,4 +1,4 @@
-const { getMonthlySummaryData } = require("./summaryRepository");
+const { getMonthlySummaryData } = require("../repositories/summaryRepository");
 
 const roundToTwoDecimals = (value) => {
   return Number(value.toFixed(2));
