@@ -99,3 +99,51 @@ Siempre se calcularán en tiempo real.
 Beneficio:
 
 Los datos siempre estarán sincronizados con los viajes registrados.
+
+---
+
+## ADR-005
+
+### Modo Trabajo y Modo Gestión
+
+Fecha:
+
+30/06/2026
+
+Decisión:
+
+Taxi Finance tendrá dos modos principales de uso:
+
+- Modo Trabajo: cuando hay una jornada activa.
+- Modo Gestión: cuando no hay una jornada activa.
+
+Motivo:
+
+El conductor no necesita lo mismo mientras está trabajando que cuando está en casa revisando datos.
+
+En jornada activa, la aplicación debe priorizar acciones rápidas:
+
+- registrar viaje;
+- ver último viaje;
+- ver resumen del día;
+- registrar gasolina;
+- finalizar jornada.
+
+Fuera de jornada, la aplicación debe priorizar gestión:
+
+- ver jornadas anteriores;
+- consultar estadísticas;
+- revisar liquidaciones;
+- generar PDF;
+- analizar el mes.
+
+Criterio técnico:
+
+El modo de la aplicación se decidirá según el estado de la jornada:
+
+- Si existe una jornada abierta → Modo Trabajo.
+- Si no existe una jornada abierta → Modo Gestión.
+
+Beneficio:
+
+La interfaz será más simple, rápida e intuitiva, especialmente para taxistas que no están acostumbrados a usar tecnología.
