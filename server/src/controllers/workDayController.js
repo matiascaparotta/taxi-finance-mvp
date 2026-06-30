@@ -2,6 +2,7 @@ const {
   createWorkDayService,
   getWorkDaysService,
   getOpenWorkDayService,
+  closeWorkDayService,
 } = require("../services/workDayService");
 
 const createWorkDay = async (req, res) => {
@@ -52,9 +53,25 @@ const getOpenWorkDay = async (req, res) => {
     });
   }
 };
+const closeWorkDay = async (req, res) => {
+  try {
+    const result = await closeWorkDayService(req.params.id, req.body);
 
+    res.status(200).json({
+      success: true,
+      message: "Jornada cerrada correctamente",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createWorkDay,
   getAllWorkDays,
   getOpenWorkDay,
+  closeWorkDay,
 };

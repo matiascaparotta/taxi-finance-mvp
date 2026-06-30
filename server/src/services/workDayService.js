@@ -2,8 +2,8 @@ const {
   createWorkDay,
   getWorkDays,
   getOpenWorkDay,
+  closeWorkDayById,
 } = require("../repositories/workDayRepository");
-
 const createWorkDayService = async (workDayData) => {
   const { date, startKm } = workDayData;
 
@@ -62,8 +62,49 @@ const getOpenWorkDayService = async () => {
   };
 };
 
+const closeWorkDayService = async (workDayId, closeData) => {
+  const { endKm, fuelOwn } = closeData;
+
+  const openWorkDay = await getOpenWorkDay();
+
+  if (!openWorkDay) {
+    throw new Error("No hay una jornada activa para cerrar");
+  }
+
+  if (Number(openWorkDay.id) !== Number(workDayId)) {
+    throw new Error("La jornada indicada no coincide con la jornada activa");
+  }
+
+  if (endKm === undefined || endKm === null || endKm === "") {
+    throw new Error("El kilometraje final es obligatorio");
+  }
+
+  if (Number(endKm) < Number(openWorkDay.startKm)) {
+    throw new Error("El kilometraje final no puede ser menor al inicial");
+  }
+
+  if (fuelOwn === undefined || fuelOwn === null || fuelOwn === "") {
+    throw new Error("El combustible es obligatorio. Si no cargaste, usa 0");
+  }
+
+  if (Number(fuelOwn) < 0) {
+    throw new Error("El combustible no puede ser negativo");
+  }
+
+  const closedWorkDay = await closeWorkDayById(workDayId, {
+    endKm: Number(endKm),
+    fuelOwn: Number(fuelOwn),
+  });
+
+  return {
+    ...closedWorkDay,
+    workedKm: closedWorkDay.endKm - closedWorkDay.startKm,
+  };
+};
+
 module.exports = {
   createWorkDayService,
   getWorkDaysService,
   getOpenWorkDayService,
+  closeWorkDayService,
 };

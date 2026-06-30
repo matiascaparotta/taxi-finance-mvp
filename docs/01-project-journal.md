@@ -302,3 +302,48 @@ Taxi Finance ya permite trabajar durante una jornada activa registrando viajes y
 ### Aprendizaje clave
 
 La interfaz debe adaptarse al flujo real de trabajo del conductor y mostrar siempre el estado actual de la jornada.
+
+---
+
+## Sprint 10 — Cierre completo de jornada
+
+**Objetivo:** completar el flujo real de finalización de una jornada de trabajo.
+
+### Trabajo realizado
+
+- Creación del endpoint `PUT /work-days/:id/close`.
+- Implementación de `closeWorkDayRepository`.
+- Implementación de `closeWorkDayService`.
+- Implementación de `closeWorkDayController`.
+- Creación de la pantalla `CloseWorkDayPage`.
+- Creación del componente reutilizable `WorkDaySummaryCard`.
+- Integración del resumen de la jornada antes del cierre.
+- Validación del kilometraje final.
+- Validación del combustible (permitiendo 0 €).
+- Cálculo en tiempo real de los kilómetros trabajados.
+- Confirmación antes de cerrar la jornada.
+- Cambio automático del estado de `OPEN` a `CLOSED`.
+- Regreso automático al Dashboard tras finalizar la jornada.
+
+### Mejoras de UX
+
+- Visualización del kilometraje inicial.
+- Cálculo inmediato de kilómetros trabajados mientras el usuario escribe.
+- Mensajes de error claros.
+- Confirmación antes de ejecutar una acción irreversible.
+
+### Resultado
+
+Taxi Finance ya permite completar el ciclo completo de una jornada:
+
+- iniciar turno;
+- registrar viajes;
+- consultar el resumen en tiempo real;
+- finalizar la jornada;
+- guardar combustible;
+- registrar kilometraje final;
+- cerrar la jornada correctamente.
+
+### Aprendizaje clave
+
+Separar la lógica de negocio en Repository, Service y Controller facilita añadir nuevas funcionalidades sin romper las existentes. Además, diseñar la interfaz siguiendo el flujo real de trabajo del conductor mejora significativamente la experiencia de uso.
