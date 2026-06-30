@@ -1,40 +1,40 @@
 const {
   createWorkDay,
   getWorkDays,
+  getOpenWorkDay,
 } = require("../repositories/workDayRepository");
 
 const createWorkDayService = async (workDayData) => {
-  const { date, startKm, endKm, fuelOwn } = workDayData;
+  const { date, startKm } = workDayData;
 
   if (!date) {
     throw new Error("La fecha es obligatoria");
   }
 
-  if (startKm === undefined || startKm === null) {
+  if (startKm === undefined || startKm === null || startKm === "") {
     throw new Error("El kilometraje inicial es obligatorio");
   }
 
-  if (endKm === undefined || endKm === null) {
-    throw new Error("El kilometraje final es obligatorio");
+  if (Number(startKm) < 0) {
+    throw new Error("El kilometraje inicial no puede ser negativo");
   }
 
-  if (endKm < startKm) {
-    throw new Error("El kilometraje final no puede ser menor al inicial");
+  const openWorkDay = await getOpenWorkDay();
+
+  if (openWorkDay) {
+    throw new Error(
+      "Ya existe una jornada activa. Debes cerrarla antes de iniciar otra."
+    );
   }
 
-  if (fuelOwn === undefined || fuelOwn === null) {
-    throw new Error("La gasolina propia es obligatoria");
-  }
-
-  if (fuelOwn < 0) {
-    throw new Error("La gasolina propia no puede ser negativa");
-  }
-
-  const workDay = await createWorkDay(workDayData);
+  const workDay = await createWorkDay({
+    date,
+    startKm: Number(startKm),
+  });
 
   return {
     ...workDay,
-    workedKm: workDay.endKm - workDay.startKm,
+    workedKm: null,
   };
 };
 
@@ -43,11 +43,27 @@ const getWorkDaysService = async () => {
 
   return workDays.map((workDay) => ({
     ...workDay,
-    workedKm: workDay.endKm - workDay.startKm,
+    workedKm:
+      workDay.endKm !== null
+        ? workDay.endKm - workDay.startKm
+        : null,
   }));
+};
+const getOpenWorkDayService = async () => {
+  const openWorkDay = await getOpenWorkDay();
+
+  if (!openWorkDay) {
+    return null;
+  }
+
+  return {
+    ...openWorkDay,
+    workedKm: null,
+  };
 };
 
 module.exports = {
   createWorkDayService,
   getWorkDaysService,
+  getOpenWorkDayService,
 };

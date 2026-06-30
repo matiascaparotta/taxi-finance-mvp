@@ -11,3 +11,32 @@ export const getWorkDays = async () => {
 
   return data.data;
 };
+
+
+export const createWorkDay = async (workDayData) => {
+  const response = await fetch(`${API_URL}/work-days`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(workDayData),
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+  
+  return data.data;
+};
+export const getOpenWorkDay = async () => {
+  const response = await fetch(`${API_URL}/work-days/open`);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data.data;
+};

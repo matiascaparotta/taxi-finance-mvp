@@ -1,20 +1,18 @@
 const pool = require("../config/database");
 
 const createWorkDay = async (workDayData) => {
-  const { date, startKm, endKm, fuelOwn, fuelJose = 0 } = workDayData;
+  const { date, startKm } = workDayData;
 
   const [result] = await pool.query(
     `
     INSERT INTO work_days (
       date,
       start_km,
-      end_km,
-      fuel_own,
-      fuel_jose
+      status
     )
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, 'OPEN')
     `,
-    [date, startKm, endKm, fuelOwn, fuelJose]
+    [date, startKm]
   );
 
   const [rows] = await pool.query(
@@ -26,6 +24,7 @@ const createWorkDay = async (workDayData) => {
       end_km AS endKm,
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
+      status,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -47,6 +46,7 @@ const getWorkDays = async () => {
       end_km AS endKm,
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
+      status,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -56,8 +56,31 @@ const getWorkDays = async () => {
 
   return rows;
 };
+const getOpenWorkDay = async () => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      date,
+      start_km AS startKm,
+      end_km AS endKm,
+      fuel_own AS fuelOwn,
+      fuel_jose AS fuelJose,
+      status,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM work_days
+    WHERE status = 'OPEN'
+    ORDER BY created_at DESC
+    LIMIT 1
+    `
+  );
+
+  return rows[0] || null;
+};
 
 module.exports = {
   createWorkDay,
   getWorkDays,
+  getOpenWorkDay,
 };
