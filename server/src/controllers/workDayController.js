@@ -1,6 +1,11 @@
-const { processWorkDay, getWorkDays } = require("../services/workDayService");const createWorkDay = async (req, res) => {
+const {
+  createWorkDayService,
+  getWorkDaysService,
+} = require("../services/workDayService");
+
+const createWorkDay = async (req, res) => {
   try {
-    const result = await processWorkDay(req.body);
+    const result = await createWorkDayService(req.body);
 
     res.status(201).json({
       success: true,
@@ -14,9 +19,10 @@ const { processWorkDay, getWorkDays } = require("../services/workDayService");co
     });
   }
 };
+
 const getAllWorkDays = async (req, res) => {
   try {
-    const result = await getWorkDays();
+    const result = await getWorkDaysService();
 
     res.status(200).json({
       success: true,
@@ -30,6 +36,7 @@ const getAllWorkDays = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   createWorkDay,
   getAllWorkDays,

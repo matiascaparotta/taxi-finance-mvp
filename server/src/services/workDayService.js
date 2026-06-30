@@ -1,64 +1,53 @@
-const { createWorkDay, getAllWorkDays } = require("../repositories/workDayRepository");
-const DEFAULT_WORKED_DAYS_IN_MONTH = 22;
+const {
+  createWorkDay,
+  getWorkDays,
+} = require("../repositories/workDayRepository");
 
-const roundToTwoDecimals = (value) => {
-  return Number(value.toFixed(2));
-};
-
-const processWorkDay = async (workDayData) => {
-  const { date, startKm, endKm, cash, card, fuelOwn, fuelJose = 0 } = workDayData;
+const createWorkDayService = async (workDayData) => {
+  const { date, startKm, endKm, fuelOwn } = workDayData;
 
   if (!date) {
     throw new Error("La fecha es obligatoria");
   }
 
+  if (startKm === undefined || startKm === null) {
+    throw new Error("El kilometraje inicial es obligatorio");
+  }
+
+  if (endKm === undefined || endKm === null) {
+    throw new Error("El kilometraje final es obligatorio");
+  }
+
   if (endKm < startKm) {
-    throw new Error("El kilometraje final no puede ser menor que el inicial");
+    throw new Error("El kilometraje final no puede ser menor al inicial");
   }
 
-  if (cash < 0 || card < 0 || fuelOwn < 0 || fuelJose < 0) {
-    throw new Error("Los importes no pueden ser negativos");
+  if (fuelOwn === undefined || fuelOwn === null) {
+    throw new Error("La gasolina propia es obligatoria");
   }
-  const getWorkDays = async () => {
-    const workDays = await getAllWorkDays();
-  
-    return workDays;
-  };
-  const workedKm = endKm - startKm;
-  const totalGenerated = roundToTwoDecimals(cash + card);
 
-  const dailyPayrollCost = roundToTwoDecimals(
-    MONTHLY_PAYROLL_COST / DEFAULT_WORKED_DAYS_IN_MONTH
-  );
+  if (fuelOwn < 0) {
+    throw new Error("La gasolina propia no puede ser negativa");
+  }
 
-  const netProfit = roundToTwoDecimals(
-    (totalGenerated - fuelOwn - dailyPayrollCost) / 2
-  );
-
-  const workDayId = await createWorkDay(workDayData);
+  const workDay = await createWorkDay(workDayData);
 
   return {
-    id: workDayId,
-    date,
-    startKm,
-    endKm,
-    workedKm,
-    cash,
-    card,
-    totalGenerated,
-    fuelOwn,
-    fuelJose,
-    dailyPayrollCost,
-    netProfit,
+    ...workDay,
+    workedKm: workDay.endKm - workDay.startKm,
   };
 };
-const getWorkDays = async () => {
-  const workDays = await getAllWorkDays();
 
-  return workDays;
+const getWorkDaysService = async () => {
+  const workDays = await getWorkDays();
+
+  return workDays.map((workDay) => ({
+    ...workDay,
+    workedKm: workDay.endKm - workDay.startKm,
+  }));
 };
 
 module.exports = {
-  processWorkDay,
-  getWorkDays,
+  createWorkDayService,
+  getWorkDaysService,
 };
