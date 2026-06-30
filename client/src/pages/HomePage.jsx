@@ -1,20 +1,33 @@
+import { useEffect, useState } from "react";
+import { getWorkDays } from "../services/workDayService";
+
 function HomePage() {
-    return (
-      <section>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
-          <h2 className="text-xl font-semibold">Fase 2 iniciada</h2>
-  
-          <p className="mt-2 text-slate-300">
-            El frontend de Taxi Finance ya está funcionando con React, Vite,
-            Tailwind y React Router.
-          </p>
-  
-          <button className="mt-6 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-slate-950 hover:bg-emerald-400">
-            Nueva jornada
-          </button>
-        </div>
-      </section>
-    );
-  }
-  
-  export default HomePage;
+  const [workDays, setWorkDays] = useState([]);
+
+  useEffect(() => {
+    loadWorkDays();
+  }, []);
+
+  const loadWorkDays = async () => {
+    try {
+      const data = await getWorkDays();
+      setWorkDays(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <section>
+      <h2 className="mb-6 text-2xl font-bold">
+        Bienvenido a Taxi Finance 🚖
+      </h2>
+
+      <p className="mb-6">
+        Jornadas registradas: <strong>{workDays.length}</strong>
+      </p>
+    </section>
+  );
+}
+
+export default HomePage;
