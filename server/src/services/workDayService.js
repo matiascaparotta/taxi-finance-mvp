@@ -1,9 +1,11 @@
 const {
   createWorkDay,
   getWorkDays,
+  getWorkDayById,
   getOpenWorkDay,
   closeWorkDayById,
 } = require("../repositories/workDayRepository");
+
 const createWorkDayService = async (workDayData) => {
   const { date, startKm } = workDayData;
 
@@ -48,6 +50,26 @@ const getWorkDaysService = async () => {
         ? workDay.endKm - workDay.startKm
         : null,
   }));
+};
+
+const getWorkDayByIdService = async (workDayId) => {
+  if (!workDayId) {
+    throw new Error("El id de la jornada es obligatorio");
+  }
+
+  const workDay = await getWorkDayById(workDayId);
+
+  if (!workDay) {
+    throw new Error("Jornada no encontrada");
+  }
+
+  return {
+    ...workDay,
+    workedKm:
+      workDay.endKm !== null
+        ? workDay.endKm - workDay.startKm
+        : null,
+  };
 };
 const getOpenWorkDayService = async () => {
   const openWorkDay = await getOpenWorkDay();
@@ -105,6 +127,7 @@ const closeWorkDayService = async (workDayId, closeData) => {
 module.exports = {
   createWorkDayService,
   getWorkDaysService,
+  getWorkDayByIdService,
   getOpenWorkDayService,
   closeWorkDayService,
 };

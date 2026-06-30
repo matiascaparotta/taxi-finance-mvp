@@ -347,3 +347,34 @@ Taxi Finance ya permite completar el ciclo completo de una jornada:
 ### Aprendizaje clave
 
 Separar la lógica de negocio en Repository, Service y Controller facilita añadir nuevas funcionalidades sin romper las existentes. Además, diseñar la interfaz siguiendo el flujo real de trabajo del conductor mejora significativamente la experiencia de uso.
+
+---
+
+## Sprint 11 — Ticket de jornada
+
+**Objetivo:** mostrar un resumen final de la jornada una vez cerrado el turno.
+
+### Trabajo realizado
+
+- Creación del componente reutilizable `WorkDayTicket`.
+- Creación de la pantalla `WorkDayClosedPage`.
+- Creación del endpoint `GET /work-days/:id`.
+- Integración del ticket con datos reales de la jornada cerrada.
+- Integración del ticket con el resumen de jornada.
+- Navegación automática desde el cierre de jornada hacia el ticket final.
+- Visualización de:
+  - fecha;
+  - viajes;
+  - kilómetros trabajados;
+  - facturación;
+  - efectivo;
+  - datáfono;
+  - combustible.
+
+### Resultado
+
+Al cerrar una jornada, Taxi Finance muestra un ticket final con la información operativa del turno.
+
+### Aprendizaje clave
+
+Una misma vista de resumen puede reutilizarse en varias partes de la aplicación: cierre de jornada, historial, PDF y compartir.

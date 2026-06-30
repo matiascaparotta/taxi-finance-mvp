@@ -56,6 +56,28 @@ const getWorkDays = async () => {
 
   return rows;
 };
+const getWorkDayById = async (workDayId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      date,
+      start_km AS startKm,
+      end_km AS endKm,
+      fuel_own AS fuelOwn,
+      fuel_jose AS fuelJose,
+      status,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM work_days
+    WHERE id = ?
+    `,
+    [workDayId]
+  );
+
+  return rows[0] || null;
+};
+
 const getOpenWorkDay = async () => {
   const [rows] = await pool.query(
     `
@@ -118,6 +140,7 @@ const closeWorkDayById = async (workDayId, closeData) => {
 module.exports = {
   createWorkDay,
   getWorkDays,
+  getWorkDayById,
   getOpenWorkDay,
   closeWorkDayById,
 };
