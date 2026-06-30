@@ -1,0 +1,101 @@
+# Taxi Finance — Architecture Decisions
+
+---
+
+## ADR-001
+
+### Eliminar cash y card de work_days
+
+Fecha:
+
+30/06/2026
+
+Motivo:
+
+Evitar duplicación de datos.
+
+Decisión:
+
+Los importes de efectivo y datáfono se calcularán siempre a partir de la tabla trips.
+
+Beneficio:
+
+Existe una única fuente de verdad.
+
+---
+
+## ADR-002
+
+### Crear la capa Repositories
+
+Fecha:
+
+30/06/2026
+
+Motivo:
+
+Separar las consultas SQL de las reglas de negocio.
+
+Decisión:
+
+Toda consulta a MySQL debe realizarse desde la carpeta repositories.
+
+Beneficio:
+
+Código más limpio y mantenible.
+
+---
+
+## ADR-003
+
+### Arquitectura por capas
+
+Fecha:
+
+30/06/2026
+
+Decisión:
+
+El backend seguirá la estructura:
+
+Routes
+
+↓
+
+Controllers
+
+↓
+
+Services
+
+↓
+
+Repositories
+
+↓
+
+MySQL
+
+Beneficio:
+
+Separación clara de responsabilidades.
+
+---
+
+## ADR-004
+
+### Resumen inteligente
+
+Fecha:
+
+30/06/2026
+
+Decisión:
+
+Los resúmenes diarios no almacenarán resultados en la base de datos.
+
+Siempre se calcularán en tiempo real.
+
+Beneficio:
+
+Los datos siempre estarán sincronizados con los viajes registrados.

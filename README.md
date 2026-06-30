@@ -1,31 +1,101 @@
-# Taxi Finance MVP
+# 🚖 Taxi Finance MVP
 
-Aplicación para registrar jornadas de taxi, calcular ganancias diarias, generar resúmenes para WhatsApp y preparar liquidaciones mensuales.
+Aplicación Full Stack para la gestión financiera de conductores de taxi.
 
-## Objetivo
+---
 
-Construir una herramienta real para:
+# Objetivo
 
-- Registrar kilómetros iniciales y finales.
-- Registrar efectivo y datáfono.
-- Registrar gasolina propia.
-- Registrar gasolina cargada para José cuando corresponda.
-- Calcular ganancia neta diaria.
-- Generar resumen diario.
-- Generar liquidación mensual.
-- Exportar reportes.
+Taxi Finance nace para reemplazar el registro manual realizado mediante WhatsApp, calculadora y hojas de cálculo.
 
-## Fórmula principal
+Permite registrar jornadas, viajes, combustible y generar resúmenes financieros automáticos.
 
-Ganancia neta diaria:
+---
 
-```txt
-(efectivo + datáfono - gasolina propia - nómina diaria) / 2
+# Estado del proyecto
+
+## Fase 1
+
+✅ Backend Express
+
+✅ Base de datos MySQL
+
+✅ Arquitectura por capas
+
+✅ CRUD de jornadas
+
+✅ CRUD de viajes
+
+✅ Resumen inteligente de jornada
+
+---
+
+# Tecnologías
+
+- Node.js
+- Express
+- MySQL
+- React (próximamente)
+- Git
+- GitHub
+
+---
+
+# Arquitectura
+
+```text
+React
+    │
+    ▼
+Express API
+    │
+    ▼
+Controllers
+    │
+    ▼
+Services
+    │
+    ▼
+Repositories
+    │
+    ▼
+MySQL
 ```
 
-## Stack
+---
 
-- Frontend: React + Vite
-- Backend: Node.js + Express
-- Base de datos: MySQL
-- Git + GitHub
+# Funcionalidades actuales
+
+- Gestión de jornadas.
+- Registro de viajes.
+- Edición de viajes.
+- Eliminación de viajes.
+- Resumen inteligente de jornada.
+
+---
+
+# Documentación
+
+- 📘 01 Project Journal
+- 🏗 02 Architecture
+- 🗺 03 Roadmap
+- 📖 04 Decisions
+
+---
+
+# Próximos pasos
+
+- Frontend React
+- Dashboard
+- Liquidación mensual
+- Exportación PDF
+- Estadísticas
+- PWA
+
+---
+
+## Autor
+
+**Matías Caparotta**
+
+Proyecto desarrollado como aplicación real para la gestión financiera de conductores de taxi y como portfolio de desarrollo Full Stack.
