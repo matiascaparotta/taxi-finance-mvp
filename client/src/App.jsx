@@ -3,6 +3,7 @@ import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import NewWorkDayPage from "./pages/NewWorkDayPage";
 import NewTripPage from "./pages/NewTripPage";
+import CloseWorkDayPage from "./pages/CloseWorkDayPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/new-work-day" element={<NewWorkDayPage />} />
           <Route path="/new-trip" element={<NewTripPage />} />
+          <Route path="/close-work-day" element={<CloseWorkDayPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

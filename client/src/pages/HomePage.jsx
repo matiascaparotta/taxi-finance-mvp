@@ -107,6 +107,16 @@ function HomePage() {
             </Button>
           </div>
 
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => navigate("/close-work-day")}
+              className="w-full rounded-2xl border border-red-500/40 bg-red-500/10 px-6 py-4 text-lg font-bold text-red-300 transition hover:bg-red-500/20 active:scale-[0.99]"
+            >
+              Finalizar jornada
+            </button>
+          </div>
+
           <div className="mt-6 border-t border-emerald-500/20 pt-5">
             <div>
               <h3 className="text-lg font-bold text-white">

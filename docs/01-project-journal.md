@@ -270,3 +270,35 @@ Posteriormente:
 - historial mensual;
 - exportación PDF;
 - dashboard financiero.
+---
+
+## Sprint 9 — Gestión de viajes en tiempo real
+
+**Objetivo:** permitir registrar viajes durante una jornada activa y visualizar la información en tiempo real.
+
+### Trabajo realizado
+
+- Creación de la pantalla `NewTripPage`.
+- Navegación desde la Home para registrar viajes.
+- Integración con la API para crear viajes.
+- Consulta automática de la jornada activa.
+- Visualización del resumen de la jornada activa.
+- Creación del componente de resumen reutilizable (inicio de la refactorización).
+- Visualización de los últimos viajes registrados.
+- Orden cronológico de los viajes (más reciente primero).
+
+### Mejoras de UX definidas
+
+- Futuro teclado numérico optimizado para conductores.
+- Flujo rápido de registro de viajes.
+- Confirmación antes de eliminar un viaje.
+- Posibilidad de editar viajes.
+- Separación entre resumen operativo y resumen personal.
+
+### Resultado
+
+Taxi Finance ya permite trabajar durante una jornada activa registrando viajes y viendo la evolución de la facturación en tiempo real.
+
+### Aprendizaje clave
+
+La interfaz debe adaptarse al flujo real de trabajo del conductor y mostrar siempre el estado actual de la jornada.
