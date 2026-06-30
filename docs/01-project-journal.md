@@ -144,3 +144,129 @@ Empezar el frontend en React para visualizar:
 - viajes;
 - resumen diario;
 - futuros cierres mensuales.
+---
+
+## Sprint 7 — Frontend React (MVP)
+
+**Objetivo:** construir la primera interfaz de Taxi Finance.
+
+### Trabajo realizado
+
+- Creación del cliente React con Vite.
+- Integración con Tailwind CSS.
+- Diseño inicial responsive orientado a móvil.
+- Creación de componentes reutilizables:
+  - Button
+  - Card
+  - SectionTitle
+  - Stat
+  - WorkDayCard
+- Conexión del frontend con la API Express.
+- Visualización de jornadas desde MySQL.
+- Creación de la pantalla Home.
+- Creación de la pantalla Nueva Jornada.
+
+### Resultado
+
+Taxi Finance deja de ser solamente una API y pasa a tener una interfaz moderna y funcional.
+
+### Aprendizaje clave
+
+Separación entre frontend y backend, reutilización de componentes y consumo de APIs desde React.
+
+---
+
+## Sprint 8 — Jornadas activas
+
+**Objetivo:** adaptar la aplicación al flujo real de trabajo de un taxista.
+
+### Trabajo realizado
+
+- Se incorporó el estado de jornada:
+  - OPEN
+  - CLOSED
+- Se modificó la base de datos para permitir jornadas abiertas.
+- Se implementó la regla de negocio:
+  - Un conductor solo puede tener una jornada OPEN.
+- Creación del endpoint:
+
+GET /work-days/open
+
+- El frontend consulta automáticamente la jornada activa.
+- La Home cambia dinámicamente según el estado de la jornada.
+- Se añadió la pantalla "Jornada activa".
+- Se impide iniciar una segunda jornada mientras exista otra abierta.
+
+### Resultado
+
+Taxi Finance comienza a comportarse como una aplicación real de gestión diaria y no solamente como un sistema de registro.
+
+### Aprendizaje clave
+
+Modelar correctamente el negocio antes que la interfaz.
+
+---
+
+## Estado actual
+
+Actualmente Taxi Finance dispone de:
+
+### Backend
+
+- Express
+- MySQL
+- Arquitectura por capas
+- CRUD de viajes
+- Jornadas
+- Resúmenes automáticos
+- Reglas de negocio
+
+### Frontend
+
+- React + Vite
+- Tailwind CSS
+- Home responsive
+- Nueva jornada
+- Componentes reutilizables
+- Detección automática de jornada activa
+
+### Flujo actual
+
+Iniciar jornada
+
+↓
+
+Jornada OPEN
+
+↓
+
+Home cambia automáticamente
+
+↓
+
+Registrar viajes (próximo paso)
+
+↓
+
+Cerrar jornada
+
+↓
+
+Liquidación automática
+
+---
+
+## Próximo Sprint
+
+### Sprint 9
+
+Registro de viajes en tiempo real durante una jornada activa.
+
+Posteriormente:
+
+- cierre de jornada;
+- liquidación automática;
+- estadísticas;
+- historial mensual;
+- exportación PDF;
+- dashboard financiero.
