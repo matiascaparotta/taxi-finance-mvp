@@ -4,9 +4,11 @@ import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 import WorkDayCard from "../components/WorkDayCard";
 import { getWorkDays } from "../services/workDayService";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [workDays, setWorkDays] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadWorkDays();
@@ -44,7 +46,9 @@ function HomePage() {
         </p>
 
         <div className="mt-6">
-          <Button>Iniciar jornada</Button>
+        <Button onClick={() => navigate("/new-work-day")}>
+  Iniciar jornada
+</Button>
         </div>
       </Card>
 

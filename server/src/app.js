@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 
+
 const healthRoutes = require("./routes/healthRoutes");
 const workDayRoutes = require("./routes/workDayRoutes");
 const tripRoutes = require("./routes/tripRoutes");
