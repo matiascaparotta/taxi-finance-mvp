@@ -59,6 +59,50 @@ Repositories
 MySQL
 ```
 
+## Filosofía de la arquitectura
+
+Taxi Finance sigue una arquitectura por capas con los siguientes objetivos:
+
+- Separación de responsabilidades.
+- Reutilización de código.
+- Facilidad de mantenimiento.
+- Escalabilidad.
+- Facilidad para realizar pruebas.
+
+Cada capa tiene una única responsabilidad y únicamente conoce a la capa inmediatamente inferior.
+
+---
+
+## Flujo de una petición
+
+Ejemplo: registro de un viaje.
+
+```text
+Usuario
+   ↓
+NewTripPage
+   ↓
+tripService
+   ↓
+POST /trips
+   ↓
+Route
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+MySQL
+   ↓
+Respuesta JSON
+   ↓
+React actualiza la interfaz
+```
+
+---
+
 ## Frontend
 
 ### Pages
@@ -248,6 +292,28 @@ Taxi Finance intenta seguir varios principios de ingeniería de software.
 
 ---
 
+## Estructura del proyecto
+
+```text
+client/
+├── pages
+├── components
+├── services
+└── utils
+
+server/
+├── config
+├── routes
+├── controllers
+├── services
+├── repositories
+└── database
+```
+
+Esta organización facilita localizar rápidamente la responsabilidad de cada archivo y favorece la evolución del proyecto sin aumentar el acoplamiento entre módulos.
+
+---
+
 ## Estado actual
 
 Actualmente Taxi Finance dispone de:
@@ -279,11 +345,12 @@ Actualmente Taxi Finance dispone de:
 
 ## Evolución prevista
 
-Los siguientes pasos de la arquitectura incluyen:
+Los siguientes pasos previstos para la arquitectura son:
 
-- Gestión completa de viajes (editar y eliminar).
-- Dashboard financiero.
-- Exportación PDF.
+- Gestión completa de viajes (edición y eliminación).
 - Historial de jornadas.
+- Dashboard financiero.
+- Exportación de PDF.
 - Soporte para múltiples conductores.
-- Despliegue como aplicación web (PWA).
+- Autenticación y autorización.
+- Conversión de la aplicación en una Progressive Web App (PWA).

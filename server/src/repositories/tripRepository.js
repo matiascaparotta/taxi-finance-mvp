@@ -75,6 +75,29 @@ const getTripsByWorkDayId = async (workDayId) => {
 
   return rows;
 };
+
+const getTripById = async (tripId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      work_day_id AS workDayId,
+      amount,
+      payment_type AS paymentType,
+      note,
+      cash_adjustment AS cashAdjustment,
+      adjustment_reason AS adjustmentReason,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM trips
+    WHERE id = ?
+    `,
+    [tripId]
+  );
+
+  return rows[0] || null;
+};
+
 const updateTripById = async (tripId, tripData) => {
   const {
     amount,
@@ -161,6 +184,7 @@ const deleteTripById = async (tripId) => {
 module.exports = {
   createTrip,
   getTripsByWorkDayId,
+  getTripById,
   updateTripById,
   deleteTripById,
 };

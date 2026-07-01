@@ -134,17 +134,21 @@ function HomePage() {
             ) : (
               <div className="mt-4 space-y-3">
                 {sortedActiveTrips.map((trip) => (
-                  <div
+                  <button
                     key={trip.id}
-                    className="rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3"
+                    type="button"
+                    onClick={() => navigate(`/trips/${trip.id}/edit`)}
+                    className="w-full rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-left transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]"
                   >
                     <p className="text-sm text-slate-400">
-                      🕙 {formatTripTime(trip)} · {trip.paymentType === "cash" ? "💵 Efectivo" : "💳 Datáfono"}
+                      🕙 {formatTripTime(trip)} ·{" "}
+                      {trip.paymentType === "cash" ? "💵 Efectivo" : "💳 Datáfono"}
                     </p>
+
                     <p className="mt-1 text-lg font-bold text-white">
                       {Number(trip.amount).toFixed(2)} €
                     </p>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

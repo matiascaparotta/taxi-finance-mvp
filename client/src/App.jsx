@@ -5,6 +5,8 @@ import NewWorkDayPage from "./pages/NewWorkDayPage";
 import NewTripPage from "./pages/NewTripPage";
 import CloseWorkDayPage from "./pages/CloseWorkDayPage";
 import WorkDayClosedPage from "./pages/WorkDayClosedPage";
+import EditTripPage from "./pages/EditTripPage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -14,9 +16,8 @@ function App() {
           <Route path="/new-work-day" element={<NewWorkDayPage />} />
           <Route path="/new-trip" element={<NewTripPage />} />
           <Route path="/close-work-day" element={<CloseWorkDayPage />} />
-          <Route path="/work-day-closed/:id"
-  element={<WorkDayClosedPage />}
-/>
+          <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />}
+/>       <Route path="/trips/:id/edit" element={<EditTripPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

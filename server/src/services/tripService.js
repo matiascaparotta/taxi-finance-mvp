@@ -1,6 +1,7 @@
 const {
   createTrip,
   getTripsByWorkDayId,
+  getTripById,
   updateTripById,
   deleteTripById,
 } = require("../repositories/tripRepository");
@@ -23,6 +24,16 @@ const getTripsByWorkDayService = async (workDayId) => {
   if (!workDayId) throw new Error("El workDayId es obligatorio");
 
   return await getTripsByWorkDayId(workDayId);
+};
+
+const getTripByIdService = async (tripId) => {
+  if (!tripId) throw new Error("El id del viaje es obligatorio");
+
+  const trip = await getTripById(tripId);
+
+  if (!trip) throw new Error("Viaje no encontrado");
+
+  return trip;
 };
 
 const updateTripService = async (tripId, tripData) => {
@@ -57,6 +68,7 @@ const deleteTripService = async (tripId) => {
 module.exports = {
   createTripService,
   getTripsByWorkDayService,
+  getTripByIdService,
   updateTripService,
   deleteTripService,
 };
