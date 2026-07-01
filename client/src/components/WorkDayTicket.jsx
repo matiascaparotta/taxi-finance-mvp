@@ -1,6 +1,7 @@
 import Card from "./ui/Card";
 import Stat from "./ui/Stat";
 import { formatDate } from "../utils/formatDate";
+import { formatCurrency } from "../utils/formatCurrency";
 
 function WorkDayTicket({ workDay, summary }) {
   if (!workDay || !summary) {
@@ -33,10 +34,10 @@ function WorkDayTicket({ workDay, summary }) {
       <div className="grid grid-cols-2 gap-4">
         <Stat label="🚖 Viajes" value={summary.tripCount} />
         <Stat label="📍 Km" value={`${workedKm} km`} />
-        <Stat label="💶 Facturación" value={`${summary.totalRevenue} €`} />
-        <Stat label="💳 Datáfono" value={`${summary.card} €`} />
-        <Stat label="💵 Efectivo" value={`${summary.cash} €`} />
-        <Stat label="⛽ Combustible" value={`${workDay.fuelOwn} €`} />
+        <Stat label="💶 Facturación" value={formatCurrency(summary.totalRevenue)} />
+        <Stat label="💳 Datáfono" value={formatCurrency(summary.card)} />
+        <Stat label="💵 Efectivo" value={formatCurrency(summary.cash)} />
+        <Stat label="⛽ Combustible" value={formatCurrency(workDay.fuelOwn)} />
       </div>
     </Card>
   );

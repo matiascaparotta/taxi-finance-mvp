@@ -1,101 +1,150 @@
-# 🚖 Taxi Finance MVP
+# 🚖 Taxi Finance
 
-Aplicación Full Stack para la gestión financiera de conductores de taxi.
+> Aplicación Full Stack desarrollada para digitalizar la gestión financiera diaria de conductores de taxi.
 
----
+Taxi Finance surge a partir de una necesidad real: sustituir el uso de WhatsApp, calculadora y registros manuales por una herramienta rápida, intuitiva y profesional.
 
-# Objetivo
-
-Taxi Finance nace para reemplazar el registro manual realizado mediante WhatsApp, calculadora y hojas de cálculo.
-
-Permite registrar jornadas, viajes, combustible y generar resúmenes financieros automáticos.
+El proyecto se desarrolla siguiendo buenas prácticas de ingeniería de software, arquitectura por capas y una evolución incremental mediante sprints.
 
 ---
 
-# Estado del proyecto
+# ✨ Características principales
 
-## Fase 1
-
-✅ Backend Express
-
-✅ Base de datos MySQL
-
-✅ Arquitectura por capas
-
-✅ CRUD de jornadas
-
-✅ CRUD de viajes
-
-✅ Resumen inteligente de jornada
+- 🚖 Inicio y cierre de jornada.
+- 💶 Registro de viajes en tiempo real.
+- 📊 Resúmenes financieros automáticos.
+- 🧾 Ticket profesional al finalizar la jornada.
+- 📋 Compartir el resumen listo para WhatsApp.
+- 🏗️ Arquitectura desacoplada y escalable.
 
 ---
 
-# Tecnologías
+# 🛠️ Stack tecnológico
+
+## Frontend
+
+- React
+- Vite
+- Tailwind CSS
+
+## Backend
 
 - Node.js
 - Express
+
+## Base de datos
+
 - MySQL
-- React (próximamente)
+- mysql2/promise
+
+## Herramientas
+
 - Git
 - GitHub
+- Thunder Client
 
 ---
 
-# Arquitectura
+# 🏛️ Arquitectura
 
 ```text
 React
-    │
-    ▼
-Express API
-    │
-    ▼
-Controllers
-    │
-    ▼
+   ↓
+Pages
+   ↓
+Components
+   ↓
 Services
-    │
-    ▼
+   ↓
+Utils
+   ↓
+REST API
+   ↓
+Routes
+   ↓
+Controllers
+   ↓
+Services
+   ↓
 Repositories
-    │
-    ▼
+   ↓
 MySQL
 ```
 
 ---
 
-# Funcionalidades actuales
+# 🚀 Estado del proyecto
 
-- Gestión de jornadas.
-- Registro de viajes.
-- Edición de viajes.
-- Eliminación de viajes.
-- Resumen inteligente de jornada.
+- Estado: 🚧 Desarrollo activo
+- Sprint actual: Sprint 13
+- Frontend y Backend integrados
+- Arquitectura por capas implementada
 
----
+### Flujo principal disponible
 
-# Documentación
-
-- 📘 01 Project Journal
-- 🏗 02 Architecture
-- 🗺 03 Roadmap
-- 📖 04 Decisions
-
----
-
-# Próximos pasos
-
-- Frontend React
-- Dashboard
-- Liquidación mensual
-- Exportación PDF
-- Estadísticas
-- PWA
+1. Crear una jornada.
+2. Registrar viajes.
+3. Consultar el resumen en tiempo real.
+4. Cerrar la jornada.
+5. Generar el ticket final.
+6. Compartir el resumen.
 
 ---
 
-## Autor
+# ▶️ Ejecución del proyecto
+
+## Backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+## Frontend
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+---
+
+# 📚 Documentación
+
+La carpeta `docs/` contiene la documentación del proyecto:
+
+- `00-roadmap.md`
+- `01-project-journal.md`
+- `02-architecture.md`
+- `03-architecture-decisions.md`
+- `04-backlog.md`
+- `05-release-notes.md`
+
+---
+
+# 🔜 Próximas funcionalidades
+
+- Editar viajes.
+- Eliminar viajes.
+- Historial de jornadas.
+- Dashboard financiero.
+- Exportación PDF.
+- Soporte para múltiples conductores.
+
+---
+
+# 🎯 Objetivo del proyecto
+
+Además de resolver un problema real del trabajo diario de un conductor de taxi, Taxi Finance forma parte de un proceso de aprendizaje continuo en desarrollo Full Stack, arquitectura de software y diseño de producto.
+
+El objetivo es construir una aplicación real, mantenible y escalable siguiendo prácticas similares a las de un equipo profesional.
+
+---
+
+# 👨‍💻 Autor
 
 **Matías Caparotta**
 
-Proyecto desarrollado como aplicación real para la gestión financiera de conductores de taxi y como portfolio de desarrollo Full Stack.
+📍 Málaga, España

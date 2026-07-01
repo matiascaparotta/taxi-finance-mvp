@@ -1,5 +1,15 @@
 # Taxi Finance — Project Journal
 
+## Estado del proyecto
+
+- Proyecto: Taxi Finance MVP
+- Estado: 🚧 Desarrollo activo
+- Sprint actual: Sprint 13
+- Último sprint completado: Sprint 12
+- Stack: React + Vite + Tailwind CSS + Node.js + Express + MySQL
+
+---
+
 ## Objetivo del proyecto
 
 Taxi Finance es una aplicación pensada para ayudar a conductores de taxi a registrar su jornada diaria, viajes, gastos, combustible y liquidaciones mensuales.
@@ -8,59 +18,119 @@ El objetivo principal es reemplazar el uso manual de WhatsApp, calculadora y cua
 
 ---
 
-## Sprint 1 — Base inicial del proyecto
+### Sprint 1 — Base inicial del proyecto
 
-**Objetivo:** crear la base técnica de Taxi Finance.
+### Objetivo
 
-**Trabajo realizado:**
+Crear la base técnica de Taxi Finance.
+
+### Trabajo realizado
+
 - Creación del repositorio local.
 - Conexión con GitHub.
 - Configuración inicial de Node.js y Express.
 - Creación del endpoint `/health`.
 - Primeras pruebas con Thunder Client.
 
-**Resultado:** API inicial funcionando.
+### Resultado
 
-**Aprendizaje clave:** estructura básica de una API Express y flujo Git/GitHub.
+API inicial funcionando.
+
+### Valor para el usuario
+
+Se establece una base técnica sólida para construir una API confiable y estable.
+
+### Aprendizaje técnico
+
+Estructura básica de una API Express y flujo Git/GitHub.
+
+### Reflexión del sprint
+
+Sentar una base técnica clara facilita el desarrollo progresivo y controlado del proyecto.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Sprint 2 — Jornadas de trabajo
+### Sprint 2 — Jornadas de trabajo
 
-**Objetivo:** registrar jornadas laborales.
+### Objetivo
 
-**Trabajo realizado:**
+Registrar jornadas laborales.
+
+### Trabajo realizado
+
 - Creación de tabla `work_days`.
 - Endpoint `POST /work-days`.
 - Endpoint `GET /work-days`.
 - Validaciones iniciales de fecha, kilómetros y gasolina.
 
-**Resultado:** el sistema puede guardar y listar jornadas.
+### Resultado
 
-**Aprendizaje clave:** conexión entre Express, MySQL y Thunder Client.
+El sistema puede guardar y listar jornadas.
+
+### Valor para el usuario
+
+Permite a los conductores registrar y consultar sus jornadas de trabajo de forma digital.
+
+### Aprendizaje técnico
+
+Conexión entre Express, MySQL y Thunder Client.
+
+### Reflexión del sprint
+
+Integrar la base de datos con la API es fundamental para persistir datos de manera segura.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Sprint 3 — Resumen mensual inicial
+### Sprint 3 — Resumen mensual inicial
 
-**Objetivo:** empezar a calcular información mensual.
+### Objetivo
 
-**Trabajo realizado:**
+Empezar a calcular información mensual.
+
+### Trabajo realizado
+
 - Creación de módulo de resumen mensual.
 - Endpoint con parámetro `month`.
 - Primeras reglas de negocio: efectivo, datáfono, gasolina.
 
-**Resultado:** primer cálculo financiero mensual.
+### Resultado
 
-**Aprendizaje clave:** diferencia entre guardar datos y generar información útil.
+Primer cálculo financiero mensual.
+
+### Valor para el usuario
+
+Proporciona una visión financiera mensual para mejor control y análisis.
+
+### Aprendizaje técnico
+
+Diferencia entre guardar datos y generar información útil.
+
+### Reflexión del sprint
+
+Transformar datos en información relevante mejora el valor de la aplicación.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Sprint 4 — Gestión de viajes
+### Sprint 4 — Gestión de viajes
 
-**Objetivo:** registrar viajes individuales dentro de una jornada.
+### Objetivo
 
-**Trabajo realizado:**
+Registrar viajes individuales dentro de una jornada.
+
+### Trabajo realizado
+
 - Creación de tabla `trips`.
 - Relación `trips.work_day_id` con `work_days.id`.
 - Endpoint `POST /trips`.
@@ -68,17 +138,36 @@ El objetivo principal es reemplazar el uso manual de WhatsApp, calculadora y cua
 - Endpoint `PUT /trips/:id`.
 - Endpoint `DELETE /trips/:id`.
 
-**Resultado:** CRUD completo de viajes funcionando.
+### Resultado
 
-**Aprendizaje clave:** construcción completa de un módulo con crear, leer, actualizar y eliminar.
+CRUD completo de viajes funcionando.
+
+### Valor para el usuario
+
+Permite gestionar viajes de forma detallada y organizada.
+
+### Aprendizaje técnico
+
+Construcción completa de un módulo con crear, leer, actualizar y eliminar.
+
+### Reflexión del sprint
+
+Implementar un CRUD completo es esencial para la gestión dinámica de datos.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Sprint 5 — Refactor de arquitectura
+### Sprint 5 — Refactor de arquitectura
 
-**Objetivo:** mejorar la estructura del backend.
+### Objetivo
 
-**Trabajo realizado:**
+Mejorar la estructura del backend.
+
+### Trabajo realizado
+
 - Creación de carpeta `repositories`.
 - Movimiento de archivos de acceso a MySQL desde `services` hacia `repositories`.
 - Separación clara de responsabilidades:
@@ -87,17 +176,36 @@ El objetivo principal es reemplazar el uso manual de WhatsApp, calculadora y cua
   - Services: reglas de negocio.
   - Repositories: consultas SQL.
 
-**Resultado:** arquitectura más limpia y mantenible.
+### Resultado
 
-**Aprendizaje clave:** importancia de la separación de responsabilidades.
+Arquitectura más limpia y mantenible.
+
+### Valor para el usuario
+
+Mejora la estabilidad y escalabilidad del backend para futuros desarrollos.
+
+### Aprendizaje técnico
+
+Importancia de la separación de responsabilidades.
+
+### Reflexión del sprint
+
+Una arquitectura bien definida reduce la complejidad y facilita el mantenimiento.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Sprint 6 — Resumen inteligente de jornada
+### Sprint 6 — Resumen inteligente de jornada
 
-**Objetivo:** calcular automáticamente el resumen financiero de una jornada.
+### Objetivo
 
-**Trabajo realizado:**
+Calcular automáticamente el resumen financiero de una jornada.
+
+### Trabajo realizado
+
 - Eliminación de `cash` y `card` de `work_days`.
 - Los totales se calculan desde `trips`.
 - Creación de:
@@ -107,7 +215,9 @@ El objetivo principal es reemplazar el uso manual de WhatsApp, calculadora y cua
   - `workDaySummaryRoutes`
 - Endpoint `GET /work-days/:id/summary`.
 
-**Resultado:** la API calcula automáticamente:
+### Resultado
+
+La API calcula automáticamente:
 - kilómetros trabajados;
 - cantidad de viajes;
 - efectivo;
@@ -118,37 +228,29 @@ El objetivo principal es reemplazar el uso manual de WhatsApp, calculadora y cua
 - efectivo a rendir;
 - promedio por viaje.
 
-**Aprendizaje clave:** evitar duplicación de datos y calcular información desde la fuente real.
+### Valor para el usuario
+
+Obtiene un resumen financiero preciso sin necesidad de ingresar datos duplicados.
+
+### Aprendizaje técnico
+
+Evitar duplicación de datos y calcular información desde la fuente real.
+
+### Reflexión del sprint
+
+Calcular datos derivados en tiempo real mejora la integridad y precisión de la información.
+
+### Estado
+
+✅ Sprint finalizado.
 
 ---
 
-## Estado actual
+### Sprint 7 — Frontend React (MVP)
 
-Taxi Finance ya tiene:
+### Objetivo
 
-- Backend Express funcionando.
-- Base de datos MySQL.
-- Arquitectura por capas.
-- CRUD completo de viajes.
-- Jornadas de trabajo.
-- Resumen inteligente de jornada.
-- Primeras reglas reales de negocio del taxi.
-
----
-
-## Próximo objetivo
-
-Empezar el frontend en React para visualizar:
-
-- jornadas;
-- viajes;
-- resumen diario;
-- futuros cierres mensuales.
----
-
-## Sprint 7 — Frontend React (MVP)
-
-**Objetivo:** construir la primera interfaz de Taxi Finance.
+Construir la primera interfaz de Taxi Finance.
 
 ### Trabajo realizado
 
@@ -170,15 +272,29 @@ Empezar el frontend en React para visualizar:
 
 Taxi Finance deja de ser solamente una API y pasa a tener una interfaz moderna y funcional.
 
-### Aprendizaje clave
+### Valor para el usuario
+
+Proporciona una experiencia visual amigable y accesible para los conductores.
+
+### Aprendizaje técnico
 
 Separación entre frontend y backend, reutilización de componentes y consumo de APIs desde React.
 
+### Reflexión del sprint
+
+Un frontend bien diseñado mejora la adopción y usabilidad del producto.
+
+### Estado
+
+✅ Sprint finalizado.
+
 ---
 
-## Sprint 8 — Jornadas activas
+### Sprint 8 — Jornadas activas
 
-**Objetivo:** adaptar la aplicación al flujo real de trabajo de un taxista.
+### Objetivo
+
+Adaptar la aplicación al flujo real de trabajo de un taxista.
 
 ### Trabajo realizado
 
@@ -201,80 +317,29 @@ GET /work-days/open
 
 Taxi Finance comienza a comportarse como una aplicación real de gestión diaria y no solamente como un sistema de registro.
 
-### Aprendizaje clave
+### Valor para el usuario
+
+Permite gestionar jornadas activas, evitando errores y duplicaciones.
+
+### Aprendizaje técnico
 
 Modelar correctamente el negocio antes que la interfaz.
 
----
+### Reflexión del sprint
 
-## Estado actual
+Entender y reflejar el flujo real del negocio es clave para una aplicación útil.
 
-Actualmente Taxi Finance dispone de:
+### Estado
 
-### Backend
-
-- Express
-- MySQL
-- Arquitectura por capas
-- CRUD de viajes
-- Jornadas
-- Resúmenes automáticos
-- Reglas de negocio
-
-### Frontend
-
-- React + Vite
-- Tailwind CSS
-- Home responsive
-- Nueva jornada
-- Componentes reutilizables
-- Detección automática de jornada activa
-
-### Flujo actual
-
-Iniciar jornada
-
-↓
-
-Jornada OPEN
-
-↓
-
-Home cambia automáticamente
-
-↓
-
-Registrar viajes (próximo paso)
-
-↓
-
-Cerrar jornada
-
-↓
-
-Liquidación automática
+✅ Sprint finalizado.
 
 ---
 
-## Próximo Sprint
+### Sprint 9 — Gestión de viajes en tiempo real
 
-### Sprint 9
+### Objetivo
 
-Registro de viajes en tiempo real durante una jornada activa.
-
-Posteriormente:
-
-- cierre de jornada;
-- liquidación automática;
-- estadísticas;
-- historial mensual;
-- exportación PDF;
-- dashboard financiero.
----
-
-## Sprint 9 — Gestión de viajes en tiempo real
-
-**Objetivo:** permitir registrar viajes durante una jornada activa y visualizar la información en tiempo real.
+Permitir registrar viajes durante una jornada activa y visualizar la información en tiempo real.
 
 ### Trabajo realizado
 
@@ -287,7 +352,7 @@ Posteriormente:
 - Visualización de los últimos viajes registrados.
 - Orden cronológico de los viajes (más reciente primero).
 
-### Mejoras de UX definidas
+### Mejoras de UX
 
 - Futuro teclado numérico optimizado para conductores.
 - Flujo rápido de registro de viajes.
@@ -299,15 +364,29 @@ Posteriormente:
 
 Taxi Finance ya permite trabajar durante una jornada activa registrando viajes y viendo la evolución de la facturación en tiempo real.
 
-### Aprendizaje clave
+### Valor para el usuario
+
+Facilita el registro y seguimiento de viajes en tiempo real durante la jornada.
+
+### Aprendizaje técnico
 
 La interfaz debe adaptarse al flujo real de trabajo del conductor y mostrar siempre el estado actual de la jornada.
 
+### Reflexión del sprint
+
+Adaptar la UI al usuario final mejora la eficiencia y satisfacción.
+
+### Estado
+
+✅ Sprint finalizado.
+
 ---
 
-## Sprint 10 — Cierre completo de jornada
+### Sprint 10 — Cierre completo de jornada
 
-**Objetivo:** completar el flujo real de finalización de una jornada de trabajo.
+### Objetivo
+
+Completar el flujo real de finalización de una jornada de trabajo.
 
 ### Trabajo realizado
 
@@ -344,15 +423,29 @@ Taxi Finance ya permite completar el ciclo completo de una jornada:
 - registrar kilometraje final;
 - cerrar la jornada correctamente.
 
-### Aprendizaje clave
+### Valor para el usuario
+
+Proporciona un cierre de jornada seguro y completo, evitando errores y pérdidas de datos.
+
+### Aprendizaje técnico
 
 Separar la lógica de negocio en Repository, Service y Controller facilita añadir nuevas funcionalidades sin romper las existentes. Además, diseñar la interfaz siguiendo el flujo real de trabajo del conductor mejora significativamente la experiencia de uso.
 
+### Reflexión del sprint
+
+Una arquitectura modular y un diseño centrado en el usuario son clave para funcionalidades críticas.
+
+### Estado
+
+✅ Sprint finalizado.
+
 ---
 
-## Sprint 11 — Ticket de jornada
+### Sprint 11 — Ticket de jornada
 
-**Objetivo:** mostrar un resumen final de la jornada una vez cerrado el turno.
+### Objetivo
+
+Mostrar un resumen final de la jornada una vez cerrado el turno.
 
 ### Trabajo realizado
 
@@ -375,17 +468,31 @@ Separar la lógica de negocio en Repository, Service y Controller facilita añad
 
 Al cerrar una jornada, Taxi Finance muestra un ticket final con la información operativa del turno.
 
-### Aprendizaje clave
+### Valor para el usuario
+
+Ofrece un resumen profesional y accesible para revisar y compartir la jornada cerrada.
+
+### Aprendizaje técnico
 
 Una misma vista de resumen puede reutilizarse en varias partes de la aplicación: cierre de jornada, historial, PDF y compartir.
 
-# Sprint 12 - Calidad del cierre de jornada
+### Reflexión del sprint
 
-## Objetivo
+Reutilizar componentes mejora la consistencia y reduce tiempos de desarrollo.
+
+### Estado
+
+✅ Sprint finalizado.
+
+---
+
+### Sprint 12 - Calidad del cierre de jornada
+
+### Objetivo
 
 Mejorar la experiencia de usuario del cierre de jornada y del ticket final antes de continuar agregando nuevas funcionalidades.
 
-## Funcionalidades implementadas
+### Trabajo realizado
 
 - Se creó la utilidad `formatCurrency()` para unificar el formato de importes en toda la aplicación.
 - El Ticket de Jornada ahora utiliza el nuevo formato monetario.
@@ -395,17 +502,43 @@ Mejorar la experiencia de usuario del cierre de jornada y del ticket final antes
 - Se reemplazó el `alert()` por un mensaje visual dentro de la interfaz.
 - Se mejoró la experiencia de usuario al compartir el resumen.
 
-## Valor para el usuario
+### Resultado
+
+Se unificó el formato monetario y se mejoró la interacción para compartir el resumen de la jornada, proporcionando una experiencia más profesional y fluida.
+
+### Valor para el usuario
 
 Ahora el conductor puede finalizar la jornada y compartir un resumen profesional en pocos segundos, sin copiar manualmente los datos ni rehacer cálculos.
 
-## Aprendizajes
+### Aprendizaje técnico
 
 - Creación de utilidades reutilizables.
 - Uso de `Intl.NumberFormat`.
 - Uso de `navigator.clipboard`.
 - Mejora de UX mediante feedback visual sin interrumpir el flujo del usuario.
 
-## Estado
+### Reflexión del sprint
+
+Incorporar utilidades comunes y mejorar el feedback visual aumenta la calidad y profesionalismo del producto.
+
+### Estado
 
 ✅ Sprint finalizado.
+
+---
+
+# Próximo Sprint
+
+## Sprint 13 — Gestión de viajes
+
+### Objetivo
+
+Permitir editar y eliminar viajes registrados para que el conductor pueda corregir errores durante la jornada sin afectar la consistencia de los datos.
+
+### Funcionalidades previstas
+
+- Editar viajes.
+- Eliminar viajes.
+- Confirmación antes de eliminar.
+- Actualización automática del resumen de jornada.
+- Mejoras adicionales de experiencia de usuario.

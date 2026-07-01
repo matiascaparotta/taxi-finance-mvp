@@ -2,45 +2,106 @@
 
 ## Objetivo
 
-Este documento explica la arquitectura actual del backend de Taxi Finance y el motivo de cada capa.
+Este documento describe la arquitectura Full Stack actual de Taxi Finance, explicando cómo se organiza el proyecto y cuál es la responsabilidad de cada capa.
 
-Taxi Finance está diseñado siguiendo una separación clara de responsabilidades para que el proyecto sea más fácil de mantener, escalar y explicar técnicamente.
+El objetivo es mantener una arquitectura limpia, escalable y fácil de entender para cualquier desarrollador que participe en el proyecto.
 
----
+## Stack tecnológico
 
-## Stack actual
+### Frontend
+
+- React
+- Vite
+- Tailwind CSS
+
+### Backend
 
 - Node.js
 - Express
+
+### Base de datos
+
 - MySQL
 - mysql2/promise
+
+### Herramientas
+
+- Git
+- GitHub
+- Thunder Client
 - dotenv
-- Thunder Client para pruebas manuales
-- Git y GitHub para control de versiones
 
 ---
 
 ## Arquitectura general
 
 ```text
-Client / Thunder Client / Future React App
-        |
-        v
-Express Routes
-        |
-        v
-Controllers
-        |
-        v
+React
+   ↓
+Pages
+   ↓
+Components
+   ↓
 Services
-        |
-        v
+   ↓
+Utils
+   ↓
+REST API
+   ↓
+Routes
+   ↓
+Controllers
+   ↓
+Services
+   ↓
 Repositories
-        |
-        v
-MySQL Database
+   ↓
+MySQL
+```
 
-## Capas de la aplicación
+## Frontend
+
+### Pages
+
+Las páginas representan las pantallas principales de la aplicación.
+
+Ejemplos:
+
+- Home
+- NewWorkDayPage
+- ActiveWorkDayPage
+- NewTripPage
+- CloseWorkDayPage
+- WorkDayClosedPage
+
+### Components
+
+Los componentes reutilizables encapsulan la interfaz y evitan duplicación de código.
+
+Ejemplos:
+
+- Button
+- Card
+- Stat
+- WorkDayCard
+- WorkDaySummaryCard
+- WorkDayTicket
+
+### Services
+
+Los servicios del frontend encapsulan todas las llamadas HTTP hacia la API.
+
+### Utils
+
+Las utilidades contienen lógica reutilizable, por ejemplo:
+
+- formatDate
+- formatCurrency
+- buildWorkDaySummaryText
+
+---
+
+## Backend
 
 ### Routes
 
@@ -51,6 +112,9 @@ Ejemplos:
 ```text
 POST /work-days
 GET /work-days
+GET /work-days/open
+GET /work-days/:id
+PUT /work-days/:id/close
 POST /trips
 GET /trips?workDayId=1
 PUT /trips/:id
@@ -186,18 +250,40 @@ Taxi Finance intenta seguir varios principios de ingeniería de software.
 
 ## Estado actual
 
-Actualmente el backend permite:
+Actualmente Taxi Finance dispone de:
 
-- crear jornadas;
-- listar jornadas;
-- registrar viajes;
-- listar viajes;
-- editar viajes;
-- eliminar viajes;
-- obtener el resumen inteligente de una jornada.
+### Frontend
+
+- Gestión de jornadas.
+- Jornada activa.
+- Registro de viajes.
+- Cierre de jornada.
+- Ticket final.
+- Compartir resumen.
+- Componentes reutilizables.
+
+### Backend
+
+- Arquitectura por capas.
+- CRUD de jornadas.
+- CRUD de viajes.
+- Resumen inteligente.
+- Reglas de negocio.
+
+### Base de datos
+
+- work_days
+- trips
 
 ---
 
-## Próximos pasos
+## Evolución prevista
 
-El siguiente gran objetivo será construir el frontend en React para consumir esta API y convertir Taxi Finance en una aplicación completa.
+Los siguientes pasos de la arquitectura incluyen:
+
+- Gestión completa de viajes (editar y eliminar).
+- Dashboard financiero.
+- Exportación PDF.
+- Historial de jornadas.
+- Soporte para múltiples conductores.
+- Despliegue como aplicación web (PWA).
