@@ -1,30 +1,3 @@
-# Backlog
-
-## MVP
-
-- [ ] Editar viaje
-- [ ] Eliminar viaje
-- [ ] Confirmación antes de borrar
-- [ ] Historial
-- [ ] Dashboard
-
----
-
-## Versión 2
-
-- [ ] Login
-- [ ] Usuarios
-- [ ] Multi conductor
-- [ ] Configuración
-
----
-
-## Futuro
-
-- [ ] PWA
-- [ ] Notificaciones
-- [ ] Estadísticas avanzadas
-- [ ] IA para análisis
 # Taxi Finance — Release Notes
 
 ## Objetivo
@@ -86,14 +59,30 @@ Este documento registra las funcionalidades incorporadas en cada versión de Tax
 - Mejoras de experiencia de usuario.
 
 ---
+# v0.5.0
+
+## Gestión completa de viajes
+
+### Novedades
+
+- Edición de viajes desde la aplicación.
+- Eliminación de viajes con confirmación.
+- Nuevo componente reutilizable `TripForm`.
+- Refactorización de `NewTripPage`.
+- Nueva pantalla `EditTripPage`.
+- Navegación directa desde la Home para editar viajes.
+- CRUD de viajes completado de extremo a extremo.
+- Recalculo automático del resumen tras editar o eliminar un viaje.
+
+---
 
 ## Próxima versión
 
-### v0.5.0
+### v0.6.0
 
 Funcionalidades previstas:
 
-- Editar viajes.
-- Eliminar viajes.
-- Confirmación antes de eliminar.
-- Recalcular automáticamente el resumen.
+- Historial de jornadas.
+- Detalle completo de una jornada.
+- Consulta de viajes históricos.
+- Base para generación de PDF.

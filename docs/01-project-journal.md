@@ -5,7 +5,7 @@
 - Proyecto: Taxi Finance MVP
 - Estado: 🚧 Desarrollo activo
 - Sprint actual: Sprint 13
-- Último sprint completado: Sprint 12
+- Último sprint completado: Sprint 13
 - Stack: React + Vite + Tailwind CSS + Node.js + Express + MySQL
 
 ---
@@ -527,18 +527,56 @@ Incorporar utilidades comunes y mejorar el feedback visual aumenta la calidad y 
 
 ---
 
-# Próximo Sprint
+---
 
-## Sprint 13 — Gestión de viajes
+### Sprint 13 — Gestión y edición de viajes
 
 ### Objetivo
 
-Permitir editar y eliminar viajes registrados para que el conductor pueda corregir errores durante la jornada sin afectar la consistencia de los datos.
+Permitir editar y eliminar viajes registrados durante una jornada activa, mejorando la flexibilidad de la aplicación sin comprometer la consistencia de la información.
 
-### Funcionalidades previstas
+### Trabajo realizado
 
-- Editar viajes.
-- Eliminar viajes.
-- Confirmación antes de eliminar.
-- Actualización automática del resumen de jornada.
-- Mejoras adicionales de experiencia de usuario.
+- Se implementó el endpoint `GET /trips/:id`.
+- Se completó el CRUD de viajes en la API.
+- Se creó el componente reutilizable `TripForm`.
+- Se refactorizó `NewTripPage` para reutilizar el formulario.
+- Se creó la pantalla `EditTripPage`.
+- Se implementó la edición de importe, método de pago y nota.
+- Se añadió la eliminación de viajes con confirmación.
+- Los viajes de la Home ahora son clicables y permiten acceder directamente a su edición.
+- El resumen de la jornada permanece consistente tras editar o eliminar un viaje.
+
+### Resultado
+
+Taxi Finance permite ahora crear, consultar, editar y eliminar viajes desde una interfaz unificada, manteniendo la coherencia de los datos y reutilizando componentes para facilitar el mantenimiento del proyecto.
+
+### Valor para el usuario
+
+El conductor puede corregir errores de registro en cualquier momento de la jornada sin tener que eliminar información manualmente ni rehacer cálculos.
+
+### Aprendizaje técnico
+
+- Diseño de componentes reutilizables.
+- Refactorización de formularios.
+- Implementación de un CRUD completo de extremo a extremo.
+- Navegación dinámica con React Router.
+- Sincronización entre frontend y backend.
+
+### Reflexión del sprint
+
+Antes de añadir nuevas funcionalidades, se consolidó la arquitectura del frontend mediante la reutilización de componentes. Esta decisión reduce la duplicación de código y facilita la evolución futura de la aplicación.
+
+### Estado
+
+✅ Sprint finalizado.
+
+---
+
+# Próximo Sprint
+
+## Sprint 14 — Historial de jornadas
+
+### Objetivo
+
+Construir una pantalla de historial que permita consultar jornadas anteriores, acceder a sus detalles, revisar los viajes registrados y preparar la futura generación de PDF y estadísticas.

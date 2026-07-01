@@ -76,18 +76,19 @@ MySQL
 # 🚀 Estado del proyecto
 
 - Estado: 🚧 Desarrollo activo
-- Sprint actual: Sprint 13
+- Último sprint completado: Sprint 13
 - Frontend y Backend integrados
 - Arquitectura por capas implementada
 
 ### Flujo principal disponible
 
-1. Crear una jornada.
-2. Registrar viajes.
-3. Consultar el resumen en tiempo real.
-4. Cerrar la jornada.
-5. Generar el ticket final.
-6. Compartir el resumen.
+1. Iniciar una jornada.
+2. Registrar viajes durante el turno.
+3. Editar o eliminar viajes si es necesario.
+4. Consultar el resumen en tiempo real.
+5. Finalizar la jornada.
+6. Visualizar el ticket final.
+7. Compartir el resumen listo para WhatsApp.
 
 ---
 
@@ -126,12 +127,33 @@ La carpeta `docs/` contiene la documentación del proyecto:
 
 # 🔜 Próximas funcionalidades
 
-- Editar viajes.
-- Eliminar viajes.
 - Historial de jornadas.
+- Detalle completo de cada jornada.
+- Consulta y edición de viajes históricos.
 - Dashboard financiero.
-- Exportación PDF.
+- Exportación PDF profesional.
+- Estadísticas mensuales.
+- Comparativas entre períodos.
 - Soporte para múltiples conductores.
+- Sistema de autenticación.
+- Despliegue como PWA.
+
+---
+
+# 📈 Estado del MVP
+
+Actualmente Taxi Finance permite completar el flujo principal de trabajo de un conductor de taxi:
+
+- ✅ Iniciar jornada.
+- ✅ Registrar viajes.
+- ✅ Editar viajes.
+- ✅ Eliminar viajes.
+- ✅ Consultar el resumen automático.
+- ✅ Finalizar la jornada.
+- ✅ Visualizar el ticket final.
+- ✅ Compartir el resumen.
+
+El siguiente gran objetivo del proyecto es incorporar el historial de jornadas y las herramientas de análisis financiero.
 
 ---
 
@@ -139,7 +161,7 @@ La carpeta `docs/` contiene la documentación del proyecto:
 
 Además de resolver un problema real del trabajo diario de un conductor de taxi, Taxi Finance forma parte de un proceso de aprendizaje continuo en desarrollo Full Stack, arquitectura de software y diseño de producto.
 
-El objetivo es construir una aplicación real, mantenible y escalable siguiendo prácticas similares a las de un equipo profesional.
+El objetivo es construir un producto real, mantenible y escalable, aplicando buenas prácticas de ingeniería de software, arquitectura limpia y diseño de producto. Además de resolver una necesidad diaria, Taxi Finance constituye el principal proyecto de portfolio del autor y evoluciona de forma incremental mediante sprints documentados.
 
 ---
 
