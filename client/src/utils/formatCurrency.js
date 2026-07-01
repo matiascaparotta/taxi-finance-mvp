@@ -1,0 +1,6 @@
+export function formatCurrency(value) {
+    return new Intl.NumberFormat("es-ES", {
+      style: "currency",
+      currency: "EUR",
+    }).format(Number(value || 0));
+  }

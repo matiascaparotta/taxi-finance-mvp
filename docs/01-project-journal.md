@@ -378,3 +378,34 @@ Al cerrar una jornada, Taxi Finance muestra un ticket final con la información 
 ### Aprendizaje clave
 
 Una misma vista de resumen puede reutilizarse en varias partes de la aplicación: cierre de jornada, historial, PDF y compartir.
+
+# Sprint 12 - Calidad del cierre de jornada
+
+## Objetivo
+
+Mejorar la experiencia de usuario del cierre de jornada y del ticket final antes de continuar agregando nuevas funcionalidades.
+
+## Funcionalidades implementadas
+
+- Se creó la utilidad `formatCurrency()` para unificar el formato de importes en toda la aplicación.
+- El Ticket de Jornada ahora utiliza el nuevo formato monetario.
+- El texto compartido utiliza el mismo formato de moneda.
+- Se implementó la utilidad `buildWorkDaySummaryText()`.
+- Se agregó la posibilidad de copiar automáticamente el resumen al portapapeles.
+- Se reemplazó el `alert()` por un mensaje visual dentro de la interfaz.
+- Se mejoró la experiencia de usuario al compartir el resumen.
+
+## Valor para el usuario
+
+Ahora el conductor puede finalizar la jornada y compartir un resumen profesional en pocos segundos, sin copiar manualmente los datos ni rehacer cálculos.
+
+## Aprendizajes
+
+- Creación de utilidades reutilizables.
+- Uso de `Intl.NumberFormat`.
+- Uso de `navigator.clipboard`.
+- Mejora de UX mediante feedback visual sin interrumpir el flujo del usuario.
+
+## Estado
+
+✅ Sprint finalizado.
