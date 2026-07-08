@@ -4,8 +4,8 @@
 
 - Proyecto: Taxi Finance MVP
 - Estado: 🚧 Desarrollo activo
-- Sprint actual: Sprint 13
-- Último sprint completado: Sprint 13
+- Sprint actual: Sprint 15
+- Último sprint completado: Sprint 14
 - Stack: React + Vite + Tailwind CSS + Node.js + Express + MySQL
 
 ---
@@ -573,10 +573,89 @@ Antes de añadir nuevas funcionalidades, se consolidó la arquitectura del front
 
 ---
 
-# Próximo Sprint
-
-## Sprint 14 — Historial de jornadas
+### Sprint 14 — Historial y detalle de jornadas
 
 ### Objetivo
 
 Construir una pantalla de historial que permita consultar jornadas anteriores, acceder a sus detalles, revisar los viajes registrados y preparar la futura generación de PDF y estadísticas.
+
+### Trabajo realizado
+
+- Se creó la pantalla `WorkDayHistoryPage`.
+- Se agregó la ruta `/history`.
+- Se agregó acceso al historial desde la Home.
+- Se creó la pantalla `WorkDayDetailPage`.
+- Se agregó la ruta `/work-days/:id`.
+- Se integró el detalle de una jornada con:
+  - datos de la jornada;
+  - resumen financiero;
+  - lista completa de viajes;
+  - botón para copiar resumen para WhatsApp.
+- Se reutilizó el componente `WorkDayTicket` en:
+  - pantalla de jornada cerrada;
+  - pantalla de detalle histórico.
+- Se mejoró el formato visual del ticket interno.
+- Se separó el resumen interno de la app del texto enviado al jefe.
+- Se ajustó `buildWorkDaySummaryText()` para generar un formato limpio para WhatsApp:
+  - fecha en mayúsculas;
+  - kilómetros trabajados;
+  - efectivo;
+  - datáfono;
+  - total;
+  - gasolina.
+- Se eliminó el texto comercial y los emojis del resumen copiado para el jefe.
+- Se corrigió el formato de moneda para evitar espacios raros al copiar texto.
+- Se ajustó la fecha de la jornada para respetar el flujo real del taxi:
+  - antes de las 06:00, la jornada se considera del día anterior.
+- Se mejoró la Home con:
+  - última jornada cargada;
+  - jornadas anteriores;
+  - tarjetas de jornada con total, efectivo, datáfono, kilómetros y gasolina.
+- Se ordenaron las jornadas por última carga usando el `id` descendente.
+
+### Resultado
+
+Taxi Finance permite consultar jornadas anteriores, abrir el detalle completo de cada jornada, revisar sus viajes y copiar un resumen limpio listo para enviar por WhatsApp.
+
+### Valor para el usuario
+
+El conductor puede revisar días anteriores sin depender de WhatsApp, fotos o cálculos manuales. Además, puede reenviar el resumen de una jornada pasada con el mismo formato profesional usado al cerrar el turno.
+
+### Aprendizaje técnico
+
+- Uso de rutas dinámicas en React Router.
+- Reutilización de componentes entre pantallas distintas.
+- Separación entre visualización interna y texto de salida para WhatsApp.
+- Ordenamiento de datos por fecha y por orden real de carga.
+- Mejora de UX en pantallas con muchas jornadas.
+- Manejo de fechas adaptado a un turno nocturno real.
+
+### Reflexión del sprint
+
+El historial convierte a Taxi Finance en una herramienta mucho más útil para el trabajo diario, porque ya no solo sirve para registrar el presente, sino también para consultar, revisar y justificar jornadas pasadas.
+
+También se confirmó una decisión importante de producto: la app puede mostrar información detallada internamente, pero el resumen enviado al jefe debe seguir siendo simple, corto y claro.
+
+### Estado
+
+✅ Sprint finalizado.
+
+---
+
+# Próximo Sprint
+
+## Sprint 15 — Registro rápido de viajes
+
+### Objetivo
+
+Mejorar la velocidad de carga de viajes con una interfaz tipo calculadora, optimizada para el uso real durante la jornada de taxi.
+
+### Ideas iniciales
+
+- Importe grande en pantalla.
+- Teclado numérico propio.
+- Botón de coma decimal.
+- Botón borrar.
+- Botones grandes para efectivo y datáfono.
+- Nota opcional.
+- Guardado rápido del viaje.

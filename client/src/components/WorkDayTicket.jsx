@@ -8,10 +8,16 @@ function WorkDayTicket({ workDay, summary }) {
     return null;
   }
 
+  const startKm = workDay.startKm;
+  const endKm = workDay.endKm;
+
   const workedKm =
-    workDay.endKm !== null
-      ? Number(workDay.endKm) - Number(workDay.startKm)
+    endKm !== null && endKm !== undefined
+      ? Number(endKm) - Number(startKm || 0)
       : null;
+
+  const fuelOwn = workDay.fuelOwn ?? workDay.fuel_own ?? 0;
+  const workDayDate = workDay.date || workDay.workDate;
 
   return (
     <Card className="border-emerald-500/30 bg-slate-950">
@@ -25,19 +31,33 @@ function WorkDayTicket({ workDay, summary }) {
         </h2>
 
         <p className="mt-1 text-sm text-slate-400">
-          {formatDate(workDay.date)}
+          {workDayDate ? formatDate(workDayDate) : "Fecha no disponible"}
         </p>
       </div>
 
       <div className="my-6 border-t border-dashed border-slate-700" />
 
-      <div className="grid grid-cols-2 gap-4">
-        <Stat label="🚖 Viajes" value={summary.tripCount} />
-        <Stat label="📍 Km" value={`${workedKm} km`} />
-        <Stat label="💶 Facturación" value={formatCurrency(summary.totalRevenue)} />
-        <Stat label="💳 Datáfono" value={formatCurrency(summary.card)} />
+      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+        <p className="text-sm font-medium text-emerald-300">
+          Total facturado
+        </p>
+
+        <p className="mt-1 text-3xl font-bold text-white">
+          {formatCurrency(summary.totalRevenue)}
+        </p>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-4">
         <Stat label="💵 Efectivo" value={formatCurrency(summary.cash)} />
-        <Stat label="⛽ Combustible" value={formatCurrency(workDay.fuelOwn)} />
+        <Stat label="💳 Datáfono" value={formatCurrency(summary.card)} />
+        <Stat label="🚖 Viajes" value={summary.tripCount} />
+        <Stat label="⛽ Combustible" value={formatCurrency(fuelOwn)} />
+        <Stat label="📍 Km inicial" value={startKm ?? "-"} />
+        <Stat label="🏁 Km final" value={endKm ?? "-"} />
+        <Stat
+          label="🛣️ Km trabajados"
+          value={workedKm !== null && workedKm !== undefined ? `${workedKm} km` : "-"}
+        />
       </div>
     </Card>
   );

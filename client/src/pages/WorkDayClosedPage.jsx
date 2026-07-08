@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import SectionTitle from "../components/ui/SectionTitle";
 import Button from "../components/ui/Button";
+import SectionTitle from "../components/ui/SectionTitle";
 import WorkDayTicket from "../components/WorkDayTicket";
 
 import { getWorkDayById } from "../services/workDayService";
@@ -21,10 +21,13 @@ function WorkDayClosedPage() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [id]);
 
   const loadData = async () => {
     try {
+      setError("");
+      setLoading(true);
+
       const [workDayData, summaryData] = await Promise.all([
         getWorkDayById(id),
         getWorkDaySummary(id),
@@ -37,6 +40,27 @@ function WorkDayClosedPage() {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!workDay || !summary) {
+      return;
+    }
+
+    try {
+      const text = buildWorkDaySummaryText(workDay, summary);
+
+      await navigator.clipboard.writeText(text);
+
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setError("No se pudo copiar el resumen");
     }
   };
 
@@ -55,22 +79,7 @@ function WorkDayClosedPage() {
       </p>
     );
   }
-  const handleShare = async () => {
-    try {
-      const text = buildWorkDaySummaryText(workDay, summary);
-  
-      await navigator.clipboard.writeText(text);
-  
-      setCopied(true);
-  
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch (error) {
-      console.error(error);
-      setError("No se pudo copiar el resumen");
-    }
-  };
+
   return (
     <section className="space-y-8">
       <SectionTitle
@@ -78,24 +87,23 @@ function WorkDayClosedPage() {
         subtitle="Resumen final del turno."
       />
 
-      <WorkDayTicket
-        workDay={workDay}
-        summary={summary}
-      />
+      <WorkDayTicket workDay={workDay} summary={summary} />
 
       <div className="space-y-3">
-      <Button onClick={handleShare}>
-  Compartir resumen
-</Button>
-{copied && (
-  <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
-    Resumen copiado ✅
-  </p>
-)}
+        <Button onClick={handleShare}>
+          Compartir resumen
+        </Button>
+
+        {copied && (
+          <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
+            Resumen copiado ✅
+          </p>
+        )}
+
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300"
+          className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
         >
           Volver al inicio
         </button>

@@ -1,9 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SectionTitle from "../components/ui/SectionTitle";
-import Card from "../components/ui/Card";
+
 import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import SectionTitle from "../components/ui/SectionTitle";
+
 import { createWorkDay } from "../services/workDayService";
+
+function formatDateForInput(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getDefaultWorkDayDate() {
+  const now = new Date();
+  const workDayDate = new Date(now);
+
+  if (now.getHours() < 6) {
+    workDayDate.setDate(workDayDate.getDate() - 1);
+  }
+
+  return formatDateForInput(workDayDate);
+}
 
 function NewWorkDayPage() {
   const [startKm, setStartKm] = useState("");
@@ -18,7 +39,7 @@ function NewWorkDayPage() {
       setError("");
 
       await createWorkDay({
-        date: new Date().toISOString().split("T")[0],
+        date: getDefaultWorkDayDate(),
         startKm,
       });
 
@@ -43,6 +64,8 @@ function NewWorkDayPage() {
             </label>
 
             <input
+              id="startKm"
+              name="startKm"
               type="number"
               value={startKm}
               onChange={(event) => setStartKm(event.target.value)}

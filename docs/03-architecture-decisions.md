@@ -177,12 +177,261 @@ Las futuras pantallas deberán adaptarse al modo de trabajo o de gestión según
 
 ---
 
+# ADR-006
+
+## Edición y eliminación de viajes
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+Durante una jornada real, el conductor puede equivocarse al cargar un viaje: importe incorrecto, método de pago incorrecto o nota incompleta.
+
+Además, algunos viajes pueden ser cargados por error y necesitan eliminarse para que el resumen diario sea correcto.
+
+### Alternativas consideradas
+
+- Editar viajes directamente desde un modal.
+- Crear una pantalla independiente para editar cada viaje.
+- Permitir solo eliminación y volver a cargar el viaje.
+
+### Decisión
+
+Crear una pantalla independiente de edición de viaje mediante la ruta:
+
+```text
+/trips/:id/edit
+```
+
+Desde esa pantalla se puede:
+
+- consultar los datos del viaje;
+- modificar importe, método de pago y nota;
+- eliminar el viaje con confirmación previa.
+
+### Beneficios
+
+- Flujo más claro y escalable.
+- Mejor experiencia en móvil.
+- Permite agregar más campos en el futuro sin saturar la interfaz.
+- Mantiene el resumen siempre sincronizado porque los totales se calculan desde `trips`.
+
+### Impacto futuro
+
+La edición de cualquier entidad importante deberá evaluarse como pantalla propia cuando el flujo pueda crecer en complejidad.
+
+---
+
+# ADR-007
+
+## Reutilización del ticket de jornada
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+El resumen de una jornada se mostraba en más de una pantalla:
+
+- al cerrar una jornada;
+- al consultar una jornada histórica.
+
+Mantener dos diseños separados podía generar duplicación de código e inconsistencias visuales.
+
+### Decisión
+
+Crear y reutilizar el componente:
+
+```text
+WorkDayTicket
+```
+
+Este componente muestra el resumen interno de una jornada con información detallada:
+
+- total facturado;
+- efectivo;
+- datáfono;
+- cantidad de viajes;
+- combustible;
+- km inicial;
+- km final;
+- km trabajados.
+
+### Beneficios
+
+- Menos duplicación de código.
+- Interfaz consistente.
+- Más fácil de mantener.
+- Base reutilizable para futuros PDF o reportes.
+
+### Impacto futuro
+
+Cualquier cambio visual importante en el ticket deberá hacerse en `WorkDayTicket` para que impacte automáticamente en todas las pantallas que lo usan.
+
+---
+
+# ADR-008
+
+## Separar resumen interno de resumen para WhatsApp
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+La aplicación necesita mostrar información detallada para el usuario, pero el resumen enviado al jefe debe ser breve y operativo.
+
+Un texto con demasiados datos, emojis o branding puede ser menos profesional y menos práctico para enviar por WhatsApp.
+
+### Decisión
+
+Separar dos responsabilidades:
+
+- `WorkDayTicket` muestra el resumen completo dentro de la aplicación.
+- `buildWorkDaySummaryText()` genera el texto corto para WhatsApp.
+
+El formato para WhatsApp será:
+
+```text
+DÍA DD/MM
+
+KILÓMETROS: 000
+
+EFECTIVO: 00,00 €
+DATÁFONO: 00,00 €
+TOTAL: 00,00 €
+
+GASOLINA: 00,00 €
+```
+
+### Beneficios
+
+- La app puede mostrar más detalle sin afectar el mensaje enviado.
+- El resumen para el jefe se mantiene claro, corto y profesional.
+- Se evita mezclar necesidades internas con comunicación externa.
+
+### Impacto futuro
+
+Si en el futuro existen varios formatos de salida, deberán implementarse como funciones separadas, por ejemplo:
+
+- resumen para jefe;
+- resumen personal;
+- resumen para PDF;
+- resumen mensual.
+
+---
+
+# ADR-009
+
+## Regla de jornada nocturna
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+El conductor suele cerrar la jornada después de medianoche, pero esa jornada pertenece operativamente al día anterior.
+
+Usar directamente la fecha del reloj puede registrar una jornada con el día incorrecto.
+
+### Decisión
+
+Al crear una jornada, si la hora local es anterior a las 06:00, la fecha por defecto se asigna al día anterior.
+
+Ejemplo:
+
+```text
+Martes 07/07 a las 17:00 → jornada 07/07
+Miércoles 08/07 a las 02:30 → jornada 07/07
+Miércoles 08/07 a las 06:30 → jornada 08/07
+```
+
+### Beneficios
+
+- Refleja mejor el trabajo real del taxi.
+- Evita errores de fecha en jornadas nocturnas.
+- Reduce correcciones manuales posteriores.
+
+### Impacto futuro
+
+El corte horario debería convertirse en una configuración editable cuando la aplicación soporte más conductores o distintos turnos.
+
+---
+
+# ADR-010
+
+## Ordenar jornadas por última carga
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+Ordenar jornadas solo por fecha puede resultar confuso cuando el usuario carga una jornada atrasada o cuando una jornada nocturna queda asignada al día anterior.
+
+En la Home, la sección “Última jornada” debe representar la última jornada cargada en la aplicación, no necesariamente la fecha más reciente.
+
+### Decisión
+
+Ordenar las jornadas por `id` descendente para representar el orden real de carga.
+
+```text
+id más alto = última jornada cargada
+```
+
+### Beneficios
+
+- La Home muestra la última carga real.
+- El historial refleja mejor el orden de trabajo reciente dentro de la app.
+- Evita confusión entre fecha operativa y orden de registro.
+
+### Impacto futuro
+
+Si se agrega un campo `createdAt` confiable para jornadas, se podrá ordenar por fecha de creación real en lugar de depender del `id`.
+
+---
+
+# ADR-011
+
+## Preparar registro rápido de viajes
+
+**Fecha:** 08/07/2026
+
+### Problema
+
+Durante una jornada activa, el conductor registra muchos viajes y necesita cargar importes con la menor fricción posible.
+
+Un formulario tradicional puede ser más lento en móvil, especialmente si se repite 20 o 30 veces por turno.
+
+### Decisión prevista
+
+Diseñar una interfaz de registro rápido tipo calculadora para la pantalla de nuevo viaje.
+
+La idea inicial incluye:
+
+- importe grande en pantalla;
+- teclado numérico propio;
+- botón de coma decimal;
+- botón borrar;
+- botones grandes para efectivo y datáfono;
+- nota opcional;
+- guardado rápido.
+
+### Beneficios esperados
+
+- Menos toques por viaje.
+- Carga más rápida durante el turno.
+- Mejor experiencia móvil.
+- Flujo más parecido al uso real de WhatsApp/calculadora.
+
+### Impacto futuro
+
+Este cambio puede convertirse en una de las ventajas principales del producto, porque ataca directamente el problema de uso diario del conductor.
+
+---
+
 ## Próximos ADR previstos
 
 Las siguientes decisiones probablemente requerirán un ADR específico:
 
-- ADR-006 — Edición de viajes.
-- ADR-007 — Estrategia de eliminación de viajes (eliminación física o lógica).
-- ADR-008 — Generación y almacenamiento de PDF.
-- ADR-009 — Soporte para múltiples conductores.
-- ADR-010 — Estrategia de autenticación y autorización.
+- ADR-012 — Generación y almacenamiento de PDF.
+- ADR-013 — Dashboard financiero.
+- ADR-014 — Soporte para múltiples conductores.
+- ADR-015 — Estrategia de autenticación y autorización.
+- ADR-016 — PWA y uso móvil offline.

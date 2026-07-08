@@ -7,10 +7,10 @@ Construir una aplicación Full Stack para la gestión financiera de conductores 
 ## Resumen
 
 - Estado: 🚧 Desarrollo activo
-- Sprints completados: 12
-- Sprint actual: Sprint 13
-- Próximo hito: Gestión completa de viajes
-- Última actualización: 01/07/2026
+- Sprints completados: 14
+- Sprint actual: Sprint 15
+- Próximo hito: Registro rápido de viajes
+- Última actualización: 08/07/2026
 
 ---
 
@@ -30,16 +30,17 @@ Construir una aplicación Full Stack para la gestión financiera de conductores 
 | Sprint 10 | ✅ | Cierre de jornada | Completar el ciclo diario de trabajo |
 | Sprint 11 | ✅ | Ticket de jornada | Mostrar un resumen profesional del turno |
 | Sprint 12 | ✅ | Compartir resumen y mejoras UX | Compartir el cierre de jornada de forma rápida |
-| Sprint 13 | 🚧 | Gestión de viajes | Editar y eliminar viajes con seguridad |
-| Sprint 14 | ⏳ | Historial | Consultar jornadas anteriores |
-| Sprint 15 | ⏳ | Exportación PDF | Generar informes profesionales |
-| Sprint 16 | ⏳ | Dashboard | Analizar estadísticas y rentabilidad |
+| Sprint 13 | ✅ | Gestión de viajes | Editar y eliminar viajes con seguridad |
+| Sprint 14 | ✅ | Historial y detalle de jornadas | Consultar jornadas anteriores, ver detalle completo y copiar resumen para WhatsApp |
+| Sprint 15 | 🚧 | Registro rápido de viajes | Cargar viajes en menos pasos con una interfaz tipo calculadora |
+| Sprint 16 | ⏳ | Exportación PDF | Generar informes profesionales |
+| Sprint 17 | ⏳ | Dashboard | Analizar estadísticas y rentabilidad |
 
 ---
 
 ## Próximos hitos
 
-- 🚧 Sprint 13 → Editar y eliminar viajes.
-- ⏳ Sprint 14 → Historial de jornadas.
-- ⏳ Sprint 15 → Exportación PDF.
-- ⏳ Sprint 16 → Dashboard financiero.
+- 🚧 Sprint 15 → Registro rápido de viajes con teclado numérico propio.
+- ⏳ Sprint 16 → Exportación PDF.
+- ⏳ Sprint 17 → Dashboard financiero.
+- ⏳ Futuro → Configuración avanzada, multi-conductor y despliegue.

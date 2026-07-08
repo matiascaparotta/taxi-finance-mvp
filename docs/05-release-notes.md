@@ -76,13 +76,56 @@ Este documento registra las funcionalidades incorporadas en cada versión de Tax
 
 ---
 
+# v0.6.0
+
+## Historial y detalle de jornadas
+
+### Novedades
+
+- Nueva pantalla de historial de jornadas.
+- Nueva ruta `/history`.
+- Botón de acceso al historial desde la Home.
+- Nueva pantalla de detalle de jornada.
+- Nueva ruta `/work-days/:id`.
+- Consulta de jornadas históricas.
+- Visualización de viajes de una jornada pasada.
+- Reutilización del componente `WorkDayTicket`.
+- Ticket interno más completo con:
+  - total facturado;
+  - efectivo;
+  - datáfono;
+  - cantidad de viajes;
+  - combustible;
+  - km inicial;
+  - km final;
+  - km trabajados.
+- Botón para copiar resumen de jornada para WhatsApp.
+- Separación entre resumen interno completo y resumen externo para enviar al jefe.
+- Formato limpio para WhatsApp sin emojis ni branding.
+- Corrección del formato de moneda para evitar espacios raros al copiar texto.
+- Ajuste de fecha para jornadas nocturnas:
+  - antes de las 06:00, la jornada se asigna al día anterior.
+- Mejora de la Home con:
+  - última jornada cargada;
+  - jornadas anteriores;
+  - tarjetas de jornada con total, efectivo, datáfono, kilómetros y gasolina.
+- Ordenamiento de jornadas por última carga usando `id` descendente.
+
+### Valor para el usuario
+
+El usuario puede consultar jornadas anteriores, revisar el detalle completo de cada turno y reenviar un resumen limpio por WhatsApp sin recalcular manualmente los datos.
+
+---
+
 ## Próxima versión
 
-### v0.6.0
+### v0.7.0
 
 Funcionalidades previstas:
 
-- Historial de jornadas.
-- Detalle completo de una jornada.
-- Consulta de viajes históricos.
-- Base para generación de PDF.
+- Registro rápido de viajes.
+- Interfaz tipo calculadora.
+- Teclado numérico propio.
+- Botones grandes para efectivo y datáfono.
+- Carga más rápida durante la jornada activa.
+- Nota opcional más accesible.

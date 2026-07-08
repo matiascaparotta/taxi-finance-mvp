@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 import Stat from "../components/ui/Stat";
 import WorkDayCard from "../components/WorkDayCard";
+
 import { getOpenWorkDay, getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
+import { formatCurrency } from "../utils/formatCurrency";
+
 function HomePage() {
   const [workDays, setWorkDays] = useState([]);
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [activeSummary, setActiveSummary] = useState(null);
   const [activeTrips, setActiveTrips] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +31,36 @@ function HomePage() {
         getOpenWorkDay(),
       ]);
 
-      setWorkDays(workDaysData);
+      const sortedWorkDays = [...workDaysData].sort((a, b) => {
+        const idA = Number(a.id || 0);
+        const idB = Number(b.id || 0);
+
+        if (idA !== idB) {
+          return idB - idA;
+        }
+
+        const dateA = new Date(a.createdAt || a.created_at || a.date || a.workDate || 0);
+        const dateB = new Date(b.createdAt || b.created_at || b.date || b.workDate || 0);
+
+        return dateB - dateA;
+      });
+
+      const workDaysWithSummary = await Promise.all(
+        sortedWorkDays.map(async (workDay, index) => {
+          if (index > 3 || workDay.status !== "CLOSED") {
+            return workDay;
+          }
+
+          const summary = await getWorkDaySummary(workDay.id);
+
+          return {
+            ...workDay,
+            summary,
+          };
+        })
+      );
+
+      setWorkDays(workDaysWithSummary);
       setOpenWorkDay(openWorkDayData);
 
       if (openWorkDayData) {
@@ -47,6 +81,7 @@ function HomePage() {
   };
 
   const lastWorkDay = workDays[0];
+  const recentWorkDays = workDays.slice(1, 5);
 
   const formatTripTime = (trip) => {
     const rawDate = trip.createdAt || trip.created_at || trip.createdAtFormatted;
@@ -92,12 +127,21 @@ function HomePage() {
           {activeSummary && (
             <div className="mt-6 grid grid-cols-2 gap-4">
               <Stat label="🚖 Viajes" value={activeSummary.tripCount} />
+
               <Stat
                 label="💶 Facturación"
-                value={`${activeSummary.totalRevenue} €`}
+                value={formatCurrency(activeSummary.totalRevenue)}
               />
-              <Stat label="💵 Efectivo" value={`${activeSummary.cash} €`} />
-              <Stat label="💳 Datáfono" value={`${activeSummary.card} €`} />
+
+              <Stat
+                label="💵 Efectivo"
+                value={formatCurrency(activeSummary.cash)}
+              />
+
+              <Stat
+                label="💳 Datáfono"
+                value={formatCurrency(activeSummary.card)}
+              />
             </div>
           )}
 
@@ -122,6 +166,7 @@ function HomePage() {
               <h3 className="text-lg font-bold text-white">
                 Últimos viajes
               </h3>
+
               <p className="mt-1 text-sm text-slate-400">
                 Registro rápido de la jornada activa
               </p>
@@ -142,11 +187,13 @@ function HomePage() {
                   >
                     <p className="text-sm text-slate-400">
                       🕙 {formatTripTime(trip)} ·{" "}
-                      {trip.paymentType === "cash" ? "💵 Efectivo" : "💳 Datáfono"}
+                      {trip.paymentType === "cash"
+                        ? "💵 Efectivo"
+                        : "💳 Datáfono"}
                     </p>
 
                     <p className="mt-1 text-lg font-bold text-white">
-                      {Number(trip.amount).toFixed(2)} €
+                      {formatCurrency(trip.amount)}
                     </p>
                   </button>
                 ))}
@@ -188,13 +235,23 @@ function HomePage() {
       )}
 
       <section className="space-y-3">
-        <SectionTitle
-          title="Jornadas recientes"
-          subtitle="Historial de tus últimos turnos"
-        />
+        <div className="flex items-start justify-between gap-4">
+          <SectionTitle
+            title="Jornadas recientes"
+            subtitle="Historial de tus últimos turnos"
+          />
+
+          <button
+            type="button"
+            onClick={() => navigate("/history")}
+            className="mt-1 rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+          >
+            Ver historial
+          </button>
+        </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          {workDays.map((workDay) => (
+          {recentWorkDays.map((workDay) => (
             <WorkDayCard key={workDay.id} workDay={workDay} />
           ))}
         </div>

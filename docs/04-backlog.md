@@ -1,101 +1,3 @@
-# Backlog
-
-## MVP
-
-- [ ] Editar viaje
-- [ ] Eliminar viaje
-- [ ] Confirmación antes de borrar
-- [ ] Historial
-- [ ] Dashboard
-
----
-
-## Versión 2
-
-- [ ] Login
-- [ ] Usuarios
-- [ ] Multi conductor
-- [ ] Configuración
-
----
-
-## Futuro
-
-- [ ] PWA
-- [ ] Notificaciones
-- [ ] Estadísticas avanzadas
-- [ ] IA para análisis
-# Taxi Finance — Backlog
-
-## Objetivo
-
-Este documento centraliza todas las funcionalidades pendientes del proyecto y ayuda a priorizar el desarrollo.
-
-Las tareas están organizadas según su impacto en el producto y no necesariamente según el orden cronológico en el que serán implementadas.
-
----
-
-# 🚀 MVP
-
-Funcionalidades necesarias para que Taxi Finance pueda utilizarse diariamente como herramienta de trabajo.
-
-## Gestión de viajes
-
-- [ ] Editar viaje.
-- [ ] Eliminar viaje.
-- [ ] Confirmación antes de eliminar.
-- [ ] Recalcular automáticamente el resumen.
-
-## Jornadas
-
-- [ ] Historial de jornadas.
-- [ ] Búsqueda por fecha.
-- [ ] Ver detalle de una jornada.
-
-## Dashboard
-
-- [ ] Dashboard diario.
-- [ ] Dashboard mensual.
-- [ ] Indicadores principales.
-
----
-
-# ⭐ Versión 2
-
-Funcionalidades orientadas a mejorar la productividad y preparar la aplicación para más usuarios.
-
-- [ ] Login.
-- [ ] Usuarios.
-- [ ] Multi conductor.
-- [ ] Configuración.
-- [ ] Perfil del conductor.
-- [ ] Preferencias de la aplicación.
-
----
-
-# 🔮 Futuro
-
-Ideas para versiones posteriores.
-
-- [ ] PWA.
-- [ ] Notificaciones.
-- [ ] Estadísticas avanzadas.
-- [ ] Comparativas anuales.
-- [ ] Exportación a Excel.
-- [ ] IA para análisis financiero.
-- [ ] Recomendaciones automáticas.
-
----
-
-# 💡 Ideas
-
-Espacio para registrar nuevas ideas antes de decidir si formarán parte del producto.
-
-- [ ] Integración con Google Calendar.
-- [ ] Recordatorios de mantenimiento del vehículo.
-- [ ] Control de gastos extraordinarios.
-- [ ] Soporte para varios vehículos.
-- [ ] Modo oscuro/claro configurable.
 # Taxi Finance — Backlog
 
 ## Objetivo
@@ -117,6 +19,8 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 - [x] Eliminar viaje.
 - [x] Confirmación antes de eliminar.
 - [x] Recalcular automáticamente el resumen.
+- [ ] Registro rápido de viajes con interfaz tipo calculadora.
+- [ ] Nota opcional más accesible en la carga rápida.
 
 ## Jornadas
 
@@ -124,9 +28,15 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 - [x] Finalizar jornada.
 - [x] Ticket final de jornada.
 - [x] Compartir resumen.
-- [ ] Historial de jornadas.
-- [ ] Ver detalle de una jornada.
+- [x] Historial de jornadas.
+- [x] Ver detalle de una jornada.
+- [x] Copiar resumen limpio para WhatsApp.
+- [x] Mostrar detalle interno completo sin afectar el resumen enviado.
+- [x] Ajustar fecha de jornada nocturna antes de las 06:00.
+- [x] Ordenar jornadas por última carga.
 - [ ] Búsqueda por fecha.
+- [ ] Filtro por mes.
+- [ ] Agrupar historial por mes.
 
 ## Dashboard
 
@@ -134,6 +44,12 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 - [ ] Dashboard mensual.
 - [ ] Indicadores principales.
 - [ ] Comparativa mensual.
+
+## Exportación
+
+- [ ] Exportación PDF profesional.
+- [ ] Resumen mensual en PDF.
+- [ ] Reporte anual.
 
 ---
 
@@ -147,6 +63,7 @@ Funcionalidades para convertir Taxi Finance en un producto multiusuario.
 - [ ] Perfil del conductor.
 - [ ] Configuración.
 - [ ] Preferencias de la aplicación.
+- [ ] Configuración del horario de corte de jornada.
 - [ ] Roles y permisos.
 
 ---
@@ -160,9 +77,9 @@ Mejoras para aumentar el valor del producto.
 - [ ] Estadísticas avanzadas.
 - [ ] Comparativas anuales.
 - [ ] Exportación a Excel.
-- [ ] Exportación PDF profesional.
 - [ ] IA para análisis financiero.
 - [ ] Recomendaciones automáticas.
+- [ ] Soporte offline.
 
 ---
 
@@ -177,3 +94,4 @@ Posibles funcionalidades para evaluar más adelante.
 - [ ] Modo oscuro/claro configurable.
 - [ ] Sincronización en la nube.
 - [ ] Aplicación para iOS y Android.
+- [ ] Diferentes formatos de resumen: jefe, personal, PDF y mensual.

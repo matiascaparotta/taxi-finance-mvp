@@ -111,12 +111,14 @@ Las páginas representan las pantallas principales de la aplicación.
 
 Ejemplos:
 
-- Home
+- HomePage
 - NewWorkDayPage
-- ActiveWorkDayPage
 - NewTripPage
+- EditTripPage
 - CloseWorkDayPage
 - WorkDayClosedPage
+- WorkDayHistoryPage
+- WorkDayDetailPage
 
 ### Components
 
@@ -127,8 +129,8 @@ Ejemplos:
 - Button
 - Card
 - Stat
+- TripForm
 - WorkDayCard
-- WorkDaySummaryCard
 - WorkDayTicket
 
 ### Services
@@ -159,11 +161,12 @@ GET /work-days
 GET /work-days/open
 GET /work-days/:id
 PUT /work-days/:id/close
+GET /work-days/:id/summary
 POST /trips
 GET /trips?workDayId=1
+GET /trips/:id
 PUT /trips/:id
 DELETE /trips/:id
-GET /work-days/:id/summary
 ```
 
 Las rutas únicamente redirigen las peticiones hacia el controlador correspondiente.
@@ -323,9 +326,12 @@ Actualmente Taxi Finance dispone de:
 - Gestión de jornadas.
 - Jornada activa.
 - Registro de viajes.
+- Edición y eliminación de viajes.
 - Cierre de jornada.
-- Ticket final.
-- Compartir resumen.
+- Ticket final reutilizable.
+- Historial de jornadas.
+- Detalle completo de jornada.
+- Compartir resumen limpio para WhatsApp.
 - Componentes reutilizables.
 
 ### Backend
@@ -333,8 +339,9 @@ Actualmente Taxi Finance dispone de:
 - Arquitectura por capas.
 - CRUD de jornadas.
 - CRUD de viajes.
-- Resumen inteligente.
-- Reglas de negocio.
+- Consulta individual de viajes.
+- Resumen inteligente calculado desde los viajes.
+- Reglas de negocio centralizadas.
 
 ### Base de datos
 
@@ -343,14 +350,42 @@ Actualmente Taxi Finance dispone de:
 
 ---
 
+## Consideraciones de producto implementadas
+
+### Separación entre vista interna y resumen para WhatsApp
+
+La aplicación puede mostrar información detallada dentro de la interfaz, como kilómetros iniciales, kilómetros finales, kilómetros trabajados, cantidad de viajes, efectivo, datáfono, gasolina y facturación total.
+
+Sin embargo, el texto copiado para enviar al jefe se mantiene intencionalmente simple:
+
+```text
+DÍA DD/MM
+
+KILÓMETROS: 000
+
+EFECTIVO: 00,00 €
+DATÁFONO: 00,00 €
+TOTAL: 00,00 €
+
+GASOLINA: 00,00 €
+```
+
+Esta separación evita mezclar necesidades internas del usuario con el formato operativo que necesita enviar por WhatsApp.
+
+### Jornada nocturna
+
+Taxi Finance contempla el flujo real del conductor: una jornada puede comenzar un día y terminar después de la medianoche.
+
+Por ese motivo, al crear una jornada antes de las 06:00, la fecha por defecto se asigna al día anterior. Esta regla refleja el uso real del taxi y evita que una jornada nocturna quede registrada con la fecha incorrecta.
+
 ## Evolución prevista
 
 Los siguientes pasos previstos para la arquitectura son:
 
-- Gestión completa de viajes (edición y eliminación).
-- Historial de jornadas.
-- Dashboard financiero.
+- Registro rápido de viajes con interfaz tipo calculadora.
 - Exportación de PDF.
+- Dashboard financiero.
+- Configuración de reglas de jornada y corte horario.
 - Soporte para múltiples conductores.
 - Autenticación y autorización.
 - Conversión de la aplicación en una Progressive Web App (PWA).
