@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
-import TripForm from "../components/TripForm";
+import QuickTripForm from "../components/QuickTripForm";
 
 import { createTrip } from "../services/tripService";
 import { getOpenWorkDay } from "../services/workDayService";
@@ -28,14 +28,10 @@ function NewTripPage() {
     <section className="space-y-8">
       <SectionTitle
         title="Nuevo viaje"
-        subtitle="Registra el importe y el método de pago."
+        subtitle="Ingresá el importe y guardalo directamente como efectivo o datáfono."
       />
 
-      <TripForm
-        submitLabel="Guardar viaje"
-        loadingLabel="Guardando..."
-        onSubmit={handleCreateTrip}
-      />
+      <QuickTripForm onSubmit={handleCreateTrip} />
     </section>
   );
 }
