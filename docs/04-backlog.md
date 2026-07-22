@@ -19,8 +19,11 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 - [x] Eliminar viaje.
 - [x] Confirmación antes de eliminar.
 - [x] Recalcular automáticamente el resumen.
-- [ ] Registro rápido de viajes con interfaz tipo calculadora.
-- [ ] Nota opcional más accesible en la carga rápida.
+- [x] Registro rápido de viajes con interfaz tipo calculadora.
+- [x] Guardado directo en efectivo o datáfono.
+- [x] Nota opcional desplegable.
+- [x] Confirmación visual después de guardar.
+- [x] Carga consecutiva de viajes sin volver a la Home.
 
 ## Jornadas
 
@@ -34,6 +37,7 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 - [x] Mostrar detalle interno completo sin afectar el resumen enviado.
 - [x] Ajustar fecha de jornada nocturna antes de las 06:00.
 - [x] Ordenar jornadas por última carga.
+- [ ] Exportación PDF diaria.
 - [ ] Búsqueda por fecha.
 - [ ] Filtro por mes.
 - [ ] Agrupar historial por mes.
@@ -57,14 +61,25 @@ Funcionalidades necesarias para utilizar Taxi Finance diariamente.
 
 Funcionalidades para convertir Taxi Finance en un producto multiusuario.
 
+## Usuarios
+
 - [ ] Login.
 - [ ] Gestión de usuarios.
 - [ ] Multi conductor.
 - [ ] Perfil del conductor.
+- [ ] Roles y permisos.
+
+## Configuración
+
 - [ ] Configuración.
 - [ ] Preferencias de la aplicación.
 - [ ] Configuración del horario de corte de jornada.
-- [ ] Roles y permisos.
+
+## Gestión para jefes
+
+- [ ] Panel del jefe.
+- [ ] Visualización de conductores.
+- [ ] Consulta de jornadas por conductor.
 
 ---
 
@@ -72,7 +87,7 @@ Funcionalidades para convertir Taxi Finance en un producto multiusuario.
 
 Mejoras para aumentar el valor del producto.
 
-- [ ] PWA.
+- [ ] Progressive Web App (PWA).
 - [ ] Notificaciones.
 - [ ] Estadísticas avanzadas.
 - [ ] Comparativas anuales.
@@ -94,4 +109,36 @@ Posibles funcionalidades para evaluar más adelante.
 - [ ] Modo oscuro/claro configurable.
 - [ ] Sincronización en la nube.
 - [ ] Aplicación para iOS y Android.
-- [ ] Diferentes formatos de resumen: jefe, personal, PDF y mensual.
+- [ ] Diferentes formatos de resumen (jefe, personal, PDF y mensual).
+- [ ] Configuración de múltiples métodos de pago.
+- [ ] Objetivos diarios y mensuales de facturación.
+- [ ] Copias de seguridad automáticas.
+
+---
+
+# 📌 Prioridad actual
+
+## Sprint 16
+
+- [ ] Exportación PDF diaria.
+
+## Sprint 17
+
+- [ ] Resumen mensual.
+- [ ] Exportación PDF mensual.
+
+## Sprint 18
+
+- [ ] Dashboard financiero.
+
+## Sprint 19
+
+- [ ] Deploy privado para uso diario.
+
+## Sprint 20
+
+- [ ] Gestión de usuarios.
+
+## Sprint 21
+
+- [ ] Panel del jefe.

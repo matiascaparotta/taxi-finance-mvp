@@ -116,16 +116,42 @@ Este documento registra las funcionalidades incorporadas en cada versión de Tax
 El usuario puede consultar jornadas anteriores, revisar el detalle completo de cada turno y reenviar un resumen limpio por WhatsApp sin recalcular manualmente los datos.
 
 ---
+# v0.7.0
+
+## Registro rápido de viajes
+
+### Novedades
+
+- Nuevo componente `QuickTripForm`.
+- Interfaz optimizada para registrar viajes durante una jornada activa.
+- Teclado numérico propio.
+- Botón de coma decimal.
+- Botón borrar.
+- Importe grande para facilitar la carga rápida.
+- Botón independiente para guardar en efectivo.
+- Botón independiente para guardar en datáfono.
+- Nota opcional desplegable.
+- Confirmación visual después de guardar un viaje.
+- Limpieza automática del formulario tras cada registro.
+- Posibilidad de registrar múltiples viajes consecutivos sin volver a la Home.
+- Nuevo botón para ver la jornada activa.
+- Nuevo botón para cerrar la jornada directamente desde la pantalla de carga de viajes.
+- `TripForm` queda reservado exclusivamente para la edición de viajes.
+
+### Valor para el usuario
+
+Registrar un viaje ahora requiere menos acciones y permite cargar varios viajes consecutivos de forma mucho más rápida. El flujo se adapta mejor al trabajo diario del taxista, reduciendo el tiempo necesario para registrar cada servicio.
+
+---
 
 ## Próxima versión
 
-### v0.7.0
+### v0.8.0
 
 Funcionalidades previstas:
 
-- Registro rápido de viajes.
-- Interfaz tipo calculadora.
-- Teclado numérico propio.
-- Botones grandes para efectivo y datáfono.
-- Carga más rápida durante la jornada activa.
-- Nota opcional más accesible.
+- Exportación PDF diaria.
+- Ticket profesional en formato PDF.
+- Compartir PDF.
+- Base para el resumen mensual.
+- Reutilización del ticket de jornada para la generación del PDF.

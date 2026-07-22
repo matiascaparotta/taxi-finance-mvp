@@ -389,49 +389,45 @@ Si se agrega un campo `createdAt` confiable para jornadas, se podrá ordenar por
 
 # ADR-011
 
-## Preparar registro rápido de viajes
+## Registro rápido de viajes con QuickTripForm
 
-**Fecha:** 08/07/2026
+**Fecha:** 22/07/2026
 
 ### Problema
 
-Durante una jornada activa, el conductor registra muchos viajes y necesita cargar importes con la menor fricción posible.
+Durante una jornada activa el conductor registra entre 20 y 30 viajes.
 
-Un formulario tradicional puede ser más lento en móvil, especialmente si se repite 20 o 30 veces por turno.
+El formulario tradicional obligaba a realizar varias acciones para cada viaje, reduciendo la velocidad de carga durante el turno.
 
-### Decisión prevista
+### Alternativas consideradas
 
-Diseñar una interfaz de registro rápido tipo calculadora para la pantalla de nuevo viaje.
+- Mantener un único formulario para alta y edición.
+- Crear un formulario específico para el registro rápido.
 
-La idea inicial incluye:
+### Decisión
 
-- importe grande en pantalla;
+Crear un componente independiente llamado `QuickTripForm`, optimizado exclusivamente para registrar viajes durante una jornada activa.
+
+Sus principales características son:
+
 - teclado numérico propio;
-- botón de coma decimal;
+- importe grande;
+- coma decimal;
 - botón borrar;
-- botones grandes para efectivo y datáfono;
-- nota opcional;
-- guardado rápido.
+- botones independientes para guardar en efectivo o datáfono;
+- nota opcional desplegable;
+- confirmación visual después de guardar;
+- limpieza automática del formulario.
 
-### Beneficios esperados
+Además, la pantalla permanece abierta después de registrar un viaje para facilitar la carga consecutiva de múltiples viajes.
 
-- Menos toques por viaje.
-- Carga más rápida durante el turno.
-- Mejor experiencia móvil.
-- Flujo más parecido al uso real de WhatsApp/calculadora.
+### Beneficios
+
+- Menor cantidad de pulsaciones.
+- Registro mucho más rápido.
+- Mejor experiencia de uso en móvil.
+- Flujo adaptado al trabajo diario de un taxista.
 
 ### Impacto futuro
 
-Este cambio puede convertirse en una de las ventajas principales del producto, porque ataca directamente el problema de uso diario del conductor.
-
----
-
-## Próximos ADR previstos
-
-Las siguientes decisiones probablemente requerirán un ADR específico:
-
-- ADR-012 — Generación y almacenamiento de PDF.
-- ADR-013 — Dashboard financiero.
-- ADR-014 — Soporte para múltiples conductores.
-- ADR-015 — Estrategia de autenticación y autorización.
-- ADR-016 — PWA y uso móvil offline.
+Las futuras mejoras del flujo de carga rápida deberán implementarse sobre `QuickTripForm`, manteniendo `TripForm` exclusivamente para edición.

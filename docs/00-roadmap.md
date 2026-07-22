@@ -7,10 +7,10 @@ Construir una aplicación Full Stack para la gestión financiera de conductores 
 ## Resumen
 
 - Estado: 🚧 Desarrollo activo
-- Sprints completados: 14
-- Sprint actual: Sprint 15
-- Próximo hito: Registro rápido de viajes
-- Última actualización: 08/07/2026
+- Sprints completados: 15
+- Sprint actual: Sprint 16
+- Próximo hito: Exportación PDF diaria
+- Última actualización: 22/07/2026
 
 ---
 
@@ -32,9 +32,13 @@ Construir una aplicación Full Stack para la gestión financiera de conductores 
 | Sprint 12 | ✅ | Compartir resumen y mejoras UX | Compartir el cierre de jornada de forma rápida |
 | Sprint 13 | ✅ | Gestión de viajes | Editar y eliminar viajes con seguridad |
 | Sprint 14 | ✅ | Historial y detalle de jornadas | Consultar jornadas anteriores, ver detalle completo y copiar resumen para WhatsApp |
-| Sprint 15 | 🚧 | Registro rápido de viajes | Cargar viajes en menos pasos con una interfaz tipo calculadora |
-| Sprint 16 | ⏳ | Exportación PDF | Generar informes profesionales |
-| Sprint 17 | ⏳ | Dashboard | Analizar estadísticas y rentabilidad |
+| Sprint 15 | ✅ | Registro rápido de viajes | Cargar viajes en menos pasos con una interfaz tipo calculadora |
+| Sprint 16 | 🚧 | Exportación PDF diaria | Generar un informe profesional de una jornada cerrada |
+| Sprint 17 | ⏳ | Resumen mensual y PDF mensual | Calcular liquidación mensual, efectivo a rendir y generar informe mensual |
+| Sprint 18 | ⏳ | Dashboard financiero | Analizar estadísticas, promedios, rentabilidad y evolución mensual |
+| Sprint 19 | ⏳ | Deploy privado estable | Publicar una versión privada para prueba real desde móvil |
+| Sprint 20 | ⏳ | Usuarios y roles | Preparar login, perfiles y separación de datos por usuario |
+| Sprint 21 | ⏳ | Panel de jefe | Permitir que el jefe consulte jornadas y datos de sus conductores |
 
 ---
 
@@ -116,44 +120,3 @@ BOSS
 
 ADMIN
 → gestiona la aplicación completa.
-```
-
-### Regla de decisión
-
-No se debe avanzar a multiusuario hasta validar primero que la experiencia individual funciona bien en una jornada real.
-
-El orden recomendado es:
-
-```text
-Sprint 15 → Registro rápido de viajes
-Deploy privado para prueba real
-Una semana de uso real por Matías
-Sprint de ajustes según uso real
-PDF diario
-Resumen mensual y PDF mensual
-Dashboard financiero
-Usuarios y roles
-Panel de jefe
-```
-
-### Reglas de negocio mensuales a definir
-
-Antes de construir el resumen mensual y el PDF mensual, se deberán definir con precisión estas reglas:
-
-- cómo se calcula el efectivo a rendir;
-- cómo se calcula la ganancia personal;
-- cómo se descuenta la gasolina propia;
-- cómo se registra la gasolina José;
-- cómo se tratan adelantos, descuentos o gastos autorizados;
-- si la nómina o seguridad social se descuenta antes o después de dividir.
-
-Estas reglas serán la base del módulo de liquidación mensual.
-
----
-
-## Próximos hitos
-
-- 🚧 Sprint 15 → Registro rápido de viajes con teclado numérico propio.
-- ⏳ Sprint 16 → Exportación PDF.
-- ⏳ Sprint 17 → Dashboard financiero.
-- ⏳ Futuro → Configuración avanzada, multi-conductor y despliegue.

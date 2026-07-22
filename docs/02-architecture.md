@@ -82,6 +82,8 @@ Usuario
    ↓
 NewTripPage
    ↓
+QuickTripForm
+   ↓
 tripService
    ↓
 POST /trips
@@ -130,8 +132,18 @@ Ejemplos:
 - Card
 - Stat
 - TripForm
+- QuickTripForm
 - WorkDayCard
 - WorkDayTicket
+
+#### Formularios de viajes
+
+Taxi Finance utiliza dos formularios distintos según el contexto.
+
+- **QuickTripForm** se utiliza para registrar viajes rápidamente durante una jornada activa.
+- **TripForm** se utiliza para editar viajes ya registrados.
+
+Esta separación evita sobrecargar un único componente con responsabilidades diferentes y permite optimizar cada flujo de trabajo de forma independiente.
 
 ### Services
 
@@ -325,7 +337,11 @@ Actualmente Taxi Finance dispone de:
 
 - Gestión de jornadas.
 - Jornada activa.
-- Registro de viajes.
+- Registro rápido de viajes con interfaz tipo calculadora.
+- Carga consecutiva de varios viajes sin volver a la pantalla principal.
+- Guardado directo en efectivo o datáfono.
+- Nota opcional desplegable.
+- Confirmación visual después de guardar un viaje.
 - Edición y eliminación de viajes.
 - Cierre de jornada.
 - Ticket final reutilizable.
@@ -347,6 +363,37 @@ Actualmente Taxi Finance dispone de:
 
 - work_days
 - trips
+
+---
+
+## Decisión de interfaz para el registro rápido
+
+Durante una jornada real un conductor puede registrar entre 20 y 30 viajes. Reducir la cantidad de pulsaciones necesarias para registrar cada uno de ellos era una prioridad del producto.
+
+Por este motivo se decidió crear un componente específico (`QuickTripForm`) para la carga rápida de viajes, en lugar de reutilizar el formulario tradicional de edición.
+
+El flujo quedó definido de la siguiente manera:
+
+```text
+Ingresar importe
+   ↓
+Guardar efectivo o Guardar datáfono
+   ↓
+Mostrar confirmación visual
+   ↓
+Limpiar formulario
+   ↓
+Listo para registrar el siguiente viaje
+```
+
+La pantalla permanece abierta después de cada registro para permitir cargar varios viajes consecutivos sin volver constantemente a la pantalla principal.
+
+Además, el usuario mantiene accesos directos para:
+
+- Ver la jornada.
+- Cerrar la jornada.
+
+Esta decisión prioriza la velocidad de uso durante una jornada real de trabajo sin perder acceso a las funciones principales.
 
 ---
 
@@ -378,14 +425,18 @@ Taxi Finance contempla el flujo real del conductor: una jornada puede comenzar u
 
 Por ese motivo, al crear una jornada antes de las 06:00, la fecha por defecto se asigna al día anterior. Esta regla refleja el uso real del taxi y evita que una jornada nocturna quede registrada con la fecha incorrecta.
 
+---
+
 ## Evolución prevista
 
 Los siguientes pasos previstos para la arquitectura son:
 
-- Registro rápido de viajes con interfaz tipo calculadora.
-- Exportación de PDF.
+- Exportación PDF diaria.
+- Resumen mensual y PDF mensual.
 - Dashboard financiero.
+- Deploy privado para pruebas reales.
 - Configuración de reglas de jornada y corte horario.
 - Soporte para múltiples conductores.
 - Autenticación y autorización.
+- Panel de jefe con acceso a los datos de sus conductores.
 - Conversión de la aplicación en una Progressive Web App (PWA).
