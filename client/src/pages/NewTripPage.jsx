@@ -20,18 +20,44 @@ function NewTripPage() {
       workDayId: openWorkDay.id,
       ...tripData,
     });
-
-    navigate("/");
   };
 
   return (
-    <section className="space-y-8">
-      <SectionTitle
-        title="Nuevo viaje"
-        subtitle="Ingresá el importe y guardalo directamente como efectivo o datáfono."
-      />
+    <section className="space-y-6">
+      <div className="flex items-start justify-between gap-3">
+        <SectionTitle
+          title="Nuevo viaje"
+          subtitle="Ingresá el importe y guardalo como efectivo o datáfono."
+        />
+
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+        >
+          Ver jornada
+        </button>
+      </div>
 
       <QuickTripForm onSubmit={handleCreateTrip} />
+
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-4 font-bold text-white transition hover:border-emerald-500/40 hover:bg-slate-700 active:scale-[0.98]"
+        >
+          ← Ver jornada
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate("/close-work-day")}
+          className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 font-bold text-red-300 transition hover:bg-red-500/20 active:scale-[0.98]"
+        >
+          Cerrar jornada
+        </button>
+      </div>
     </section>
   );
 }

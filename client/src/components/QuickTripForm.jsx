@@ -9,10 +9,12 @@ function QuickTripForm({ onSubmit }) {
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   const handleKeyPress = (key) => {
     setError("");
+    setSuccessMessage("");
 
     if (key === "⌫") {
       setAmount((currentAmount) => currentAmount.slice(0, -1));
@@ -49,6 +51,7 @@ function QuickTripForm({ onSubmit }) {
   const handleSave = async (paymentType) => {
     try {
       setError("");
+      setSuccessMessage("");
 
       const numericAmount = Number(amount.replace(",", "."));
 
@@ -64,9 +67,20 @@ function QuickTripForm({ onSubmit }) {
         note: note.trim() || null,
       });
 
+      const paymentLabel =
+        paymentType === "cash" ? "efectivo" : "datáfono";
+
+      setSuccessMessage(
+        `Viaje de ${amount} € guardado en ${paymentLabel}.`
+      );
+
       setAmount("");
       setNote("");
       setShowNote(false);
+
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -136,6 +150,12 @@ function QuickTripForm({ onSubmit }) {
             rows={3}
             className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
           />
+        )}
+
+        {successMessage && (
+          <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
+            {successMessage}
+          </p>
         )}
 
         {error && (
