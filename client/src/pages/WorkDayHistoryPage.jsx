@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
 import Card from "../components/ui/Card";
+import HistoryWorkDayCard from "../components/HistoryWorkDayCard";
 
 import { getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
-import { formatDate } from "../utils/formatDate";
-import { formatCurrency } from "../utils/formatCurrency";
 
 function WorkDayHistoryPage() {
   const [history, setHistory] = useState([]);
@@ -92,67 +91,13 @@ function WorkDayHistoryPage() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {history.map((workDay) => {
-            const workedKm =
-              Number(workDay.endKm || 0) - Number(workDay.startKm || 0);
-
-            return (
-              <button
-                key={workDay.id}
-                type="button"
-                onClick={() => navigate(`/work-days/${workDay.id}`)}
-                className="w-full text-left"
-              >
-                <Card className="transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-emerald-300">
-                        {formatDate(workDay.date)}
-                      </p>
-
-                      <h3 className="mt-1 text-xl font-bold text-white">
-                        {formatCurrency(workDay.summary.totalRevenue)}
-                      </h3>
-                    </div>
-
-                    <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-300">
-                      {workedKm} km
-                    </span>
-                  </div>
-
-                  <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-slate-400">Viajes</p>
-                      <p className="font-bold text-white">
-                        {workDay.summary.tripCount}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-slate-400">Combustible</p>
-                      <p className="font-bold text-white">
-                        {formatCurrency(workDay.fuelOwn)}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-slate-400">Efectivo</p>
-                      <p className="font-bold text-white">
-                        {formatCurrency(workDay.summary.cash)}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-slate-400">Datáfono</p>
-                      <p className="font-bold text-white">
-                        {formatCurrency(workDay.summary.card)}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </button>
-            );
-          })}
+          {history.map((workDay) => (
+            <HistoryWorkDayCard
+              key={workDay.id}
+              workDay={workDay}
+              onClick={() => navigate(`/work-days/${workDay.id}`)}
+            />
+          ))}
         </div>
       )}
     </section>
