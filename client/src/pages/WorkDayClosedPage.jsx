@@ -7,6 +7,7 @@ import WorkDayTicket from "../components/WorkDayTicket";
 
 import { getWorkDayById } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
+import { getTripsByWorkDay } from "../services/tripService";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
 
 function WorkDayClosedPage() {
@@ -15,6 +16,7 @@ function WorkDayClosedPage() {
 
   const [workDay, setWorkDay] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -28,13 +30,15 @@ function WorkDayClosedPage() {
       setError("");
       setLoading(true);
 
-      const [workDayData, summaryData] = await Promise.all([
+      const [workDayData, summaryData, tripsData] = await Promise.all([
         getWorkDayById(id),
         getWorkDaySummary(id),
+        getTripsByWorkDay(id),
       ]);
 
       setWorkDay(workDayData);
       setSummary(summaryData);
+      setTrips(tripsData);
     } catch (error) {
       console.error(error);
       setError(error.message);
@@ -87,7 +91,7 @@ function WorkDayClosedPage() {
         subtitle="Resumen final del turno."
       />
 
-      <WorkDayTicket workDay={workDay} summary={summary} />
+      <WorkDayTicket workDay={workDay} summary={summary} trips={trips} />
 
       <div className="space-y-3">
         <Button onClick={handleShare}>

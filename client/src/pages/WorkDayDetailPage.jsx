@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/ui/Button";
-import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 
 import WorkDayTicket from "../components/WorkDayTicket";
@@ -11,7 +10,6 @@ import { getWorkDayById } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 
-import { formatCurrency } from "../utils/formatCurrency";
 import { formatDate } from "../utils/formatDate";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
 
@@ -67,26 +65,6 @@ function WorkDayDetailPage() {
     }, 2500);
   };
 
-  const formatTripTime = (trip) => {
-    const rawDate = trip.createdAt || trip.created_at || trip.createdAtFormatted;
-
-    if (!rawDate) {
-      return "Hora no disponible";
-    }
-
-    return new Date(rawDate).toLocaleTimeString("es-ES", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const sortedTrips = [...trips].sort((a, b) => {
-    const dateA = new Date(a.createdAt || a.created_at || 0);
-    const dateB = new Date(b.createdAt || b.created_at || 0);
-
-    return dateA - dateB;
-  });
-
   if (isLoading) {
     return <p className="text-slate-400">Cargando jornada...</p>;
   }
@@ -114,7 +92,12 @@ function WorkDayDetailPage() {
         subtitle={formatDate(workDay.date)}
       />
       <div className="space-y-3">
-        <WorkDayTicket workDay={workDay} summary={summary} />
+        <WorkDayTicket
+          workDay={workDay}
+          summary={summary}
+          trips={trips}
+          onTripClick={(trip) => navigate(`/trips/${trip.id}/edit`)}
+        />
 
         <Button onClick={handleCopySummary}>
           Copiar resumen para WhatsApp
@@ -126,49 +109,6 @@ function WorkDayDetailPage() {
           </p>
         )}
       </div>
-
-      <section className="space-y-3">
-        <SectionTitle
-          title="Viajes"
-          subtitle="Todos los viajes registrados en esta jornada"
-        />
-
-        {sortedTrips.length === 0 ? (
-          <Card>
-            <p className="text-slate-300">
-              Esta jornada no tiene viajes registrados.
-            </p>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {sortedTrips.map((trip) => (
-              <button
-                key={trip.id}
-                type="button"
-                onClick={() => navigate(`/trips/${trip.id}/edit`)}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-left transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]"
-              >
-                <p className="text-sm text-slate-400">
-                  🕙 {formatTripTime(trip)} ·{" "}
-                  {trip.paymentType === "cash"
-                    ? "💵 Efectivo"
-                    : "💳 Datáfono"}
-                </p>
-
-                <p className="mt-1 text-lg font-bold text-white">
-                  {formatCurrency(trip.amount)}
-                </p>
-
-                {trip.note && (
-                  <p className="mt-1 text-sm text-slate-400">
-                    {trip.note}
-                  </p>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
-      </section>
 
       <Button onClick={() => navigate("/history")}>
         Volver al historial
