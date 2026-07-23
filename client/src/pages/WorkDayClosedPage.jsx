@@ -8,6 +8,8 @@ import WorkDayTicket from "../components/WorkDayTicket";
 import { getWorkDayById } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
+import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
+import { copyTextToClipboard } from "../utils/copyTextToClipboard";
 import { createWorkDayShareCard } from "../utils/createWorkDayShareCard";
 
 function WorkDayClosedPage() {
@@ -22,6 +24,7 @@ function WorkDayClosedPage() {
   const [shareFile, setShareFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [shareMessage, setShareMessage] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
 
   useEffect(() => {
     loadData();
@@ -37,7 +40,11 @@ function WorkDayClosedPage() {
 
     const prepareShareCard = async () => {
       try {
-        const blob = await createWorkDayShareCard(workDay, summary);
+        const blob = await createWorkDayShareCard(
+          workDay,
+          summary,
+          trips
+        );
 
         if (isCancelled) {
           return;
@@ -66,7 +73,7 @@ function WorkDayClosedPage() {
         URL.revokeObjectURL(generatedUrl);
       }
     };
-  }, [workDay, summary]);
+  }, [workDay, summary, trips]);
 
   const loadData = async () => {
     try {
@@ -125,6 +132,20 @@ function WorkDayClosedPage() {
     }
   };
 
+  const handleCopyText = async () => {
+    try {
+      const text = buildWorkDaySummaryText(workDay, summary);
+      await copyTextToClipboard(text);
+      setCopyMessage("Resumen copiado");
+
+      setTimeout(() => {
+        setCopyMessage("");
+      }, 2500);
+    } catch (error) {
+      setCopyMessage(error.message);
+    }
+  };
+
   if (loading) {
     return (
       <p className="text-center text-slate-400">
@@ -178,9 +199,23 @@ function WorkDayClosedPage() {
           Compartir tarjeta
         </Button>
 
+        <button
+          type="button"
+          onClick={handleCopyText}
+          className="w-full rounded-2xl border border-emerald-500/40 px-6 py-4 text-lg font-bold text-emerald-300 transition hover:bg-emerald-500/10 active:scale-[0.99]"
+        >
+          Copiar texto
+        </button>
+
         {shareMessage && (
           <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
             {shareMessage}
+          </p>
+        )}
+
+        {copyMessage && (
+          <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
+            {copyMessage}
           </p>
         )}
 

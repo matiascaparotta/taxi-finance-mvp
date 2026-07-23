@@ -1,4 +1,5 @@
-import { formatCurrency } from "./formatCurrency";
+import { formatCurrency } from "./formatCurrency.js";
+import { normalizeWorkDayDate } from "./workDayDate.js";
 
 const WEEK_DAYS = [
   "DOMINGO",
@@ -17,7 +18,7 @@ function formatWorkDayHeader(workDay) {
     return "FECHA NO DISPONIBLE";
   }
 
-  const dateOnly = String(rawDate).split("T")[0];
+  const dateOnly = normalizeWorkDayDate(String(rawDate));
   const parsedDate = new Date(`${dateOnly}T00:00:00`);
 
   if (Number.isNaN(parsedDate.getTime())) {
@@ -32,15 +33,33 @@ function formatWorkDayHeader(workDay) {
 }
 
 export function buildWorkDaySummaryText(workDay, summary) {
-  const workedKm = Number(workDay.endKm) - Number(workDay.startKm);
+  const workedKm = Number(
+    summary.workedKm ??
+      Number(workDay.endKm) - Number(workDay.startKm)
+  );
+  const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
+  const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
+  const lines = [
+    formatWorkDayHeader(workDay),
+    "",
+    `KM: ${workedKm}`,
+    "",
+    `EFECTIVO: ${formatCurrency(summary.realCash ?? summary.cash)}`,
+    `DATÁFONO: ${formatCurrency(summary.card)}`,
+    `FACTURACIÓN: ${formatCurrency(summary.totalRevenue)}`,
+  ];
 
-  return `${formatWorkDayHeader(workDay)}
+  if (fuelOwn > 0 || fuelJose > 0) {
+    lines.push("");
+  }
 
-KILÓMETROS: ${workedKm}
+  if (fuelOwn > 0) {
+    lines.push(`GASOLINA: ${formatCurrency(fuelOwn)}`);
+  }
 
-EFECTIVO: ${formatCurrency(summary.cash)}
-DATÁFONO: ${formatCurrency(summary.card)}
-TOTAL: ${formatCurrency(summary.totalRevenue)}
+  if (fuelJose > 0) {
+    lines.push(`GASOLINA JOSÉ: ${formatCurrency(fuelJose)}`);
+  }
 
-GASOLINA: ${formatCurrency(workDay.fuelOwn)}`;
+  return lines.join("\n");
 }

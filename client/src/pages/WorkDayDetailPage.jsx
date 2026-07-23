@@ -12,6 +12,7 @@ import { getTripsByWorkDay } from "../services/tripService";
 
 import { formatDate } from "../utils/formatDate";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
+import { copyTextToClipboard } from "../utils/copyTextToClipboard";
 
 function WorkDayDetailPage() {
   const [workDay, setWorkDay] = useState(null);
@@ -56,7 +57,7 @@ function WorkDayDetailPage() {
 
     const text = buildWorkDaySummaryText(workDay, summary);
 
-    await navigator.clipboard.writeText(text);
+    await copyTextToClipboard(text);
 
     setCopyMessage("Resumen copiado");
 
