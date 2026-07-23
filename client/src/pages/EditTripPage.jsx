@@ -59,12 +59,14 @@ function EditTripPage() {
     <section className="space-y-8">
       <SectionTitle
         title="Editar viaje"
-        subtitle="Corrige el importe, método de pago o nota."
+        subtitle="Corrige el importe, método de pago, comisión, propina o nota."
       />
 
       <TripForm
         initialAmount={trip.amount}
         initialPaymentType={trip.paymentType}
+        initialCommission={trip.commission}
+        initialTip={trip.tip}
         initialNote={trip.note}
         submitLabel="Guardar cambios"
         loadingLabel="Guardando cambios..."

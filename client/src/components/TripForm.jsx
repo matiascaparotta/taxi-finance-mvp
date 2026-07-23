@@ -5,6 +5,8 @@ import Button from "./ui/Button";
 function TripForm({
   initialAmount = "",
   initialPaymentType = "cash",
+  initialCommission = "",
+  initialTip = "",
   initialNote = "",
   submitLabel = "Guardar viaje",
   loadingLabel = "Guardando...",
@@ -12,6 +14,8 @@ function TripForm({
 }) {
   const [amount, setAmount] = useState(initialAmount);
   const [paymentType, setPaymentType] = useState(initialPaymentType);
+  const [commission, setCommission] = useState(initialCommission || "");
+  const [tip, setTip] = useState(initialTip || "");
   const [note, setNote] = useState(initialNote || "");
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -31,9 +35,19 @@ function TripForm({
         throw new Error("El importe debe ser mayor a 0");
       }
 
+      if (Number(commission || 0) < 0) {
+        throw new Error("La comisión no puede ser negativa");
+      }
+
+      if (Number(tip || 0) < 0) {
+        throw new Error("La propina no puede ser negativa");
+      }
+
       await onSubmit({
         amount: Number(amount),
         paymentType,
+        commission: Number(commission || 0),
+        tip: Number(tip || 0),
         note: note.trim() || null,
       });
     } catch (error) {
@@ -86,6 +100,50 @@ function TripForm({
             <option value="cash">Efectivo</option>
             <option value="card">Datáfono</option>
           </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="commission"
+            className="mb-2 block text-sm text-slate-300"
+          >
+            Comisión (opcional)
+          </label>
+
+          <input
+            id="commission"
+            name="commission"
+            type="number"
+            min="0"
+            step="0.01"
+            inputMode="decimal"
+            value={commission}
+            onChange={(event) => setCommission(event.target.value)}
+            placeholder="0,00"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="tip"
+            className="mb-2 block text-sm text-slate-300"
+          >
+            Propina (opcional)
+          </label>
+
+          <input
+            id="tip"
+            name="tip"
+            type="number"
+            min="0"
+            step="0.01"
+            inputMode="decimal"
+            value={tip}
+            onChange={(event) => setTip(event.target.value)}
+            placeholder="0,00"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
+          />
         </div>
 
         <div>

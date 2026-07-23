@@ -6,6 +6,7 @@ import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 import Stat from "../components/ui/Stat";
 import WorkDayCard from "../components/WorkDayCard";
+import ActiveTripCard from "../components/ActiveTripCard";
 
 import { getOpenWorkDay, getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
@@ -179,23 +180,12 @@ function HomePage() {
             ) : (
               <div className="mt-4 space-y-3">
                 {sortedActiveTrips.map((trip) => (
-                  <button
+                  <ActiveTripCard
                     key={trip.id}
-                    type="button"
+                    trip={trip}
+                    time={formatTripTime(trip)}
                     onClick={() => navigate(`/trips/${trip.id}/edit`)}
-                    className="w-full rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-left transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]"
-                  >
-                    <p className="text-sm text-slate-400">
-                      🕙 {formatTripTime(trip)} ·{" "}
-                      {trip.paymentType === "cash"
-                        ? "💵 Efectivo"
-                        : "💳 Datáfono"}
-                    </p>
-
-                    <p className="mt-1 text-lg font-bold text-white">
-                      {formatCurrency(trip.amount)}
-                    </p>
-                  </button>
+                  />
                 ))}
               </div>
             )}
