@@ -159,7 +159,7 @@ function WorkDayTicket({ workDay, summary, trips = [], onTripClick }) {
           </div>
           <div className="flex items-center justify-between py-3">
             <p className="text-sm text-slate-400">Facturación</p>
-            <p className="font-bold text-emerald-300">
+            <p className="text-lg font-bold text-white">
               {formatCurrency(summary.totalRevenue)}
             </p>
           </div>

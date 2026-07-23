@@ -313,7 +313,7 @@ export async function createWorkDayShareCard(
     "700 27px Arial",
     COLORS.emerald
   );
-  drawPanel(context, 70, summaryTop, 940, summaryHeight, true);
+  drawPanel(context, 70, summaryTop, 940, summaryHeight);
 
   summaryRows.forEach((row, index) => {
     const rowTop = summaryTop + 24 + index * 76;
@@ -324,15 +324,15 @@ export async function createWorkDayShareCard(
       110,
       rowTop,
       "400 28px Arial",
-      row.label === "Facturación" ? COLORS.emerald : COLORS.muted
+      COLORS.muted
     );
     drawText(
       context,
       row.value,
       970,
       rowTop,
-      "700 31px Arial",
-      row.label === "Facturación" ? COLORS.emerald : COLORS.text,
+      row.label === "Facturación" ? "700 36px Arial" : "700 31px Arial",
+      COLORS.text,
       "right"
     );
 
