@@ -8,7 +8,7 @@ import WorkDayTicket from "../components/WorkDayTicket";
 import { getWorkDayById } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
-import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
+import { createWorkDayShareCard } from "../utils/createWorkDayShareCard";
 
 function WorkDayClosedPage() {
   const { id } = useParams();
@@ -19,11 +19,54 @@ function WorkDayClosedPage() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [shareFile, setShareFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [shareMessage, setShareMessage] = useState("");
 
   useEffect(() => {
     loadData();
   }, [id]);
+
+  useEffect(() => {
+    if (!workDay || !summary) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+    let generatedUrl = "";
+
+    const prepareShareCard = async () => {
+      try {
+        const blob = await createWorkDayShareCard(workDay, summary);
+
+        if (isCancelled) {
+          return;
+        }
+
+        const file = new File(
+          [blob],
+          `taxi-finance-${String(workDay.date).split("T")[0]}.png`,
+          { type: "image/png" }
+        );
+
+        generatedUrl = URL.createObjectURL(blob);
+        setShareFile(file);
+        setPreviewUrl(generatedUrl);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    prepareShareCard();
+
+    return () => {
+      isCancelled = true;
+
+      if (generatedUrl) {
+        URL.revokeObjectURL(generatedUrl);
+      }
+    };
+  }, [workDay, summary]);
 
   const loadData = async () => {
     try {
@@ -48,23 +91,37 @@ function WorkDayClosedPage() {
   };
 
   const handleShare = async () => {
-    if (!workDay || !summary) {
+    if (!shareFile) {
+      setShareMessage("La tarjeta todavía se está preparando");
       return;
     }
 
     try {
-      const text = buildWorkDaySummaryText(workDay, summary);
+      if (
+        navigator.share &&
+        navigator.canShare?.({ files: [shareFile] })
+      ) {
+        await navigator.share({
+          files: [shareFile],
+          title: "Resumen de jornada — Taxi Finance",
+        });
+        setShareMessage("Tarjeta compartida");
+        return;
+      }
 
-      await navigator.clipboard.writeText(text);
-
-      setCopied(true);
-
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      const downloadUrl = URL.createObjectURL(shareFile);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = shareFile.name;
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+      setShareMessage(
+        "Tu dispositivo no permite compartir archivos directamente. La tarjeta se descargó."
+      );
     } catch (error) {
-      console.error(error);
-      setError("No se pudo copiar el resumen");
+      if (error.name !== "AbortError") {
+        setShareMessage("No se pudo compartir la tarjeta");
+      }
     }
   };
 
@@ -93,14 +150,37 @@ function WorkDayClosedPage() {
 
       <WorkDayTicket workDay={workDay} summary={summary} trips={trips} />
 
+      <section className="space-y-3">
+        <div>
+          <h3 className="text-lg font-bold text-white">
+            Tarjeta para compartir
+          </h3>
+          <p className="mt-1 text-sm text-slate-400">
+            Esta es la imagen que se enviará.
+          </p>
+        </div>
+
+        {previewUrl ? (
+          <img
+            src={previewUrl}
+            alt="Vista previa de la tarjeta de jornada"
+            className="w-full rounded-3xl border border-emerald-500/30 shadow-xl"
+          />
+        ) : (
+          <div className="rounded-3xl border border-slate-800 bg-slate-950 p-8 text-center text-sm text-slate-400">
+            Preparando tarjeta...
+          </div>
+        )}
+      </section>
+
       <div className="space-y-3">
         <Button onClick={handleShare}>
-          Compartir resumen
+          Compartir tarjeta
         </Button>
 
-        {copied && (
+        {shareMessage && (
           <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
-            Resumen copiado ✅
+            {shareMessage}
           </p>
         )}
 
