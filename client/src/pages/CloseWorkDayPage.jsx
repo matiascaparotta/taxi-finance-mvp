@@ -16,7 +16,7 @@ function CloseWorkDayPage() {
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [summary, setSummary] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
-  const [fuelOwn, setFuelOwn] = useState("0");
+  const [fuelAmount, setFuelAmount] = useState("0");
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
@@ -78,8 +78,8 @@ function CloseWorkDayPage() {
       return;
     }
 
-    if (Number(fuelOwn) < 0) {
-      setError("El combustible no puede ser negativo");
+    if (!/^\d+(?:\.\d{1,2})?$/.test(fuelAmount)) {
+      setError("Introduce un importe de combustible válido, con hasta 2 decimales");
       return;
     }
 
@@ -93,7 +93,7 @@ function CloseWorkDayPage() {
       const closedWorkDay = await closeWorkDay(openWorkDay.id, {
         date: selectedDate,
         endKm,
-        fuelOwn,
+        fuelAmount,
       });
 
       navigate(`/work-day-closed/${closedWorkDay.id}`);
@@ -165,9 +165,27 @@ function CloseWorkDayPage() {
             </div>
           )}
 
-          <div>
-            <label htmlFor="fuelOwn" className="mb-2 block text-sm text-slate-300">Combustible (€)</label>
-            <input id="fuelOwn" type="number" step="0.01" value={fuelOwn} onChange={(e)=>setFuelOwn(e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500" />
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+            <label
+              htmlFor="fuelAmount"
+              className="mb-2 block text-sm font-medium text-slate-200"
+            >
+              ⛽ Importe cargado
+            </label>
+            <input
+              id="fuelAmount"
+              name="fuelAmount"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={fuelAmount}
+              onChange={(event) => setFuelAmount(event.target.value)}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
+            />
+            <p className="mt-2 text-xs text-slate-400">
+              Si no cargaste combustible, deja el importe en 0 €.
+            </p>
           </div>
 
           <div>
