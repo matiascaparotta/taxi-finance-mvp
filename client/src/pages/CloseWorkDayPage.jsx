@@ -7,10 +7,15 @@ import Button from "../components/ui/Button";
 
 import { closeWorkDay, getOpenWorkDay } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
+import {
+  getCloseDateOptions,
+  normalizeWorkDayDate,
+} from "../utils/workDayDate";
 
 function CloseWorkDayPage() {
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const [fuelOwn, setFuelOwn] = useState("0");
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
@@ -32,9 +37,17 @@ function CloseWorkDayPage() {
       }
 
       const summaryData = await getWorkDaySummary(openWorkDayData.id);
+      const dateOptions = getCloseDateOptions();
+      const currentDate = normalizeWorkDayDate(openWorkDayData.date);
 
       setOpenWorkDay(openWorkDayData);
       setSummary(summaryData);
+      setSelectedDate(
+        currentDate === dateOptions.today ||
+          currentDate === dateOptions.yesterday
+          ? currentDate
+          : ""
+      );
     } catch (error) {
       console.error(error);
       setError(error.message);
@@ -49,6 +62,11 @@ function CloseWorkDayPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setError("");
+
+    if (!selectedDate) {
+      setError("Confirma si la jornada corresponde a hoy o ayer");
+      return;
+    }
 
     if (!endKm) {
       setError("El kilometraje final es obligatorio");
@@ -73,6 +91,7 @@ function CloseWorkDayPage() {
       setError("");
 
       const closedWorkDay = await closeWorkDay(openWorkDay.id, {
+        date: selectedDate,
         endKm,
         fuelOwn,
       });
@@ -84,6 +103,8 @@ function CloseWorkDayPage() {
     }
   };
 
+  const dateOptions = getCloseDateOptions();
+
   return (
     <section className="space-y-8">
       <SectionTitle title="Finalizar jornada" subtitle="Revisa la información antes de cerrar el turno." />
@@ -92,6 +113,51 @@ function CloseWorkDayPage() {
 
       <Card>
         <form onSubmit={handleSubmit} className="space-y-5">
+          <fieldset>
+            <legend className="mb-3 block text-sm text-slate-300">
+              ¿A qué día corresponde esta jornada?
+            </legend>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Hoy", value: dateOptions.today },
+                { label: "Ayer", value: dateOptions.yesterday },
+              ].map((option) => {
+                const isSelected = selectedDate === option.value;
+
+                return (
+                  <label
+                    key={option.value}
+                    className={`cursor-pointer rounded-2xl border p-4 text-center transition ${
+                      isSelected
+                        ? "border-emerald-400 bg-emerald-400/10"
+                        : "border-slate-700 bg-slate-950/60 hover:border-slate-500"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="workDayDate"
+                      value={option.value}
+                      checked={isSelected}
+                      onChange={(event) => setSelectedDate(event.target.value)}
+                      className="sr-only"
+                    />
+                    <span
+                      className={`block text-lg font-bold ${
+                        isSelected ? "text-emerald-300" : "text-white"
+                      }`}
+                    >
+                      {option.label}
+                    </span>
+                    <span className="mt-1 block text-xs text-slate-400">
+                      {option.value.split("-").reverse().join("/")}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
           {openWorkDay && (
             <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
               <p className="text-sm text-slate-400">Kilometraje inicial</p>
