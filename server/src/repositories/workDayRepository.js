@@ -102,7 +102,7 @@ const getOpenWorkDay = async () => {
 };
 
 const closeWorkDayById = async (workDayId, closeData) => {
-  const { date, endKm, fuelOwn } = closeData;
+  const { date, endKm, fuelOwn, fuelJose } = closeData;
 
   await pool.query(
     `
@@ -111,10 +111,11 @@ const closeWorkDayById = async (workDayId, closeData) => {
       date = ?,
       end_km = ?,
       fuel_own = ?,
+      fuel_jose = ?,
       status = 'CLOSED'
     WHERE id = ?
     `,
-    [date, endKm, fuelOwn, workDayId]
+    [date, endKm, fuelOwn, fuelJose, workDayId]
   );
 
   const [rows] = await pool.query(

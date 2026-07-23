@@ -4,9 +4,11 @@ import SectionTitle from "../components/ui/SectionTitle";
 import WorkDaySummaryCard from "../components/WorkDaySummaryCard";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
+import { formatCurrency } from "../utils/formatCurrency";
 
 import { closeWorkDay, getOpenWorkDay } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
+import { calculateFuelSplit } from "../utils/calculateFuelSplit";
 import {
   getCloseDateOptions,
   normalizeWorkDayDate,
@@ -17,6 +19,7 @@ function CloseWorkDayPage() {
   const [summary, setSummary] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [fuelAmount, setFuelAmount] = useState("0");
+  const [fuelAllocation, setFuelAllocation] = useState("OWN");
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
@@ -94,6 +97,7 @@ function CloseWorkDayPage() {
         date: selectedDate,
         endKm,
         fuelAmount,
+        fuelAllocation,
       });
 
       navigate(`/work-day-closed/${closedWorkDay.id}`);
@@ -104,6 +108,7 @@ function CloseWorkDayPage() {
   };
 
   const dateOptions = getCloseDateOptions();
+  const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
 
   return (
     <section className="space-y-8">
@@ -186,6 +191,80 @@ function CloseWorkDayPage() {
             <p className="mt-2 text-xs text-slate-400">
               Si no cargaste combustible, deja el importe en 0 €.
             </p>
+
+            <fieldset className="mt-5">
+              <legend className="mb-3 text-sm text-slate-300">
+                ¿Cómo corresponde esta carga?
+              </legend>
+
+              <div className="space-y-3">
+                {[
+                  {
+                    label: "Toda mía",
+                    description: "La carga completa corresponde al conductor.",
+                    value: "OWN",
+                  },
+                  {
+                    label: "Compartida 50 % con José",
+                    description: "El sistema calculará ambas partes.",
+                    value: "SHARED",
+                  },
+                ].map((option) => {
+                  const isSelected = fuelAllocation === option.value;
+
+                  return (
+                    <label
+                      key={option.value}
+                      className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${
+                        isSelected
+                          ? "border-emerald-400 bg-emerald-400/10"
+                          : "border-slate-700 bg-slate-950 hover:border-slate-500"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="fuelAllocation"
+                        value={option.value}
+                        checked={isSelected}
+                        onChange={(event) =>
+                          setFuelAllocation(event.target.value)
+                        }
+                        className="mt-1 accent-emerald-400"
+                      />
+                      <span>
+                        <span
+                          className={`block font-bold ${
+                            isSelected ? "text-emerald-300" : "text-white"
+                          }`}
+                        >
+                          {option.label}
+                        </span>
+                        <span className="mt-1 block text-xs text-slate-400">
+                          {option.description}
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            {fuelSplit && Number(fuelAmount) > 0 && (
+              <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                <div>
+                  <p className="text-xs text-emerald-300">Gasolina propia</p>
+                  <p className="mt-1 font-bold text-white">
+                    {formatCurrency(fuelSplit.fuelOwn)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-emerald-300">Gasolina José</p>
+                  <p className="mt-1 font-bold text-white">
+                    {formatCurrency(fuelSplit.fuelJose)}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>

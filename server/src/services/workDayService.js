@@ -5,7 +5,7 @@ const {
   getOpenWorkDay,
   closeWorkDayById,
 } = require("../repositories/workDayRepository");
-const { validateFuelAmount } = require("../utils/fuel");
+const { calculateFuelSplit } = require("../utils/fuel");
 const { validateCloseDate } = require("../utils/workDayDate");
 
 const createWorkDayService = async (workDayData) => {
@@ -87,7 +87,7 @@ const getOpenWorkDayService = async () => {
 };
 
 const closeWorkDayService = async (workDayId, closeData) => {
-  const { date, endKm, fuelAmount } = closeData;
+  const { date, endKm, fuelAmount, fuelAllocation } = closeData;
 
   const openWorkDay = await getOpenWorkDay();
 
@@ -109,12 +109,12 @@ const closeWorkDayService = async (workDayId, closeData) => {
     throw new Error("El kilometraje final no puede ser menor al inicial");
   }
 
-  const validatedFuelAmount = validateFuelAmount(fuelAmount);
+  const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
 
   const closedWorkDay = await closeWorkDayById(workDayId, {
     date: validatedDate,
     endKm: Number(endKm),
-    fuelOwn: validatedFuelAmount,
+    ...fuelSplit,
   });
 
   return {

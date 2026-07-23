@@ -20,6 +20,31 @@ const validateFuelAmount = (fuelAmount) => {
   return amount;
 };
 
+const calculateFuelSplit = (fuelAmount, fuelAllocation) => {
+  const amount = validateFuelAmount(fuelAmount);
+
+  if (!["OWN", "SHARED"].includes(fuelAllocation)) {
+    throw new Error("Indica cómo corresponde la carga de combustible");
+  }
+
+  const totalCents = Math.round(amount * 100);
+
+  if (fuelAllocation === "SHARED") {
+    const fuelJoseCents = Math.floor(totalCents / 2);
+
+    return {
+      fuelOwn: (totalCents - fuelJoseCents) / 100,
+      fuelJose: fuelJoseCents / 100,
+    };
+  }
+
+  return {
+    fuelOwn: totalCents / 100,
+    fuelJose: 0,
+  };
+};
+
 module.exports = {
+  calculateFuelSplit,
   validateFuelAmount,
 };
