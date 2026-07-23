@@ -40,6 +40,17 @@ export const getOpenWorkDay = async () => {
 
   return data.data;
 };
+export const getLatestClosedWorkDay = async () => {
+  const response = await fetch(`${API_URL}/work-days/latest-closed`);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data.data;
+};
 export const closeWorkDay = async (workDayId, closeData) => {
   const response = await fetch(`${API_URL}/work-days/${workDayId}/close`, {
     method: "PUT",

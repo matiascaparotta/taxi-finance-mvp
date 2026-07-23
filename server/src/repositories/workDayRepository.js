@@ -101,6 +101,27 @@ const getOpenWorkDay = async () => {
   return rows[0] || null;
 };
 
+const getLatestClosedWorkDay = async () => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      id,
+      date,
+      start_km AS startKm,
+      end_km AS endKm,
+      status,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM work_days
+    WHERE status = 'CLOSED'
+    ORDER BY updated_at DESC
+    LIMIT 1
+    `
+  );
+
+  return rows[0] || null;
+};
+
 const closeWorkDayById = async (workDayId, closeData) => {
   const { date, endKm, fuelOwn, fuelJose } = closeData;
 
@@ -144,5 +165,6 @@ module.exports = {
   getWorkDays,
   getWorkDayById,
   getOpenWorkDay,
+  getLatestClosedWorkDay,
   closeWorkDayById,
 };

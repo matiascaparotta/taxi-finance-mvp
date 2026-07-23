@@ -2,6 +2,7 @@ const {
   createWorkDayService,
   getWorkDaysService,
   getOpenWorkDayService,
+  getLatestClosedWorkDayService,
   closeWorkDayService,
   getWorkDayByIdService,
 } = require("../services/workDayService");
@@ -70,6 +71,21 @@ const getOpenWorkDay = async (req, res) => {
     });
   }
 };
+const getLatestClosedWorkDay = async (req, res) => {
+  try {
+    const result = await getLatestClosedWorkDayService();
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 const closeWorkDay = async (req, res) => {
   try {
     const result = await closeWorkDayService(req.params.id, req.body);
@@ -90,6 +106,7 @@ module.exports = {
   createWorkDay,
   getAllWorkDays,
   getOpenWorkDay,
+  getLatestClosedWorkDay,
   closeWorkDay,
   getWorkDayById,
 };

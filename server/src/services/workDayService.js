@@ -3,24 +3,18 @@ const {
   getWorkDays,
   getWorkDayById,
   getOpenWorkDay,
+  getLatestClosedWorkDay,
   closeWorkDayById,
 } = require("../repositories/workDayRepository");
 const { calculateFuelSplit } = require("../utils/fuel");
+const { validateStartKm } = require("../utils/odometer");
 const { validateCloseDate } = require("../utils/workDayDate");
 
 const createWorkDayService = async (workDayData) => {
-  const { date, startKm } = workDayData;
+  const { date, startKm, resetOdometer = false } = workDayData;
 
   if (!date) {
     throw new Error("La fecha es obligatoria");
-  }
-
-  if (startKm === undefined || startKm === null || startKm === "") {
-    throw new Error("El kilometraje inicial es obligatorio");
-  }
-
-  if (Number(startKm) < 0) {
-    throw new Error("El kilometraje inicial no puede ser negativo");
   }
 
   const openWorkDay = await getOpenWorkDay();
@@ -31,9 +25,16 @@ const createWorkDayService = async (workDayData) => {
     );
   }
 
+  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const validatedStartKm = validateStartKm(
+    startKm,
+    latestClosedWorkDay?.endKm,
+    resetOdometer
+  );
+
   const workDay = await createWorkDay({
     date,
-    startKm: Number(startKm),
+    startKm: validatedStartKm,
   });
 
   return {
@@ -86,6 +87,10 @@ const getOpenWorkDayService = async () => {
   };
 };
 
+const getLatestClosedWorkDayService = async () => {
+  return await getLatestClosedWorkDay();
+};
+
 const closeWorkDayService = async (workDayId, closeData) => {
   const { date, endKm, fuelAmount, fuelAllocation } = closeData;
 
@@ -128,5 +133,6 @@ module.exports = {
   getWorkDaysService,
   getWorkDayByIdService,
   getOpenWorkDayService,
+  getLatestClosedWorkDayService,
   closeWorkDayService,
 };
