@@ -22,6 +22,8 @@ function HomePage() {
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [activeSummary, setActiveSummary] = useState(null);
   const [activeTrips, setActiveTrips] = useState([]);
+  const [showAllActiveTrips, setShowAllActiveTrips] =
+    useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -71,9 +73,11 @@ function HomePage() {
 
         setActiveSummary(summary);
         setActiveTrips(trips);
+        setShowAllActiveTrips(false);
       } else {
         setActiveSummary(null);
         setActiveTrips([]);
+        setShowAllActiveTrips(false);
       }
     } catch (error) {
       console.error(error);
@@ -113,6 +117,9 @@ function HomePage() {
 
     return dateB - dateA;
   });
+  const visibleActiveTrips = showAllActiveTrips
+    ? sortedActiveTrips
+    : sortedActiveTrips.slice(0, 5);
 
   if (isLoading) {
     return (
@@ -233,7 +240,7 @@ function HomePage() {
               </p>
             ) : (
               <div className="mt-4 space-y-3">
-                {sortedActiveTrips.map((trip) => (
+                {visibleActiveTrips.map((trip) => (
                   <ActiveTripCard
                     key={trip.id}
                     trip={trip}
@@ -241,6 +248,20 @@ function HomePage() {
                     onClick={() => navigate(`/trips/${trip.id}/edit`)}
                   />
                 ))}
+
+                {sortedActiveTrips.length > 5 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowAllActiveTrips((current) => !current)
+                    }
+                    className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+                  >
+                    {showAllActiveTrips
+                      ? "Mostrar menos"
+                      : `Ver los ${sortedActiveTrips.length} viajes`}
+                  </button>
+                )}
               </div>
             )}
           </div>
