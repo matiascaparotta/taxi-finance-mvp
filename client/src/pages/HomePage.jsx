@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../components/ui/Button";
@@ -22,15 +22,16 @@ function HomePage() {
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [activeSummary, setActiveSummary] = useState(null);
   const [activeTrips, setActiveTrips] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadHomeData();
-  }, []);
-
-  const loadHomeData = async () => {
+  const loadHomeData = useCallback(async () => {
     try {
+      setError("");
+      setIsLoading(true);
+
       const [workDaysData, openWorkDayData] = await Promise.all([
         getWorkDays(),
         getOpenWorkDay(),
@@ -76,8 +77,18 @@ function HomePage() {
       }
     } catch (error) {
       console.error(error);
+      setError(
+        error.message ||
+          "No se pudo cargar la información del inicio"
+      );
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadHomeData();
+  }, [loadHomeData]);
 
   const closedWorkDays = getClosedWorkDays(workDays);
   const lastWorkDay = closedWorkDays[0];
@@ -102,6 +113,50 @@ function HomePage() {
 
     return dateB - dateA;
   });
+
+  if (isLoading) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Hola, Mati 👋"
+          subtitle="Bienvenido a Taxi Finance"
+        />
+
+        <Card>
+          <p className="text-center text-slate-300">
+            Cargando inicio...
+          </p>
+        </Card>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Hola, Mati 👋"
+          subtitle="Bienvenido a Taxi Finance"
+        />
+
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            No pudimos cargar el inicio
+          </p>
+          <p className="mt-2 text-sm text-slate-300">
+            {error}
+          </p>
+          <button
+            type="button"
+            onClick={loadHomeData}
+            className="mt-5 w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+          >
+            Reintentar
+          </button>
+        </Card>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-8">
