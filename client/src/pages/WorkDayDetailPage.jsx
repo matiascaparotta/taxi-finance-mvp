@@ -97,7 +97,6 @@ function WorkDayDetailPage() {
           workDay={workDay}
           summary={summary}
           trips={trips}
-          onTripClick={(trip) => navigate(`/trips/${trip.id}/edit`)}
         />
 
         <Button onClick={handleCopySummary}>

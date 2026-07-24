@@ -15,7 +15,7 @@ function formatTripTime(trip) {
   });
 }
 
-function WorkDayTicket({ workDay, summary, trips = [], onTripClick }) {
+function WorkDayTicket({ workDay, summary, trips = [] }) {
   if (!workDay || !summary) {
     return null;
   }
@@ -110,25 +110,14 @@ function WorkDayTicket({ workDay, summary, trips = [], onTripClick }) {
           </p>
         ) : (
           <div className="mt-3 space-y-3">
-            {sortedTrips.map((trip) =>
-              onTripClick ? (
-                <button
-                  key={trip.id}
-                  type="button"
-                  onClick={() => onTripClick(trip)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-left transition hover:border-emerald-500/40 active:scale-[0.99]"
-                >
-                  {renderTripContent(trip)}
-                </button>
-              ) : (
-                <div
-                  key={trip.id}
-                  className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
-                >
-                  {renderTripContent(trip)}
-                </div>
-              )
-            )}
+            {sortedTrips.map((trip) => (
+              <div
+                key={trip.id}
+                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
+              >
+                {renderTripContent(trip)}
+              </div>
+            ))}
           </div>
         )}
       </section>

@@ -5,6 +5,9 @@ const {
   updateTripById,
   deleteTripById,
 } = require("../repositories/tripRepository");
+const {
+  assertTripBelongsToOpenWorkDay,
+} = require("./workDayStatusGuard");
 
 const createTripService = async (tripData) => {
   const { workDayId, amount, paymentType } = tripData;
@@ -48,6 +51,8 @@ const updateTripService = async (tripId, tripData) => {
     throw new Error("El método de pago debe ser cash o card");
   }
 
+  await assertTripBelongsToOpenWorkDay(tripId);
+
   const updatedTrip = await updateTripById(tripId, tripData);
 
   if (!updatedTrip) throw new Error("Viaje no encontrado");
@@ -57,6 +62,8 @@ const updateTripService = async (tripId, tripData) => {
 
 const deleteTripService = async (tripId) => {
   if (!tripId) throw new Error("El id del viaje es obligatorio");
+
+  await assertTripBelongsToOpenWorkDay(tripId);
 
   const deletedTrip = await deleteTripById(tripId);
 
