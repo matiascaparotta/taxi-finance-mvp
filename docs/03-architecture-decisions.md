@@ -1,62 +1,155 @@
+# Taxi Finance — Architecture Decision Records (ADR)
 
-# Taxi Finance — Architecture Decisions (ADR)
+**Versión:** 2.0
 
-## ¿Qué es un ADR?
+**Última actualización:** 24/07/2026
 
-Un Architecture Decision Record (ADR) documenta una decisión técnica importante tomada durante el desarrollo del proyecto.
-
-Su objetivo es explicar:
-
-- qué decisión se tomó;
-- por qué se tomó;
-- qué alternativas existían;
-- qué beneficios aporta.
-
-De esta forma, cualquier desarrollador que participe en el proyecto podrá entender el razonamiento detrás de la arquitectura.
+**Estado:** Beta 1.0 finalizada — estabilización en curso
 
 ---
 
-## Cómo utilizar este documento
+# Objetivo
 
-Cada ADR representa una decisión arquitectónica importante del proyecto.
+Este documento registra las decisiones arquitectónicas más importantes tomadas durante el desarrollo de Taxi Finance.
 
-Cuando una decisión afecte a la arquitectura, las reglas de negocio o la evolución del producto, deberá documentarse aquí antes o al mismo tiempo que se implemente.
+Su finalidad es conservar el razonamiento técnico detrás de la arquitectura del proyecto para que cualquier desarrollador pueda comprender no solo cómo está construido el sistema, sino también por qué se tomaron determinadas decisiones.
 
-Cada ADR seguirá la siguiente estructura:
+Mientras que el documento **Architecture** describe la estructura técnica del proyecto, los **Architecture Decision Records (ADR)** explican las decisiones que dieron forma a esa arquitectura.
 
-- Contexto o problema.
-- Alternativas consideradas (cuando corresponda).
-- Decisión tomada.
-- Beneficios.
-- Impacto futuro.
+Cada ADR representa un momento en el que fue necesario elegir entre varias alternativas y documenta las consecuencias de dicha elección.
+
+---
+
+# ¿Qué es un ADR?
+
+Un **Architecture Decision Record (ADR)** es un documento breve que registra una decisión técnica relevante.
+
+Cada ADR responde, como mínimo, a las siguientes preguntas:
+
+- ¿Cuál era el problema?
+- ¿Qué alternativas existían?
+- ¿Qué decisión se tomó?
+- ¿Por qué se eligió esa solución?
+- ¿Qué beneficios aporta?
+- ¿Qué impacto tendrá en el futuro?
+
+Documentar estas decisiones evita que, con el paso del tiempo, se pierda el contexto en el que fueron tomadas.
+
+---
+
+# Cómo utilizar este documento
+
+Este documento debe actualizarse siempre que una decisión afecte significativamente a alguno de los siguientes aspectos:
+
+- arquitectura del sistema;
+- organización del código;
+- reglas de negocio;
+- modelo de datos;
+- experiencia de uso;
+- evolución futura del proyecto.
+
+Cada decisión debe documentarse antes o al mismo tiempo que se implementa.
+
+---
+
+# Estructura de un ADR
+
+Todos los ADR del proyecto siguen la misma estructura para mantener una documentación consistente.
+
+```text
+Contexto o problema
+
+↓
+
+Alternativas consideradas
+(opcional)
+
+↓
+
+Decisión tomada
+
+↓
+
+Beneficios
+
+↓
+
+Impacto futuro
+```
+
+Cuando una decisión no tenga alternativas relevantes, dicha sección podrá omitirse.
+
+---
+
+# Estado de implementación
+
+Los ADR también sirven para conocer el estado de cada decisión.
+
+Se utilizarán los siguientes estados:
+
+- ✅ Implementado
+- 🚧 En desarrollo
+- 📋 Planificado
+
+Actualmente, todos los ADR incluidos en este documento corresponden a decisiones ya implementadas dentro de la Beta 1.0.
+
+---
+
+# Índice
+
+- ADR-001 — Single Source of Truth para los datos financieros
+- ADR-002 — Crear la capa Repositories
+- ADR-003 — Arquitectura por capas
+- ADR-004 — Resúmenes calculados dinámicamente
+- ADR-005 — Modo Trabajo y Modo Gestión
+- ADR-006 — Edición y eliminación de viajes
+- ADR-007 — Reutilización del Ticket de Jornada
+- ADR-008 — Separar resumen interno del resumen para WhatsApp
+- ADR-009 — Regla de jornada nocturna
+- ADR-010 — Ordenar jornadas por última carga
+- ADR-011 — Registro rápido de viajes con QuickTripForm
+- ADR-012 — Diseñar la aplicación alrededor del flujo de trabajo del conductor
+- ADR-013 — Preservar cierres autorizados durante la importación histórica
 
 ---
 
 # ADR-001
 
-## Eliminar `cash` y `card` de `work_days`
+## Single Source of Truth para los datos financieros
 
 **Fecha:** 30/06/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-Inicialmente la tabla `work_days` almacenaba los importes de efectivo y datáfono.
+### Contexto
 
-Esto provocaba duplicación de datos, ya que la misma información también existía en la tabla `trips`.
+En las primeras versiones del proyecto, la tabla `work_days` almacenaba los importes de efectivo y datáfono.
+
+Sin embargo, esa misma información también podía obtenerse a partir de los viajes registrados en la tabla `trips`.
+
+Esto generaba duplicación de datos y aumentaba el riesgo de inconsistencias cuando un viaje era editado o eliminado.
 
 ### Decisión
 
-Eliminar ambas columnas y calcular siempre los totales a partir de los viajes registrados.
+Eliminar los campos `cash` y `card` de `work_days` y calcular siempre los totales financieros a partir de los viajes registrados.
+
+De esta manera, la tabla `trips` pasa a convertirse en la única fuente oficial de información económica de una jornada.
 
 ### Beneficios
 
 - Una única fuente de verdad.
+- Eliminación de datos duplicados.
 - Menor riesgo de inconsistencias.
-- Cualquier modificación de un viaje actualiza automáticamente el resumen.
+- Cualquier modificación de un viaje actualiza automáticamente todos los cálculos.
 
 ### Impacto futuro
 
-Todos los nuevos cálculos financieros deberán obtener sus datos desde `trips` y no duplicar información en `work_days`.
+Todos los nuevos cálculos financieros deberán obtener la información desde `trips`, evitando almacenar datos derivados dentro de `work_days`.
+
+**Relacionado con:**
+
+- Architecture
+- Business Rules
 
 ---
 
@@ -66,25 +159,35 @@ Todos los nuevos cálculos financieros deberán obtener sus datos desde `trips` 
 
 **Fecha:** 30/06/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-Las consultas SQL estaban mezcladas con la lógica de negocio.
+### Contexto
+
+Durante las primeras etapas del desarrollo, las consultas SQL se encontraban mezcladas con la lógica de negocio.
+
+Esta organización dificultaba el mantenimiento del código y aumentaba el acoplamiento entre la lógica del sistema y la base de datos.
 
 ### Decisión
 
-Toda consulta a MySQL debe vivir exclusivamente en la carpeta `repositories`.
+Crear una capa específica denominada **Repositories**, responsable de centralizar todas las consultas a MySQL.
+
+Ningún Service podrá ejecutar consultas SQL directamente.
 
 ### Beneficios
 
-- Separación de responsabilidades.
+- Separación clara de responsabilidades.
 - Código más limpio.
-- Mayor facilidad para realizar pruebas y mantenimiento.
+- Mayor facilidad para realizar pruebas.
+- Menor acoplamiento entre negocio y persistencia.
 
 ### Impacto futuro
 
-Ningún Service deberá ejecutar consultas SQL directamente; cualquier acceso a la base de datos deberá realizarse mediante un Repository.
+Si en el futuro cambia el motor de base de datos o la estrategia de persistencia, las modificaciones quedarán concentradas en los Repositories sin afectar al resto del sistema.
 
----
+**Relacionado con:**
+
+- Architecture
+- Sprint 3
 
 # ADR-003
 
@@ -92,55 +195,100 @@ Ningún Service deberá ejecutar consultas SQL directamente; cualquier acceso a 
 
 **Fecha:** 30/06/2026
 
+**Estado:** ✅ Implementado
+
+### Contexto
+
+Desde el inicio del proyecto era necesario definir una estructura que permitiera hacer crecer la aplicación sin convertir el código en un conjunto de funciones difíciles de mantener.
+
+Mezclar rutas, lógica de negocio y consultas a la base de datos habría provocado un alto acoplamiento y dificultado la incorporación de nuevas funcionalidades.
+
+### Alternativas consideradas
+
+- Centralizar toda la lógica en los Controllers.
+- Utilizar una estructura basada únicamente en rutas.
+- Separar claramente las responsabilidades mediante capas.
+
 ### Decisión
 
-El backend seguirá la siguiente estructura:
+Adoptar una arquitectura por capas para todo el backend.
 
 ```text
 Routes
-   ↓
+   │
+   ▼
 Controllers
-   ↓
+   │
+   ▼
 Services
-   ↓
+   │
+   ▼
 Repositories
-   ↓
+   │
+   ▼
 MySQL
 ```
 
+Cada capa tiene una única responsabilidad y únicamente interactúa con la capa inmediatamente inferior.
+
 ### Beneficios
 
-- Código desacoplado.
-- Escalabilidad.
-- Mayor facilidad para incorporar nuevas funcionalidades.
+- Código más organizado.
+- Mayor facilidad para mantener el proyecto.
+- Menor acoplamiento entre componentes.
+- Facilita la incorporación de nuevas funcionalidades.
+- Permite realizar pruebas de forma más sencilla.
 
 ### Impacto futuro
 
-Las nuevas funcionalidades deberán respetar la arquitectura por capas para mantener la coherencia del proyecto.
+Toda nueva funcionalidad deberá respetar esta estructura para mantener una arquitectura consistente a medida que el proyecto crezca.
+
+**Relacionado con:**
+
+- Architecture
+- Sprint 3
 
 ---
 
 # ADR-004
 
-## Resumen inteligente
+## Resúmenes calculados dinámicamente
 
 **Fecha:** 30/06/2026
 
+**Estado:** ✅ Implementado
+
+### Contexto
+
+Durante las primeras versiones surgió la posibilidad de almacenar el resumen diario de una jornada directamente en la base de datos.
+
+Sin embargo, dicho resumen puede obtenerse a partir de la información registrada durante la jornada.
+
+Guardar ambos datos habría supuesto mantener información derivada que podría quedar desactualizada.
+
 ### Decisión
 
-Los resúmenes diarios no se almacenan en la base de datos.
+No almacenar los resúmenes diarios.
 
-Siempre se calculan en tiempo real utilizando la información registrada en `trips`.
+Cada vez que la aplicación necesita mostrar un resumen, este se genera dinámicamente utilizando la información existente en la base de datos.
 
 ### Beneficios
 
-- Datos siempre sincronizados.
-- No existen resúmenes desactualizados.
-- Se elimina la duplicación de información.
+- Información siempre actualizada.
+- No existen resúmenes obsoletos.
+- Se elimina la duplicación de datos.
+- Cualquier modificación de un viaje se refleja automáticamente en el resumen.
 
 ### Impacto futuro
 
-Cualquier nuevo resumen deberá calcularse dinámicamente siempre que sea posible, evitando almacenar datos derivados.
+Siempre que sea posible, los nuevos informes deberán calcularse dinámicamente en lugar de almacenarse como información adicional.
+
+Únicamente se considerará almacenar datos derivados cuando existan motivos de rendimiento claramente justificados.
+
+**Relacionado con:**
+
+- Business Rules
+- Architecture
 
 ---
 
@@ -150,30 +298,59 @@ Cualquier nuevo resumen deberá calcularse dinámicamente siempre que sea posibl
 
 **Fecha:** 30/06/2026
 
+**Estado:** ✅ Implementado
+
+### Contexto
+
+Durante una jornada activa el conductor necesita registrar viajes de la forma más rápida posible.
+
+Fuera de la jornada, en cambio, las necesidades cambian completamente y la prioridad pasa a ser consultar información, revisar jornadas anteriores y gestionar los datos registrados.
+
+Intentar cubrir ambos escenarios dentro de una única interfaz generaba una experiencia más compleja y con elementos innecesarios para cada momento.
+
 ### Decisión
 
-La aplicación funciona en dos modos:
+Dividir el funcionamiento de la aplicación en dos modos claramente diferenciados.
 
-- **Modo Trabajo** cuando existe una jornada `OPEN`.
-- **Modo Gestión** cuando no existe ninguna jornada abierta.
+### Modo Trabajo
 
-### Motivo
+Se activa automáticamente cuando existe una jornada con estado **OPEN**.
 
-El conductor necesita herramientas diferentes según el momento del día.
+La interfaz prioriza:
 
-Durante la jornada se prioriza la rapidez.
+- registro rápido de viajes;
+- acceso inmediato al resumen de la jornada;
+- cierre de jornada;
+- mínima cantidad de acciones por operación.
 
-Fuera de la jornada se prioriza el análisis y la gestión.
+### Modo Gestión
+
+Se activa cuando no existe ninguna jornada abierta.
+
+La interfaz se orienta a:
+
+- consultar el historial;
+- revisar jornadas anteriores;
+- acceder a estadísticas;
+- crear una nueva jornada.
 
 ### Beneficios
 
-- Interfaz más simple.
-- Menos distracciones.
-- Flujo adaptado al trabajo real del taxista.
+- Interfaz más sencilla.
+- Menor carga visual.
+- Flujo adaptado al momento de trabajo.
+- Mejor experiencia de uso.
+- Mayor productividad durante la jornada.
 
 ### Impacto futuro
 
-Las futuras pantallas deberán adaptarse al modo de trabajo o de gestión según el estado de la jornada activa.
+Las futuras pantallas deberán integrarse respetando esta separación entre trabajo operativo y gestión administrativa.
+
+**Relacionado con:**
+
+- Architecture
+- Roadmap
+- Business Rules
 
 ---
 
@@ -183,139 +360,169 @@ Las futuras pantallas deberán adaptarse al modo de trabajo o de gestión según
 
 **Fecha:** 08/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-Durante una jornada real, el conductor puede equivocarse al cargar un viaje: importe incorrecto, método de pago incorrecto o nota incompleta.
+### Contexto
 
-Además, algunos viajes pueden ser cargados por error y necesitan eliminarse para que el resumen diario sea correcto.
+Durante una jornada es habitual cometer pequeños errores al registrar un viaje.
+
+Puede introducirse un importe incorrecto, seleccionar un método de pago equivocado o añadir una nota incompleta.
+
+Además, en ocasiones un viaje puede registrarse accidentalmente y necesitar ser eliminado.
 
 ### Alternativas consideradas
 
-- Editar viajes directamente desde un modal.
-- Crear una pantalla independiente para editar cada viaje.
-- Permitir solo eliminación y volver a cargar el viaje.
+- Editar los viajes mediante un cuadro de diálogo.
+- Permitir únicamente eliminar el viaje y volver a crearlo.
+- Crear una pantalla específica para la edición.
 
 ### Decisión
 
-Crear una pantalla independiente de edición de viaje mediante la ruta:
+Crear una pantalla independiente para la edición de viajes.
 
 ```text
 /trips/:id/edit
 ```
 
-Desde esa pantalla se puede:
+Desde esta pantalla es posible:
 
-- consultar los datos del viaje;
-- modificar importe, método de pago y nota;
+- modificar el importe;
+- cambiar el método de pago;
+- editar la nota;
+- actualizar comisión y propina;
 - eliminar el viaje con confirmación previa.
 
 ### Beneficios
 
-- Flujo más claro y escalable.
-- Mejor experiencia en móvil.
-- Permite agregar más campos en el futuro sin saturar la interfaz.
-- Mantiene el resumen siempre sincronizado porque los totales se calculan desde `trips`.
+- Flujo más claro.
+- Interfaz preparada para crecer.
+- Mejor experiencia de uso en dispositivos móviles.
+- Menor complejidad en el formulario de registro rápido.
+- Los cálculos permanecen sincronizados gracias a que todos los totales se obtienen desde `trips`.
 
 ### Impacto futuro
 
-La edición de cualquier entidad importante deberá evaluarse como pantalla propia cuando el flujo pueda crecer en complejidad.
+Si la edición incorpora nuevas funcionalidades, deberán añadirse sobre esta pantalla sin afectar al flujo de registro rápido.
 
----
+**Relacionado con:**
+
+- QuickTripForm
+- TripForm
+- Architecture
 
 # ADR-007
 
-## Reutilización del ticket de jornada
+## Reutilización del componente WorkDayTicket
 
 **Fecha:** 08/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-El resumen de una jornada se mostraba en más de una pantalla:
+### Contexto
 
-- al cerrar una jornada;
-- al consultar una jornada histórica.
+Durante el desarrollo apareció la necesidad de mostrar el resumen de una jornada en diferentes pantallas de la aplicación.
 
-Mantener dos diseños separados podía generar duplicación de código e inconsistencias visuales.
+Inicialmente se planteó construir un diseño independiente para cada una de ellas.
+
+Sin embargo, esto habría provocado duplicación de código y el riesgo de que ambas vistas evolucionaran de forma diferente con el paso del tiempo.
+
+### Alternativas consideradas
+
+- Duplicar el diseño en cada pantalla.
+- Crear un componente reutilizable.
 
 ### Decisión
 
-Crear y reutilizar el componente:
+Crear un componente independiente denominado **WorkDayTicket**.
 
-```text
-WorkDayTicket
-```
+Este componente se utiliza como representación oficial de una jornada dentro de la aplicación y puede reutilizarse desde cualquier pantalla que necesite mostrar un resumen.
 
-Este componente muestra el resumen interno de una jornada con información detallada:
+Actualmente muestra información como:
 
-- total facturado;
+- fecha;
+- kilómetros iniciales;
+- kilómetros finales;
+- kilómetros recorridos;
+- cantidad de viajes;
 - efectivo;
 - datáfono;
-- cantidad de viajes;
-- combustible;
-- km inicial;
-- km final;
-- km trabajados.
+- facturación;
+- combustible.
 
 ### Beneficios
 
-- Menos duplicación de código.
-- Interfaz consistente.
-- Más fácil de mantener.
-- Base reutilizable para futuros PDF o reportes.
+- Una única implementación.
+- Consistencia visual en toda la aplicación.
+- Menor cantidad de código.
+- Mayor facilidad para realizar mejoras futuras.
 
 ### Impacto futuro
 
-Cualquier cambio visual importante en el ticket deberá hacerse en `WorkDayTicket` para que impacte automáticamente en todas las pantallas que lo usan.
+Toda modificación del diseño del resumen deberá realizarse únicamente sobre `WorkDayTicket`, propagándose automáticamente al resto de pantallas.
+
+**Relacionado con:**
+
+- Architecture
+- Componentes reutilizables
+- Sprint 14
 
 ---
 
 # ADR-008
 
-## Separar resumen interno de resumen para WhatsApp
+## Separación entre resumen interno y resumen para compartir
 
 **Fecha:** 08/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-La aplicación necesita mostrar información detallada para el usuario, pero el resumen enviado al jefe debe ser breve y operativo.
+### Contexto
 
-Un texto con demasiados datos, emojis o branding puede ser menos profesional y menos práctico para enviar por WhatsApp.
+El conductor necesita consultar información muy detallada dentro de la aplicación.
+
+Sin embargo, el resumen que comparte con su responsable debe ser breve, claro y contener únicamente la información necesaria para la operativa diaria.
+
+Intentar utilizar un único formato para ambos casos habría obligado a hacer concesiones que perjudicarían una de las dos experiencias.
 
 ### Decisión
 
-Separar dos responsabilidades:
+Separar completamente ambas responsabilidades.
 
-- `WorkDayTicket` muestra el resumen completo dentro de la aplicación.
-- `buildWorkDaySummaryText()` genera el texto corto para WhatsApp.
+El componente **WorkDayTicket** muestra toda la información necesaria dentro de la aplicación.
 
-El formato para WhatsApp será:
+Por otro lado, la función:
 
 ```text
-DÍA DD/MM
-
-KILÓMETROS: 000
-
-EFECTIVO: 00,00 €
-DATÁFONO: 00,00 €
-TOTAL: 00,00 €
-
-GASOLINA: 00,00 €
+buildWorkDaySummaryText()
 ```
+
+genera un resumen específico para compartir mediante WhatsApp.
 
 ### Beneficios
 
-- La app puede mostrar más detalle sin afectar el mensaje enviado.
-- El resumen para el jefe se mantiene claro, corto y profesional.
-- Se evita mezclar necesidades internas con comunicación externa.
+- Cada formato responde a una necesidad distinta.
+- El resumen compartido permanece limpio y fácil de leer.
+- La interfaz interna puede seguir creciendo sin afectar al mensaje enviado.
 
 ### Impacto futuro
 
-Si en el futuro existen varios formatos de salida, deberán implementarse como funciones separadas, por ejemplo:
+Si en el futuro se incorporan nuevos formatos de salida, cada uno deberá implementarse de forma independiente.
 
-- resumen para jefe;
-- resumen personal;
+Por ejemplo:
+
+- resumen para WhatsApp;
 - resumen para PDF;
-- resumen mensual.
+- resumen mensual;
+- resumen personal;
+- resumen para el jefe.
+
+Cada formato podrá evolucionar sin afectar al resto.
+
+**Relacionado con:**
+
+- Architecture
+- Business Rules
+- WorkDayTicket
 
 ---
 
@@ -325,109 +532,282 @@ Si en el futuro existen varios formatos de salida, deberán implementarse como f
 
 **Fecha:** 08/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-El conductor suele cerrar la jornada después de medianoche, pero esa jornada pertenece operativamente al día anterior.
+### Contexto
 
-Usar directamente la fecha del reloj puede registrar una jornada con el día incorrecto.
+El turno habitual del conductor comienza por la tarde y finaliza durante la madrugada.
+
+Si la aplicación utilizara directamente la fecha del sistema al crear una jornada, una misma jornada podría quedar registrada con un día diferente al que realmente corresponde desde el punto de vista operativo.
 
 ### Decisión
 
-Al crear una jornada, si la hora local es anterior a las 06:00, la fecha por defecto se asigna al día anterior.
+Cuando se crea una nueva jornada, si la hora local es anterior a las 06:00, la fecha propuesta corresponde automáticamente al día anterior.
 
 Ejemplo:
 
 ```text
-Martes 07/07 a las 17:00 → jornada 07/07
-Miércoles 08/07 a las 02:30 → jornada 07/07
-Miércoles 08/07 a las 06:30 → jornada 08/07
+Martes 07/07 - 17:00
+↓
+
+Jornada: 07/07
+
+
+Miércoles 08/07 - 02:30
+↓
+
+Jornada: 07/07
+
+
+Miércoles 08/07 - 08:00
+↓
+
+Jornada: 08/07
 ```
 
 ### Beneficios
 
-- Refleja mejor el trabajo real del taxi.
-- Evita errores de fecha en jornadas nocturnas.
-- Reduce correcciones manuales posteriores.
+- Refleja correctamente el trabajo real del conductor.
+- Evita errores de registro.
+- Reduce correcciones manuales.
+- Mantiene un historial coherente.
 
 ### Impacto futuro
 
-El corte horario debería convertirse en una configuración editable cuando la aplicación soporte más conductores o distintos turnos.
+Cuando la aplicación soporte distintos conductores o varios turnos, este horario de corte podrá convertirse en una configuración específica para cada usuario.
+
+**Relacionado con:**
+
+- Business Rules
+- WorkDay
+- Architecture
 
 ---
 
 # ADR-010
 
-## Ordenar jornadas por última carga
+## Ordenar jornadas por orden de creación
 
 **Fecha:** 08/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-Ordenar jornadas solo por fecha puede resultar confuso cuando el usuario carga una jornada atrasada o cuando una jornada nocturna queda asignada al día anterior.
+### Contexto
 
-En la Home, la sección “Última jornada” debe representar la última jornada cargada en la aplicación, no necesariamente la fecha más reciente.
+La sección "Última jornada" debe representar la jornada registrada más recientemente en la aplicación.
+
+Ordenar únicamente por la fecha operativa podía producir resultados poco intuitivos cuando el usuario registraba jornadas atrasadas o cuando una jornada nocturna pertenecía al día anterior.
 
 ### Decisión
 
-Ordenar las jornadas por `id` descendente para representar el orden real de carga.
+Mientras no exista un criterio más adecuado, las jornadas se ordenan utilizando el identificador (`id`) en orden descendente.
 
 ```text
-id más alto = última jornada cargada
+Mayor ID
+
+↓
+
+Última jornada creada
 ```
 
 ### Beneficios
 
-- La Home muestra la última carga real.
-- El historial refleja mejor el orden de trabajo reciente dentro de la app.
-- Evita confusión entre fecha operativa y orden de registro.
+- La Home refleja la actividad más reciente del usuario.
+- El comportamiento resulta más predecible.
+- Se evita confundir la fecha operativa con el momento en que la jornada fue registrada.
 
 ### Impacto futuro
 
-Si se agrega un campo `createdAt` confiable para jornadas, se podrá ordenar por fecha de creación real en lugar de depender del `id`.
+Cuando el proyecto incorpore un campo `createdAt` completamente consolidado, el criterio de ordenación podrá evolucionar para utilizar la fecha real de creación.
 
----
+**Relacionado con:**
+
+- Home
+- Historial
+- Architecture
 
 # ADR-011
 
-## Registro rápido de viajes con QuickTripForm
+## Registro rápido de viajes mediante QuickTripForm
 
 **Fecha:** 22/07/2026
 
-### Problema
+**Estado:** ✅ Implementado
 
-Durante una jornada activa el conductor registra entre 20 y 30 viajes.
+### Contexto
 
-El formulario tradicional obligaba a realizar varias acciones para cada viaje, reduciendo la velocidad de carga durante el turno.
+Durante una jornada activa un conductor puede registrar entre veinte y treinta viajes.
+
+El formulario tradicional obligaba a realizar varias acciones para registrar cada viaje, ralentizando el trabajo y aumentando el riesgo de errores.
+
+Tras analizar el flujo real de uso se concluyó que el registro de un viaje nuevo y la edición de un viaje existente responden a necesidades completamente diferentes.
 
 ### Alternativas consideradas
 
 - Mantener un único formulario para alta y edición.
-- Crear un formulario específico para el registro rápido.
+- Utilizar un formulario dinámico con distintos modos.
+- Crear un componente específico para el registro rápido.
 
 ### Decisión
 
-Crear un componente independiente llamado `QuickTripForm`, optimizado exclusivamente para registrar viajes durante una jornada activa.
+Crear un componente independiente denominado **QuickTripForm**, diseñado exclusivamente para registrar viajes durante una jornada activa.
 
-Sus principales características son:
+El componente incorpora:
 
-- teclado numérico propio;
-- importe grande;
+- teclado numérico optimizado;
+- importe con gran tamaño visual;
 - coma decimal;
-- botón borrar;
-- botones independientes para guardar en efectivo o datáfono;
+- botón de borrar;
+- botones independientes para efectivo y datáfono;
 - nota opcional desplegable;
-- confirmación visual después de guardar;
+- comisión opcional;
+- propina opcional;
+- confirmación visual al guardar;
 - limpieza automática del formulario.
 
-Además, la pantalla permanece abierta después de registrar un viaje para facilitar la carga consecutiva de múltiples viajes.
+Tras registrar un viaje, la pantalla permanece abierta para facilitar el registro consecutivo de múltiples operaciones.
 
 ### Beneficios
 
 - Menor cantidad de pulsaciones.
-- Registro mucho más rápido.
-- Mejor experiencia de uso en móvil.
-- Flujo adaptado al trabajo diario de un taxista.
+- Registro significativamente más rápido.
+- Menor probabilidad de errores.
+- Mejor experiencia en dispositivos móviles.
+- Flujo adaptado al trabajo real del conductor.
 
 ### Impacto futuro
 
-Las futuras mejoras del flujo de carga rápida deberán implementarse sobre `QuickTripForm`, manteniendo `TripForm` exclusivamente para edición.
+Las futuras mejoras relacionadas con la velocidad de registro deberán implementarse sobre `QuickTripForm`.
+
+El componente `TripForm` permanecerá orientado exclusivamente a la edición de viajes existentes.
+
+**Relacionado con:**
+
+- TripForm
+- Architecture
+- Sprint 16
+
+---
+
+# ADR-012
+
+## Diseñar la aplicación alrededor del flujo de trabajo del conductor
+
+**Fecha:** 22/07/2026
+
+**Estado:** ✅ Implementado
+
+### Contexto
+
+Muchas aplicaciones organizan su interfaz siguiendo la estructura técnica de la base de datos.
+
+Sin embargo, un conductor de taxi no piensa en tablas, entidades o relaciones.
+
+Su trabajo gira alrededor de una secuencia muy concreta:
+
+```text
+Comenzar jornada
+
+↓
+
+Registrar viajes
+
+↓
+
+Consultar el resumen
+
+↓
+
+Cerrar la jornada
+
+↓
+
+Compartir el resultado
+```
+
+Diseñar la aplicación siguiendo la estructura técnica habría obligado al usuario a adaptarse al software en lugar de que el software se adaptara a su forma de trabajar.
+
+### Decisión
+
+Diseñar toda la aplicación siguiendo el flujo real de una jornada de trabajo.
+
+Las entidades técnicas permanecen ocultas al usuario.
+
+La interfaz presenta únicamente las acciones necesarias en cada momento.
+
+Este principio ha influido directamente en decisiones como:
+
+- separación entre Modo Trabajo y Modo Gestión;
+- creación de QuickTripForm;
+- cierre simplificado de jornada;
+- reutilización del WorkDayTicket;
+- separación entre resumen interno y resumen compartido.
+
+### Beneficios
+
+- Curva de aprendizaje muy reducida.
+- Menor cantidad de errores.
+- Flujo intuitivo.
+- Mayor productividad durante la jornada.
+- Arquitectura alineada con las necesidades del negocio.
+
+### Impacto futuro
+
+Toda nueva funcionalidad deberá integrarse respetando el flujo natural de trabajo del conductor.
+
+La prioridad será siempre simplificar la operativa diaria antes que añadir complejidad técnica visible para el usuario.
+
+**Relacionado con:**
+
+- Architecture
+- Business Rules
+- Roadmap
+
+---
+
+# ADR-013
+
+## Preservar cierres autorizados durante la importación histórica
+
+**Fecha:** 24/07/2026
+
+**Estado:** ✅ Implementado
+
+### Contexto
+
+Las jornadas importadas desde el historial de WhatsApp contienen valores de
+cierre de efectivo y datáfono que fueron revisados y utilizados en la
+operativa real. La reconstrucción de los viajes no siempre permite representar
+por sí sola todos los ajustes históricos.
+
+### Decisión
+
+Conservar para cada jornada importada sus valores autorizados de cierre y
+utilizarlos al generar el resumen histórico. Las jornadas creadas directamente
+en Taxi Finance continúan calculando sus importes desde los viajes, respetando
+el principio de fuente única de verdad.
+
+### Beneficios
+
+- Los 70 cierres históricos coinciden con el registro original.
+- No se crean viajes artificiales para forzar diferencias.
+- Los datos importados quedan diferenciados de las jornadas nuevas.
+- La experiencia diaria mantiene los cálculos automáticos actuales.
+
+### Impacto futuro
+
+La migración a producción deberá incluir tanto las jornadas y viajes como los
+cierres autorizados de la importación. Cualquier futura herramienta de
+importación deberá validar explícitamente esos totales.
+
+---
+
+# Conclusión
+
+Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Taxi Finance.
+
+Su objetivo no es únicamente documentar el estado actual del proyecto, sino conservar el razonamiento que dio origen a cada decisión.
+
+Gracias a esta documentación es posible comprender cómo ha evolucionado la arquitectura, por qué se descartaron determinadas alternativas y cuáles son los principios que deberán respetarse en futuras versiones.
+
+Este documento complementa al resto de la documentación del proyecto y constituye la referencia oficial para cualquier decisión arquitectónica relevante que se tome a partir de la Beta 1.0.
