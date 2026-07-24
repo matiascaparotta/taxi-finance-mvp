@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SectionTitle from "../components/ui/SectionTitle";
 import WorkDaySummaryCard from "../components/WorkDaySummaryCard";
@@ -23,6 +23,8 @@ function CloseWorkDayPage() {
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const closingLockRef = useRef(false);
 
   const navigate = useNavigate();
 
@@ -90,6 +92,13 @@ function CloseWorkDayPage() {
   };
 
   const confirmCloseWorkDay = async () => {
+    if (closingLockRef.current) {
+      return;
+    }
+
+    closingLockRef.current = true;
+    setIsClosing(true);
+
     try {
       setError("");
 
@@ -104,6 +113,9 @@ function CloseWorkDayPage() {
     } catch (error) {
       setError(error.message);
       setShowConfirm(false);
+    } finally {
+      closingLockRef.current = false;
+      setIsClosing(false);
     }
   };
 
@@ -299,8 +311,22 @@ function CloseWorkDayPage() {
             <h3 className="text-xl font-bold text-white">¿Cerrar jornada?</h3>
             <p className="mt-3 text-sm text-slate-300">Esta acción cerrará el turno y cambiará la jornada a estado CLOSED.</p>
             <div className="mt-6 space-y-3">
-              <Button onClick={confirmCloseWorkDay}>Sí, cerrar jornada</Button>
-              <button type="button" onClick={()=>setShowConfirm(false)} className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300">Cancelar</button>
+              <button
+                type="button"
+                onClick={confirmCloseWorkDay}
+                disabled={isClosing}
+                className="w-full rounded-2xl bg-emerald-400 px-6 py-4 text-lg font-bold text-slate-950 transition hover:bg-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-60"
+              >
+                {isClosing ? "Cerrando..." : "Sí, cerrar jornada"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowConfirm(false)}
+                disabled={isClosing}
+                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
