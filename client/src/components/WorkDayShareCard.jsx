@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "./ui/Button";
 import { createWorkDayShareCards } from "../utils/createWorkDayShareCard";
@@ -7,6 +7,10 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
   const [shareFiles, setShareFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [message, setMessage] = useState("");
+  const [isPreparing, setIsPreparing] = useState(true);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isSavingImages, setIsSavingImages] = useState(false);
+  const sharingLockRef = useRef(false);
 
   useEffect(() => {
     if (!workDay || !summary) {
@@ -18,6 +22,7 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
 
     const prepareShareCard = async () => {
       try {
+        setIsPreparing(true);
         setShareFiles([]);
         setPreviewUrls([]);
         setMessage("");
@@ -55,6 +60,10 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
         if (!isCancelled) {
           setMessage(error.message);
         }
+      } finally {
+        if (!isCancelled) {
+          setIsPreparing(false);
+        }
       }
     };
 
@@ -67,11 +76,29 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
     };
   }, [workDay, summary, trips]);
 
+  const downloadShareFiles = () => {
+    shareFiles.forEach((file) => {
+      const downloadUrl = URL.createObjectURL(file);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = file.name;
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+    });
+  };
+
   const handleShare = async () => {
-    if (shareFiles.length === 0) {
-      setMessage("La tarjeta todavía se está preparando");
+    if (
+      sharingLockRef.current ||
+      isPreparing ||
+      shareFiles.length === 0
+    ) {
       return;
     }
+
+    sharingLockRef.current = true;
+    setIsSharing(true);
+    setMessage("");
 
     try {
       if (
@@ -90,14 +117,7 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
         return;
       }
 
-      shareFiles.forEach((file) => {
-        const downloadUrl = URL.createObjectURL(file);
-        const link = document.createElement("a");
-        link.href = downloadUrl;
-        link.download = file.name;
-        link.click();
-        URL.revokeObjectURL(downloadUrl);
-      });
+      downloadShareFiles();
       setMessage(
         "Tu dispositivo no permite compartir archivos directamente. Las imágenes se descargaron."
       );
@@ -105,6 +125,37 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
       if (error.name !== "AbortError") {
         setMessage("No se pudo compartir la tarjeta");
       }
+    } finally {
+      sharingLockRef.current = false;
+      setIsSharing(false);
+    }
+  };
+
+  const handleSaveImages = () => {
+    if (
+      sharingLockRef.current ||
+      isPreparing ||
+      shareFiles.length === 0
+    ) {
+      return;
+    }
+
+    sharingLockRef.current = true;
+    setIsSavingImages(true);
+    setMessage("");
+
+    try {
+      downloadShareFiles();
+      setMessage(
+        `${shareFiles.length} ${
+          shareFiles.length === 1 ? "imagen guardada" : "imágenes guardadas"
+        }`
+      );
+    } catch {
+      setMessage("No se pudieron guardar las imágenes");
+    } finally {
+      sharingLockRef.current = false;
+      setIsSavingImages(false);
     }
   };
 
@@ -154,11 +205,31 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
         </div>
       )}
 
-      <Button onClick={handleShare}>
-        {shareFiles.length > 1
-          ? `Compartir ${shareFiles.length} imágenes`
-          : "Compartir tarjeta"}
+      <Button
+        onClick={handleShare}
+        disabled={isPreparing || isSharing || isSavingImages}
+      >
+        {isPreparing
+          ? "Preparando imágenes..."
+          : isSharing
+            ? "Abriendo opciones..."
+            : shareFiles.length > 1
+              ? `Compartir ${shareFiles.length} imágenes`
+              : "Compartir tarjeta"}
       </Button>
+
+      <button
+        type="button"
+        onClick={handleSaveImages}
+        disabled={isPreparing || isSharing || isSavingImages}
+        className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-50"
+      >
+        {isSavingImages
+          ? "Guardando..."
+          : shareFiles.length > 1
+            ? "Guardar imágenes"
+            : "Guardar imagen"}
+      </button>
 
       {message && (
         <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
