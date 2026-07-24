@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import Card from "./ui/Card";
 import {
@@ -34,6 +34,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
     useState("");
 
   const [isSaving, setIsSaving] = useState(false);
+  const savingLockRef = useRef(false);
   const moneyFields = {
     amount: {
       label: "Importe",
@@ -84,6 +85,13 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
   };
 
   const handleSave = async (paymentType) => {
+    if (savingLockRef.current) {
+      return;
+    }
+
+    savingLockRef.current = true;
+    setIsSaving(true);
+
     try {
       clearMessages();
 
@@ -119,8 +127,6 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
         );
       }
 
-      setIsSaving(true);
-
       await onSubmit({
         amount: numericAmount,
         paymentType,
@@ -151,6 +157,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
           "No se pudo guardar el viaje."
       );
     } finally {
+      savingLockRef.current = false;
       setIsSaving(false);
     }
   };
