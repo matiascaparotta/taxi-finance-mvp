@@ -3,7 +3,7 @@ import { formatDate } from "./formatDate.js";
 import { getDisplayedCash } from "./getDisplayedCash.js";
 
 const CARD_WIDTH = 1080;
-const TRIPS_PER_PAGE = 8;
+const TRIPS_PER_PAGE = 15;
 const TRIPS_PAGE_HEIGHT = 1920;
 const COLORS = {
   background: "#020617",
@@ -332,29 +332,29 @@ async function createTripsCard(
     const hasCommission = Number(trip.commission || 0) > 0;
     const hasTip = Number(trip.tip || 0) > 0;
 
-    drawPanel(context, 70, tripTop, 940, 175);
+    drawPanel(context, 70, tripTop, 940, 92);
     drawText(
       context,
       formatTripTime(trip),
       110,
-      tripTop + 28,
-      "700 32px Arial",
+      tripTop + 17,
+      "700 26px Arial",
       COLORS.text
     );
     drawText(
       context,
       trip.paymentType === "cash" ? "Efectivo" : "Datáfono",
-      110,
-      tripTop + 76,
-      "400 25px Arial",
+      245,
+      tripTop + 21,
+      "400 22px Arial",
       COLORS.muted
     );
     drawText(
       context,
       formatCurrency(trip.amount),
       970,
-      tripTop + 40,
-      "700 43px Arial",
+      tripTop + 17,
+      "700 32px Arial",
       COLORS.text,
       "right"
     );
@@ -371,13 +371,13 @@ async function createTripsCard(
         context,
         details,
         110,
-        tripTop + 128,
-        "400 24px Arial",
+        tripTop + 57,
+        "400 19px Arial",
         COLORS.muted
       );
     }
 
-    tripTop += 193;
+    tripTop += 102;
   });
 
   drawFooter(context, TRIPS_PAGE_HEIGHT);

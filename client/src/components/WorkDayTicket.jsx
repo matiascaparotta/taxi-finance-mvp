@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
+
 import Card from "./ui/Card";
 import { formatDate } from "../utils/formatDate";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
+
+const INITIAL_VISIBLE_TRIPS = 8;
 
 function formatTripTime(trip) {
   const rawDate = trip.createdAt || trip.created_at || trip.createdAtFormatted;
@@ -17,6 +21,12 @@ function formatTripTime(trip) {
 }
 
 function WorkDayTicket({ workDay, summary, trips = [] }) {
+  const [showAllTrips, setShowAllTrips] = useState(false);
+
+  useEffect(() => {
+    setShowAllTrips(false);
+  }, [workDay?.id]);
+
   if (!workDay || !summary) {
     return null;
   }
@@ -33,6 +43,11 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
 
     return dateA - dateB;
   });
+  const hasHiddenTrips =
+    sortedTrips.length > INITIAL_VISIBLE_TRIPS;
+  const visibleTrips = showAllTrips
+    ? sortedTrips
+    : sortedTrips.slice(0, INITIAL_VISIBLE_TRIPS);
 
   const renderTripContent = (trip) => (
     <>
@@ -111,7 +126,7 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
           </p>
         ) : (
           <div className="mt-3 space-y-3">
-            {sortedTrips.map((trip) => (
+            {visibleTrips.map((trip) => (
               <div
                 key={trip.id}
                 className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
@@ -119,6 +134,18 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
                 {renderTripContent(trip)}
               </div>
             ))}
+
+            {hasHiddenTrips && (
+              <button
+                type="button"
+                onClick={() => setShowAllTrips((current) => !current)}
+                className="w-full rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+              >
+                {showAllTrips
+                  ? "Mostrar menos"
+                  : `Ver los ${sortedTrips.length} viajes`}
+              </button>
+            )}
           </div>
         )}
       </section>
