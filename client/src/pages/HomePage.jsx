@@ -13,6 +13,7 @@ import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
+import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 
 function HomePage() {
   const [workDays, setWorkDays] = useState([]);
@@ -82,8 +83,9 @@ function HomePage() {
     }
   };
 
-  const lastWorkDay = workDays[0];
-  const recentWorkDays = workDays.slice(1, 5);
+  const closedWorkDays = getClosedWorkDays(workDays);
+  const lastWorkDay = closedWorkDays[0];
+  const recentWorkDays = closedWorkDays.slice(1, 5);
 
   const formatTripTime = (trip) => {
     const rawDate = trip.createdAt || trip.created_at || trip.createdAtFormatted;
