@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 
@@ -34,22 +35,32 @@ function NewWorkDayPage() {
   const [error, setError] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  const [isLoadingMileage, setIsLoadingMileage] = useState(true);
+  const [mileageLoadError, setMileageLoadError] = useState("");
   const startingLockRef = useRef(false);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadLatestMileage = async () => {
-      try {
-        const workDay = await getLatestClosedWorkDay();
-        setLatestClosedWorkDay(workDay);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+  const loadLatestMileage = useCallback(async () => {
+    try {
+      setMileageLoadError("");
+      setIsLoadingMileage(true);
 
-    loadLatestMileage();
+      const workDay = await getLatestClosedWorkDay();
+      setLatestClosedWorkDay(workDay);
+    } catch (error) {
+      setMileageLoadError(
+        error.message ||
+          "No se pudo consultar el último kilometraje"
+      );
+    } finally {
+      setIsLoadingMileage(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadLatestMileage();
+  }, [loadLatestMileage]);
 
   const startWorkDay = async (resetOdometer = false) => {
     if (startingLockRef.current) {
@@ -109,12 +120,70 @@ function NewWorkDayPage() {
     }
   };
 
+  if (isLoadingMileage) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Nueva jornada"
+          subtitle="Preparando el kilometraje inicial."
+        />
+
+        <Card>
+          <p className="text-center text-slate-300">
+            Consultando el último kilometraje...
+          </p>
+        </Card>
+      </section>
+    );
+  }
+
+  if (mileageLoadError) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Nueva jornada"
+          subtitle="No pudimos comprobar el kilometraje anterior."
+        />
+
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            No es seguro iniciar la jornada todavía
+          </p>
+          <p className="mt-2 text-sm text-red-300">
+            {mileageLoadError}
+          </p>
+
+          <div className="mt-5 space-y-3">
+            <Button onClick={loadLatestMileage}>Reintentar</Button>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+            >
+              Volver al inicio
+            </button>
+          </div>
+        </Card>
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-8">
-      <SectionTitle
-        title="Nueva jornada"
-        subtitle="Comienza tu turno registrando el kilometraje inicial."
-      />
+      <div className="flex items-start justify-between gap-4">
+        <SectionTitle
+          title="Nueva jornada"
+          subtitle="Comienza tu turno registrando el kilometraje inicial."
+        />
+
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="mt-1 rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+        >
+          Inicio
+        </button>
+      </div>
 
       <Card>
         <form onSubmit={handleSubmit} className="space-y-5">
