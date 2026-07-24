@@ -9,9 +9,15 @@ import { getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
+import {
+  filterWorkDaysByMonth,
+  formatWorkDayMonth,
+  getAvailableWorkDayMonths,
+} from "../utils/workDayMonth";
 
 function WorkDayHistoryPage() {
   const [history, setHistory] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,6 +50,9 @@ function WorkDayHistoryPage() {
       );
 
       setHistory(historyWithSummary);
+      setSelectedMonth(
+        getAvailableWorkDayMonths(historyWithSummary)[0] ?? ""
+      );
     } catch (error) {
       setError(error.message);
     } finally {
@@ -62,6 +71,12 @@ function WorkDayHistoryPage() {
       </p>
     );
   }
+
+  const availableMonths = getAvailableWorkDayMonths(history);
+  const filteredHistory = filterWorkDaysByMonth(
+    history,
+    selectedMonth
+  );
 
   return (
     <section className="space-y-8">
@@ -87,15 +102,42 @@ function WorkDayHistoryPage() {
           </p>
         </Card>
       ) : (
-        <div className="space-y-4">
-          {history.map((workDay) => (
-            <HistoryWorkDayCard
-              key={workDay.id}
-              workDay={workDay}
-              onClick={() => navigate(`/work-days/${workDay.id}`)}
-            />
-          ))}
-        </div>
+        <>
+          <Card>
+            <label
+              htmlFor="historyMonth"
+              className="mb-2 block text-sm font-semibold text-slate-300"
+            >
+              Mes de las jornadas
+            </label>
+            <select
+              id="historyMonth"
+              value={selectedMonth}
+              onChange={(event) => setSelectedMonth(event.target.value)}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
+            >
+              {availableMonths.map((month) => (
+                <option key={month} value={month}>
+                  {formatWorkDayMonth(month)}
+                </option>
+              ))}
+            </select>
+            <p className="mt-2 text-sm text-slate-400">
+              {filteredHistory.length}{" "}
+              {filteredHistory.length === 1 ? "jornada" : "jornadas"}
+            </p>
+          </Card>
+
+          <div className="space-y-4">
+            {filteredHistory.map((workDay) => (
+              <HistoryWorkDayCard
+                key={workDay.id}
+                workDay={workDay}
+                onClick={() => navigate(`/work-days/${workDay.id}`)}
+              />
+            ))}
+          </div>
+        </>
       )}
     </section>
   );
