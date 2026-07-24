@@ -132,13 +132,18 @@ realizarlo quedan pendientes:
 2. ✅ Esquema reproducible y sistema de migraciones de la base de datos.
 3. Restricción del origen permitido por CORS.
 4. Protección del acceso privado.
-5. Copia de seguridad inicial y respaldos automáticos.
-6. Uso de una versión compatible de Node.js.
-7. Prueba integral desde el móvil.
+5. ✅ Copia de seguridad inicial verificada.
+6. Configuración de respaldos automáticos en producción.
+7. Uso de una versión compatible de Node.js.
+8. Prueba integral desde el móvil.
 
 El traslado de los datos todavía está pendiente porque requiere crear primero
 la base privada de destino. Una vez disponible, se aplicarán las migraciones y
 se importará una copia validada de los datos locales.
+
+Existe un comando reproducible para generar respaldos privados con
+`mysqldump` y validar su integridad mediante SHA-256. La automatización
+periódica se configurará cuando se haya elegido el proveedor de producción.
 
 ---
 

@@ -124,7 +124,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Crear el esquema y procedimiento de migración de la base de datos.
 - [ ] Proteger el primer deploy para un único conductor.
 - [ ] Restringir CORS al origen de producción.
-- [ ] Configurar copias de seguridad automáticas.
+- [x] Crear y verificar una copia de seguridad inicial.
+- [ ] Configurar copias de seguridad automáticas en producción.
 - [ ] Realizar la prueba integral desde el móvil.
 - [ ] Validar compartir y guardar imágenes en Android y iPhone.
 

@@ -812,6 +812,11 @@ de `server/database/migrations`. El comando `npm run db:migrate` aplica
 `schema_migrations`. Las restricciones únicas de fecha refuerzan en la base de
 datos las reglas aplicadas por los Services.
 
+El comando `npm run db:backup` genera un respaldo de datos consistente
+mediante `mysqldump`, sin incluir credenciales en el archivo ni en Git. Cada
+respaldo se acompaña de una huella SHA-256 para comprobar su integridad. Los
+archivos se almacenan en un directorio privado ignorado por el repositorio.
+
 ---
 
 # Conclusión
