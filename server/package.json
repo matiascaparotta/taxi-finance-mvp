@@ -6,6 +6,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "db:test": "node src/config/testDatabaseConnection.js",
+    "db:migrate": "node src/scripts/migrateDatabase.js",
     "test": "node --test"
   },
   "keywords": [],

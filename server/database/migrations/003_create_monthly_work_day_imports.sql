@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS monthly_work_day_imports (
+  id INT NOT NULL AUTO_INCREMENT,
+  date DATE NOT NULL,
+  cash DECIMAL(10, 2) NOT NULL,
+  card DECIMAL(10, 2) NOT NULL,
+  fuel_own DECIMAL(10, 2) NOT NULL,
+  fuel_jose DECIMAL(10, 2) DEFAULT 0.00,
+  source VARCHAR(100) DEFAULT 'manual_import',
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;

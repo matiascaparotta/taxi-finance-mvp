@@ -121,7 +121,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Validar el kilometraje anterior antes de iniciar.
 - [x] Importar y validar 70 jornadas históricas.
 - [x] Configurar la URL de la API y el puerto mediante variables de entorno.
-- [ ] Crear el esquema y procedimiento de migración de la base de datos.
+- [x] Crear el esquema y procedimiento de migración de la base de datos.
 - [ ] Proteger el primer deploy para un único conductor.
 - [ ] Restringir CORS al origen de producción.
 - [ ] Configurar copias de seguridad automáticas.

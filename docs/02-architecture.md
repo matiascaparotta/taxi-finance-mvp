@@ -806,6 +806,12 @@ Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
 nuevas continúan calculándose a partir de sus viajes.
 
+La estructura de MySQL se reproduce mediante migraciones SQL numeradas dentro
+de `server/database/migrations`. El comando `npm run db:migrate` aplica
+únicamente las migraciones pendientes y registra cada una en
+`schema_migrations`. Las restricciones únicas de fecha refuerzan en la base de
+datos las reglas aplicadas por los Services.
+
 ---
 
 # Conclusión
