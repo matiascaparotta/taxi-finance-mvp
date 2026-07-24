@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
@@ -23,6 +23,11 @@ function WorkDayHistoryPage() {
   const [showDaySearch, setShowDaySearch] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [summariesById, setSummariesById] = useState({});
+  const [summaryError, setSummaryError] = useState("");
+  const [isLoadingSummaries, setIsLoadingSummaries] =
+    useState(false);
+  const [summaryReloadKey, setSummaryReloadKey] = useState(0);
 
   const navigate = useNavigate();
 
@@ -41,20 +46,9 @@ function WorkDayHistoryPage() {
         getClosedWorkDays(workDays)
       );
 
-      const historyWithSummary = await Promise.all(
-        closedWorkDays.map(async (workDay) => {
-          const summary = await getWorkDaySummary(workDay.id);
-
-          return {
-            ...workDay,
-            summary,
-          };
-        })
-      );
-
-      setHistory(historyWithSummary);
+      setHistory(closedWorkDays);
       setSelectedMonth(
-        getAvailableWorkDayMonths(historyWithSummary)[0] ?? ""
+        getAvailableWorkDayMonths(closedWorkDays)[0] ?? ""
       );
     } catch (error) {
       setError(error.message);
@@ -62,6 +56,75 @@ function WorkDayHistoryPage() {
       setIsLoading(false);
     }
   };
+
+  const visibleWorkDays = useMemo(
+    () =>
+      selectedDate
+        ? filterWorkDaysByDate(history, selectedDate)
+        : filterWorkDaysByMonth(history, selectedMonth),
+    [history, selectedDate, selectedMonth]
+  );
+
+  useEffect(() => {
+    let isCancelled = false;
+    const workDaysWithoutSummary = visibleWorkDays.filter(
+      (workDay) => !summariesById[workDay.id]
+    );
+
+    if (workDaysWithoutSummary.length === 0) {
+      setIsLoadingSummaries(false);
+      setSummaryError("");
+      return undefined;
+    }
+
+    const loadVisibleSummaries = async () => {
+      try {
+        setSummaryError("");
+        setIsLoadingSummaries(true);
+
+        const loadedSummaries = await Promise.all(
+          workDaysWithoutSummary.map(async (workDay) => ({
+            id: workDay.id,
+            summary: await getWorkDaySummary(workDay.id),
+          }))
+        );
+
+        if (isCancelled) {
+          return;
+        }
+
+        setSummariesById((current) => {
+          const next = { ...current };
+
+          loadedSummaries.forEach(({ id, summary }) => {
+            next[id] = summary;
+          });
+
+          return next;
+        });
+      } catch (error) {
+        if (!isCancelled) {
+          setSummaryError(error.message);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsLoadingSummaries(false);
+        }
+      }
+    };
+
+    loadVisibleSummaries();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    selectedDate,
+    selectedMonth,
+    summariesById,
+    summaryReloadKey,
+    visibleWorkDays,
+  ]);
 
   if (isLoading) {
     return <p className="text-slate-400">Cargando historial...</p>;
@@ -76,9 +139,10 @@ function WorkDayHistoryPage() {
   }
 
   const availableMonths = getAvailableWorkDayMonths(history);
-  const filteredHistory = selectedDate
-    ? filterWorkDaysByDate(history, selectedDate)
-    : filterWorkDaysByMonth(history, selectedMonth);
+  const filteredHistory = visibleWorkDays.map((workDay) => ({
+    ...workDay,
+    summary: summariesById[workDay.id],
+  }));
 
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
@@ -182,7 +246,31 @@ function WorkDayHistoryPage() {
             </p>
           </Card>
 
-          {selectedDate && filteredHistory.length === 0 ? (
+          {isLoadingSummaries ? (
+            <Card>
+              <p className="text-center text-slate-300">
+                Cargando jornadas...
+              </p>
+            </Card>
+          ) : summaryError ? (
+            <Card className="border-red-500/30">
+              <p className="font-bold text-white">
+                No se pudieron cargar las jornadas
+              </p>
+              <p className="mt-2 text-sm text-slate-300">
+                {summaryError}
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  setSummaryReloadKey((current) => current + 1)
+                }
+                className="mt-4 w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+              >
+                Reintentar
+              </button>
+            </Card>
+          ) : selectedDate && filteredHistory.length === 0 ? (
             <Card>
               <p className="font-semibold text-white">
                 No hay una jornada registrada este día.
