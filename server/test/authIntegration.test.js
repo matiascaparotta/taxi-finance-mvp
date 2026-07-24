@@ -50,6 +50,10 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
     const session = await sessionResponse.json();
 
     assert.equal(session.authenticated, true);
+    assert.match(
+      sessionResponse.headers.get("set-cookie"),
+      /Max-Age=2592000/
+    );
     assert.equal(
       loginResponse.headers.get(
         "access-control-allow-credentials"

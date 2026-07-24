@@ -813,7 +813,8 @@ El primer deploy utiliza autenticación de un único conductor. La contraseña
 se valida exclusivamente en el servidor mediante una huella `scrypt`; nunca
 se almacena en el frontend ni en Git. Tras el acceso, el servidor entrega una
 sesión firmada mediante una cookie `HttpOnly`, inaccesible para JavaScript y
-con duración configurable.
+con duración configurable. Mientras la sesión siga siendo válida, cada apertura
+desde el mismo navegador o instalación renueva su duración durante 30 días.
 
 Todas las rutas de jornadas, viajes y resúmenes requieren una sesión válida.
 Solo permanecen públicas la comprobación de salud y las operaciones necesarias

@@ -48,6 +48,7 @@ test("crea una cookie privada que JavaScript no puede leer", () => {
   assert.match(cookie, /HttpOnly/);
   assert.match(cookie, /Secure/);
   assert.match(cookie, /SameSite=Lax/);
+  assert.match(cookie, /Expires=/);
   assert.equal(
     parseCookies("other=1; taxi_finance_session=token")
       .taxi_finance_session,

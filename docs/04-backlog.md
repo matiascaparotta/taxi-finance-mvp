@@ -134,6 +134,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Proteger las jornadas importadas y permitir eliminar jornadas nuevas de prueba.
 - [x] Agrupar las acciones de compartir y separar la navegación al historial.
 - [x] Personalizar las jornadas compartidas con la marca Licencia 249.
+- [x] Renovar la sesión privada durante 30 días en el mismo dispositivo.
 - [ ] Definir una alternativa de respaldos automáticos compatible con Railway Hobby.
 - [ ] Realizar la prueba integral desde el móvil.
 - [ ] Validar compartir y guardar imágenes en Android y iPhone.

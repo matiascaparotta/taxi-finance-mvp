@@ -88,12 +88,30 @@ const getSession = (req, res) => {
   }
 
   const cookies = parseCookies(req.headers.cookie);
+  const authenticated = verifySession(
+    cookies[COOKIE_NAME],
+    config.sessionSecret
+  );
+
+  if (authenticated) {
+    const token = signSession(
+      config.sessionSecret,
+      config.sessionDurationMs
+    );
+
+    res.setHeader(
+      "Set-Cookie",
+      serializeSessionCookie(token, {
+        secureCookie: config.secureCookie,
+        maxAgeSeconds: Math.floor(
+          config.sessionDurationMs / 1000
+        ),
+      })
+    );
+  }
 
   res.json({
-    authenticated: verifySession(
-      cookies[COOKIE_NAME],
-      config.sessionSecret
-    ),
+    authenticated,
     authRequired: true,
   });
 };

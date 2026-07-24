@@ -116,7 +116,7 @@ const parseCookies = (cookieHeader = "") =>
 
 const serializeSessionCookie = (
   token,
-  { secureCookie, maxAgeSeconds }
+  { secureCookie, maxAgeSeconds, now = Date.now() }
 ) => {
   const parts = [
     `${COOKIE_NAME}=${encodeURIComponent(token)}`,
@@ -124,6 +124,9 @@ const serializeSessionCookie = (
     "HttpOnly",
     "SameSite=Lax",
     `Max-Age=${maxAgeSeconds}`,
+    `Expires=${new Date(
+      now + maxAgeSeconds * 1000
+    ).toUTCString()}`,
   ];
 
   if (secureCookie) {

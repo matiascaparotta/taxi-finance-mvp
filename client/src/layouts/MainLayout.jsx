@@ -18,7 +18,7 @@ function MainLayout({ onLogout = null }) {
               onClick={onLogout}
               className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white"
             >
-              Salir
+              Cerrar sesión
             </button>
           )}
         </div>
