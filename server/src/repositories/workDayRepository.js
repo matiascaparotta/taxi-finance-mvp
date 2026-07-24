@@ -25,6 +25,7 @@ const createWorkDay = async (workDayData) => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -47,6 +48,7 @@ const getWorkDays = async () => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -67,6 +69,7 @@ const getWorkDayById = async (workDayId) => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -89,6 +92,7 @@ const getOpenWorkDay = async () => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -110,6 +114,7 @@ const getLatestClosedWorkDay = async () => {
       start_km AS startKm,
       end_km AS endKm,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -149,6 +154,7 @@ const closeWorkDayById = async (workDayId, closeData) => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose,
       status,
+      is_locked AS isLocked,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -160,6 +166,15 @@ const closeWorkDayById = async (workDayId, closeData) => {
   return rows[0] || null;
 };
 
+const deleteWorkDayById = async (workDayId) => {
+  const [result] = await pool.query(
+    "DELETE FROM work_days WHERE id = ?",
+    [workDayId]
+  );
+
+  return result.affectedRows > 0;
+};
+
 module.exports = {
   createWorkDay,
   getWorkDays,
@@ -167,4 +182,5 @@ module.exports = {
   getOpenWorkDay,
   getLatestClosedWorkDay,
   closeWorkDayById,
+  deleteWorkDayById,
 };

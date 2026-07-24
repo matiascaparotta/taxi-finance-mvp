@@ -76,6 +76,13 @@ Mientras una jornada permanezca activa podrán registrarse nuevos viajes.
 
 Una vez cerrada, no podrán añadirse, modificarse ni eliminarse viajes.
 
+Las jornadas históricas procedentes de la importación estarán protegidas y no
+podrán modificarse ni eliminarse.
+
+Las jornadas creadas directamente en Taxi Finance después de la importación
+podrán eliminarse completas con confirmación explícita. Al eliminarlas se
+eliminarán también sus viajes y la operación será irreversible.
+
 Para un mismo conductor no podrán existir dos jornadas con la misma fecha.
 
 La fecha de una nueva jornada deberá ser posterior a la última jornada

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/ui/Button";
@@ -8,7 +8,10 @@ import SectionTitle from "../components/ui/SectionTitle";
 import WorkDayShareCard from "../components/WorkDayShareCard";
 import WorkDayTicket from "../components/WorkDayTicket";
 
-import { getWorkDayById } from "../services/workDayService";
+import {
+  deleteWorkDay,
+  getWorkDayById,
+} from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 
@@ -23,6 +26,9 @@ function WorkDayDetailPage() {
   const [copyMessage, setCopyMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const deletingLockRef = useRef(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -66,6 +72,27 @@ function WorkDayDetailPage() {
     setTimeout(() => {
       setCopyMessage("");
     }, 2500);
+  };
+
+  const handleDeleteWorkDay = async () => {
+    if (deletingLockRef.current) {
+      return;
+    }
+
+    deletingLockRef.current = true;
+    setIsDeleting(true);
+
+    try {
+      setError("");
+      await deleteWorkDay(id);
+      navigate("/history");
+    } catch (deleteError) {
+      setError(deleteError.message);
+      setShowDeleteConfirm(false);
+    } finally {
+      deletingLockRef.current = false;
+      setIsDeleting(false);
+    }
   };
 
   if (isLoading) {
@@ -160,6 +187,64 @@ function WorkDayDetailPage() {
       <Button onClick={() => navigate("/history")}>
         Volver al historial
       </Button>
+
+      {!workDay.isLocked && (
+        <Card className="border-red-500/30 bg-red-500/5">
+          <h3 className="text-lg font-bold text-red-300">
+            Eliminar jornada de prueba
+          </h3>
+          <p className="mt-2 text-sm text-slate-300">
+            Eliminará la jornada completa y todos sus viajes.
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(true)}
+            disabled={isDeleting}
+            className="mt-5 w-full rounded-2xl border border-red-500/40 px-5 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/10 disabled:cursor-wait disabled:opacity-50"
+          >
+            Eliminar jornada
+          </button>
+        </Card>
+      )}
+
+      {workDay.isLocked && (
+        <p className="text-center text-xs text-slate-500">
+          Jornada histórica protegida
+        </p>
+      )}
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
+          <div className="w-full max-w-sm rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
+            <h3 className="text-xl font-bold text-white">
+              ¿Eliminar esta jornada?
+            </h3>
+            <p className="mt-3 text-sm text-slate-300">
+              Se eliminarán también todos sus viajes. Esta acción no se puede deshacer.
+            </p>
+            <div className="mt-6 space-y-3">
+              <button
+                type="button"
+                onClick={handleDeleteWorkDay}
+                disabled={isDeleting}
+                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-bold text-white disabled:cursor-wait disabled:opacity-60"
+              >
+                {isDeleting
+                  ? "Eliminando..."
+                  : "Sí, eliminar jornada"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

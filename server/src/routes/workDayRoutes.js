@@ -7,6 +7,7 @@ const {
   getOpenWorkDay,
   getLatestClosedWorkDay,
   closeWorkDay,
+  deleteWorkDay,
 } = require("../controllers/workDayController");
 
 const router = express.Router();
@@ -22,5 +23,7 @@ router.get("/:id", getWorkDayById);
 router.post("/", createWorkDay);
 
 router.put("/:id/close", closeWorkDay);
+
+router.delete("/:id", deleteWorkDay);
 
 module.exports = router;

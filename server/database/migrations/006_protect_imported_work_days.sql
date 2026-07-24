@@ -1,0 +1,3 @@
+ALTER TABLE work_days
+  ADD COLUMN is_locked BOOLEAN NOT NULL DEFAULT FALSE
+  AFTER status;

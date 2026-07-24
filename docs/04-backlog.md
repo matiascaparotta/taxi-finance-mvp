@@ -131,6 +131,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Crear los servicios reales de aplicación y MySQL en Railway.
 - [x] Crear y verificar una copia de seguridad inicial.
 - [x] Migrar y validar 70 jornadas y 1.203 viajes en producción.
+- [x] Proteger las jornadas importadas y permitir eliminar jornadas nuevas de prueba.
 - [ ] Definir una alternativa de respaldos automáticos compatible con Railway Hobby.
 - [ ] Realizar la prueba integral desde el móvil.
 - [ ] Validar compartir y guardar imágenes en Android y iPhone.

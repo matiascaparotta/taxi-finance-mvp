@@ -5,7 +5,11 @@ const {
   getOpenWorkDay,
   getLatestClosedWorkDay,
   closeWorkDayById,
+  deleteWorkDayById,
 } = require("../repositories/workDayRepository");
+const {
+  assertWorkDayCanBeDeleted,
+} = require("./workDayProtection");
 const { calculateFuelSplit } = require("../utils/fuel");
 const { validateStartKm } = require("../utils/odometer");
 const {
@@ -46,6 +50,7 @@ const createWorkDayService = async (workDayData) => {
 
   return {
     ...workDay,
+    isLocked: Boolean(workDay.isLocked),
     workedKm: null,
   };
 };
@@ -55,6 +60,7 @@ const getWorkDaysService = async () => {
 
   return workDays.map((workDay) => ({
     ...workDay,
+    isLocked: Boolean(workDay.isLocked),
     workedKm:
       workDay.endKm !== null
         ? workDay.endKm - workDay.startKm
@@ -75,6 +81,7 @@ const getWorkDayByIdService = async (workDayId) => {
 
   return {
     ...workDay,
+    isLocked: Boolean(workDay.isLocked),
     workedKm:
       workDay.endKm !== null
         ? workDay.endKm - workDay.startKm
@@ -90,6 +97,7 @@ const getOpenWorkDayService = async () => {
 
   return {
     ...openWorkDay,
+    isLocked: Boolean(openWorkDay.isLocked),
     workedKm: null,
   };
 };
@@ -136,7 +144,23 @@ const closeWorkDayService = async (workDayId, closeData) => {
 
   return {
     ...closedWorkDay,
+    isLocked: Boolean(closedWorkDay.isLocked),
     workedKm: closedWorkDay.endKm - closedWorkDay.startKm,
+  };
+};
+
+const deleteWorkDayService = async (workDayId) => {
+  if (!workDayId) {
+    throw new Error("El id de la jornada es obligatorio");
+  }
+
+  const workDay = await getWorkDayById(workDayId);
+  assertWorkDayCanBeDeleted(workDay);
+
+  await deleteWorkDayById(workDayId);
+
+  return {
+    id: Number(workDayId),
   };
 };
 
@@ -147,4 +171,5 @@ module.exports = {
   getOpenWorkDayService,
   getLatestClosedWorkDayService,
   closeWorkDayService,
+  deleteWorkDayService,
 };
