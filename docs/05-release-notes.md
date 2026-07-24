@@ -1,4 +1,4 @@
-# Taxi Finance — Release Notes
+# Lic249 — Release Notes
 
 **Versión:** 2.0
 
@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento registra la evolución funcional de Taxi Finance desde la perspectiva del usuario.
+Este documento registra la evolución funcional de Lic249 desde la perspectiva del usuario.
 
 Cada versión resume las principales funcionalidades incorporadas, las mejoras realizadas y el valor que aportan al flujo de trabajo del conductor.
 
@@ -66,7 +66,7 @@ Aunque todavía no dispone de interfaz gráfica, ya permite gestionar jornadas y
 
 ### Valor para el usuario
 
-Taxi Finance deja de ser únicamente una API y pasa a disponer de una interfaz gráfica que permite comenzar a utilizar la aplicación durante una jornada real.
+Lic249 deja de ser únicamente una API y pasa a disponer de una interfaz gráfica que permite comenzar a utilizar la aplicación durante una jornada real.
 
 ---
 
@@ -202,6 +202,7 @@ La aplicación reduce el número de acciones necesarias durante una jornada y ad
 
 ### Novedades
 
+- Nueva marca visible `Lic249` en toda la aplicación, tarjetas y archivos compartidos.
 - Cierre de jornada con confirmación de hoy o ayer.
 - Registro y reparto automático del combustible.
 - Continuidad del kilometraje con reinicio explícito por cambio de vehículo.
@@ -219,7 +220,7 @@ La aplicación reduce el número de acciones necesarias durante una jornada y ad
 
 ### Valor para el usuario
 
-Taxi Finance puede gestionar una jornada completa y conservar el historial
+Lic249 puede gestionar una jornada completa y conservar el historial
 real del conductor. Las mejoras reducen errores durante el uso móvil, mantienen
 el foco visual en los importes importantes y permiten rendir cuentas mediante
 imagen o texto.
@@ -238,7 +239,7 @@ automáticos compatible con el plan Hobby continúan dentro del Sprint 17.
 
 # Estado actual
 
-Con la versión **v1.0.0-beta**, Taxi Finance alcanza el hito funcional
+Con la versión **v1.0.0-beta**, Lic249 alcanza el hito funcional
 correspondiente a la **Beta 1.0** y se encuentra publicada de forma privada y
 en estabilización mediante uso real.
 
@@ -333,8 +334,8 @@ Objetivo principal:
 
 # Conclusión
 
-Las **Release Notes** documentan la evolución funcional de Taxi Finance desde la perspectiva del usuario final.
+Las **Release Notes** documentan la evolución funcional de Lic249 desde la perspectiva del usuario final.
 
 Cada versión representa una mejora incremental sobre la anterior, incorporando nuevas funcionalidades, optimizando el flujo de trabajo y reforzando la estabilidad del proyecto.
 
-A medida que Taxi Finance continúe evolucionando, este documento seguirá registrando de forma cronológica las novedades de cada versión, proporcionando un historial claro de la evolución del producto y de las mejoras incorporadas en cada fase de desarrollo.
+A medida que Lic249 continúe evolucionando, este documento seguirá registrando de forma cronológica las novedades de cada versión, proporcionando un historial claro de la evolución del producto y de las mejoras incorporadas en cada fase de desarrollo.

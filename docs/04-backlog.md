@@ -1,4 +1,4 @@
-# Taxi Finance — Backlog
+# Lic249 — Backlog
 
 **Versión:** 2.0
 
@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento centraliza todas las funcionalidades pendientes, mejoras previstas e ideas futuras de Taxi Finance.
+Este documento centraliza todas las funcionalidades pendientes, mejoras previstas e ideas futuras de Lic249.
 
 Su finalidad es servir como referencia para planificar el desarrollo del proyecto, priorizar el trabajo de cada sprint y mantener una visión clara de la evolución del producto.
 
@@ -32,7 +32,7 @@ Algunas forman parte del desarrollo inmediato, mientras que otras representan id
 
 # Estado actual del proyecto
 
-Actualmente, Taxi Finance ha completado el desarrollo de la **Beta 1.0**.
+Actualmente, Lic249 ha completado el desarrollo de la **Beta 1.0**.
 
 La aplicación ya permite gestionar una jornada completa de trabajo, registrar viajes, cerrar la jornada y consultar el historial.
 
@@ -133,7 +133,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Migrar y validar 70 jornadas y 1.203 viajes en producción.
 - [x] Proteger las jornadas importadas y permitir eliminar jornadas nuevas de prueba.
 - [x] Agrupar las acciones de compartir y separar la navegación al historial.
-- [x] Personalizar las jornadas compartidas con la marca Licencia 249.
+- [x] Personalizar las jornadas compartidas con la marca Lic249.
 - [x] Renovar la sesión privada durante 30 días en el mismo dispositivo.
 - [ ] Definir una alternativa de respaldos automáticos compatible con Railway Hobby.
 - [ ] Realizar la prueba integral desde el móvil.
@@ -203,7 +203,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 Estas funcionalidades forman parte de la visión a largo plazo del proyecto.
 
-No están planificadas para las próximas versiones, pero representan posibles líneas de evolución de Taxi Finance.
+No están planificadas para las próximas versiones, pero representan posibles líneas de evolución de Lic249.
 
 ## Mejoras funcionales
 
@@ -296,13 +296,13 @@ Las nuevas funcionalidades se incorporarán siguiendo los siguientes criterios:
 4. Mantener una arquitectura sencilla y escalable.
 5. Incorporar nuevas funcionalidades únicamente cuando aporten un valor claro al usuario.
 
-Este enfoque garantiza que Taxi Finance evolucione de forma sostenible, manteniendo siempre el equilibrio entre nuevas características, estabilidad y facilidad de uso.
+Este enfoque garantiza que Lic249 evolucione de forma sostenible, manteniendo siempre el equilibrio entre nuevas características, estabilidad y facilidad de uso.
 
 ---
 
 # Conclusión
 
-El Backlog representa la planificación funcional de Taxi Finance y complementa al Roadmap detallando las funcionalidades previstas para cada etapa del proyecto.
+El Backlog representa la planificación funcional de Lic249 y complementa al Roadmap detallando las funcionalidades previstas para cada etapa del proyecto.
 
 A diferencia del Roadmap, que define las grandes fases del desarrollo, este documento reúne el conjunto de tareas concretas que permitirán alcanzar cada uno de esos objetivos.
 

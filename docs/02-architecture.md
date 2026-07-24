@@ -1,4 +1,4 @@
-# Taxi Finance — Architecture
+# Lic249 — Architecture
 
 **Versión:** 2.0
 
@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento describe la arquitectura técnica de Taxi Finance y explica cómo se organiza internamente la aplicación.
+Este documento describe la arquitectura técnica de Lic249 y explica cómo se organiza internamente la aplicación.
 
 Su propósito es facilitar la comprensión del proyecto, mantener una estructura consistente a medida que evoluciona y servir como referencia para cualquier desarrollador que participe en su mantenimiento o desarrollo.
 
@@ -20,7 +20,7 @@ La arquitectura se ha diseñado siguiendo principios de simplicidad, separación
 
 # Filosofía de la arquitectura
 
-Taxi Finance no nace como un ejercicio académico, sino como una herramienta diseñada para resolver un problema real.
+Lic249 no nace como un ejercicio académico, sino como una herramienta diseñada para resolver un problema real.
 
 Por este motivo, todas las decisiones técnicas se toman teniendo en cuenta dos criterios:
 
@@ -104,7 +104,7 @@ Este diseño reduce el acoplamiento entre módulos y facilita la evolución del 
 
 # Principios de la arquitectura
 
-Taxi Finance se apoya en varios principios de ingeniería de software.
+Lic249 se apoya en varios principios de ingeniería de software.
 
 ## Separación de responsabilidades
 
@@ -156,7 +156,7 @@ Esta separación permite modificar las reglas de negocio sin afectar la interfaz
 
 # Arquitectura orientada al flujo de trabajo
 
-La arquitectura de Taxi Finance no está diseñada únicamente alrededor de entidades técnicas.
+La arquitectura de Lic249 no está diseñada únicamente alrededor de entidades técnicas.
 
 Está diseñada alrededor del trabajo diario del conductor.
 
@@ -176,7 +176,7 @@ La arquitectura técnica siempre está al servicio del flujo de trabajo del usua
 
 # Flujo general de una petición
 
-El siguiente diagrama representa el recorrido completo de una operación típica dentro de Taxi Finance.
+El siguiente diagrama representa el recorrido completo de una operación típica dentro de Lic249.
 
 Ejemplo: registro de un viaje.
 
@@ -234,7 +234,7 @@ Las **Pages** representan las pantallas principales de la aplicación.
 
 Cada página organiza uno o varios componentes reutilizables y coordina las acciones que puede realizar el usuario.
 
-Actualmente Taxi Finance dispone de las siguientes páginas:
+Actualmente Lic249 dispone de las siguientes páginas:
 
 - HomePage
 - NewWorkDayPage
@@ -271,7 +271,7 @@ Cada componente tiene una responsabilidad concreta y puede reutilizarse en disti
 
 ## QuickTripForm
 
-El registro rápido de viajes constituye uno de los elementos más importantes de Taxi Finance.
+El registro rápido de viajes constituye uno de los elementos más importantes de Lic249.
 
 Durante una jornada real un conductor puede registrar entre veinte y treinta viajes.
 
@@ -356,7 +356,7 @@ Separar estas funciones evita duplicar lógica en diferentes componentes y manti
 
 # Arquitectura del Backend
 
-El backend concentra toda la lógica de negocio de Taxi Finance.
+El backend concentra toda la lógica de negocio de Lic249.
 
 Mientras el frontend se ocupa de mostrar información e interactuar con el usuario, el backend valida los datos, aplica las reglas de negocio y accede a la base de datos.
 
@@ -382,7 +382,7 @@ Cada capa posee una única responsabilidad y desconoce los detalles internos del
 
 # Arquitectura del Backend
 
-El backend constituye el núcleo de Taxi Finance.
+El backend constituye el núcleo de Lic249.
 
 Su responsabilidad es validar la información recibida desde el frontend, aplicar las reglas de negocio del proyecto y gestionar el acceso a la base de datos.
 
@@ -460,7 +460,7 @@ Su objetivo es actuar únicamente como intermediarios entre la API y la lógica 
 
 # Services
 
-Los Services contienen toda la inteligencia de Taxi Finance.
+Los Services contienen toda la inteligencia de Lic249.
 
 Es la capa donde se aplican las reglas de negocio oficiales del proyecto.
 
@@ -506,7 +506,7 @@ Esta separación ofrece varias ventajas:
 
 # Base de datos
 
-Actualmente Taxi Finance utiliza dos entidades principales.
+Actualmente Lic249 utiliza dos entidades principales.
 
 ```text
 WorkDay
@@ -550,7 +550,7 @@ Estos valores siempre se calculan automáticamente a partir de los viajes regist
 
 # Entidad Trip
 
-El viaje constituye la unidad principal de información de Taxi Finance.
+El viaje constituye la unidad principal de información de Lic249.
 
 Cada viaje pertenece exactamente a una única jornada mediante la relación `work_day_id`.
 
@@ -619,7 +619,7 @@ Estas decisiones forman parte de la arquitectura del sistema y explican por qué
 
 ## Single Source of Truth
 
-Uno de los principios más importantes de Taxi Finance consiste en evitar almacenar información duplicada.
+Uno de los principios más importantes de Lic249 consiste en evitar almacenar información duplicada.
 
 La entidad `work_days` únicamente almacena la información propia de la jornada.
 
@@ -663,7 +663,7 @@ Esta separación simplifica ambos componentes y evita añadir complejidad innece
 
 ## Separación entre vista interna y resumen compartido
 
-Taxi Finance distingue claramente entre la información que necesita el conductor y la información que debe compartir.
+Lic249 distingue claramente entre la información que necesita el conductor y la información que debe compartir.
 
 Dentro de la aplicación pueden mostrarse datos como:
 
@@ -727,7 +727,7 @@ Esta organización evita duplicar información y facilita mantener la documentac
 
 # Estado actual de la arquitectura
 
-Actualmente Taxi Finance dispone de:
+Actualmente Lic249 dispone de:
 
 ## Frontend
 
@@ -851,7 +851,7 @@ monorepo, las migraciones previas al deploy, el comando de inicio, la
 comprobación de salud en `/api/health` y la política de reinicio.
 
 El volumen de MySQL tendrá respaldos programados. Se mantendrá además el
-respaldo lógico externo generado por Taxi Finance, ya que los respaldos del
+respaldo lógico externo generado por Lic249, ya que los respaldos del
 volumen solo pueden restaurarse dentro del mismo proyecto y entorno.
 
 Los datos históricos importados conservan los cierres de efectivo y datáfono
@@ -873,7 +873,7 @@ archivos se almacenan en un directorio privado ignorado por el repositorio.
 
 # Conclusión
 
-Taxi Finance sigue una arquitectura por capas orientada tanto a la calidad del software como a las necesidades reales del usuario.
+Lic249 sigue una arquitectura por capas orientada tanto a la calidad del software como a las necesidades reales del usuario.
 
 La separación entre interfaz, reglas de negocio y acceso a datos facilita el mantenimiento del proyecto, mientras que el diseño basado en el flujo de trabajo del conductor permite que la aplicación evolucione sin perder simplicidad.
 

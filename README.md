@@ -1,8 +1,8 @@
-# 🚖 Taxi Finance
+# 🚖 Lic249
 
 > Aplicación Full Stack desarrollada para digitalizar la gestión financiera diaria de conductores de taxi.
 
-Taxi Finance surge a partir de una necesidad real: sustituir el uso de WhatsApp, calculadora y registros manuales por una herramienta rápida, intuitiva y profesional.
+Lic249 surge a partir de una necesidad real: sustituir el uso de WhatsApp, calculadora y registros manuales por una herramienta rápida, intuitiva y profesional.
 
 El proyecto se desarrolla siguiendo buenas prácticas de ingeniería de software, arquitectura por capas y una evolución incremental mediante sprints.
 
@@ -98,7 +98,7 @@ MySQL
 
 # ▶️ Ejecución del proyecto
 
-Taxi Finance requiere **Node.js 22**. Con `nvm` puede activarse la versión
+Lic249 requiere **Node.js 22**. Con `nvm` puede activarse la versión
 correcta ejecutando `nvm use` desde la raíz.
 
 ## Backend
@@ -178,7 +178,7 @@ La carpeta `docs/` contiene la documentación del proyecto:
 
 # 📈 Estado del MVP
 
-Actualmente Taxi Finance permite completar el flujo principal de trabajo de un conductor de taxi:
+Actualmente Lic249 permite completar el flujo principal de trabajo de un conductor de taxi:
 
 - ✅ Iniciar jornada.
 - ✅ Registrar viajes.
@@ -196,9 +196,9 @@ históricos y validar el flujo completo desde el móvil.
 
 # 🎯 Objetivo del proyecto
 
-Además de resolver un problema real del trabajo diario de un conductor de taxi, Taxi Finance forma parte de un proceso de aprendizaje continuo en desarrollo Full Stack, arquitectura de software y diseño de producto.
+Además de resolver un problema real del trabajo diario de un conductor de taxi, Lic249 forma parte de un proceso de aprendizaje continuo en desarrollo Full Stack, arquitectura de software y diseño de producto.
 
-El objetivo es construir un producto real, mantenible y escalable, aplicando buenas prácticas de ingeniería de software, arquitectura limpia y diseño de producto. Además de resolver una necesidad diaria, Taxi Finance constituye el principal proyecto de portfolio del autor y evoluciona de forma incremental mediante sprints documentados.
+El objetivo es construir un producto real, mantenible y escalable, aplicando buenas prácticas de ingeniería de software, arquitectura limpia y diseño de producto. Además de resolver una necesidad diaria, Lic249 constituye el principal proyecto de portfolio del autor y evoluciona de forma incremental mediante sprints documentados.
 
 ---
 

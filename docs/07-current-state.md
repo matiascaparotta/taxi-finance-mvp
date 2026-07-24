@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento resume el estado actual de Taxi Finance.
+Este documento resume el estado actual de Lic249.
 
 Su finalidad es ofrecer una visión rápida del punto en el que se encuentra el proyecto, incluyendo el avance del desarrollo, la documentación disponible y la metodología de trabajo utilizada.
 
@@ -20,7 +20,7 @@ A diferencia del **Roadmap**, que describe las fases previstas del proyecto, est
 
 # Proyecto
 
-**Nombre:** Taxi Finance
+**Nombre:** Lic249
 
 **Versión actual:** Beta 1.0
 
@@ -118,7 +118,7 @@ como recuperación independiente.
 
 # Estado del deploy
 
-Taxi Finance está desplegada de forma privada en Railway:
+Lic249 está desplegada de forma privada en Railway:
 
 - Aplicación: `https://taxi-finance-mvp-production.up.railway.app`
 - Entorno: `production`
@@ -204,7 +204,7 @@ Las prioridades actuales son:
 
 # Metodología de trabajo
 
-El desarrollo de Taxi Finance seguirá un proceso iterativo basado en sprints.
+El desarrollo de Lic249 seguirá un proceso iterativo basado en sprints.
 
 Cada sprint deberá completar el siguiente flujo de trabajo:
 
@@ -233,7 +233,7 @@ Las reglas de negocio y las decisiones arquitectónicas deberán actualizarse an
 
 # Conclusión
 
-Este documento ofrece una visión resumida del estado actual de Taxi Finance.
+Este documento ofrece una visión resumida del estado actual de Lic249.
 
 Su objetivo es facilitar la incorporación al proyecto, conocer rápidamente el punto de desarrollo alcanzado y servir como referencia para iniciar el siguiente sprint.
 

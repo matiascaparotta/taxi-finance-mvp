@@ -1,4 +1,4 @@
-# Taxi Finance — Project Journal
+# Lic249 — Project Journal
 
 **Versión:** 2.0
 
@@ -12,7 +12,7 @@
 
 # Introducción
 
-Este documento registra la evolución completa de Taxi Finance desde el inicio del proyecto.
+Este documento registra la evolución completa de Lic249 desde el inicio del proyecto.
 
 Su objetivo no es únicamente listar las funcionalidades desarrolladas, sino documentar las decisiones técnicas, los cambios de enfoque y el aprendizaje obtenido durante el desarrollo.
 
@@ -28,7 +28,7 @@ Cada sprint representa un incremento funcional del proyecto y deja constancia de
 
 ## Objetivo
 
-Crear la base técnica sobre la que se desarrollará Taxi Finance.
+Crear la base técnica sobre la que se desarrollará Lic249.
 
 ## Trabajo realizado
 
@@ -112,7 +112,7 @@ Comprender el flujo completo de una petición fue mucho más importante que desa
 
 ## Objetivo
 
-Comenzar a definir las reglas de negocio que posteriormente darían forma al funcionamiento financiero de Taxi Finance.
+Comenzar a definir las reglas de negocio que posteriormente darían forma al funcionamiento financiero de Lic249.
 
 ## Trabajo realizado
 
@@ -165,7 +165,7 @@ Incorporar una base de datos para conservar la información registrada entre ses
 
 La información dejó de existir únicamente en memoria y comenzó a almacenarse de forma permanente.
 
-Este paso convirtió a Taxi Finance en una aplicación capaz de conservar el historial de trabajo.
+Este paso convirtió a Lic249 en una aplicación capaz de conservar el historial de trabajo.
 
 ## Valor para el proyecto
 
@@ -203,7 +203,7 @@ Permitir crear jornadas de trabajo desde la aplicación y validar por primera ve
 
 ## Resultado
 
-Taxi Finance fue capaz de registrar jornadas reales por primera vez.
+Lic249 fue capaz de registrar jornadas reales por primera vez.
 
 La aplicación dejó de ser únicamente una estructura técnica y comenzó a almacenar información vinculada al trabajo diario del conductor.
 
@@ -278,7 +278,7 @@ Permitir registrar cada viaje realizado durante una jornada de trabajo.
 
 ## Resultado
 
-Taxi Finance comenzó a almacenar cada viaje de forma individual, dejando atrás el modelo basado únicamente en totales diarios.
+Lic249 comenzó a almacenar cada viaje de forma individual, dejando atrás el modelo basado únicamente en totales diarios.
 
 ## Valor para el proyecto
 
@@ -302,7 +302,7 @@ Este fue uno de los cambios más importantes del desarrollo. La aplicación dej�
 
 ## Objetivo
 
-Construir la primera pantalla principal de Taxi Finance mostrando la información esencial de la jornada activa.
+Construir la primera pantalla principal de Lic249 mostrando la información esencial de la jornada activa.
 
 ## Trabajo realizado
 
@@ -318,7 +318,7 @@ Por primera vez la aplicación permitió gestionar una jornada completa desde un
 
 ## Valor para el proyecto
 
-El conductor pudo dejar de interactuar únicamente con la API y comenzar a utilizar Taxi Finance como una herramienta real durante su jornada.
+El conductor pudo dejar de interactuar únicamente con la API y comenzar a utilizar Lic249 como una herramienta real durante su jornada.
 
 ## Aprendizaje técnico
 
@@ -386,7 +386,7 @@ Implementar el primer flujo de cierre de una jornada de trabajo.
 
 ## Resultado
 
-Taxi Finance fue capaz de cerrar correctamente una jornada y dejar preparada toda la información para su revisión.
+Lic249 fue capaz de cerrar correctamente una jornada y dejar preparada toda la información para su revisión.
 
 Aunque el flujo de cierre evolucionaría posteriormente, este sprint estableció la estructura sobre la que se desarrollaría el proceso definitivo.
 
@@ -526,7 +526,7 @@ La reutilización de componentes permitió mantener un único formulario para cr
 
 ## Reflexión del sprint
 
-Este sprint consolidó definitivamente al viaje como la unidad principal de información dentro de Taxi Finance.
+Este sprint consolidó definitivamente al viaje como la unidad principal de información dentro de Lic249.
 
 ## Estado
 
@@ -561,7 +561,7 @@ Permitir consultar jornadas anteriores, revisar todos los viajes registrados y c
 
 ## Resultado
 
-Taxi Finance pasó a conservar el historial completo de jornadas, permitiendo revisar cualquier día trabajado sin depender de anotaciones externas.
+Lic249 pasó a conservar el historial completo de jornadas, permitiendo revisar cualquier día trabajado sin depender de anotaciones externas.
 
 El historial se convirtió además en la base sobre la que posteriormente se construirían los módulos de estadísticas e informes previstos en el Roadmap.
 
@@ -575,7 +575,7 @@ Separar claramente la representación interna de los datos y el formato comparti
 
 ## Reflexión del sprint
 
-Con este sprint Taxi Finance dejó de ser únicamente una herramienta para registrar el presente y pasó a convertirse también en una herramienta de consulta y seguimiento del trabajo realizado.
+Con este sprint Lic249 dejó de ser únicamente una herramienta para registrar el presente y pasó a convertirse también en una herramienta de consulta y seguimiento del trabajo realizado.
 
 ## Estado
 
@@ -618,7 +618,7 @@ Este sprint supuso un cambio importante en la filosofía del proyecto.
 
 Hasta ese momento muchas decisiones se habían tomado desde un punto de vista técnico. A partir de aquí, cada nueva decisión comenzó a evaluarse principalmente desde la perspectiva del flujo de trabajo del conductor.
 
-Ese cambio de enfoque terminó definiendo la identidad de Taxi Finance.
+Ese cambio de enfoque terminó definiendo la identidad de Lic249.
 
 ## Estado
 
@@ -630,7 +630,7 @@ Ese cambio de enfoque terminó definiendo la identidad de Taxi Finance.
 
 ## Objetivo
 
-Completar el flujo principal de Taxi Finance y obtener una primera versión totalmente funcional capaz de sustituir el registro manual mediante WhatsApp durante una jornada real de trabajo.
+Completar el flujo principal de Lic249 y obtener una primera versión totalmente funcional capaz de sustituir el registro manual mediante WhatsApp durante una jornada real de trabajo.
 
 ## Trabajo realizado
 
@@ -676,7 +676,7 @@ aplicación utilizada con rapidez desde el móvil.
 
 Este sprint representa el cierre del MVP.
 
-A partir de este momento el objetivo deja de ser añadir nuevas funcionalidades y pasa a ser validar que Taxi Finance resuelve correctamente el problema para el que fue creado.
+A partir de este momento el objetivo deja de ser añadir nuevas funcionalidades y pasa a ser validar que Lic249 resuelve correctamente el problema para el que fue creado.
 
 Solo una vez validado el producto en producción comenzará el desarrollo de las siguientes fases del Roadmap.
 
@@ -711,7 +711,7 @@ publicación privada que preserve los datos del conductor.
 El 24/07/2026 se realizó el primer deploy privado en Railway:
 
 - Se activó el plan Hobby.
-- Se creó el proyecto privado `Taxi Finance`.
+- Se creó el proyecto privado `Lic249`.
 - Se desplegaron la aplicación unificada y MySQL en EU West.
 - Se ejecutaron las migraciones antes de publicar.
 - Se configuraron CORS, sesión firmada y acceso mediante contraseña.
@@ -732,7 +732,7 @@ manuales verificados y se evaluará una automatización alternativa.
 
 # Evolución del proyecto
 
-Taxi Finance no fue desarrollado siguiendo un plan completamente cerrado desde el primer día.
+Lic249 no fue desarrollado siguiendo un plan completamente cerrado desde el primer día.
 
 A medida que avanzó el desarrollo y se comprendió mejor el trabajo diario del conductor, varias decisiones iniciales fueron revisadas para adaptarse a un flujo de trabajo más eficiente.
 
@@ -750,7 +750,7 @@ Estos cambios no representan errores de planificación, sino el aprendizaje obte
 
 # Próximas fases
 
-Una vez validada la Beta 1.0, Taxi Finance continuará evolucionando siguiendo el Roadmap oficial del proyecto:
+Una vez validada la Beta 1.0, Lic249 continuará evolucionando siguiendo el Roadmap oficial del proyecto:
 
 - Sprint 17 — Estabilización y mejoras derivadas del uso real.
 - Sprint 18 — Liquidación mensual.
@@ -765,7 +765,7 @@ Cada fase comenzará únicamente cuando la anterior haya sido validada y conside
 
 # Filosofía del proyecto
 
-Taxi Finance se desarrolla de forma incremental.
+Lic249 se desarrolla de forma incremental.
 
 Cada sprint debe aportar valor real al conductor y dejar la aplicación en un estado funcional.
 
@@ -779,8 +779,8 @@ La prioridad no es desarrollar más funcionalidades, sino construir una herramie
 
 # Fuente oficial
 
-Este documento constituye el historial oficial del desarrollo de Taxi Finance.
+Este documento constituye el historial oficial del desarrollo de Lic249.
 
 Cada sprint refleja el estado del proyecto en ese momento, las decisiones tomadas, los cambios introducidos y los aprendizajes obtenidos durante la evolución del producto.
 
-Las reglas de negocio vigentes y el alcance actual del proyecto quedan definidos en la documentación oficial (`Roadmap`, `Business Rules` y `Architecture Decisions`), mientras que este Journal conserva la historia de cómo Taxi Finance llegó a convertirse en la aplicación que es hoy.
+Las reglas de negocio vigentes y el alcance actual del proyecto quedan definidos en la documentación oficial (`Roadmap`, `Business Rules` y `Architecture Decisions`), mientras que este Journal conserva la historia de cómo Lic249 llegó a convertirse en la aplicación que es hoy.

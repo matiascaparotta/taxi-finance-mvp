@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento define las reglas de negocio oficiales de Taxi Finance.
+Este documento define las reglas de negocio oficiales de Lic249.
 
 Su finalidad es garantizar que el comportamiento de la aplicación sea consistente independientemente de futuras modificaciones del código.
 
@@ -20,7 +20,7 @@ En caso de contradicción entre una conversación, una implementación o una pro
 
 # Cómo utilizar este documento
 
-Las reglas descritas en este documento representan el comportamiento oficial de Taxi Finance.
+Las reglas descritas en este documento representan el comportamiento oficial de Lic249.
 
 Toda nueva funcionalidad deberá respetarlas o, en caso de requerir un cambio, actualizar previamente este documento.
 
@@ -30,7 +30,7 @@ En caso de conflicto entre la implementación y estas reglas, prevalecerán las 
 
 # Principios del producto
 
-Taxi Finance está diseñado para ayudar al conductor durante su jornada de trabajo.
+Lic249 está diseñado para ayudar al conductor durante su jornada de trabajo.
 
 Toda funcionalidad deberá cumplir al menos uno de estos objetivos:
 
@@ -79,7 +79,7 @@ Una vez cerrada, no podrán añadirse, modificarse ni eliminarse viajes.
 Las jornadas históricas procedentes de la importación estarán protegidas y no
 podrán modificarse ni eliminarse.
 
-Las jornadas creadas directamente en Taxi Finance después de la importación
+Las jornadas creadas directamente en Lic249 después de la importación
 podrán eliminarse completas con confirmación explícita. Al eliminarlas se
 eliminarán también sus viajes y la operación será irreversible.
 
@@ -156,7 +156,7 @@ La eliminación de un viaje será irreversible.
 
 # Medios de pago
 
-Actualmente Taxi Finance admite dos medios de pago:
+Actualmente Lic249 admite dos medios de pago:
 
 - Efectivo.
 - Datáfono.
@@ -413,7 +413,7 @@ Las siguientes reglas deberán cumplirse en toda la aplicación.
 
 ## Acceso privado
 
-Mientras Taxi Finance funcione como aplicación de un único conductor, todas
+Mientras Lic249 funcione como aplicación de un único conductor, todas
 las jornadas, viajes y resúmenes estarán protegidos mediante una sesión
 privada. La contraseña será validada únicamente por el backend y no podrá
 incluirse en el código del frontend.
@@ -454,7 +454,7 @@ Los resúmenes, indicadores y pantallas nunca almacenarán cálculos propios, si
 
 ## Simplicidad
 
-Toda nueva funcionalidad deberá mantener la filosofía de Taxi Finance:
+Toda nueva funcionalidad deberá mantener la filosofía de Lic249:
 
 - reducir el número de acciones necesarias para completar una tarea;
 - minimizar los errores del usuario;
@@ -476,7 +476,7 @@ Si una regla cambia, este documento deberá actualizarse antes de cerrar el spri
 
 # Fuente oficial
 
-Este documento constituye la fuente oficial de las reglas de negocio de Taxi Finance.
+Este documento constituye la fuente oficial de las reglas de negocio de Lic249.
 
 Toda decisión funcional deberá ser coherente con las reglas aquí definidas hasta que se apruebe una nueva versión del documento.
 

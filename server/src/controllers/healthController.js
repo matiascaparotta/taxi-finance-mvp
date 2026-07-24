@@ -1,7 +1,7 @@
 const getHealthStatus = (req, res) => {
     res.json({
       status: "ok",
-      message: "Taxi Finance API running",
+      message: "Lic249 API running",
     });
   };
   

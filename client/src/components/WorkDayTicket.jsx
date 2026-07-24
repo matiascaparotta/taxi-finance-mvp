@@ -83,7 +83,7 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
     <Card className="border-emerald-500/30 bg-slate-950">
       <div className="text-center">
         <p className="text-sm font-semibold tracking-[0.2em] text-emerald-300">
-          LICENCIA 249
+          Lic249
         </p>
         <h2 className="mt-2 text-2xl font-bold text-white">
           Jornada finalizada

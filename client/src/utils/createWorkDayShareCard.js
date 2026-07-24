@@ -106,7 +106,7 @@ function createCanvas(height) {
 function drawBrandHeader(context, title) {
   drawText(
     context,
-    "LICENCIA 249",
+    "Lic249",
     CARD_WIDTH / 2,
     58,
     "700 32px Arial",

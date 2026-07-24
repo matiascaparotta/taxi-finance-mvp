@@ -1,4 +1,4 @@
-# Taxi Finance — Architecture Decision Records (ADR)
+# Lic249 — Architecture Decision Records (ADR)
 
 **Versión:** 2.0
 
@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento registra las decisiones arquitectónicas más importantes tomadas durante el desarrollo de Taxi Finance.
+Este documento registra las decisiones arquitectónicas más importantes tomadas durante el desarrollo de Lic249.
 
 Su finalidad es conservar el razonamiento técnico detrás de la arquitectura del proyecto para que cualquier desarrollador pueda comprender no solo cómo está construido el sistema, sino también por qué se tomaron determinadas decisiones.
 
@@ -784,7 +784,7 @@ por sí sola todos los ajustes históricos.
 
 Conservar para cada jornada importada sus valores autorizados de cierre y
 utilizarlos al generar el resumen histórico. Las jornadas creadas directamente
-en Taxi Finance continúan calculando sus importes desde los viajes, respetando
+en Lic249 continúan calculando sus importes desde los viajes, respetando
 el principio de fuente única de verdad.
 
 ### Beneficios
@@ -804,7 +804,7 @@ importación deberá validar explícitamente esos totales.
 
 # Conclusión
 
-Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Taxi Finance.
+Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.
 
 Su objetivo no es únicamente documentar el estado actual del proyecto, sino conservar el razonamiento que dio origen a cada decisión.
 

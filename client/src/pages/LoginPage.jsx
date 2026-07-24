@@ -34,7 +34,7 @@ function LoginPage({ onAuthenticated }) {
       <div className="mx-auto max-w-md space-y-8">
         <div className="text-center">
           <p className="text-sm font-bold tracking-widest text-emerald-300">
-            TAXI FINANCE
+            Lic249
           </p>
           <h1 className="mt-3 text-3xl font-bold">
             Acceso privado

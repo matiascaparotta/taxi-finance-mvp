@@ -49,8 +49,8 @@ function WorkDayShareCard({
             new File(
               [blob],
               index === 0
-                ? `taxi-finance-${dateKey}-resumen.png`
-                : `taxi-finance-${dateKey}-viajes-${String(
+                ? `lic249-${dateKey}-resumen.png`
+                : `lic249-${dateKey}-viajes-${String(
                     index
                   ).padStart(2, "0")}.png`,
               { type: "image/png" }
@@ -113,7 +113,7 @@ function WorkDayShareCard({
       ) {
         await navigator.share({
           files: shareFiles,
-          title: "Resumen de jornada — Licencia 249",
+          title: "Resumen de jornada — Lic249",
         });
         setMessage(
           `${shareFiles.length} ${

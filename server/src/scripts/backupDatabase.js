@@ -112,11 +112,11 @@ const backupDatabase = async () => {
       path.join(__dirname, "../../backups")
   );
   const temporaryDirectory = await fsPromises.mkdtemp(
-    path.join(os.tmpdir(), "taxi-finance-backup-")
+    path.join(os.tmpdir(), "lic249-backup-")
   );
   const configPath = path.join(temporaryDirectory, "mysql-client.cnf");
   const timestamp = formatTimestamp(new Date());
-  const backupName = `taxi-finance-${timestamp}.sql`;
+  const backupName = `lic249-${timestamp}.sql`;
   const temporaryBackupPath = path.join(
     temporaryDirectory,
     backupName

@@ -1,10 +1,10 @@
-# 🚖 Taxi Finance — Roadmap
+# 🚖 Lic249 — Roadmap
 
 ## Visión
 
 Construir una aplicación Full Stack para la gestión financiera de conductores de taxi, sustituyendo los procesos manuales por una herramienta rápida, intuitiva, segura y profesional.
 
-Taxi Finance nace para resolver un problema real: simplificar el trabajo diario del conductor de taxi, reduciendo el tiempo dedicado a registrar información y eliminando errores en los cálculos y en la rendición de cuentas.
+Lic249 nace para resolver un problema real: simplificar el trabajo diario del conductor de taxi, reduciendo el tiempo dedicado a registrar información y eliminando errores en los cálculos y en la rendición de cuentas.
 
 El objetivo del proyecto es evolucionar desde un MVP funcional hasta una plataforma completa para la gestión financiera de conductores.
 
@@ -40,7 +40,7 @@ El objetivo del proyecto es evolucionar desde un MVP funcional hasta una platafo
 | Sprint 13 | ✅ | Gestión de viajes | Editar y eliminar viajes |
 | Sprint 14 | ✅ | Historial de jornadas | Consultar jornadas anteriores |
 | Sprint 15 | ✅ | Registro rápido | Registro tipo calculadora |
-| **Sprint 16** | ✅ | **Beta 1.0 — Cierre del MVP** | **Gestionar una jornada completa con Taxi Finance** |
+| **Sprint 16** | ✅ | **Beta 1.0 — Cierre del MVP** | **Gestionar una jornada completa con Lic249** |
 | **Sprint 17** | 🚧 | **Estabilización** | **Preparar un uso diario fiable y el deploy privado** |
 | Sprint 18 | ⏳ | Liquidación mensual | Desarrollar el módulo financiero mensual |
 | Sprint 19 | ⏳ | Dashboard financiero | Estadísticas y análisis |
@@ -60,7 +60,7 @@ Cada decisión debe responder a una única pregunta:
 
 Si la respuesta es no, la funcionalidad no tendrá prioridad dentro del MVP.
 
-Taxi Finance debe crecer sobre una base estable y validada en producción.
+Lic249 debe crecer sobre una base estable y validada en producción.
 
 ---
 
@@ -74,7 +74,7 @@ Reemplazar completamente:
 - La calculadora.
 - Las anotaciones manuales.
 
-Al finalizar esta fase el conductor deberá poder registrar una jornada completa utilizando únicamente Taxi Finance.
+Al finalizar esta fase el conductor deberá poder registrar una jornada completa utilizando únicamente Lic249.
 
 ---
 
@@ -240,7 +240,7 @@ No deberán mostrarse indicadores que no aporten valor al trabajo diario del con
 
 La Beta se considerará finalizada cuando se cumplan todos los siguientes puntos:
 
-- Se pueda registrar una jornada completa utilizando únicamente Taxi Finance.
+- Se pueda registrar una jornada completa utilizando únicamente Lic249.
 - El flujo de cierre funcione correctamente.
 - El cálculo del combustible sea correcto.
 - El resumen diario sea correcto.
@@ -272,7 +272,7 @@ Se completaron los siguientes pasos:
 - Validar desde el móvil el flujo completo de una jornada.
 - Validar compartir y guardar imágenes en el dispositivo real.
 
-Hasta que exista autenticación o separación por usuario, Taxi Finance se
+Hasta que exista autenticación o separación por usuario, Lic249 se
 desplegará únicamente como aplicación privada para un solo conductor.
 
 ---
@@ -281,7 +281,7 @@ desplegará únicamente como aplicación privada para un solo conductor.
 
 ## Objetivo
 
-Una vez publicada la Beta 1.0, el objetivo será utilizar Taxi Finance en producción y corregir únicamente los problemas detectados durante el uso real.
+Una vez publicada la Beta 1.0, el objetivo será utilizar Lic249 en producción y corregir únicamente los problemas detectados durante el uso real.
 
 Durante esta fase no se desarrollarán nuevas funcionalidades importantes.
 
@@ -408,7 +408,7 @@ La documentación será siempre la fuente oficial del proyecto.
 
 # Filosofía del producto
 
-Taxi Finance debe permitir cerrar una jornada completa en menos de un minuto.
+Lic249 debe permitir cerrar una jornada completa en menos de un minuto.
 
 Cada nueva funcionalidad deberá cumplir al menos uno de estos objetivos:
 
@@ -423,7 +423,7 @@ Si una funcionalidad no aporta alguno de estos beneficios, no tendrá prioridad 
 
 # Regla principal del proyecto
 
-> **Taxi Finance debe resolver primero el trabajo diario del conductor. Solo cuando ese flujo sea estable, rápido y esté validado en producción se incorporarán nuevas funcionalidades.**
+> **Lic249 debe resolver primero el trabajo diario del conductor. Solo cuando ese flujo sea estable, rápido y esté validado en producción se incorporarán nuevas funcionalidades.**
 
 ---
 
