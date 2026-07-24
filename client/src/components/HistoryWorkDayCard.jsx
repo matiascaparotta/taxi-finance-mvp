@@ -1,6 +1,7 @@
 import Card from "./ui/Card";
 import { formatCurrency } from "../utils/formatCurrency";
 import { formatDate } from "../utils/formatDate";
+import { getDisplayedCash } from "../utils/getDisplayedCash";
 
 function HistoryWorkDayCard({ workDay, onClick }) {
   const summary = workDay.summary ?? {};
@@ -14,8 +15,10 @@ function HistoryWorkDayCard({ workDay, onClick }) {
   );
   const totalRevenue =
     summary.totalRevenue ?? workDay.totalRevenue ?? workDay.total;
-  const displayedCash =
-    summary.realCash ?? summary.cash ?? workDay.realCash ?? workDay.cash;
+  const displayedCash = getDisplayedCash({
+    realCash: summary.realCash ?? workDay.realCash,
+    cash: summary.cash ?? workDay.cash,
+  });
   const displayedCard = summary.card ?? workDay.card;
   const fuelOwn = Number(
     summary.fuelOwn ?? workDay.fuelOwn ?? workDay.fuel_own ?? 0

@@ -1,5 +1,6 @@
 import { formatCurrency } from "./formatCurrency.js";
 import { formatDate } from "./formatDate.js";
+import { getDisplayedCash } from "./getDisplayedCash.js";
 
 const CARD_WIDTH = 1080;
 const COLORS = {
@@ -112,7 +113,7 @@ export async function createWorkDayShareCard(
     },
     {
       label: "Efectivo",
-      value: formatCurrency(summary.realCash ?? summary.cash),
+      value: formatCurrency(getDisplayedCash(summary)),
     },
     { label: "Datáfono", value: formatCurrency(summary.card) },
     { label: "Facturación", value: formatCurrency(summary.totalRevenue) },

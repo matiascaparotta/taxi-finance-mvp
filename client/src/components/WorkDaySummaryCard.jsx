@@ -1,5 +1,7 @@
 import Card from "./ui/Card";
 import Stat from "./ui/Stat";
+import { formatCurrency } from "../utils/formatCurrency";
+import { getDisplayedCash } from "../utils/getDisplayedCash";
 
 function WorkDaySummaryCard({ summary }) {
   if (!summary) {
@@ -12,9 +14,18 @@ function WorkDaySummaryCard({ summary }) {
 
       <div className="mt-5 grid grid-cols-2 gap-4">
         <Stat label="🚖 Viajes" value={summary.tripCount} />
-        <Stat label="💶 Facturación" value={`${summary.totalRevenue} €`} />
-        <Stat label="💵 Efectivo" value={`${summary.cash} €`} />
-        <Stat label="💳 Datáfono" value={`${summary.card} €`} />
+        <Stat
+          label="💶 Facturación"
+          value={formatCurrency(summary.totalRevenue)}
+        />
+        <Stat
+          label="💵 Efectivo"
+          value={formatCurrency(getDisplayedCash(summary))}
+        />
+        <Stat
+          label="💳 Datáfono"
+          value={formatCurrency(summary.card)}
+        />
       </div>
     </Card>
   );

@@ -1,6 +1,7 @@
 import Card from "./ui/Card";
 import { formatDate } from "../utils/formatDate";
 import { formatCurrency } from "../utils/formatCurrency";
+import { getDisplayedCash } from "../utils/getDisplayedCash";
 
 function formatTripTime(trip) {
   const rawDate = trip.createdAt || trip.created_at || trip.createdAtFormatted;
@@ -25,7 +26,7 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
   const workedKm = Number(summary.workedKm ?? endKm - startKm);
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
-  const displayedCash = summary.realCash ?? summary.cash;
+  const displayedCash = getDisplayedCash(summary);
   const sortedTrips = [...trips].sort((a, b) => {
     const dateA = new Date(a.createdAt || a.created_at || 0);
     const dateB = new Date(b.createdAt || b.created_at || 0);

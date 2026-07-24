@@ -12,6 +12,7 @@ import { getOpenWorkDay, getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 import { formatCurrency } from "../utils/formatCurrency";
+import { getDisplayedCash } from "../utils/getDisplayedCash";
 
 function HomePage() {
   const [workDays, setWorkDays] = useState([]);
@@ -136,7 +137,7 @@ function HomePage() {
 
               <Stat
                 label="💵 Efectivo"
-                value={formatCurrency(activeSummary.cash)}
+                value={formatCurrency(getDisplayedCash(activeSummary))}
               />
 
               <Stat

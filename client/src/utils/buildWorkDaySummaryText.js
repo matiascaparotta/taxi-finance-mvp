@@ -1,4 +1,5 @@
 import { formatCurrency } from "./formatCurrency.js";
+import { getDisplayedCash } from "./getDisplayedCash.js";
 import { normalizeWorkDayDate } from "./workDayDate.js";
 
 const WEEK_DAYS = [
@@ -44,7 +45,7 @@ export function buildWorkDaySummaryText(workDay, summary) {
     "",
     `KM: ${workedKm}`,
     "",
-    `EFECTIVO: ${formatCurrency(summary.realCash ?? summary.cash)}`,
+    `EFECTIVO: ${formatCurrency(getDisplayedCash(summary))}`,
     `DATÁFONO: ${formatCurrency(summary.card)}`,
     `FACTURACIÓN: ${formatCurrency(summary.totalRevenue)}`,
   ];
