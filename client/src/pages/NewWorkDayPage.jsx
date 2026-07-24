@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 
@@ -34,6 +33,8 @@ function NewWorkDayPage() {
   const [latestClosedWorkDay, setLatestClosedWorkDay] = useState(null);
   const [error, setError] = useState("");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  const startingLockRef = useRef(false);
 
   const navigate = useNavigate();
 
@@ -51,13 +52,25 @@ function NewWorkDayPage() {
   }, []);
 
   const startWorkDay = async (resetOdometer = false) => {
-    await createWorkDay({
-      date: getDefaultWorkDayDate(),
-      startKm,
-      resetOdometer,
-    });
+    if (startingLockRef.current) {
+      return;
+    }
 
-    navigate("/");
+    startingLockRef.current = true;
+    setIsStarting(true);
+
+    try {
+      await createWorkDay({
+        date: getDefaultWorkDayDate(),
+        startKm,
+        resetOdometer,
+      });
+
+      navigate("/");
+    } finally {
+      startingLockRef.current = false;
+      setIsStarting(false);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -138,7 +151,13 @@ function NewWorkDayPage() {
             </p>
           )}
 
-          <Button type="submit">Iniciar jornada</Button>
+          <button
+            type="submit"
+            disabled={isStarting}
+            className="w-full rounded-2xl bg-emerald-400 px-6 py-4 text-lg font-bold text-slate-950 transition hover:bg-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-60"
+          >
+            {isStarting ? "Iniciando..." : "Iniciar jornada"}
+          </button>
         </form>
       </Card>
 
@@ -154,13 +173,21 @@ function NewWorkDayPage() {
               si cambiaste de vehículo o se reinició el cuentakilómetros.
             </p>
             <div className="mt-6 space-y-3">
-              <Button onClick={confirmNewMileageBase}>
-                Sí, usar nueva base
-              </Button>
+              <button
+                type="button"
+                onClick={confirmNewMileageBase}
+                disabled={isStarting}
+                className="w-full rounded-2xl bg-emerald-400 px-6 py-4 text-lg font-bold text-slate-950 transition hover:bg-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-60"
+              >
+                {isStarting
+                  ? "Iniciando..."
+                  : "Sí, usar nueva base"}
+              </button>
               <button
                 type="button"
                 onClick={() => setShowResetConfirm(false)}
-                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300"
+                disabled={isStarting}
+                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Corregir kilometraje
               </button>
