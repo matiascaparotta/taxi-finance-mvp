@@ -5,6 +5,8 @@ const createTrip = async (tripData) => {
     workDayId,
     amount,
     paymentType,
+    commission = 0,
+    tip = 0,
     note = null,
     cashAdjustment = 0,
     adjustmentReason = null,
@@ -16,16 +18,20 @@ const createTrip = async (tripData) => {
       work_day_id,
       amount,
       payment_type,
+      commission,
+      tip,
       note,
       cash_adjustment,
       adjustment_reason
     )
-    VALUES (?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [
       workDayId,
       amount,
       paymentType,
+      commission,
+      tip,
       note,
       cashAdjustment,
       adjustmentReason,
@@ -39,6 +45,8 @@ const createTrip = async (tripData) => {
       work_day_id AS workDayId,
       amount,
       payment_type AS paymentType,
+      commission,
+      tip,
       note,
       cash_adjustment AS cashAdjustment,
       adjustment_reason AS adjustmentReason,
@@ -61,6 +69,8 @@ const getTripsByWorkDayId = async (workDayId) => {
       work_day_id AS workDayId,
       amount,
       payment_type AS paymentType,
+      commission,
+      tip,
       note,
       cash_adjustment AS cashAdjustment,
       adjustment_reason AS adjustmentReason,
@@ -84,6 +94,8 @@ const getTripById = async (tripId) => {
       work_day_id AS workDayId,
       amount,
       payment_type AS paymentType,
+      commission,
+      tip,
       note,
       cash_adjustment AS cashAdjustment,
       adjustment_reason AS adjustmentReason,
@@ -102,17 +114,21 @@ const updateTripById = async (tripId, tripData) => {
   const {
     amount,
     paymentType,
+    commission = 0,
+    tip = 0,
     note = null,
     cashAdjustment = 0,
     adjustmentReason = null,
   } = tripData;
 
-  await pool.query(
+  const [result] = await pool.query(
     `
     UPDATE trips
     SET
       amount = ?,
       payment_type = ?,
+      commission = ?,
+      tip = ?,
       note = ?,
       cash_adjustment = ?,
       adjustment_reason = ?
@@ -121,12 +137,18 @@ const updateTripById = async (tripId, tripData) => {
     [
       amount,
       paymentType,
+      commission,
+      tip,
       note,
       cashAdjustment,
       adjustmentReason,
       tripId,
     ]
   );
+
+  if (result.affectedRows === 0) {
+    return null;
+  }
 
   const [rows] = await pool.query(
     `
@@ -135,6 +157,8 @@ const updateTripById = async (tripId, tripData) => {
       work_day_id AS workDayId,
       amount,
       payment_type AS paymentType,
+      commission,
+      tip,
       note,
       cash_adjustment AS cashAdjustment,
       adjustment_reason AS adjustmentReason,
@@ -146,8 +170,9 @@ const updateTripById = async (tripId, tripData) => {
     [tripId]
   );
 
-  return rows[0];
+  return rows[0] || null;
 };
+
 const deleteTripById = async (tripId) => {
   const [rows] = await pool.query(
     `
@@ -156,6 +181,8 @@ const deleteTripById = async (tripId) => {
       work_day_id AS workDayId,
       amount,
       payment_type AS paymentType,
+      commission,
+      tip,
       note,
       cash_adjustment AS cashAdjustment,
       adjustment_reason AS adjustmentReason,
@@ -181,6 +208,7 @@ const deleteTripById = async (tripId) => {
 
   return rows[0];
 };
+
 module.exports = {
   createTrip,
   getTripsByWorkDayId,

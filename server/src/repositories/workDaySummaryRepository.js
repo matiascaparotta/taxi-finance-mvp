@@ -26,7 +26,9 @@ const getWorkDayWithTrips = async (workDayId) => {
       id,
       amount,
       payment_type AS paymentType,
-      cash_adjustment AS cashAdjustment
+      commission,
+      tip,
+      note
     FROM trips
     WHERE work_day_id = ?
     `,

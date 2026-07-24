@@ -1,7 +1,9 @@
-const { getWorkDayWithTrips } = require("../repositories/workDaySummaryRepository");
+const {
+  getWorkDayWithTrips,
+} = require("../repositories/workDaySummaryRepository");
 
 const roundToTwoDecimals = (value) => {
-  return Number(value.toFixed(2));
+  return Number(Number(value || 0).toFixed(2));
 };
 
 const getWorkDaySummaryService = async (workDayId) => {
@@ -17,51 +19,83 @@ const getWorkDaySummaryService = async (workDayId) => {
 
   const { workDay, trips, importedSummary } = result;
 
-  const workedKm = workDay.endKm - workDay.startKm;
+  const startKm = Number(workDay.startKm || 0);
+  const endKm = Number(workDay.endKm || 0);
+
+  const workedKm = endKm - startKm;
 
   const cash = trips
     .filter((trip) => trip.paymentType === "cash")
     .reduce((total, trip) => {
-      return total + Number(trip.amount) + Number(trip.cashAdjustment || 0);
+      return total + Number(trip.amount || 0);
     }, 0);
 
   const card = trips
     .filter((trip) => trip.paymentType === "card")
     .reduce((total, trip) => {
-      return total + Number(trip.amount);
+      return total + Number(trip.amount || 0);
     }, 0);
 
-  const summaryCash = importedSummary
-    ? Number(importedSummary.cash)
-    : cash;
-  const summaryCard = importedSummary
-    ? Number(importedSummary.card)
+  const commission = trips.reduce((total, trip) => {
+    return total + Number(trip.commission || 0);
+  }, 0);
+
+  const tip = trips.reduce((total, trip) => {
+    return total + Number(trip.tip || 0);
+  }, 0);
+
+  const displayedCash = importedSummary
+    ? Number(importedSummary.cash || 0)
+    : cash - commission - tip;
+  const displayedCard = importedSummary
+    ? Number(importedSummary.card || 0)
     : card;
-  const totalRevenue = summaryCash + summaryCard;
+  const totalRevenue = displayedCash + displayedCard;
+
+  const realCash = displayedCash;
 
   const tripCount = trips.length;
+
+  const cashTripCount = trips.filter(
+    (trip) => trip.paymentType === "cash"
+  ).length;
+
+  const cardTripCount = trips.filter(
+    (trip) => trip.paymentType === "card"
+  ).length;
 
   const averageTrip =
     tripCount > 0 ? totalRevenue / tripCount : 0;
 
+  const fuelOwn = Number(workDay.fuelOwn || 0);
+  const fuelJose = Number(workDay.fuelJose || 0);
+
   const cashToDeliver =
-    summaryCash - Number(workDay.fuelOwn) - Number(workDay.fuelJose);
+    realCash - fuelOwn - fuelJose;
 
   return {
     workDayId: workDay.id,
     date: workDay.date,
-    startKm: workDay.startKm,
-    endKm: workDay.endKm,
-    workedKm,
+    startKm,
+    endKm,
+    workedKm: roundToTwoDecimals(workedKm),
 
     tripCount,
+    cashTripCount,
+    cardTripCount,
 
-    cash: roundToTwoDecimals(summaryCash),
-    card: roundToTwoDecimals(summaryCard),
+    cash: roundToTwoDecimals(
+      importedSummary ? displayedCash : cash
+    ),
+    card: roundToTwoDecimals(displayedCard),
     totalRevenue: roundToTwoDecimals(totalRevenue),
 
-    fuelOwn: Number(workDay.fuelOwn),
-    fuelJose: Number(workDay.fuelJose),
+    commission: roundToTwoDecimals(commission),
+    tip: roundToTwoDecimals(tip),
+    realCash: roundToTwoDecimals(realCash),
+
+    fuelOwn: roundToTwoDecimals(fuelOwn),
+    fuelJose: roundToTwoDecimals(fuelJose),
 
     cashToDeliver: roundToTwoDecimals(cashToDeliver),
     averageTrip: roundToTwoDecimals(averageTrip),
