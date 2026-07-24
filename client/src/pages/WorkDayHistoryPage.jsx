@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
 import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
 import HistoryWorkDayCard from "../components/HistoryWorkDayCard";
 
 import { getWorkDays } from "../services/workDayService";
@@ -31,13 +32,10 @@ function WorkDayHistoryPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadHistory();
-  }, []);
-
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     try {
       setError("");
+      setSummaryError("");
       setIsLoading(true);
 
       const workDays = await getWorkDays();
@@ -47,6 +45,9 @@ function WorkDayHistoryPage() {
       );
 
       setHistory(closedWorkDays);
+      setSummariesById({});
+      setSelectedDate("");
+      setShowDaySearch(false);
       setSelectedMonth(
         getAvailableWorkDayMonths(closedWorkDays)[0] ?? ""
       );
@@ -55,7 +56,11 @@ function WorkDayHistoryPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const visibleWorkDays = useMemo(
     () =>
@@ -127,14 +132,47 @@ function WorkDayHistoryPage() {
   ]);
 
   if (isLoading) {
-    return <p className="text-slate-400">Cargando historial...</p>;
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Historial"
+          subtitle="Consulta tus jornadas anteriores."
+        />
+        <Card>
+          <p className="text-center text-slate-300">
+            Cargando historial...
+          </p>
+        </Card>
+      </section>
+    );
   }
 
   if (error) {
     return (
-      <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-        {error}
-      </p>
+      <section className="space-y-8">
+        <SectionTitle
+          title="Historial"
+          subtitle="No pudimos cargar tus jornadas."
+        />
+
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            Revisa la conexión e inténtalo de nuevo
+          </p>
+          <p className="mt-2 text-sm text-red-300">{error}</p>
+
+          <div className="mt-5 space-y-3">
+            <Button onClick={loadHistory}>Reintentar</Button>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+            >
+              Volver al inicio
+            </button>
+          </div>
+        </Card>
+      </section>
     );
   }
 
