@@ -8,7 +8,10 @@ const {
 } = require("../repositories/workDayRepository");
 const { calculateFuelSplit } = require("../utils/fuel");
 const { validateStartKm } = require("../utils/odometer");
-const { validateCloseDate } = require("../utils/workDayDate");
+const {
+  validateCloseDate,
+  validateChronologicalWorkDayDate,
+} = require("../utils/workDayDate");
 
 const createWorkDayService = async (workDayData) => {
   const { date, startKm, resetOdometer = false } = workDayData;
@@ -26,6 +29,10 @@ const createWorkDayService = async (workDayData) => {
   }
 
   const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const validatedDate = validateChronologicalWorkDayDate(
+    date,
+    latestClosedWorkDay?.date
+  );
   const validatedStartKm = validateStartKm(
     startKm,
     latestClosedWorkDay?.endKm,
@@ -33,7 +40,7 @@ const createWorkDayService = async (workDayData) => {
   );
 
   const workDay = await createWorkDay({
-    date,
+    date: validatedDate,
     startKm: validatedStartKm,
   });
 
@@ -105,6 +112,11 @@ const closeWorkDayService = async (workDayId, closeData) => {
   }
 
   const validatedDate = validateCloseDate(date);
+  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  validateChronologicalWorkDayDate(
+    validatedDate,
+    latestClosedWorkDay?.date
+  );
 
   if (endKm === undefined || endKm === null || endKm === "") {
     throw new Error("El kilometraje final es obligatorio");

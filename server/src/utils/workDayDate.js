@@ -27,8 +27,26 @@ const validateCloseDate = (date, now = new Date()) => {
   return date;
 };
 
+const validateChronologicalWorkDayDate = (date, latestClosedDate) => {
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error("La fecha de la jornada no es válida");
+  }
+
+  if (latestClosedDate && date <= latestClosedDate) {
+    throw new Error(
+      `La nueva jornada debe ser posterior al ${latestClosedDate
+        .split("-")
+        .reverse()
+        .join("/")}`
+    );
+  }
+
+  return date;
+};
+
 module.exports = {
   formatLocalDate,
   getAllowedCloseDates,
   validateCloseDate,
+  validateChronologicalWorkDayDate,
 };

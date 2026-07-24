@@ -19,7 +19,7 @@ const createWorkDay = async (workDayData) => {
     `
     SELECT
       id,
-      date,
+      DATE_FORMAT(date, '%Y-%m-%d') AS date,
       start_km AS startKm,
       end_km AS endKm,
       fuel_own AS fuelOwn,
@@ -106,7 +106,7 @@ const getLatestClosedWorkDay = async () => {
     `
     SELECT
       id,
-      date,
+      DATE_FORMAT(date, '%Y-%m-%d') AS date,
       start_km AS startKm,
       end_km AS endKm,
       status,
@@ -114,7 +114,7 @@ const getLatestClosedWorkDay = async () => {
       updated_at AS updatedAt
     FROM work_days
     WHERE status = 'CLOSED'
-    ORDER BY updated_at DESC
+    ORDER BY date DESC, id DESC
     LIMIT 1
     `
   );
