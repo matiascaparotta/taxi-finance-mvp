@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+import { API_URL } from "../config/api";
 
 export const getWorkDaySummary = async (workDayId) => {
   const response = await fetch(`${API_URL}/work-days/${workDayId}/summary`);

@@ -119,15 +119,16 @@ migrados a una base de producción.
 
 Taxi Finance todavía no está desplegada.
 
-El frontend apunta actualmente a la API local y el servidor utiliza una
-configuración de desarrollo. No existe autenticación ni separación por
-usuario: cualquier persona que accediera a una publicación abierta utilizaría
-el mismo conjunto de datos.
+El frontend y el servidor ya admiten configuración por entorno. En desarrollo
+utilizan los valores locales y en producción podrán recibir la URL pública de
+la API y el puerto asignado sin modificar el código. No existe todavía
+autenticación ni separación por usuario: cualquier persona que accediera a
+una publicación abierta utilizaría el mismo conjunto de datos.
 
 El primer deploy deberá ser privado para un único conductor. Antes de
 realizarlo quedan pendientes:
 
-1. Configuración de la URL de API y puerto mediante variables de entorno.
+1. ✅ Configuración de la URL de API y puerto mediante variables de entorno.
 2. Esquema reproducible y migración de la base de datos.
 3. Restricción del origen permitido por CORS.
 4. Protección del acceso privado.

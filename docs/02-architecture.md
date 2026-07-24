@@ -797,8 +797,10 @@ asociado a cada registro.
 
 Por este motivo, el primer despliegue deberá ser privado. Antes de producción
 se configurarán mediante variables de entorno la URL de la API y el puerto del
-servidor, se limitará CORS al origen autorizado y se definirá un procedimiento
-de creación, migración y copia de seguridad de la base de datos.
+servidor. Esta configuración ya está implementada y documentada mediante
+archivos `.env.example`. A continuación se limitará CORS al origen autorizado
+y se definirá un procedimiento de creación, migración y copia de seguridad de
+la base de datos.
 
 Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
