@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
@@ -14,6 +14,9 @@ function EditTripPage() {
   const [trip, setTrip] = useState(null);
   const [error, setError] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const deletingLockRef = useRef(false);
 
   useEffect(() => {
     loadTrip();
@@ -34,12 +37,22 @@ function EditTripPage() {
   };
 
   const handleDeleteTrip = async () => {
+    if (deletingLockRef.current || isUpdating) {
+      return;
+    }
+
+    deletingLockRef.current = true;
+    setIsDeleting(true);
+
     try {
       await deleteTrip(id);
       navigate("/");
     } catch (error) {
       setError(error.message);
       setShowDeleteConfirm(false);
+    } finally {
+      deletingLockRef.current = false;
+      setIsDeleting(false);
     }
   };
 
@@ -71,6 +84,8 @@ function EditTripPage() {
         submitLabel="Guardar cambios"
         loadingLabel="Guardando cambios..."
         onSubmit={handleUpdateTrip}
+        disabled={isDeleting}
+        onSavingChange={setIsUpdating}
       />
 
       <Card className="border-red-500/30 bg-red-500/10">
@@ -83,7 +98,8 @@ function EditTripPage() {
         <button
           type="button"
           onClick={() => setShowDeleteConfirm(true)}
-          className="mt-5 w-full rounded-2xl border border-red-500/40 bg-red-500/10 px-6 py-4 text-lg font-bold text-red-300 transition hover:bg-red-500/20"
+          disabled={isUpdating || isDeleting}
+          className="mt-5 w-full rounded-2xl border border-red-500/40 bg-red-500/10 px-6 py-4 text-lg font-bold text-red-300 transition hover:bg-red-500/20 disabled:cursor-wait disabled:opacity-50"
         >
           Eliminar viaje
         </button>
@@ -102,15 +118,19 @@ function EditTripPage() {
               <button
                 type="button"
                 onClick={handleDeleteTrip}
-                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-bold text-white"
+                disabled={isDeleting}
+                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-bold text-white disabled:cursor-wait disabled:opacity-60"
               >
-                Sí, eliminar viaje
+                {isDeleting
+                  ? "Eliminando..."
+                  : "Sí, eliminar viaje"}
               </button>
 
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(false)}
-                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300"
+                disabled={isDeleting}
+                className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Cancelar
               </button>

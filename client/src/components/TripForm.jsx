@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Card from "./ui/Card";
 import Button from "./ui/Button";
 
@@ -11,6 +11,8 @@ function TripForm({
   submitLabel = "Guardar viaje",
   loadingLabel = "Guardando...",
   onSubmit,
+  disabled = false,
+  onSavingChange = () => {},
 }) {
   const [amount, setAmount] = useState(initialAmount);
   const [paymentType, setPaymentType] = useState(initialPaymentType);
@@ -19,13 +21,21 @@ function TripForm({
   const [note, setNote] = useState(initialNote || "");
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const savingLockRef = useRef(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (savingLockRef.current || disabled) {
+      return;
+    }
+
+    savingLockRef.current = true;
+    setIsSaving(true);
+    onSavingChange(true);
+
     try {
       setError("");
-      setIsSaving(true);
 
       if (!amount) {
         throw new Error("El importe del viaje es obligatorio");
@@ -53,7 +63,9 @@ function TripForm({
     } catch (error) {
       setError(error.message);
     } finally {
+      savingLockRef.current = false;
       setIsSaving(false);
+      onSavingChange(false);
     }
   };
 
@@ -168,7 +180,7 @@ function TripForm({
           </p>
         )}
 
-        <Button type="submit" disabled={isSaving}>
+        <Button type="submit" disabled={isSaving || disabled}>
           {isSaving ? loadingLabel : submitLabel}
         </Button>
       </form>
