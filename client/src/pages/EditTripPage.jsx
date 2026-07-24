@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import Button from "../components/ui/Button";
 import SectionTitle from "../components/ui/SectionTitle";
 import TripForm from "../components/TripForm";
 import Card from "../components/ui/Card";
@@ -12,24 +13,31 @@ function EditTripPage() {
   const navigate = useNavigate();
 
   const [trip, setTrip] = useState(null);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const deletingLockRef = useRef(false);
 
-  useEffect(() => {
-    loadTrip();
-  }, []);
-
-  const loadTrip = async () => {
+  const loadTrip = useCallback(async () => {
     try {
+      setLoadError("");
+      setIsLoading(true);
+
       const tripData = await getTripById(id);
       setTrip(tripData);
     } catch (error) {
-      setError(error.message);
+      setLoadError(error.message);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    loadTrip();
+  }, [loadTrip]);
 
   const handleUpdateTrip = async (tripData) => {
     await updateTrip(id, tripData);
@@ -45,10 +53,11 @@ function EditTripPage() {
     setIsDeleting(true);
 
     try {
+      setActionError("");
       await deleteTrip(id);
       navigate("/");
     } catch (error) {
-      setError(error.message);
+      setActionError(error.message);
       setShowDeleteConfirm(false);
     } finally {
       deletingLockRef.current = false;
@@ -56,16 +65,55 @@ function EditTripPage() {
     }
   };
 
-  if (error) {
+  if (isLoading) {
     return (
-      <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-        {error}
-      </p>
+      <section className="space-y-8">
+        <SectionTitle
+          title="Editar viaje"
+          subtitle="Cargando información..."
+        />
+        <Card>
+          <p className="text-center text-slate-300">
+            Cargando viaje...
+          </p>
+        </Card>
+      </section>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Editar viaje"
+          subtitle="No pudimos cargar la información."
+        />
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            No se pudo cargar el viaje
+          </p>
+          <p className="mt-2 text-sm text-slate-300">
+            {loadError}
+          </p>
+          <div className="mt-5 space-y-3">
+            <Button onClick={loadTrip}>
+              Reintentar
+            </Button>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+            >
+              Volver a la jornada
+            </button>
+          </div>
+        </Card>
+      </section>
     );
   }
 
   if (!trip) {
-    return <p className="text-slate-400">Cargando viaje...</p>;
+    return null;
   }
 
   return (
@@ -87,6 +135,12 @@ function EditTripPage() {
         disabled={isDeleting}
         onSavingChange={setIsUpdating}
       />
+
+      {actionError && (
+        <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+          {actionError}
+        </p>
+      )}
 
       <Card className="border-red-500/30 bg-red-500/10">
         <h3 className="text-lg font-bold text-red-300">Eliminar viaje</h3>
