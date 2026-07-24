@@ -828,6 +828,16 @@ móvil, el frontend y la API deberán publicarse bajo el mismo sitio, idealmente
 exponiendo la API detrás de una ruta como `/api`. Esta condición se tendrá en
 cuenta al elegir la plataforma de despliegue.
 
+Esta estructura ya está implementada. En producción Express sirve la
+aplicación React y expone todas las rutas del backend bajo `/api`. Las rutas
+del frontend continúan funcionando mediante el fallback a `index.html`, pero
+una ruta desconocida de la API siempre responde como JSON y nunca devuelve la
+aplicación.
+
+El proyecto fija Node.js 22 mediante `.nvmrc` y el campo `engines` de los tres
+paquetes. Los comandos de la raíz permiten instalar dependencias, compilar,
+probar e iniciar el sistema completo desde un único punto.
+
 Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
 nuevas continúan calculándose a partir de sus viajes.

@@ -18,14 +18,14 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
 
   try {
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
-    const unauthorized = await fetch(`${baseUrl}/work-days`, {
+    const unauthorized = await fetch(`${baseUrl}/api/work-days`, {
       headers: {
         Origin: "https://taxi.example",
       },
     });
     assert.equal(unauthorized.status, 401);
 
-    const loginResponse = await fetch(`${baseUrl}/auth/login`, {
+    const loginResponse = await fetch(`${baseUrl}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
       .get("set-cookie")
       .split(";")[0];
     const sessionResponse = await fetch(
-      `${baseUrl}/auth/session`,
+      `${baseUrl}/api/auth/session`,
       {
         headers: {
           Cookie: sessionCookie,
@@ -57,7 +57,7 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
       "true"
     );
 
-    const logoutResponse = await fetch(`${baseUrl}/auth/logout`, {
+    const logoutResponse = await fetch(`${baseUrl}/api/auth/logout`, {
       method: "POST",
       headers: {
         Cookie: sessionCookie,
@@ -73,7 +73,7 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
 
     for (let attempt = 0; attempt < 5; attempt += 1) {
       const invalidResponse = await fetch(
-        `${baseUrl}/auth/login`,
+        `${baseUrl}/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -90,7 +90,7 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
     }
 
     const blockedResponse = await fetch(
-      `${baseUrl}/auth/login`,
+      `${baseUrl}/api/auth/login`,
       {
         method: "POST",
         headers: {

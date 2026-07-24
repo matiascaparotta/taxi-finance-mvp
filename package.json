@@ -1,0 +1,14 @@
+{
+  "name": "taxi-finance",
+  "private": true,
+  "version": "1.0.0-beta",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "install:all": "npm ci --prefix server && npm ci --prefix client",
+    "build": "VITE_API_URL=/api npm run build --prefix client",
+    "start": "NODE_ENV=production npm start --prefix server",
+    "test": "npm test --prefix server && npm test --prefix client"
+  }
+}

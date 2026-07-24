@@ -15,6 +15,8 @@ El proyecto se desarrolla siguiendo buenas prácticas de ingeniería de software
 - 📊 Resúmenes financieros automáticos.
 - 🧾 Ticket profesional al finalizar la jornada.
 - 📋 Compartir el resumen listo para WhatsApp.
+- 🔒 Acceso privado para un único conductor.
+- 💾 Respaldo y migraciones verificables de MySQL.
 - 🏗️ Arquitectura desacoplada y escalable.
 
 ---
@@ -75,10 +77,12 @@ MySQL
 
 # 🚀 Estado del proyecto
 
-- Estado: 🚧 Desarrollo activo
-- Último sprint completado: Sprint 13
+- Estado: 🚧 Beta 1.0 en estabilización previa al deploy privado
+- Último sprint completado: Sprint 16
+- Sprint actual: Sprint 17
 - Frontend y Backend integrados
 - Arquitectura por capas implementada
+- Historial real importado y validado
 
 ### Flujo principal disponible
 
@@ -93,6 +97,9 @@ MySQL
 ---
 
 # ▶️ Ejecución del proyecto
+
+Taxi Finance requiere **Node.js 22**. Con `nvm` puede activarse la versión
+correcta ejecutando `nvm use` desde la raíz.
 
 ## Backend
 
@@ -110,6 +117,25 @@ npm install
 npm run dev
 ```
 
+El frontend local utiliza `http://localhost:3000/api`.
+
+## Comprobación completa
+
+```bash
+npm test
+```
+
+## Compilación de producción
+
+```bash
+npm run install:all
+npm run build
+npm start
+```
+
+En producción, Express sirve la interfaz y la API bajo un único sitio. Las
+rutas del backend se encuentran bajo `/api`.
+
 ---
 
 # 📚 Documentación
@@ -122,21 +148,18 @@ La carpeta `docs/` contiene la documentación del proyecto:
 - `03-architecture-decisions.md`
 - `04-backlog.md`
 - `05-release-notes.md`
+- `06-business-rules.md`
+- `07-current-state.md`
 
 ---
 
-# 🔜 Próximas funcionalidades
+# 🔜 Próximos pasos
 
-- Historial de jornadas.
-- Detalle completo de cada jornada.
-- Consulta y edición de viajes históricos.
-- Dashboard financiero.
-- Exportación PDF profesional.
-- Estadísticas mensuales.
-- Comparativas entre períodos.
-- Soporte para múltiples conductores.
-- Sistema de autenticación.
-- Despliegue como PWA.
+- Elegir el proveedor para el deploy privado.
+- Crear y migrar la base MySQL de producción.
+- Configurar secretos y copias de seguridad automáticas.
+- Realizar una prueba integral desde el móvil.
+- Continuar posteriormente con liquidación mensual y dashboard.
 
 ---
 
@@ -153,7 +176,8 @@ Actualmente Taxi Finance permite completar el flujo principal de trabajo de un c
 - ✅ Visualizar el ticket final.
 - ✅ Compartir el resumen.
 
-El siguiente gran objetivo del proyecto es incorporar el historial de jornadas y las herramientas de análisis financiero.
+El siguiente gran objetivo es publicar una Beta privada, migrar los datos
+históricos y validar el flujo completo desde el móvil.
 
 ---
 

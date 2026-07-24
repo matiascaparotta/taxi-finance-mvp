@@ -124,6 +124,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Crear el esquema y procedimiento de migración de la base de datos.
 - [x] Proteger el primer deploy para un único conductor.
 - [x] Restringir CORS al origen configurado para cada entorno.
+- [x] Unificar frontend y API bajo el mismo sitio.
+- [x] Fijar Node.js 22 para desarrollo y producción.
 - [x] Crear y verificar una copia de seguridad inicial.
 - [ ] Configurar copias de seguridad automáticas en producción.
 - [ ] Realizar la prueba integral desde el móvil.

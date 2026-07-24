@@ -134,8 +134,9 @@ realizarlo quedan pendientes:
 4. ✅ Protección del acceso privado para un único conductor.
 5. ✅ Copia de seguridad inicial verificada.
 6. Configuración de respaldos automáticos en producción.
-7. Uso de una versión compatible de Node.js.
-8. Prueba integral desde el móvil.
+7. ✅ Uso de Node.js 22 en desarrollo y producción.
+8. ✅ Frontend y API unificados bajo el mismo sitio.
+9. Prueba integral desde el móvil.
 
 El traslado de los datos todavía está pendiente porque requiere crear primero
 la base privada de destino. Una vez disponible, se aplicarán las migraciones y
@@ -151,7 +152,9 @@ y una clave de sesión. Esta solución protege la Beta individual, pero todavía
 no crea cuentas ni separa datos entre distintos usuarios.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
-el mismo sitio para conservar la sesión de forma fiable en el móvil.
+el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
+ya implementa esa topología: Express sirve el frontend y agrupa la API bajo
+`/api`.
 
 ---
 
