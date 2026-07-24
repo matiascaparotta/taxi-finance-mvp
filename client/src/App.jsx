@@ -1,5 +1,13 @@
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Card from "./components/ui/Card";
+import Button from "./components/ui/Button";
 import MainLayout from "./layouts/MainLayout";
+import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import NewWorkDayPage from "./pages/NewWorkDayPage";
 import NewTripPage from "./pages/NewTripPage";
@@ -8,23 +16,129 @@ import WorkDayClosedPage from "./pages/WorkDayClosedPage";
 import EditTripPage from "./pages/EditTripPage";
 import WorkDayHistoryPage from "./pages/WorkDayHistoryPage";
 import WorkDayDetailPage from "./pages/WorkDayDetailPage";
+import {
+  getSession,
+  logout,
+} from "./services/authService";
 
+function PrivateApp() {
+  const [authStatus, setAuthStatus] = useState("loading");
+  const [authRequired, setAuthRequired] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  const checkSession = useCallback(async () => {
+    try {
+      setAuthError("");
+      setAuthStatus("loading");
+      const session = await getSession();
+      setAuthRequired(session.authRequired);
+      setAuthStatus(
+        session.authenticated ? "authenticated" : "anonymous"
+      );
+    } catch (error) {
+      setAuthError(error.message);
+      setAuthStatus("error");
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      setAuthStatus("anonymous");
+    }
+  };
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
+
+  useEffect(() => {
+    const handleUnauthorized = () =>
+      setAuthStatus("anonymous");
+
+    window.addEventListener(
+      "taxi-finance:unauthorized",
+      handleUnauthorized
+    );
+
+    return () =>
+      window.removeEventListener(
+        "taxi-finance:unauthorized",
+        handleUnauthorized
+      );
+  }, []);
+
+  if (authStatus === "loading") {
+    return (
+      <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+        <div className="mx-auto max-w-md">
+          <Card>
+            <p className="text-center text-slate-300">
+              Comprobando acceso...
+            </p>
+          </Card>
+        </div>
+      </main>
+    );
+  }
+
+  if (authStatus === "error") {
+    return (
+      <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+        <div className="mx-auto max-w-md">
+          <Card className="border-red-500/30">
+            <p className="font-bold">
+              No pudimos comprobar el acceso
+            </p>
+            <p className="mt-2 text-sm text-red-300">
+              {authError}
+            </p>
+            <div className="mt-5">
+              <Button onClick={checkSession}>Reintentar</Button>
+            </div>
+          </Card>
+        </div>
+      </main>
+    );
+  }
+
+  if (authStatus === "anonymous") {
+    return (
+      <LoginPage
+        onAuthenticated={() =>
+          setAuthStatus("authenticated")
+        }
+      />
+    );
+  }
+
+  return (
+    <Routes>
+      <Route
+        element={
+          <MainLayout
+            onLogout={authRequired ? handleLogout : null}
+          />
+        }
+      >
+        <Route path="/" element={<HomePage />} />
+        <Route path="/new-work-day" element={<NewWorkDayPage />} />
+        <Route path="/new-trip" element={<NewTripPage />} />
+        <Route path="/close-work-day" element={<CloseWorkDayPage />} />
+        <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />} />
+        <Route path="/trips/:id/edit" element={<EditTripPage />} />
+        <Route path="/history" element={<WorkDayHistoryPage />} />
+        <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
+      </Route>
+    </Routes>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/new-work-day" element={<NewWorkDayPage />} />
-          <Route path="/new-trip" element={<NewTripPage />} />
-          <Route path="/close-work-day" element={<CloseWorkDayPage />} />
-          <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />} />
-          <Route path="/trips/:id/edit" element={<EditTripPage />} />
-          <Route path="/history" element={<WorkDayHistoryPage />} />
-          <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
-        </Route>
-      </Routes>
+      <PrivateApp />
     </BrowserRouter>
   );
 }

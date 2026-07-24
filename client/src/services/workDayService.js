@@ -1,7 +1,7 @@
-import { API_URL } from "../config/api";
+import { apiFetch } from "./apiClient";
 
 export const getWorkDays = async () => {
-  const response = await fetch(`${API_URL}/work-days`);
+  const response = await apiFetch("/work-days");
 
   if (!response.ok) {
     throw new Error("Error al obtener las jornadas");
@@ -14,7 +14,7 @@ export const getWorkDays = async () => {
 
 
 export const createWorkDay = async (workDayData) => {
-  const response = await fetch(`${API_URL}/work-days`, {
+  const response = await apiFetch("/work-days", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const createWorkDay = async (workDayData) => {
   return data.data;
 };
 export const getOpenWorkDay = async () => {
-  const response = await fetch(`${API_URL}/work-days/open`);
+  const response = await apiFetch("/work-days/open");
 
   const data = await response.json();
 
@@ -41,7 +41,7 @@ export const getOpenWorkDay = async () => {
   return data.data;
 };
 export const getLatestClosedWorkDay = async () => {
-  const response = await fetch(`${API_URL}/work-days/latest-closed`);
+  const response = await apiFetch("/work-days/latest-closed");
 
   const data = await response.json();
 
@@ -52,7 +52,7 @@ export const getLatestClosedWorkDay = async () => {
   return data.data;
 };
 export const closeWorkDay = async (workDayId, closeData) => {
-  const response = await fetch(`${API_URL}/work-days/${workDayId}/close`, {
+  const response = await apiFetch(`/work-days/${workDayId}/close`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export const closeWorkDay = async (workDayId, closeData) => {
   return data.data;
 };
 export const getWorkDayById = async (workDayId) => {
-  const response = await fetch(`${API_URL}/work-days/${workDayId}`);
+  const response = await apiFetch(`/work-days/${workDayId}`);
 
   const data = await response.json();
 

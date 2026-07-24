@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-function MainLayout() {
+function MainLayout({ onLogout = null }) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800">
@@ -11,6 +11,16 @@ function MainLayout() {
               Gestión financiera para conductores de taxi
             </p>
           </div>
+
+          {onLogout && (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white"
+            >
+              Salir
+            </button>
+          )}
         </div>
       </header>
 

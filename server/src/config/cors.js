@@ -29,6 +29,7 @@ const createCorsOptions = (environment = process.env) => {
   const allowedOrigins = getAllowedOrigins(environment);
 
   return {
+    credentials: true,
     origin(origin, callback) {
       if (!origin || allowedOrigins.has(normalizeOrigin(origin))) {
         callback(null, true);

@@ -131,7 +131,7 @@ realizarlo quedan pendientes:
 1. ✅ Configuración de la URL de API y puerto mediante variables de entorno.
 2. ✅ Esquema reproducible y sistema de migraciones de la base de datos.
 3. ✅ Restricción del origen permitido por CORS.
-4. Protección del acceso privado.
+4. ✅ Protección del acceso privado para un único conductor.
 5. ✅ Copia de seguridad inicial verificada.
 6. Configuración de respaldos automáticos en producción.
 7. Uso de una versión compatible de Node.js.
@@ -144,6 +144,14 @@ se importará una copia validada de los datos locales.
 Existe un comando reproducible para generar respaldos privados con
 `mysqldump` y validar su integridad mediante SHA-256. La automatización
 periódica se configurará cuando se haya elegido el proveedor de producción.
+
+La API y el frontend ya incluyen acceso privado mediante contraseña y sesión
+firmada. En producción será obligatorio configurar la huella de la contraseña
+y una clave de sesión. Esta solución protege la Beta individual, pero todavía
+no crea cuentas ni separa datos entre distintos usuarios.
+
+El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
+el mismo sitio para conservar la sesión de forma fiable en el móvil.
 
 ---
 

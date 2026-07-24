@@ -1,7 +1,7 @@
-import { API_URL } from "../config/api";
+import { apiFetch } from "./apiClient";
 
 export const createTrip = async (tripData) => {
-  const response = await fetch(`${API_URL}/trips`, {
+  const response = await apiFetch("/trips", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export const createTrip = async (tripData) => {
   return data.data;
 };
 export const getTripById = async (tripId) => {
-  const response = await fetch(`${API_URL}/trips/${tripId}`);
+  const response = await apiFetch(`/trips/${tripId}`);
 
   const data = await response.json();
 
@@ -30,7 +30,7 @@ export const getTripById = async (tripId) => {
 };
 
 export const updateTrip = async (tripId, tripData) => {
-  const response = await fetch(`${API_URL}/trips/${tripId}`, {
+  const response = await apiFetch(`/trips/${tripId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const updateTrip = async (tripId, tripData) => {
 };
 
 export const deleteTrip = async (tripId) => {
-  const response = await fetch(`${API_URL}/trips/${tripId}`, {
+  const response = await apiFetch(`/trips/${tripId}`, {
     method: "DELETE",
   });
 
@@ -62,7 +62,9 @@ export const deleteTrip = async (tripId) => {
 };
 
 export const getTripsByWorkDay = async (workDayId) => {
-  const response = await fetch(`${API_URL}/trips?workDayId=${workDayId}`);
+  const response = await apiFetch(
+    `/trips?workDayId=${workDayId}`
+  );
 
   const data = await response.json();
 

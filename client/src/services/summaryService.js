@@ -1,7 +1,9 @@
-import { API_URL } from "../config/api";
+import { apiFetch } from "./apiClient";
 
 export const getWorkDaySummary = async (workDayId) => {
-  const response = await fetch(`${API_URL}/work-days/${workDayId}/summary`);
+  const response = await apiFetch(
+    `/work-days/${workDayId}/summary`
+  );
 
   const data = await response.json();
 

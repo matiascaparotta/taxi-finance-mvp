@@ -807,6 +807,27 @@ desarrollo solo se permiten los orígenes locales previstos. En producción el
 servidor no inicia si la lista no fue configurada, evitando publicar
 accidentalmente una API abierta a cualquier sitio web.
 
+## Acceso privado de la Beta
+
+El primer deploy utiliza autenticación de un único conductor. La contraseña
+se valida exclusivamente en el servidor mediante una huella `scrypt`; nunca
+se almacena en el frontend ni en Git. Tras el acceso, el servidor entrega una
+sesión firmada mediante una cookie `HttpOnly`, inaccesible para JavaScript y
+con duración configurable.
+
+Todas las rutas de jornadas, viajes y resúmenes requieren una sesión válida.
+Solo permanecen públicas la comprobación de salud y las operaciones necesarias
+para iniciar o comprobar la sesión. El acceso limita a cinco los intentos
+incorrectos dentro de una ventana de quince minutos.
+
+Esta protección corresponde a una Beta privada de un solo conductor. No
+representa todavía el sistema multiusuario previsto para el Sprint 21.
+
+Para que la cookie `SameSite=Lax` funcione de forma fiable también en Safari
+móvil, el frontend y la API deberán publicarse bajo el mismo sitio, idealmente
+exponiendo la API detrás de una ruta como `/api`. Esta condición se tendrá en
+cuenta al elegir la plataforma de despliegue.
+
 Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
 nuevas continúan calculándose a partir de sus viajes.

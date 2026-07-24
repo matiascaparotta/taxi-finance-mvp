@@ -404,6 +404,17 @@ El usuario no deberá realizar cálculos manuales durante este proceso.
 
 Las siguientes reglas deberán cumplirse en toda la aplicación.
 
+## Acceso privado
+
+Mientras Taxi Finance funcione como aplicación de un único conductor, todas
+las jornadas, viajes y resúmenes estarán protegidos mediante una sesión
+privada. La contraseña será validada únicamente por el backend y no podrá
+incluirse en el código del frontend.
+
+Esta protección no crea usuarios ni asigna propietarios a las jornadas. La
+separación multiusuario se incorporará únicamente en la fase definida por el
+Roadmap.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.
