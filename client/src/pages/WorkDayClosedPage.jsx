@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
 import WorkDayShareCard from "../components/WorkDayShareCard";
 import WorkDayTicket from "../components/WorkDayTicket";
@@ -22,11 +24,7 @@ function WorkDayClosedPage() {
   const [error, setError] = useState("");
   const [copyMessage, setCopyMessage] = useState("");
 
-  useEffect(() => {
-    loadData();
-  }, [id]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setError("");
       setLoading(true);
@@ -46,7 +44,11 @@ function WorkDayClosedPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleCopyText = async () => {
     try {
@@ -64,18 +66,53 @@ function WorkDayClosedPage() {
 
   if (loading) {
     return (
-      <p className="text-center text-slate-400">
-        Cargando jornada...
-      </p>
+      <section className="space-y-8">
+        <SectionTitle
+          title="Jornada cerrada"
+          subtitle="Preparando el resumen final."
+        />
+        <Card>
+          <p className="text-center text-slate-300">
+            Cargando jornada...
+          </p>
+        </Card>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <p className="text-center text-red-400">
-        {error}
-      </p>
+      <section className="space-y-8">
+        <SectionTitle
+          title="Jornada cerrada"
+          subtitle="No pudimos preparar el resumen."
+        />
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            No se pudo cargar la jornada
+          </p>
+          <p className="mt-2 text-sm text-slate-300">
+            {error}
+          </p>
+          <div className="mt-5 space-y-3">
+            <Button onClick={loadData}>
+              Reintentar
+            </Button>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+            >
+              Volver al inicio
+            </button>
+          </div>
+        </Card>
+      </section>
     );
+  }
+
+  if (!workDay || !summary) {
+    return null;
   }
 
   return (
