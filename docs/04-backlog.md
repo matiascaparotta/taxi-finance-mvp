@@ -123,7 +123,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Configurar la URL de la API y el puerto mediante variables de entorno.
 - [x] Crear el esquema y procedimiento de migración de la base de datos.
 - [ ] Proteger el primer deploy para un único conductor.
-- [ ] Restringir CORS al origen de producción.
+- [x] Restringir CORS al origen configurado para cada entorno.
 - [x] Crear y verificar una copia de seguridad inicial.
 - [ ] Configurar copias de seguridad automáticas en producción.
 - [ ] Realizar la prueba integral desde el móvil.

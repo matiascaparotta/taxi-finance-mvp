@@ -130,7 +130,7 @@ realizarlo quedan pendientes:
 
 1. ✅ Configuración de la URL de API y puerto mediante variables de entorno.
 2. ✅ Esquema reproducible y sistema de migraciones de la base de datos.
-3. Restricción del origen permitido por CORS.
+3. ✅ Restricción del origen permitido por CORS.
 4. Protección del acceso privado.
 5. ✅ Copia de seguridad inicial verificada.
 6. Configuración de respaldos automáticos en producción.

@@ -798,9 +798,14 @@ asociado a cada registro.
 Por este motivo, el primer despliegue deberá ser privado. Antes de producción
 se configurarán mediante variables de entorno la URL de la API y el puerto del
 servidor. Esta configuración ya está implementada y documentada mediante
-archivos `.env.example`. A continuación se limitará CORS al origen autorizado
-y se definirá un procedimiento de creación, migración y copia de seguridad de
+archivos `.env.example`. CORS también queda limitado al origen autorizado.
+Además, ya existen un procedimiento de migración y respaldos verificables de
 la base de datos.
+
+CORS utiliza una lista explícita configurada mediante `CLIENT_ORIGINS`. En
+desarrollo solo se permiten los orígenes locales previstos. En producción el
+servidor no inicia si la lista no fue configurada, evitando publicar
+accidentalmente una API abierta a cualquier sitio web.
 
 Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
