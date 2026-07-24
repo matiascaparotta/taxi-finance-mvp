@@ -15,7 +15,7 @@ const getWorkDaySummaryService = async (workDayId) => {
     throw new Error("Jornada no encontrada");
   }
 
-  const { workDay, trips } = result;
+  const { workDay, trips, importedSummary } = result;
 
   const workedKm = workDay.endKm - workDay.startKm;
 
@@ -31,7 +31,13 @@ const getWorkDaySummaryService = async (workDayId) => {
       return total + Number(trip.amount);
     }, 0);
 
-  const totalRevenue = cash + card;
+  const summaryCash = importedSummary
+    ? Number(importedSummary.cash)
+    : cash;
+  const summaryCard = importedSummary
+    ? Number(importedSummary.card)
+    : card;
+  const totalRevenue = summaryCash + summaryCard;
 
   const tripCount = trips.length;
 
@@ -39,7 +45,7 @@ const getWorkDaySummaryService = async (workDayId) => {
     tripCount > 0 ? totalRevenue / tripCount : 0;
 
   const cashToDeliver =
-    cash - Number(workDay.fuelOwn) - Number(workDay.fuelJose);
+    summaryCash - Number(workDay.fuelOwn) - Number(workDay.fuelJose);
 
   return {
     workDayId: workDay.id,
@@ -50,8 +56,8 @@ const getWorkDaySummaryService = async (workDayId) => {
 
     tripCount,
 
-    cash: roundToTwoDecimals(cash),
-    card: roundToTwoDecimals(card),
+    cash: roundToTwoDecimals(summaryCash),
+    card: roundToTwoDecimals(summaryCard),
     totalRevenue: roundToTwoDecimals(totalRevenue),
 
     fuelOwn: Number(workDay.fuelOwn),

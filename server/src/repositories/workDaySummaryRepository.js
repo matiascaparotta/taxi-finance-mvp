@@ -33,9 +33,24 @@ const getWorkDayWithTrips = async (workDayId) => {
     [workDayId]
   );
 
+  const [importRows] = await pool.query(
+    `
+    SELECT
+      cash,
+      card,
+      source
+    FROM monthly_work_day_imports
+    WHERE date = ?
+    ORDER BY id DESC
+    LIMIT 1
+    `,
+    [workDayRows[0].date]
+  );
+
   return {
     workDay: workDayRows[0],
     trips: tripRows,
+    importedSummary: importRows[0] || null,
   };
 };
 
