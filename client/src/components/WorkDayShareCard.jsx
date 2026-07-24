@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import Button from "./ui/Button";
-import { createWorkDayShareCard } from "../utils/createWorkDayShareCard";
+import { createWorkDayShareCards } from "../utils/createWorkDayShareCard";
 
 function WorkDayShareCard({ workDay, summary, trips = [] }) {
-  const [shareFile, setShareFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [shareFiles, setShareFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -14,15 +14,15 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
     }
 
     let isCancelled = false;
-    let generatedUrl = "";
+    let generatedUrls = [];
 
     const prepareShareCard = async () => {
       try {
-        setShareFile(null);
-        setPreviewUrl("");
+        setShareFiles([]);
+        setPreviewUrls([]);
         setMessage("");
 
-        const blob = await createWorkDayShareCard(
+        const blobs = await createWorkDayShareCards(
           workDay,
           summary,
           trips
@@ -32,15 +32,25 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
           return;
         }
 
-        const file = new File(
-          [blob],
-          `taxi-finance-${String(workDay.date).split("T")[0]}.png`,
-          { type: "image/png" }
+        const dateKey = String(workDay.date).split("T")[0];
+        const files = blobs.map(
+          (blob, index) =>
+            new File(
+              [blob],
+              index === 0
+                ? `taxi-finance-${dateKey}-resumen.png`
+                : `taxi-finance-${dateKey}-viajes-${String(
+                    index
+                  ).padStart(2, "0")}.png`,
+              { type: "image/png" }
+            )
         );
 
-        generatedUrl = URL.createObjectURL(blob);
-        setShareFile(file);
-        setPreviewUrl(generatedUrl);
+        generatedUrls = blobs.map((blob) =>
+          URL.createObjectURL(blob)
+        );
+        setShareFiles(files);
+        setPreviewUrls(generatedUrls);
       } catch (error) {
         if (!isCancelled) {
           setMessage(error.message);
@@ -53,14 +63,12 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
     return () => {
       isCancelled = true;
 
-      if (generatedUrl) {
-        URL.revokeObjectURL(generatedUrl);
-      }
+      generatedUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [workDay, summary, trips]);
 
   const handleShare = async () => {
-    if (!shareFile) {
+    if (shareFiles.length === 0) {
       setMessage("La tarjeta todavía se está preparando");
       return;
     }
@@ -68,24 +76,30 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
     try {
       if (
         navigator.share &&
-        navigator.canShare?.({ files: [shareFile] })
+        navigator.canShare?.({ files: shareFiles })
       ) {
         await navigator.share({
-          files: [shareFile],
+          files: shareFiles,
           title: "Resumen de jornada — Taxi Finance",
         });
-        setMessage("Tarjeta compartida");
+        setMessage(
+          `${shareFiles.length} ${
+            shareFiles.length === 1 ? "imagen compartida" : "imágenes compartidas"
+          }`
+        );
         return;
       }
 
-      const downloadUrl = URL.createObjectURL(shareFile);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = shareFile.name;
-      link.click();
-      URL.revokeObjectURL(downloadUrl);
+      shareFiles.forEach((file) => {
+        const downloadUrl = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = file.name;
+        link.click();
+        URL.revokeObjectURL(downloadUrl);
+      });
       setMessage(
-        "Tu dispositivo no permite compartir archivos directamente. La tarjeta se descargó."
+        "Tu dispositivo no permite compartir archivos directamente. Las imágenes se descargaron."
       );
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -101,16 +115,39 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
           Tarjeta para compartir
         </h3>
         <p className="mt-1 text-sm text-slate-400">
-          Esta es la imagen que se enviará.
+          El resumen se enviará primero y después el detalle de los viajes.
         </p>
       </div>
 
-      {previewUrl ? (
-        <img
-          src={previewUrl}
-          alt="Vista previa de la tarjeta de jornada"
-          className="w-full rounded-3xl border border-emerald-500/30 shadow-xl"
-        />
+      {previewUrls.length > 0 ? (
+        <div className="space-y-3">
+          <img
+            src={previewUrls[0]}
+            alt="Vista previa del resumen de jornada"
+            className="w-full rounded-3xl border border-emerald-500/30 shadow-xl"
+          />
+
+          {previewUrls.length > 1 && (
+            <div>
+              <p className="mb-2 text-sm font-semibold text-slate-300">
+                {previewUrls.length - 1}{" "}
+                {previewUrls.length === 2
+                  ? "página de viajes"
+                  : "páginas de viajes"}
+              </p>
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {previewUrls.slice(1).map((url, index) => (
+                  <img
+                    key={url}
+                    src={url}
+                    alt={`Vista previa de viajes ${index + 1}`}
+                    className="w-40 shrink-0 rounded-2xl border border-slate-700"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="rounded-3xl border border-slate-800 bg-slate-950 p-8 text-center text-sm text-slate-400">
           Preparando tarjeta...
@@ -118,7 +155,9 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
       )}
 
       <Button onClick={handleShare}>
-        Compartir tarjeta
+        {shareFiles.length > 1
+          ? `Compartir ${shareFiles.length} imágenes`
+          : "Compartir tarjeta"}
       </Button>
 
       {message && (

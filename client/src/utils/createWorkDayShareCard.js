@@ -3,6 +3,8 @@ import { formatDate } from "./formatDate.js";
 import { getDisplayedCash } from "./getDisplayedCash.js";
 
 const CARD_WIDTH = 1080;
+const TRIPS_PER_PAGE = 8;
+const TRIPS_PAGE_HEIGHT = 1920;
 const COLORS = {
   background: "#020617",
   panel: "#0f172a",
@@ -85,25 +87,78 @@ function canvasToBlob(canvas) {
   });
 }
 
-export async function createWorkDayShareCard(
-  workDay,
-  summary,
-  trips = []
-) {
-  const sortedTrips = [...trips].sort((a, b) => {
+function createCanvas(height) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  canvas.width = CARD_WIDTH;
+  canvas.height = height;
+
+  const background = context.createLinearGradient(0, 0, 0, height);
+  background.addColorStop(0, "#07111f");
+  background.addColorStop(1, COLORS.background);
+  context.fillStyle = background;
+  context.fillRect(0, 0, CARD_WIDTH, height);
+
+  return { canvas, context };
+}
+
+function drawBrandHeader(context, title) {
+  drawText(
+    context,
+    "TAXI FINANCE",
+    CARD_WIDTH / 2,
+    58,
+    "700 32px Arial",
+    COLORS.emerald,
+    "center"
+  );
+  drawText(
+    context,
+    title,
+    CARD_WIDTH / 2,
+    112,
+    "700 58px Arial",
+    COLORS.text,
+    "center"
+  );
+}
+
+function drawFooter(context, height) {
+  drawText(
+    context,
+    "Resumen generado con Taxi Finance",
+    CARD_WIDTH / 2,
+    height - 62,
+    "400 23px Arial",
+    COLORS.muted,
+    "center"
+  );
+}
+
+function getSortedTrips(trips) {
+  return [...trips].sort((a, b) => {
     const dateA = new Date(a.createdAt || a.created_at || 0);
     const dateB = new Date(b.createdAt || b.created_at || 0);
 
     return dateA - dateB;
   });
-  const tripHeights = sortedTrips.map((trip) =>
-    Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0
-      ? 190
-      : 145
-  );
-  const tripsHeight =
-    tripHeights.reduce((total, height) => total + height, 0) +
-    Math.max(sortedTrips.length - 1, 0) * 18;
+}
+
+export function paginateTrips(
+  trips = [],
+  pageSize = TRIPS_PER_PAGE
+) {
+  const pages = [];
+
+  for (let index = 0; index < trips.length; index += pageSize) {
+    pages.push(trips.slice(index, index + pageSize));
+  }
+
+  return pages;
+}
+
+async function createSummaryCard(workDay, summary) {
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
   const summaryRows = [
@@ -125,45 +180,13 @@ export async function createWorkDayShareCard(
       : []),
   ];
   const journeyTop = 225;
-  const tripsTitleTop = 455;
-  const tripsTop = 505;
-  const emptyTripsHeight = sortedTrips.length === 0 ? 115 : 0;
-  const summaryTitleTop =
-    tripsTop + (tripsHeight || emptyTripsHeight) + 65;
+  const summaryTitleTop = 455;
   const summaryTop = summaryTitleTop + 50;
   const summaryHeight = summaryRows.length * 76 + 28;
   const cardHeight = summaryTop + summaryHeight + 115;
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
+  const { canvas, context } = createCanvas(cardHeight);
 
-  canvas.width = CARD_WIDTH;
-  canvas.height = cardHeight;
-
-  const background = context.createLinearGradient(0, 0, 0, cardHeight);
-  background.addColorStop(0, "#07111f");
-  background.addColorStop(1, COLORS.background);
-  context.fillStyle = background;
-  context.fillRect(0, 0, CARD_WIDTH, cardHeight);
-
-  drawText(
-    context,
-    "TAXI FINANCE",
-    CARD_WIDTH / 2,
-    58,
-    "700 32px Arial",
-    COLORS.emerald,
-    "center"
-  );
-  drawText(
-    context,
-    "JORNADA FINALIZADA",
-    CARD_WIDTH / 2,
-    112,
-    "700 58px Arial",
-    COLORS.text,
-    "center"
-  );
-
+  drawBrandHeader(context, "JORNADA FINALIZADA");
   drawText(
     context,
     "JORNADA",
@@ -232,82 +255,6 @@ export async function createWorkDayShareCard(
 
   drawText(
     context,
-    "VIAJES",
-    70,
-    tripsTitleTop,
-    "700 27px Arial",
-    COLORS.emerald
-  );
-
-  if (sortedTrips.length === 0) {
-    drawPanel(context, 70, tripsTop, 940, emptyTripsHeight);
-    drawText(
-      context,
-      "No se registraron viajes en esta jornada.",
-      110,
-      tripsTop + 38,
-      "400 28px Arial",
-      COLORS.muted
-    );
-  } else {
-    let tripTop = tripsTop;
-
-    sortedTrips.forEach((trip, index) => {
-      const height = tripHeights[index];
-      const hasCommission = Number(trip.commission || 0) > 0;
-      const hasTip = Number(trip.tip || 0) > 0;
-
-      drawPanel(context, 70, tripTop, 940, height);
-      drawText(
-        context,
-        formatTripTime(trip),
-        110,
-        tripTop + 30,
-        "700 32px Arial",
-        COLORS.text
-      );
-      drawText(
-        context,
-        trip.paymentType === "cash" ? "Efectivo" : "Datáfono",
-        110,
-        tripTop + 78,
-        "400 25px Arial",
-        COLORS.muted
-      );
-      drawText(
-        context,
-        formatCurrency(trip.amount),
-        970,
-        tripTop + 43,
-        "700 43px Arial",
-        COLORS.text,
-        "right"
-      );
-
-      if (hasCommission || hasTip) {
-        const details = [
-          ...(hasCommission
-            ? [`Comisión: ${formatCurrency(trip.commission)}`]
-            : []),
-          ...(hasTip ? [`Propina: ${formatCurrency(trip.tip)}`] : []),
-        ].join("   ·   ");
-
-        drawText(
-          context,
-          details,
-          110,
-          tripTop + 137,
-          "400 24px Arial",
-          COLORS.muted
-        );
-      }
-
-      tripTop += height + 18;
-    });
-  }
-
-  drawText(
-    context,
     "RESUMEN",
     70,
     summaryTitleTop,
@@ -347,15 +294,129 @@ export async function createWorkDayShareCard(
     }
   });
 
-  drawText(
-    context,
-    "Resumen generado con Taxi Finance",
-    CARD_WIDTH / 2,
-    cardHeight - 62,
-    "400 23px Arial",
-    COLORS.muted,
-    "center"
-  );
+  drawFooter(context, cardHeight);
 
   return await canvasToBlob(canvas);
+}
+
+async function createTripsCard(
+  workDay,
+  trips,
+  pageIndex,
+  totalPages
+) {
+  const { canvas, context } = createCanvas(TRIPS_PAGE_HEIGHT);
+
+  drawBrandHeader(context, "DETALLE DE VIAJES");
+  drawText(
+    context,
+    formatDate(workDay.date),
+    70,
+    205,
+    "700 34px Arial",
+    COLORS.text
+  );
+  drawText(
+    context,
+    `Página ${pageIndex + 1} de ${totalPages}`,
+    1010,
+    211,
+    "700 26px Arial",
+    COLORS.muted,
+    "right"
+  );
+
+  let tripTop = 275;
+
+  trips.forEach((trip) => {
+    const hasCommission = Number(trip.commission || 0) > 0;
+    const hasTip = Number(trip.tip || 0) > 0;
+
+    drawPanel(context, 70, tripTop, 940, 175);
+    drawText(
+      context,
+      formatTripTime(trip),
+      110,
+      tripTop + 28,
+      "700 32px Arial",
+      COLORS.text
+    );
+    drawText(
+      context,
+      trip.paymentType === "cash" ? "Efectivo" : "Datáfono",
+      110,
+      tripTop + 76,
+      "400 25px Arial",
+      COLORS.muted
+    );
+    drawText(
+      context,
+      formatCurrency(trip.amount),
+      970,
+      tripTop + 40,
+      "700 43px Arial",
+      COLORS.text,
+      "right"
+    );
+
+    if (hasCommission || hasTip) {
+      const details = [
+        ...(hasCommission
+          ? [`Comisión: ${formatCurrency(trip.commission)}`]
+          : []),
+        ...(hasTip ? [`Propina: ${formatCurrency(trip.tip)}`] : []),
+      ].join("   ·   ");
+
+      drawText(
+        context,
+        details,
+        110,
+        tripTop + 128,
+        "400 24px Arial",
+        COLORS.muted
+      );
+    }
+
+    tripTop += 193;
+  });
+
+  drawFooter(context, TRIPS_PAGE_HEIGHT);
+
+  return await canvasToBlob(canvas);
+}
+
+export async function createWorkDayShareCards(
+  workDay,
+  summary,
+  trips = []
+) {
+  const sortedTrips = getSortedTrips(trips);
+  const tripPages = paginateTrips(sortedTrips);
+  const summaryCard = await createSummaryCard(workDay, summary);
+  const detailCards = await Promise.all(
+    tripPages.map((pageTrips, pageIndex) =>
+      createTripsCard(
+        workDay,
+        pageTrips,
+        pageIndex,
+        tripPages.length
+      )
+    )
+  );
+
+  return [summaryCard, ...detailCards];
+}
+
+export async function createWorkDayShareCard(
+  workDay,
+  summary,
+  trips = []
+) {
+  const [summaryCard] = await createWorkDayShareCards(
+    workDay,
+    summary,
+    trips
+  );
+
+  return summaryCard;
 }
