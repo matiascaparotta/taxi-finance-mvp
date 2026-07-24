@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  filterWorkDaysByDate,
   filterWorkDaysByMonth,
   formatWorkDayMonth,
   getAvailableWorkDayMonths,
@@ -31,4 +32,20 @@ test("filtra las jornadas del mes seleccionado", () => {
 
 test("formatea el mes para mostrarlo al usuario", () => {
   assert.equal(formatWorkDayMonth("2026-07"), "Julio 2026");
+});
+
+test("busca una jornada por su fecha exacta", () => {
+  assert.deepEqual(
+    filterWorkDaysByDate(workDays, "2026-07-24").map(
+      (workDay) => workDay.id
+    ),
+    [3]
+  );
+});
+
+test("devuelve una lista vacía si el día no tiene jornada", () => {
+  assert.deepEqual(
+    filterWorkDaysByDate(workDays, "2026-07-23"),
+    []
+  );
 });

@@ -16,14 +16,17 @@ const MONTH_NAMES = [
 ];
 
 export function getWorkDayMonthKey(workDay) {
+  return getWorkDayDateKey(workDay).slice(0, 7);
+}
+
+export function getWorkDayDateKey(workDay) {
   const rawDate =
     workDay?.date ??
     workDay?.workDate ??
     workDay?.createdAt ??
     workDay?.created_at;
-  const normalizedDate = normalizeWorkDayDate(String(rawDate || ""));
 
-  return normalizedDate ? normalizedDate.slice(0, 7) : "";
+  return normalizeWorkDayDate(String(rawDate || ""));
 }
 
 export function formatWorkDayMonth(monthKey) {
@@ -49,5 +52,11 @@ export function getAvailableWorkDayMonths(workDays = []) {
 export function filterWorkDaysByMonth(workDays = [], monthKey) {
   return workDays.filter(
     (workDay) => getWorkDayMonthKey(workDay) === monthKey
+  );
+}
+
+export function filterWorkDaysByDate(workDays = [], dateKey) {
+  return workDays.filter(
+    (workDay) => getWorkDayDateKey(workDay) === dateKey
   );
 }

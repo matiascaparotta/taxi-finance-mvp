@@ -10,6 +10,7 @@ import { getWorkDaySummary } from "../services/summaryService";
 import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
 import {
+  filterWorkDaysByDate,
   filterWorkDaysByMonth,
   formatWorkDayMonth,
   getAvailableWorkDayMonths,
@@ -18,6 +19,8 @@ import {
 function WorkDayHistoryPage() {
   const [history, setHistory] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showDaySearch, setShowDaySearch] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -73,10 +76,20 @@ function WorkDayHistoryPage() {
   }
 
   const availableMonths = getAvailableWorkDayMonths(history);
-  const filteredHistory = filterWorkDaysByMonth(
-    history,
-    selectedMonth
-  );
+  const filteredHistory = selectedDate
+    ? filterWorkDaysByDate(history, selectedDate)
+    : filterWorkDaysByMonth(history, selectedMonth);
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+    setSelectedDate("");
+    setShowDaySearch(false);
+  };
+
+  const clearDaySearch = () => {
+    setSelectedDate("");
+    setShowDaySearch(false);
+  };
 
   return (
     <section className="space-y-8">
@@ -104,39 +117,91 @@ function WorkDayHistoryPage() {
       ) : (
         <>
           <Card>
-            <label
-              htmlFor="historyMonth"
-              className="mb-2 block text-sm font-semibold text-slate-300"
-            >
-              Mes de las jornadas
-            </label>
-            <select
-              id="historyMonth"
-              value={selectedMonth}
-              onChange={(event) => setSelectedMonth(event.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
-            >
-              {availableMonths.map((month) => (
-                <option key={month} value={month}>
-                  {formatWorkDayMonth(month)}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-end gap-3">
+              <div className="min-w-0 flex-1">
+                <label
+                  htmlFor="historyMonth"
+                  className="mb-2 block text-sm font-semibold text-slate-300"
+                >
+                  Mes de las jornadas
+                </label>
+                <select
+                  id="historyMonth"
+                  value={selectedMonth}
+                  onChange={handleMonthChange}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
+                >
+                  {availableMonths.map((month) => (
+                    <option key={month} value={month}>
+                      {formatWorkDayMonth(month)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowDaySearch(true)}
+                className="shrink-0 rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+              >
+                Buscar día
+              </button>
+            </div>
+
+            {showDaySearch && (
+              <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/60 p-4">
+                <label
+                  htmlFor="historyDate"
+                  className="mb-2 block text-sm font-semibold text-slate-300"
+                >
+                  Fecha de la jornada
+                </label>
+                <input
+                  id="historyDate"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(event) =>
+                    setSelectedDate(event.target.value)
+                  }
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
+                />
+
+                <button
+                  type="button"
+                  onClick={clearDaySearch}
+                  className="mt-3 w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+                >
+                  Quitar búsqueda
+                </button>
+              </div>
+            )}
+
             <p className="mt-2 text-sm text-slate-400">
               {filteredHistory.length}{" "}
               {filteredHistory.length === 1 ? "jornada" : "jornadas"}
             </p>
           </Card>
 
-          <div className="space-y-4">
-            {filteredHistory.map((workDay) => (
-              <HistoryWorkDayCard
-                key={workDay.id}
-                workDay={workDay}
-                onClick={() => navigate(`/work-days/${workDay.id}`)}
-              />
-            ))}
-          </div>
+          {selectedDate && filteredHistory.length === 0 ? (
+            <Card>
+              <p className="font-semibold text-white">
+                No hay una jornada registrada este día.
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
+                Elige otra fecha o quita la búsqueda para volver al mes.
+              </p>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {filteredHistory.map((workDay) => (
+                <HistoryWorkDayCard
+                  key={workDay.id}
+                  workDay={workDay}
+                  onClick={() => navigate(`/work-days/${workDay.id}`)}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
     </section>
