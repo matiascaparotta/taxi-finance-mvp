@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SectionTitle from "../components/ui/SectionTitle";
 import WorkDaySummaryCard from "../components/WorkDaySummaryCard";
@@ -22,18 +22,19 @@ function CloseWorkDayPage() {
   const [fuelAllocation, setFuelAllocation] = useState("OWN");
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const closingLockRef = useRef(false);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadCloseData();
-  }, []);
-
-  const loadCloseData = async () => {
+  const loadCloseData = useCallback(async () => {
     try {
+      setLoadError("");
+      setIsLoading(true);
+
       const openWorkDayData = await getOpenWorkDay();
 
       if (!openWorkDayData) {
@@ -55,9 +56,18 @@ function CloseWorkDayPage() {
       );
     } catch (error) {
       console.error(error);
-      setError(error.message);
+      setLoadError(
+        error.message ||
+          "No se pudo cargar la jornada activa"
+      );
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    loadCloseData();
+  }, [loadCloseData]);
 
   const workedKm =
     openWorkDay && endKm
@@ -121,6 +131,57 @@ function CloseWorkDayPage() {
 
   const dateOptions = getCloseDateOptions();
   const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
+
+  if (isLoading) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Finalizar jornada"
+          subtitle="Revisa la información antes de cerrar el turno."
+        />
+        <Card>
+          <p className="text-center text-slate-300">
+            Cargando jornada...
+          </p>
+        </Card>
+      </section>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <section className="space-y-8">
+        <SectionTitle
+          title="Finalizar jornada"
+          subtitle="No pudimos preparar el cierre."
+        />
+        <Card className="border-red-500/30">
+          <p className="font-bold text-white">
+            No se pudo cargar la jornada
+          </p>
+          <p className="mt-2 text-sm text-slate-300">
+            {loadError}
+          </p>
+          <div className="mt-5 space-y-3">
+            <Button onClick={loadCloseData}>
+              Reintentar
+            </Button>
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+            >
+              Volver a la jornada
+            </button>
+          </div>
+        </Card>
+      </section>
+    );
+  }
+
+  if (!openWorkDay || !summary) {
+    return null;
+  }
 
   return (
     <section className="space-y-8">
