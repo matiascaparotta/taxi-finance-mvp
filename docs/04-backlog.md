@@ -132,6 +132,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Crear y verificar una copia de seguridad inicial.
 - [x] Migrar y validar 70 jornadas y 1.203 viajes en producción.
 - [x] Proteger las jornadas importadas y permitir eliminar jornadas nuevas de prueba.
+- [x] Agrupar las acciones de compartir y separar la navegación al historial.
 - [ ] Definir una alternativa de respaldos automáticos compatible con Railway Hobby.
 - [ ] Realizar la prueba integral desde el móvil.
 - [ ] Validar compartir y guardar imágenes en Android y iPhone.

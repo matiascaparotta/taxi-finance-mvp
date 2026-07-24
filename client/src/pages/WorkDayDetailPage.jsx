@@ -167,26 +167,18 @@ function WorkDayDetailPage() {
           workDay={workDay}
           summary={summary}
           trips={trips}
+          onCopySummary={handleCopySummary}
+          copyMessage={copyMessage}
         />
-
-        <button
-          type="button"
-          onClick={handleCopySummary}
-          className="w-full rounded-2xl border border-emerald-500/40 px-6 py-4 text-lg font-bold text-emerald-300 transition hover:bg-emerald-500/10 active:scale-[0.99]"
-        >
-          Copiar resumen para WhatsApp
-        </button>
-
-        {copyMessage && (
-          <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300">
-            {copyMessage}
-          </p>
-        )}
       </div>
 
-      <Button onClick={() => navigate("/history")}>
-        Volver al historial
-      </Button>
+      <button
+        type="button"
+        onClick={() => navigate("/history")}
+        className="w-full rounded-2xl border border-slate-700 px-5 py-3 text-sm font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+      >
+        ← Volver al historial
+      </button>
 
       {!workDay.isLocked && (
         <Card className="border-red-500/30 bg-red-500/5">

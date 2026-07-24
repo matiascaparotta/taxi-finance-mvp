@@ -3,7 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import Button from "./ui/Button";
 import { createWorkDayShareCards } from "../utils/createWorkDayShareCard";
 
-function WorkDayShareCard({ workDay, summary, trips = [] }) {
+function WorkDayShareCard({
+  workDay,
+  summary,
+  trips = [],
+  onCopySummary,
+  copyMessage = "",
+}) {
   const [shareFiles, setShareFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [message, setMessage] = useState("");
@@ -160,10 +166,13 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
   };
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-4 rounded-3xl border border-slate-800 bg-slate-900/50 p-4">
       <div>
-        <h3 className="text-lg font-bold text-white">
-          Tarjeta para compartir
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-400">
+          Compartir jornada
+        </p>
+        <h3 className="mt-1 text-lg font-bold text-white">
+          Imagen o texto, como prefieras
         </h3>
         <p className="mt-1 text-sm text-slate-400">
           El resumen se enviará primero y después el detalle de los viajes.
@@ -218,22 +227,38 @@ function WorkDayShareCard({ workDay, summary, trips = [] }) {
               : "Compartir tarjeta"}
       </Button>
 
-      <button
-        type="button"
-        onClick={handleSaveImages}
-        disabled={isPreparing || isSharing || isSavingImages}
-        className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-50"
-      >
-        {isSavingImages
-          ? "Guardando..."
-          : shareFiles.length > 1
-            ? "Guardar imágenes"
-            : "Guardar imagen"}
-      </button>
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={handleSaveImages}
+          disabled={isPreparing || isSharing || isSavingImages}
+          className="rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-50"
+        >
+          {isSavingImages
+            ? "Guardando..."
+            : shareFiles.length > 1
+              ? "Guardar imágenes"
+              : "Guardar imagen"}
+        </button>
+
+        <button
+          type="button"
+          onClick={onCopySummary}
+          className="rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+        >
+          Copiar texto
+        </button>
+      </div>
 
       {message && (
         <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
           {message}
+        </p>
+      )}
+
+      {copyMessage && (
+        <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
+          {copyMessage}
         </p>
       )}
     </section>
