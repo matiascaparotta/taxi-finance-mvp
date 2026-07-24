@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
 import SectionTitle from "../components/ui/SectionTitle";
 
+import WorkDayShareCard from "../components/WorkDayShareCard";
 import WorkDayTicket from "../components/WorkDayTicket";
 
 import { getWorkDayById } from "../services/workDayService";
@@ -99,9 +100,19 @@ function WorkDayDetailPage() {
           trips={trips}
         />
 
-        <Button onClick={handleCopySummary}>
+        <WorkDayShareCard
+          workDay={workDay}
+          summary={summary}
+          trips={trips}
+        />
+
+        <button
+          type="button"
+          onClick={handleCopySummary}
+          className="w-full rounded-2xl border border-emerald-500/40 px-6 py-4 text-lg font-bold text-emerald-300 transition hover:bg-emerald-500/10 active:scale-[0.99]"
+        >
           Copiar resumen para WhatsApp
-        </Button>
+        </button>
 
         {copyMessage && (
           <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300">
