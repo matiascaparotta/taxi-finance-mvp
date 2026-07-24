@@ -106,7 +106,7 @@ function createCanvas(height) {
 function drawBrandHeader(context, title) {
   drawText(
     context,
-    "TAXI FINANCE",
+    "LICENCIA 249",
     CARD_WIDTH / 2,
     58,
     "700 32px Arial",
@@ -120,18 +120,6 @@ function drawBrandHeader(context, title) {
     112,
     "700 58px Arial",
     COLORS.text,
-    "center"
-  );
-}
-
-function drawFooter(context, height) {
-  drawText(
-    context,
-    "Resumen generado con Taxi Finance",
-    CARD_WIDTH / 2,
-    height - 62,
-    "400 23px Arial",
-    COLORS.muted,
     "center"
   );
 }
@@ -183,7 +171,7 @@ async function createSummaryCard(workDay, summary) {
   const summaryTitleTop = 455;
   const summaryTop = summaryTitleTop + 50;
   const summaryHeight = summaryRows.length * 76 + 28;
-  const cardHeight = summaryTop + summaryHeight + 115;
+  const cardHeight = summaryTop + summaryHeight + 60;
   const { canvas, context } = createCanvas(cardHeight);
 
   drawBrandHeader(context, "JORNADA FINALIZADA");
@@ -294,8 +282,6 @@ async function createSummaryCard(workDay, summary) {
     }
   });
 
-  drawFooter(context, cardHeight);
-
   return await canvasToBlob(canvas);
 }
 
@@ -379,8 +365,6 @@ async function createTripsCard(
 
     tripTop += 102;
   });
-
-  drawFooter(context, TRIPS_PAGE_HEIGHT);
 
   return await canvasToBlob(canvas);
 }

@@ -113,7 +113,7 @@ function WorkDayShareCard({
       ) {
         await navigator.share({
           files: shareFiles,
-          title: "Resumen de jornada — Taxi Finance",
+          title: "Resumen de jornada — Licencia 249",
         });
         setMessage(
           `${shareFiles.length} ${
