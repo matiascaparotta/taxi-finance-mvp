@@ -708,17 +708,25 @@ publicación privada que preserve los datos del conductor.
 
 ## Estado del deploy
 
-El deploy todavía no se ha realizado. La aplicación continúa siendo de un
-solo conductor y no dispone de autenticación ni separación de datos por
-usuario.
+El 24/07/2026 se realizó el primer deploy privado en Railway:
 
-Antes de publicarla deben configurarse el entorno de producción, la base de
-datos remota, la migración de los datos históricos, el acceso privado, CORS y
-las copias de seguridad.
+- Se activó el plan Hobby.
+- Se creó el proyecto privado `Taxi Finance`.
+- Se desplegaron la aplicación unificada y MySQL en EU West.
+- Se ejecutaron las migraciones antes de publicar.
+- Se configuraron CORS, sesión firmada y acceso mediante contraseña.
+- Se restauraron y verificaron 70 jornadas, 1.203 viajes y 70 resúmenes
+  mensuales.
+- Se eliminó una jornada de prueba incluida en el respaldo inicial.
+- Se validó el acceso y la carga del inicio desde el dominio público.
+
+Railway reserva los respaldos automáticos y la recuperación por momento exacto
+para el plan Pro. Mientras se mantenga el plan Hobby se conservarán respaldos
+manuales verificados y se evaluará una automatización alternativa.
 
 ## Estado
 
-🚧 En desarrollo.
+🚧 En desarrollo: deploy completado y pendiente de prueba integral móvil.
 
 ---
 

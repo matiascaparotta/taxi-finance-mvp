@@ -198,7 +198,7 @@ La aplicación reduce el número de acciones necesarias durante una jornada y ad
 
 # v1.0.0-beta
 
-## Beta funcional y estabilización previa al deploy
+## Beta funcional y primer deploy privado
 
 ### Novedades
 
@@ -226,17 +226,21 @@ imagen o texto.
 
 ### Estado de publicación
 
-La versión está funcionalmente terminada, pero aún no fue desplegada. El
-primer deploy será privado y requiere configurar producción, migración de
-datos, acceso restringido y copias de seguridad.
+La versión fue desplegada de forma privada en Railway el 24/07/2026. Frontend
+y API funcionan bajo el mismo dominio HTTPS, MySQL utiliza almacenamiento
+persistente y el acceso está protegido mediante contraseña y sesión firmada.
+
+Se restauraron y verificaron 70 jornadas, 1.203 viajes y 70 resúmenes
+mensuales. La validación integral en móviles y la estrategia de respaldos
+automáticos compatible con el plan Hobby continúan dentro del Sprint 17.
 
 ---
 
 # Estado actual
 
 Con la versión **v1.0.0-beta**, Taxi Finance alcanza el hito funcional
-correspondiente a la **Beta 1.0** y se encuentra en estabilización previa al
-deploy privado.
+correspondiente a la **Beta 1.0** y se encuentra publicada de forma privada y
+en estabilización mediante uso real.
 
 La aplicación ya permite gestionar una jornada de trabajo completa de principio a fin, incluyendo el registro de viajes, el cierre de la jornada y la consulta del historial.
 

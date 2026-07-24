@@ -251,22 +251,24 @@ La Beta se considerará finalizada cuando se cumplan todos los siguientes puntos
 
 ---
 
-# Antes del Deploy
+# Publicación privada
 
-La Beta 1.0 está funcionalmente terminada, pero su publicación requiere una
-fase específica de preparación técnica y seguridad.
+La Beta 1.0 fue publicada de forma privada en Railway el 24/07/2026.
 
-Antes del primer deploy privado deberán completarse los siguientes pasos:
+Se completaron los siguientes pasos:
 
-- Consolidar y subir todo el código y la documentación.
-- Configurar la URL de la API mediante variables de entorno.
-- Configurar el puerto del servidor mediante variables de entorno.
-- Crear un procedimiento reproducible para crear y migrar la base de datos.
-- Migrar las jornadas históricas y validar sus totales.
-- Restringir CORS al dominio de producción.
-- Proteger el acceso para que únicamente el conductor autorizado pueda entrar.
-- Crear una copia de seguridad previa y definir respaldos automáticos.
-- Utilizar una versión de Node.js compatible con Vite.
+- ✅ Consolidar y subir todo el código y la documentación.
+- ✅ Configurar la URL de la API mediante variables de entorno.
+- ✅ Configurar el puerto del servidor mediante variables de entorno.
+- ✅ Crear un procedimiento reproducible para crear y migrar la base de datos.
+- ✅ Migrar las jornadas históricas y validar sus totales.
+- ✅ Restringir CORS al dominio de producción.
+- ✅ Proteger el acceso para que únicamente el conductor autorizado pueda entrar.
+- ✅ Crear y verificar una copia de seguridad previa.
+- ✅ Utilizar Node.js 22 en desarrollo y producción.
+- ✅ Publicar frontend, API y MySQL en Railway.
+- ⏳ Mantener respaldos manuales mientras las copias automáticas sigan
+  requiriendo el plan Pro de Railway.
 - Validar desde el móvil el flujo completo de una jornada.
 - Validar compartir y guardar imágenes en el dispositivo real.
 

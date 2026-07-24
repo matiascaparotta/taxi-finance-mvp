@@ -4,7 +4,7 @@
 
 **Última actualización:** 24/07/2026
 
-**Estado:** Beta 1.0 finalizada — estabilización previa al deploy
+**Estado:** Beta 1.0 publicada — estabilización en producción
 
 ---
 
@@ -31,7 +31,7 @@ La Beta 1.0 se considera finalizada.
 El proyecto dispone de una arquitectura consolidada, una documentación alineada y una primera versión funcional capaz de gestionar una jornada completa de trabajo.
 
 A partir de este punto, el desarrollo continúa con la estabilización y la
-preparación de un primer deploy privado.
+validación del uso diario sobre el primer deploy privado.
 
 ---
 
@@ -110,44 +110,47 @@ La interfaz permite realizar el flujo completo de una jornada de trabajo, desde 
 - Cierres de efectivo y datáfono validados contra la fuente original.
 - La jornada activa se mantiene separada del historial cerrado.
 
-Los datos se encuentran actualmente en la base MySQL local. Todavía no fueron
-migrados a una base de producción.
+Los datos se encuentran en MySQL de producción y fueron verificados después de
+la restauración. La copia local y el respaldo SQL con checksum se conservan
+como recuperación independiente.
 
 ---
 
 # Estado del deploy
 
-Taxi Finance todavía no está desplegada.
+Taxi Finance está desplegada de forma privada en Railway:
 
-El frontend y el servidor ya admiten configuración por entorno. En desarrollo
-utilizan los valores locales y en producción podrán recibir la URL pública de
-la API y el puerto asignado sin modificar el código. No existe todavía
-autenticación ni separación por usuario: cualquier persona que accediera a
-una publicación abierta utilizaría el mismo conjunto de datos.
+- Aplicación: `https://taxi-finance-mvp-production.up.railway.app`
+- Entorno: `production`
+- Región: EU West
+- Base de datos: MySQL con volumen persistente
+- Acceso: contraseña única y sesión firmada para el conductor autorizado
+- Topología: frontend y API bajo el mismo dominio HTTPS
 
-El primer deploy deberá ser privado para un único conductor. Antes de
-realizarlo quedan pendientes:
+Estado de la preparación:
 
 1. ✅ Configuración de la URL de API y puerto mediante variables de entorno.
 2. ✅ Esquema reproducible y sistema de migraciones de la base de datos.
 3. ✅ Restricción del origen permitido por CORS.
 4. ✅ Protección del acceso privado para un único conductor.
 5. ✅ Copia de seguridad inicial verificada.
-6. Configuración de respaldos automáticos en producción.
+6. ⏳ Alternativa de respaldos automáticos compatible con el plan Hobby.
 7. ✅ Uso de Node.js 22 en desarrollo y producción.
 8. ✅ Frontend y API unificados bajo el mismo sitio.
 9. ✅ Railway elegido y configurado como plataforma de la Beta.
-10. Creación de los servicios reales de aplicación y MySQL.
-11. Migración y validación de los datos en producción.
+10. ✅ Creación de los servicios reales de aplicación y MySQL.
+11. ✅ Migración y validación de los datos en producción.
 12. Prueba integral desde el móvil.
 
-El traslado de los datos todavía está pendiente porque requiere crear primero
-la base privada de destino. Una vez disponible, se aplicarán las migraciones y
-se importará una copia validada de los datos locales.
+El traslado de los datos se completó el 24/07/2026. Después de retirar una
+jornada de prueba, producción contiene 70 jornadas, 1.203 viajes y 70
+resúmenes mensuales.
 
 Existe un comando reproducible para generar respaldos privados con
-`mysqldump` y validar su integridad mediante SHA-256. La automatización
-periódica se configurará cuando se haya elegido el proveedor de producción.
+`mysqldump` y validar su integridad mediante SHA-256. Railway limita los
+respaldos automáticos y PITR al plan Pro; mientras se mantenga Hobby, el
+respaldo manual verificado es obligatorio antes de cambios de datos
+importantes.
 
 La API y el frontend ya incluyen acceso privado mediante contraseña y sesión
 firmada. En producción será obligatorio configurar la huella de la contraseña
@@ -159,10 +162,9 @@ el mismo sitio para conservar la sesión de forma fiable en el móvil. El códig
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo
 `/api`.
 
-Railway fue elegido para el primer deploy. La configuración del repositorio
-instala y compila el monorepo, ejecuta las migraciones antes de publicar,
-comprueba `/api/health` y reinicia el servicio ante fallos. Todavía no se han
-creado recursos externos ni iniciado cargos.
+Railway aloja el primer deploy mediante el plan Hobby. La configuración del
+repositorio instala y compila el monorepo, ejecuta las migraciones antes de
+publicar, comprueba `/api/health` y reinicia el servicio ante fallos.
 
 ---
 
