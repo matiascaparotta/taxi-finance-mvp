@@ -14,6 +14,7 @@ import { getTripsByWorkDay } from "../services/tripService";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
 import { getClosedWorkDays } from "../utils/getClosedWorkDays";
+import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
 
 function HomePage() {
   const [workDays, setWorkDays] = useState([]);
@@ -34,19 +35,8 @@ function HomePage() {
         getOpenWorkDay(),
       ]);
 
-      const sortedWorkDays = [...workDaysData].sort((a, b) => {
-        const idA = Number(a.id || 0);
-        const idB = Number(b.id || 0);
-
-        if (idA !== idB) {
-          return idB - idA;
-        }
-
-        const dateA = new Date(a.createdAt || a.created_at || a.date || a.workDate || 0);
-        const dateB = new Date(b.createdAt || b.created_at || b.date || b.workDate || 0);
-
-        return dateB - dateA;
-      });
+      const sortedWorkDays =
+        sortWorkDaysByDateDescending(workDaysData);
 
       const workDaysWithSummary = await Promise.all(
         sortedWorkDays.map(async (workDay, index) => {

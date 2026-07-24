@@ -7,6 +7,8 @@ import HistoryWorkDayCard from "../components/HistoryWorkDayCard";
 
 import { getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
+import { getClosedWorkDays } from "../utils/getClosedWorkDays";
+import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
 
 function WorkDayHistoryPage() {
   const [history, setHistory] = useState([]);
@@ -26,14 +28,9 @@ function WorkDayHistoryPage() {
 
       const workDays = await getWorkDays();
 
-      const closedWorkDays = workDays
-        .filter((workDay) => workDay.status === "CLOSED")
-        .sort((a, b) => {
-          const idA = Number(a.id || 0);
-          const idB = Number(b.id || 0);
-
-          return idB - idA;
-        });
+      const closedWorkDays = sortWorkDaysByDateDescending(
+        getClosedWorkDays(workDays)
+      );
 
       const historyWithSummary = await Promise.all(
         closedWorkDays.map(async (workDay) => {
