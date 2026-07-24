@@ -282,6 +282,14 @@ function CloseWorkDayPage() {
           {error && <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</p>}
 
           <Button type="submit">Confirmar cierre</Button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="w-full rounded-2xl border border-slate-700 px-6 py-4 text-lg font-bold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-[0.99]"
+          >
+            Volver a la jornada
+          </button>
         </form>
       </Card>
 
