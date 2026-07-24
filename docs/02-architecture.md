@@ -838,6 +838,21 @@ El proyecto fija Node.js 22 mediante `.nvmrc` y el campo `engines` de los tres
 paquetes. Los comandos de la raíz permiten instalar dependencias, compilar,
 probar e iniciar el sistema completo desde un único punto.
 
+## Plataforma del primer deploy
+
+Railway es la plataforma elegida para la Beta privada. El proyecto utilizará
+un servicio Node público y un servicio MySQL privado dentro del mismo proyecto.
+La aplicación se conectará a MySQL mediante la red privada de Railway para
+evitar tráfico público innecesario.
+
+`railway.json` define el constructor Railpack, la compilación completa del
+monorepo, las migraciones previas al deploy, el comando de inicio, la
+comprobación de salud en `/api/health` y la política de reinicio.
+
+El volumen de MySQL tendrá respaldos programados. Se mantendrá además el
+respaldo lógico externo generado por Taxi Finance, ya que los respaldos del
+volumen solo pueden restaurarse dentro del mismo proyecto y entorno.
+
 Los datos históricos importados conservan los cierres de efectivo y datáfono
 del registro original como referencia autorizada, mientras que las jornadas
 nuevas continúan calculándose a partir de sus viajes.

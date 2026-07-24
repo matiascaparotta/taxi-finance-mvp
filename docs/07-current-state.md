@@ -136,7 +136,10 @@ realizarlo quedan pendientes:
 6. Configuración de respaldos automáticos en producción.
 7. ✅ Uso de Node.js 22 en desarrollo y producción.
 8. ✅ Frontend y API unificados bajo el mismo sitio.
-9. Prueba integral desde el móvil.
+9. ✅ Railway elegido y configurado como plataforma de la Beta.
+10. Creación de los servicios reales de aplicación y MySQL.
+11. Migración y validación de los datos en producción.
+12. Prueba integral desde el móvil.
 
 El traslado de los datos todavía está pendiente porque requiere crear primero
 la base privada de destino. Una vez disponible, se aplicarán las migraciones y
@@ -155,6 +158,11 @@ El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo
 `/api`.
+
+Railway fue elegido para el primer deploy. La configuración del repositorio
+instala y compila el monorepo, ejecuta las migraciones antes de publicar,
+comprueba `/api/health` y reinicia el servicio ante fallos. Todavía no se han
+creado recursos externos ni iniciado cargos.
 
 ---
 

@@ -136,6 +136,19 @@ npm start
 En producción, Express sirve la interfaz y la API bajo un único sitio. Las
 rutas del backend se encuentran bajo `/api`.
 
+## Plataforma prevista
+
+La Beta privada está preparada para Railway:
+
+- un servicio Node para frontend y API;
+- un servicio MySQL conectado mediante red privada;
+- migraciones automáticas antes de cada despliegue;
+- comprobación de salud en `/api/health`;
+- reinicio automático si el proceso falla;
+- copias programadas del volumen de MySQL.
+
+El archivo `railway.json` contiene la configuración reproducible del servicio.
+
 ---
 
 # 📚 Documentación
@@ -155,8 +168,8 @@ La carpeta `docs/` contiene la documentación del proyecto:
 
 # 🔜 Próximos pasos
 
-- Elegir el proveedor para el deploy privado.
-- Crear y migrar la base MySQL de producción.
+- Crear el proyecto Railway y la base MySQL de producción.
+- Migrar y validar los datos en Railway.
 - Configurar secretos y copias de seguridad automáticas.
 - Realizar una prueba integral desde el móvil.
 - Continuar posteriormente con liquidación mensual y dashboard.

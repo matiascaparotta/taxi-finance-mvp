@@ -126,6 +126,9 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Restringir CORS al origen configurado para cada entorno.
 - [x] Unificar frontend y API bajo el mismo sitio.
 - [x] Fijar Node.js 22 para desarrollo y producción.
+- [x] Elegir Railway como plataforma para la Beta privada.
+- [x] Crear la configuración reproducible de Railway.
+- [ ] Crear los servicios reales de aplicación y MySQL en Railway.
 - [x] Crear y verificar una copia de seguridad inicial.
 - [ ] Configurar copias de seguridad automáticas en producción.
 - [ ] Realizar la prueba integral desde el móvil.
