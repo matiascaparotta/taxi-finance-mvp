@@ -321,8 +321,8 @@ function WorkDayHistoryPage({ currentUser }) {
                   {availableDrivers.map((driver) => (
                     <option key={driver.id} value={driver.id}>
                       {String(driver.id) === String(currentUser?.id)
-                        ? `Mis jornadas · ${driver.name}`
-                        : `Jornadas de ${driver.name} · Solo lectura`}
+                        ? "Mis jornadas"
+                        : `Jornadas de ${driver.name}`}
                     </option>
                   ))}
                 </select>
