@@ -126,7 +126,7 @@ function HomePage() {
       <section className="space-y-8">
         <SectionTitle
           title="Hola, Mati 👋"
-          subtitle="Bienvenido a Lic249"
+          subtitle="Bienvenido a TaxFin"
         />
 
         <Card>
@@ -143,7 +143,7 @@ function HomePage() {
       <section className="space-y-8">
         <SectionTitle
           title="Hola, Mati 👋"
-          subtitle="Bienvenido a Lic249"
+          subtitle="Bienvenido a TaxFin"
         />
 
         <Card className="border-red-500/30">
@@ -169,7 +169,7 @@ function HomePage() {
     <section className="space-y-8">
       <SectionTitle
         title="Hola, Mati 👋"
-        subtitle="Bienvenido a Lic249"
+        subtitle="Bienvenido a TaxFin"
       />
 
       {openWorkDay ? (

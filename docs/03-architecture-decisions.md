@@ -1,4 +1,4 @@
-# Lic249 — Architecture Decision Records (ADR)
+# TaxFin — Architecture Decision Records (ADR)
 
 **Versión:** 2.1
 
@@ -859,6 +859,36 @@ realizarán en funcionalidades posteriores con pruebas independientes.
 Toda consulta de jornadas deberá incorporar el contexto de organización,
 usuario y vehículo. La contraseña general solo podrá retirarse después de
 probar el acceso individual y la autorización en todos los endpoints.
+
+---
+
+# ADR-015
+
+## Separar la marca TaxFin de la licencia de cada organización
+
+**Fecha:** 25/07/2026
+
+**Estado:** ✅ Implementado en desarrollo
+
+### Contexto
+
+El texto `Lic249` identificaba simultáneamente la aplicación y la licencia de
+la primera organización. Ese acoplamiento impediría incorporar otras empresas
+sin mostrarles una licencia ajena o crear versiones distintas del producto.
+
+### Decisión
+
+Adoptar `TaxFin` como marca única de la aplicación. Las tarjetas, imágenes y
+exportaciones mostrarán el nombre de la organización asociada a la jornada.
+La organización inicial conservará `Lic249`.
+
+### Consecuencias
+
+- todas las organizaciones utilizan la misma aplicación TaxFin;
+- cada licencia mantiene su identidad en los documentos que comparte;
+- el nombre de archivo se genera a partir de la organización;
+- los datos transitorios sin organización usan Lic249 como compatibilidad;
+- cambiar una licencia no requiere modificar ni recompilar la aplicación.
 
 ---
 

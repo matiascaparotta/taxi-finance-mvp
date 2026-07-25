@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import { login } from "../services/authService";
+import { APP_NAME } from "../config/branding";
 
 function LoginPage({ onAuthenticated }) {
   const [username, setUsername] = useState("");
@@ -36,7 +37,7 @@ function LoginPage({ onAuthenticated }) {
       <div className="mx-auto max-w-md space-y-8">
         <div className="text-center">
           <p className="text-sm font-bold tracking-widest text-emerald-300">
-            Lic249
+            {APP_NAME}
           </p>
           <h1 className="mt-3 text-3xl font-bold">
             Iniciar sesión

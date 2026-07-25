@@ -1,6 +1,7 @@
 import { formatCurrency } from "./formatCurrency.js";
 import { formatDate } from "./formatDate.js";
 import { getDisplayedCash } from "./getDisplayedCash.js";
+import { getWorkDayOrganizationName } from "../config/branding.js";
 
 const CARD_WIDTH = 1080;
 const TRIPS_PER_PAGE = 15;
@@ -103,10 +104,10 @@ function createCanvas(height) {
   return { canvas, context };
 }
 
-function drawBrandHeader(context, title) {
+function drawBrandHeader(context, title, organizationName) {
   drawText(
     context,
-    "Lic249",
+    organizationName,
     CARD_WIDTH / 2,
     58,
     "700 32px Arial",
@@ -174,7 +175,11 @@ async function createSummaryCard(workDay, summary) {
   const cardHeight = summaryTop + summaryHeight + 60;
   const { canvas, context } = createCanvas(cardHeight);
 
-  drawBrandHeader(context, "JORNADA FINALIZADA");
+  drawBrandHeader(
+    context,
+    "JORNADA FINALIZADA",
+    getWorkDayOrganizationName(workDay)
+  );
   drawText(
     context,
     "JORNADA",
@@ -293,7 +298,11 @@ async function createTripsCard(
 ) {
   const { canvas, context } = createCanvas(TRIPS_PAGE_HEIGHT);
 
-  drawBrandHeader(context, "DETALLE DE VIAJES");
+  drawBrandHeader(
+    context,
+    "DETALLE DE VIAJES",
+    getWorkDayOrganizationName(workDay)
+  );
   drawText(
     context,
     formatDate(workDay.date),

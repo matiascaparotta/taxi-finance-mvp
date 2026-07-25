@@ -1,8 +1,8 @@
-# 🚖 Lic249
+# 🚖 TaxFin
 
 > Aplicación Full Stack desarrollada para digitalizar la gestión financiera diaria de conductores de taxi.
 
-Lic249 surge a partir de una necesidad real: sustituir el uso de WhatsApp, calculadora y registros manuales por una herramienta rápida, intuitiva y profesional.
+TaxFin surge a partir de una necesidad real: sustituir el uso de WhatsApp, calculadora y registros manuales por una herramienta rápida, intuitiva y profesional. La organización inicial mantiene `Lic249` como nombre visible de su licencia en tarjetas y exportaciones.
 
 El proyecto se desarrolla siguiendo buenas prácticas de ingeniería de software, arquitectura por capas y una evolución incremental mediante sprints.
 

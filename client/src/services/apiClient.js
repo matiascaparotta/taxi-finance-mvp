@@ -11,7 +11,7 @@ export const apiFetch = async (path, options = {}) => {
     !path.startsWith("/auth/")
   ) {
     window.dispatchEvent(
-      new CustomEvent("taxi-finance:unauthorized")
+      new CustomEvent("taxfin:unauthorized")
     );
   }
 

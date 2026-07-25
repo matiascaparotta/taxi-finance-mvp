@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento resume el estado actual de Lic249.
+Este documento resume el estado actual de TaxFin.
 
 Su finalidad es ofrecer una visión rápida del punto en el que se encuentra el proyecto, incluyendo el avance del desarrollo, la documentación disponible y la metodología de trabajo utilizada.
 
@@ -20,7 +20,9 @@ A diferencia del **Roadmap**, que describe las fases previstas del proyecto, est
 
 # Proyecto
 
-**Nombre:** Lic249
+**Aplicación:** TaxFin
+
+**Organización inicial:** Lic249
 
 **Versión actual:** Beta 1.0
 
@@ -180,6 +182,11 @@ exportar las jornadas de su organización, pero únicamente modifican las
 propias. Las nuevas jornadas reciben conductor y vehículo automáticamente, y
 el kilometraje conserva la continuidad entre los turnos del coche compartido.
 Esta funcionalidad todavía no fue publicada ni activada con datos reales.
+
+La separación de marca está implementada en desarrollo. La aplicación utiliza
+TaxFin en sus pantallas generales y conserva Lic249 como identidad de la
+organización inicial en tarjetas y exportaciones. Las futuras organizaciones
+recibirán su nombre desde los datos de la jornada. Todavía no fue publicada.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código

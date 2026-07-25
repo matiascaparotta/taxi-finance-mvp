@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento define las reglas de negocio oficiales de Lic249.
+Este documento define las reglas de negocio oficiales de TaxFin.
 
 Su finalidad es garantizar que el comportamiento de la aplicación sea consistente independientemente de futuras modificaciones del código.
 
@@ -20,7 +20,7 @@ En caso de contradicción entre una conversación, una implementación o una pro
 
 # Cómo utilizar este documento
 
-Las reglas descritas en este documento representan el comportamiento oficial de Lic249.
+Las reglas descritas en este documento representan el comportamiento oficial de TaxFin.
 
 Toda nueva funcionalidad deberá respetarlas o, en caso de requerir un cambio, actualizar previamente este documento.
 
@@ -30,7 +30,16 @@ En caso de conflicto entre la implementación y estas reglas, prevalecerán las 
 
 # Principios del producto
 
-Lic249 está diseñado para ayudar al conductor durante su jornada de trabajo.
+TaxFin está diseñado para ayudar al conductor durante su jornada de trabajo.
+
+## Marca e identidad de licencia
+
+- La aplicación se llamará `TaxFin`.
+- Cada organización tendrá su propio nombre visible de licencia.
+- Las pantallas generales utilizarán TaxFin.
+- Las tarjetas, resúmenes compartidos y archivos exportados utilizarán la
+  licencia de la organización correspondiente.
+- La organización inicial conservará `Lic249`.
 
 Toda funcionalidad deberá cumplir al menos uno de estos objetivos:
 

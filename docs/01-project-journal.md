@@ -1,4 +1,4 @@
-# Lic249 — Project Journal
+# TaxFin — Project Journal
 
 **Versión:** 2.1
 
@@ -12,7 +12,7 @@
 
 # Introducción
 
-Este documento registra la evolución completa de Lic249 desde el inicio del proyecto.
+Este documento registra la evolución completa de TaxFin desde el inicio del proyecto. Las referencias históricas a Lic249 corresponden al nombre utilizado antes de separar la marca de la aplicación y la licencia de la organización.
 
 Su objetivo no es únicamente listar las funcionalidades desarrolladas, sino documentar las decisiones técnicas, los cambios de enfoque y el aprendizaje obtenido durante el desarrollo.
 
@@ -853,6 +853,23 @@ Se implementó el aislamiento de jornadas por identidad:
 - el acceso anterior conserva temporalmente el comportamiento existente.
 
 La funcionalidad permanece aislada en desarrollo y no modifica producción.
+
+## Séptima funcionalidad
+
+Se separó la marca del producto y la identidad de cada organización:
+
+- la aplicación pasa a llamarse `TaxFin`;
+- `Lic249` continúa identificando la licencia de la organización inicial;
+- la cabecera, el acceso, el cambio de contraseña, el título del navegador y
+  la API utilizan la marca TaxFin;
+- las tarjetas, imágenes, títulos compartidos y nombres de archivo utilizan el
+  nombre de la organización asociado a la jornada;
+- durante la transición, una jornada sin organización conserva `Lic249` como
+  valor de compatibilidad;
+- una organización futura podrá mostrar su propia licencia sin cambiar el
+  código ni la marca TaxFin.
+
+El cambio permanece en desarrollo y todavía no modifica producción.
 
 ## Decisión de seguridad
 

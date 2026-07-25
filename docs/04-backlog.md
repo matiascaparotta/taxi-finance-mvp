@@ -1,4 +1,4 @@
-# Lic249 — Backlog
+# TaxFin — Backlog
 
 **Versión:** 2.1
 
@@ -163,6 +163,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Aplicar continuidad del cuentakilómetros por vehículo compartido.
 - [x] Permitir la misma fecha para conductores distintos.
 - [x] Mantener compatibilidad durante toda la transición.
+- [x] Separar la marca TaxFin de la licencia de cada organización.
 
 ---
 

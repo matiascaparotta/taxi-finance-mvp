@@ -64,13 +64,13 @@ function PrivateApp() {
     };
 
     window.addEventListener(
-      "taxi-finance:unauthorized",
+      "taxfin:unauthorized",
       handleUnauthorized
     );
 
     return () =>
       window.removeEventListener(
-        "taxi-finance:unauthorized",
+        "taxfin:unauthorized",
         handleUnauthorized
       );
   }, []);

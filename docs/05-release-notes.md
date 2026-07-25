@@ -1,4 +1,4 @@
-# Lic249 — Release Notes
+# TaxFin — Release Notes
 
 **Versión:** 2.1
 
@@ -48,6 +48,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Consulta de jornadas de conductores para el propietario en modo lectura.
 - Identificación del conductor en el historial y el detalle.
 - Continuidad del cuentakilómetros entre turnos del vehículo compartido.
+- Nueva marca de aplicación `TaxFin`, manteniendo `Lic249` en las tarjetas de
+  la organización inicial.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

@@ -51,6 +51,11 @@ const createWorkDay = async (workDayData, scope = null) => {
       is_locked AS isLocked,
       organization_id AS organizationId,
       driver_user_id AS driverUserId,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -97,6 +102,11 @@ const getWorkDays = async (scope = null) => {
       work_days.organization_id AS organizationId,
       work_days.driver_user_id AS driverUserId,
       users.display_name AS driverName,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       work_days.created_at AS createdAt,
       work_days.updated_at AS updatedAt
     FROM work_days
@@ -126,6 +136,11 @@ const getWorkDayById = async (workDayId, scope = null) => {
       work_days.organization_id AS organizationId,
       work_days.driver_user_id AS driverUserId,
       users.display_name AS driverName,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       work_days.created_at AS createdAt,
       work_days.updated_at AS updatedAt
     FROM work_days
@@ -154,6 +169,11 @@ const getOpenWorkDay = async (scope = null) => {
       is_locked AS isLocked,
       organization_id AS organizationId,
       driver_user_id AS driverUserId,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -181,6 +201,11 @@ const getLatestClosedWorkDay = async (scope = null) => {
       is_locked AS isLocked,
       organization_id AS organizationId,
       driver_user_id AS driverUserId,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
@@ -211,6 +236,11 @@ const getLatestVehicleClosedWorkDay = async (scope = null) => {
       is_locked AS isLocked,
       organization_id AS organizationId,
       driver_user_id AS driverUserId,
+      (
+        SELECT name
+        FROM organizations
+        WHERE organizations.id = work_days.organization_id
+      ) AS organizationName,
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days

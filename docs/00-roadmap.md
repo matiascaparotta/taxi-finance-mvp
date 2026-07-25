@@ -1,10 +1,10 @@
-# 🚖 Lic249 — Roadmap
+# 🚖 TaxFin — Roadmap
 
 ## Visión
 
 Construir una aplicación Full Stack para la gestión financiera de conductores de taxi, sustituyendo los procesos manuales por una herramienta rápida, intuitiva, segura y profesional.
 
-Lic249 nace para resolver un problema real: simplificar el trabajo diario del conductor de taxi, reduciendo el tiempo dedicado a registrar información y eliminando errores en los cálculos y en la rendición de cuentas.
+TaxFin nace para resolver un problema real: simplificar el trabajo diario del conductor de taxi, reduciendo el tiempo dedicado a registrar información y eliminando errores en los cálculos y en la rendición de cuentas.
 
 El objetivo del proyecto es evolucionar desde un MVP funcional hasta una plataforma completa para la gestión financiera de conductores.
 

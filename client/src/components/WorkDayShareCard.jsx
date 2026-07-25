@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 import Button from "./ui/Button";
 import { createWorkDayShareCards } from "../utils/createWorkDayShareCard";
+import {
+  getOrganizationFileSlug,
+  getWorkDayOrganizationName,
+} from "../config/branding";
 
 function WorkDayShareCard({
   workDay,
@@ -44,13 +48,14 @@ function WorkDayShareCard({
         }
 
         const dateKey = String(workDay.date).split("T")[0];
+        const organizationSlug = getOrganizationFileSlug(workDay);
         const files = blobs.map(
           (blob, index) =>
             new File(
               [blob],
               index === 0
-                ? `lic249-${dateKey}-resumen.png`
-                : `lic249-${dateKey}-viajes-${String(
+                ? `${organizationSlug}-${dateKey}-resumen.png`
+                : `${organizationSlug}-${dateKey}-viajes-${String(
                     index
                   ).padStart(2, "0")}.png`,
               { type: "image/png" }
@@ -113,7 +118,9 @@ function WorkDayShareCard({
       ) {
         await navigator.share({
           files: shareFiles,
-          title: "Resumen de jornada — Lic249",
+          title: `Resumen de jornada — ${getWorkDayOrganizationName(
+            workDay
+          )}`,
         });
         setMessage(
           `${shareFiles.length} ${

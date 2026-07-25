@@ -4,6 +4,7 @@ import Card from "./ui/Card";
 import { formatDate } from "../utils/formatDate";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
+import { getWorkDayOrganizationName } from "../config/branding";
 
 const INITIAL_VISIBLE_TRIPS = 8;
 
@@ -83,7 +84,7 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
     <Card className="border-emerald-500/30 bg-slate-950">
       <div className="text-center">
         <p className="text-sm font-semibold tracking-[0.2em] text-emerald-300">
-          Lic249
+          {getWorkDayOrganizationName(workDay)}
         </p>
         <h2 className="mt-2 text-2xl font-bold text-white">
           Jornada finalizada

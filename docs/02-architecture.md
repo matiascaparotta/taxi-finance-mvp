@@ -1,4 +1,4 @@
-# Lic249 — Architecture
+# TaxFin — Architecture
 
 **Versión:** 2.1
 
@@ -10,7 +10,7 @@
 
 # Objetivo
 
-Este documento describe la arquitectura técnica de Lic249 y explica cómo se organiza internamente la aplicación.
+Este documento describe la arquitectura técnica de TaxFin y explica cómo se organiza internamente la aplicación.
 
 Su propósito es facilitar la comprensión del proyecto, mantener una estructura consistente a medida que evoluciona y servir como referencia para cualquier desarrollador que participe en su mantenimiento o desarrollo.
 
@@ -874,6 +874,16 @@ archivos se almacenan en un directorio privado ignorado por el repositorio.
 
 La evolución multiusuario se implementará de forma incremental para que la
 Beta publicada continúe disponible durante todo el desarrollo.
+
+## Marca y organización
+
+`TaxFin` es la marca fija del producto. El nombre visible de una licencia no
+forma parte de esa marca: procede de `organizations.name`.
+
+La interfaz general utiliza `APP_NAME`, mientras las tarjetas y exportaciones
+reciben `organizationName` desde la jornada. `Lic249` se conserva únicamente
+como valor de compatibilidad para datos todavía no asignados durante la
+transición.
 
 ## Entidades base
 
