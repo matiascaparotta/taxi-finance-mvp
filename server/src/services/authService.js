@@ -41,10 +41,12 @@ const verifyPassword = (password, storedHash) => {
 const signSession = (
   secret,
   durationMs,
-  now = Date.now()
+  now = Date.now(),
+  sessionData = {}
 ) => {
   const payload = Buffer.from(
     JSON.stringify({
+      ...sessionData,
       expiresAt: now + durationMs,
     })
   ).toString("base64url");
@@ -56,15 +58,15 @@ const signSession = (
   return `${payload}.${signature}`;
 };
 
-const verifySession = (token, secret, now = Date.now()) => {
+const readSession = (token, secret, now = Date.now()) => {
   if (!token || !secret) {
-    return false;
+    return null;
   }
 
   const [payload, signature] = token.split(".");
 
   if (!payload || !signature) {
-    return false;
+    return null;
   }
 
   const expectedSignature = crypto
@@ -80,7 +82,7 @@ const verifySession = (token, secret, now = Date.now()) => {
       receivedSignature
     )
   ) {
-    return false;
+    return null;
   }
 
   try {
@@ -88,11 +90,14 @@ const verifySession = (token, secret, now = Date.now()) => {
       Buffer.from(payload, "base64url").toString("utf8")
     );
 
-    return Number(session.expiresAt) > now;
+    return Number(session.expiresAt) > now ? session : null;
   } catch {
-    return false;
+    return null;
   }
 };
+
+const verifySession = (token, secret, now = Date.now()) =>
+  readSession(token, secret, now) !== null;
 
 const parseCookies = (cookieHeader = "") =>
   Object.fromEntries(
@@ -146,6 +151,7 @@ module.exports = {
   COOKIE_NAME,
   hashPassword,
   parseCookies,
+  readSession,
   serializeExpiredSessionCookie,
   serializeSessionCookie,
   signSession,

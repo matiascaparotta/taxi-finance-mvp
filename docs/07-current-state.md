@@ -165,6 +165,11 @@ Las jornadas ya pueden incorporar referencias opcionales a organización,
 conductor y vehículo. El procedimiento para asignar las jornadas existentes a
 Matías está preparado y probado, pero todavía no fue ejecutado en producción.
 
+El inicio de sesión individual está implementado en desarrollo. Convive con el
+acceso privado actual, conserva las sesiones antiguas y permite identificar al
+usuario, su organización y sus roles. Todavía no filtra jornadas ni fue
+publicado en producción.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

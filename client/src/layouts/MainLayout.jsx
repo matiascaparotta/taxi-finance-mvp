@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-function MainLayout({ onLogout = null }) {
+function MainLayout({ onLogout = null, currentUser = null }) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800">
@@ -12,15 +12,26 @@ function MainLayout({ onLogout = null }) {
             </p>
           </div>
 
-          {onLogout && (
-            <button
-              type="button"
-              onClick={onLogout}
-              className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white"
-            >
-              Cerrar sesión
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {currentUser && (
+              <p className="hidden text-right text-sm text-slate-300 sm:block">
+                <span className="block font-semibold text-white">
+                  {currentUser.displayName}
+                </span>
+                <span>{currentUser.organizationName}</span>
+              </p>
+            )}
+
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white"
+              >
+                Cerrar sesión
+              </button>
+            )}
+          </div>
         </div>
       </header>
 

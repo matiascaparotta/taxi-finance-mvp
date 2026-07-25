@@ -939,6 +939,22 @@ ejecución conserva usuarios y contraseñas existentes.
 La autorización se aplicará en los Services del backend. El frontend podrá
 ocultar acciones, pero nunca será la barrera de seguridad.
 
+## Sesiones durante la transición
+
+La cookie firmada admite temporalmente dos modos:
+
+- `legacy`: acceso mediante la contraseña privada vigente;
+- `user`: acceso individual con identidad, organización y roles.
+
+Las sesiones creadas antes del cambio siguen siendo válidas y al renovarse
+conservan su modo. La contraseña nunca se incluye en la cookie. Los datos de
+identidad están firmados por el backend y no pueden modificarse desde el
+cliente.
+
+Esta identidad todavía no autoriza el acceso a jornadas. Cada Service deberá
+incorporar posteriormente las comprobaciones de organización, propietario y
+conductor antes de retirar el modo `legacy`.
+
 ## Combustible configurable
 
 La membresía del conductor prepara dos modalidades:

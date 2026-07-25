@@ -448,6 +448,14 @@ Cada usuario utilizará un nombre de usuario y una contraseña personal.
 - El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
 - La autorización deberá validarse siempre en el backend.
 
+Durante la transición se permitirá dejar vacío el nombre de usuario y acceder
+con la contraseña privada anterior. Este modo no crea una identidad personal y
+deberá retirarse únicamente después de validar el filtrado de todas las
+operaciones por conductor.
+
+Las cuentas suspendidas, organizaciones inactivas y membresías inactivas no
+podrán iniciar una sesión individual.
+
 Las 70 jornadas y los 1.203 viajes históricos actuales pertenecen a Matías y
 deberán asignarse a su cuenta mediante una migración verificada.
 

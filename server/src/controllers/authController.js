@@ -2,12 +2,15 @@ const { getAuthConfig } = require("../config/auth");
 const {
   COOKIE_NAME,
   parseCookies,
+  readSession,
   serializeExpiredSessionCookie,
   serializeSessionCookie,
   signSession,
   verifyPassword,
-  verifySession,
 } = require("../services/authService");
+const {
+  authenticateUser,
+} = require("../services/userAuthService");
 
 const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
@@ -28,7 +31,43 @@ const getAttemptState = (address, now = Date.now()) => {
   return current;
 };
 
-const login = (req, res) => {
+const getPublicUser = (session) => {
+  if (!session?.userId) {
+    return null;
+  }
+
+  return {
+    id: session.userId,
+    username: session.username,
+    displayName: session.displayName,
+    organizationId: session.organizationId,
+    organizationName: session.organizationName,
+    isOwner: Boolean(session.isOwner),
+    isDriver: Boolean(session.isDriver),
+    mustChangePassword: Boolean(session.mustChangePassword),
+  };
+};
+
+const setSessionCookie = (res, config, sessionData) => {
+  const token = signSession(
+    config.sessionSecret,
+    config.sessionDurationMs,
+    Date.now(),
+    sessionData
+  );
+
+  res.setHeader(
+    "Set-Cookie",
+    serializeSessionCookie(token, {
+      secureCookie: config.secureCookie,
+      maxAgeSeconds: Math.floor(
+        config.sessionDurationMs / 1000
+      ),
+    })
+  );
+};
+
+const login = async (req, res) => {
   const config = getAuthConfig();
 
   if (!config.required) {
@@ -46,34 +85,47 @@ const login = (req, res) => {
     return;
   }
 
-  if (
-    typeof req.body?.password !== "string" ||
-    !verifyPassword(req.body.password, config.passwordHash)
+  const hasUsername =
+    typeof req.body?.username === "string" &&
+    req.body.username.trim() !== "";
+  let sessionData = null;
+
+  if (hasUsername) {
+    const user = await authenticateUser(req.body);
+
+    if (user) {
+      sessionData = {
+        accessMode: "user",
+        ...user,
+      };
+    }
+  } else if (
+    typeof req.body?.password === "string" &&
+    verifyPassword(req.body.password, config.passwordHash)
   ) {
+    sessionData = {
+      accessMode: "legacy",
+    };
+  }
+
+  if (!sessionData) {
     attemptState.count += 1;
     res.status(401).json({
-      message: "Contraseña incorrecta",
+      message: hasUsername
+        ? "Usuario o contraseña incorrectos"
+        : "Contraseña incorrecta",
     });
     return;
   }
 
   attemptsByAddress.delete(address);
 
-  const token = signSession(
-    config.sessionSecret,
-    config.sessionDurationMs
-  );
-
-  res.setHeader(
-    "Set-Cookie",
-    serializeSessionCookie(token, {
-      secureCookie: config.secureCookie,
-      maxAgeSeconds: Math.floor(
-        config.sessionDurationMs / 1000
-      ),
-    })
-  );
-  res.json({ authenticated: true });
+  setSessionCookie(res, config, sessionData);
+  res.json({
+    authenticated: true,
+    accessMode: sessionData.accessMode,
+    user: getPublicUser(sessionData),
+  });
 };
 
 const getSession = (req, res) => {
@@ -88,31 +140,22 @@ const getSession = (req, res) => {
   }
 
   const cookies = parseCookies(req.headers.cookie);
-  const authenticated = verifySession(
+  const session = readSession(
     cookies[COOKIE_NAME],
     config.sessionSecret
   );
+  const authenticated = session !== null;
 
   if (authenticated) {
-    const token = signSession(
-      config.sessionSecret,
-      config.sessionDurationMs
-    );
-
-    res.setHeader(
-      "Set-Cookie",
-      serializeSessionCookie(token, {
-        secureCookie: config.secureCookie,
-        maxAgeSeconds: Math.floor(
-          config.sessionDurationMs / 1000
-        ),
-      })
-    );
+    const { expiresAt, ...sessionData } = session;
+    setSessionCookie(res, config, sessionData);
   }
 
   res.json({
     authenticated,
     authRequired: true,
+    accessMode: session?.accessMode || (authenticated ? "legacy" : null),
+    user: getPublicUser(session),
   });
 };
 

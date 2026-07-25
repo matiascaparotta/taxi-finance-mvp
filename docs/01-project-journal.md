@@ -801,6 +801,23 @@ Se preparó la propiedad de las jornadas:
 La migración no contiene actualizaciones de datos y el comando todavía no fue
 ejecutado en producción.
 
+## Cuarta funcionalidad
+
+Se implementó el inicio de sesión individual compatible:
+
+- el formulario acepta nombre de usuario y contraseña personal;
+- durante la transición el usuario puede dejar vacío el nombre y utilizar la
+  contraseña general vigente;
+- las sesiones antiguas continúan siendo válidas;
+- una sesión personal conserva identidad, organización y roles mediante una
+  firma del backend;
+- la interfaz muestra el nombre y la organización de la cuenta personal;
+- las cuentas suspendidas o sin membresía activa no pueden iniciar sesión.
+
+Esta etapa identifica al usuario, pero todavía no filtra jornadas. El acceso
+general se conservará hasta que la autorización por conductor haya sido
+implementada y validada.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

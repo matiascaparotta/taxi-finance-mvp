@@ -25,6 +25,7 @@ function PrivateApp() {
   const [authStatus, setAuthStatus] = useState("loading");
   const [authRequired, setAuthRequired] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   const checkSession = useCallback(async () => {
     try {
@@ -32,6 +33,7 @@ function PrivateApp() {
       setAuthStatus("loading");
       const session = await getSession();
       setAuthRequired(session.authRequired);
+      setCurrentUser(session.user || null);
       setAuthStatus(
         session.authenticated ? "authenticated" : "anonymous"
       );
@@ -45,6 +47,7 @@ function PrivateApp() {
     try {
       await logout();
     } finally {
+      setCurrentUser(null);
       setAuthStatus("anonymous");
     }
   };
@@ -54,8 +57,10 @@ function PrivateApp() {
   }, [checkSession]);
 
   useEffect(() => {
-    const handleUnauthorized = () =>
+    const handleUnauthorized = () => {
+      setCurrentUser(null);
       setAuthStatus("anonymous");
+    };
 
     window.addEventListener(
       "taxi-finance:unauthorized",
@@ -106,9 +111,10 @@ function PrivateApp() {
   if (authStatus === "anonymous") {
     return (
       <LoginPage
-        onAuthenticated={() =>
-          setAuthStatus("authenticated")
-        }
+        onAuthenticated={(session) => {
+          setCurrentUser(session.user || null);
+          setAuthStatus("authenticated");
+        }}
       />
     );
   }
@@ -119,6 +125,7 @@ function PrivateApp() {
         element={
           <MainLayout
             onLogout={authRequired ? handleLogout : null}
+            currentUser={currentUser}
           />
         }
       >

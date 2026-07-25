@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import { login } from "../services/authService";
 
 function LoginPage({ onAuthenticated }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,9 +20,10 @@ function LoginPage({ onAuthenticated }) {
     try {
       setError("");
       setIsSubmitting(true);
-      await login(password);
+      const session = await login({ username, password });
+      setUsername("");
       setPassword("");
-      onAuthenticated();
+      onAuthenticated(session);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -37,15 +39,39 @@ function LoginPage({ onAuthenticated }) {
             Lic249
           </p>
           <h1 className="mt-3 text-3xl font-bold">
-            Acceso privado
+            Iniciar sesión
           </h1>
           <p className="mt-2 text-slate-400">
-            Ingresa tu contraseña para consultar tus jornadas.
+            Ingresa con tu usuario personal.
           </p>
         </div>
 
         <Card>
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label
+                htmlFor="username"
+                className="mb-2 block text-sm font-semibold text-slate-300"
+              >
+                Usuario
+              </label>
+              <input
+                id="username"
+                type="text"
+                autoComplete="username"
+                value={username}
+                onChange={(event) =>
+                  setUsername(event.target.value)
+                }
+                autoFocus
+                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
+              />
+              <p className="mt-2 text-xs text-slate-500">
+                Durante la transición puedes dejarlo vacío y usar
+                la contraseña actual.
+              </p>
+            </div>
+
             <div>
               <label
                 htmlFor="accessPassword"
@@ -62,7 +88,6 @@ function LoginPage({ onAuthenticated }) {
                   setPassword(event.target.value)
                 }
                 required
-                autoFocus
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
               />
             </div>

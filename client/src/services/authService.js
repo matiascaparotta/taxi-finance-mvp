@@ -13,14 +13,14 @@ const readResponse = async (response) => {
 export const getSession = async () =>
   readResponse(await apiFetch("/auth/session"));
 
-export const login = async (password) =>
+export const login = async ({ username, password }) =>
   readResponse(
     await apiFetch("/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ username, password }),
     })
   );
 
