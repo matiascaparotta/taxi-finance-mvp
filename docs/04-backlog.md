@@ -171,7 +171,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 ## Gestión de conductores
 
-- [ ] Crear y suspender conductores.
+- [x] Crear, suspender y reactivar conductores.
 - [x] Consultar jornadas activas de los conductores.
 - [x] Visualizar y exportar jornadas ajenas en modo lectura.
 - [x] Impedir que el propietario modifique, cierre o elimine jornadas ajenas.

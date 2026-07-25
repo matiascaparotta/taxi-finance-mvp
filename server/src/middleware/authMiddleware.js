@@ -4,6 +4,9 @@ const {
   parseCookies,
   readSession,
 } = require("../services/authService");
+const userAuthRepository = require(
+  "../repositories/userAuthRepository"
+);
 
 const requireAuthentication = (req, res, next) => {
   const config = getAuthConfig();
@@ -48,7 +51,55 @@ const requireCompletedPasswordChange = (req, res, next) => {
   next();
 };
 
+const createRequireActiveUserSession = ({
+  repository = userAuthRepository,
+} = {}) => async (req, res, next) => {
+  if (req.auth?.accessMode !== "user") {
+    next();
+    return;
+  }
+
+  try {
+    const active = await repository.isUserAccessActive(
+      req.auth.userId,
+      req.auth.organizationId
+    );
+
+    if (!active) {
+      res.status(401).json({
+        code: "USER_ACCESS_INACTIVE",
+        message: "La cuenta ya no tiene acceso a esta organización",
+      });
+      return;
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+const requireActiveUserSession = createRequireActiveUserSession();
+
+const requireOwner = (req, res, next) => {
+  if (
+    req.auth?.accessMode !== "user" ||
+    !req.auth.roles?.isOwner
+  ) {
+    res.status(403).json({
+      code: "OWNER_ACCESS_REQUIRED",
+      message: "Esta acción requiere una cuenta propietaria",
+    });
+    return;
+  }
+
+  next();
+};
+
 module.exports = {
   requireAuthentication,
+  requireActiveUserSession,
   requireCompletedPasswordChange,
+  requireOwner,
+  createRequireActiveUserSession,
 };

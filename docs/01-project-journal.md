@@ -890,6 +890,23 @@ Se implementó el primer panel de seguimiento del propietario:
 
 La funcionalidad permanece en desarrollo y todavía no modifica producción.
 
+## Novena funcionalidad
+
+Se implementó la gestión inicial de conductores:
+
+- solo una cuenta propietaria puede abrir la pantalla y utilizar sus endpoints;
+- el propietario crea nombre, usuario y modalidad de combustible;
+- el sistema genera una contraseña temporal y la muestra una única vez;
+- el conductor debe cambiar esa contraseña en su primer acceso;
+- el propietario puede suspender y reactivar conductores no propietarios;
+- una cuenta con jornada activa no puede suspenderse hasta cerrar el turno;
+- suspender conserva todas las jornadas, viajes y estadísticas;
+- una sesión ya iniciada pierde acceso en la siguiente petición si su membresía
+  fue suspendida;
+- ninguna organización puede consultar o gestionar conductores de otra.
+
+La funcionalidad permanece en desarrollo y todavía no modifica producción.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

@@ -82,8 +82,31 @@ const updatePassword = async (
   return result.affectedRows === 1;
 };
 
+const isUserAccessActive = async (userId, organizationId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT 1 AS active
+    FROM users
+    INNER JOIN organization_memberships
+      ON organization_memberships.user_id = users.id
+    INNER JOIN organizations
+      ON organizations.id = organization_memberships.organization_id
+    WHERE users.id = ?
+      AND organizations.id = ?
+      AND users.status = 'ACTIVE'
+      AND organization_memberships.status = 'ACTIVE'
+      AND organizations.status = 'ACTIVE'
+    LIMIT 1
+    `,
+    [userId, organizationId]
+  );
+
+  return rows.length > 0;
+};
+
 module.exports = {
   findActiveUserForLogin,
   findActiveUserForPasswordChange,
+  isUserAccessActive,
   updatePassword,
 };

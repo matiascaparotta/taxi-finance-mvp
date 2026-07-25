@@ -52,6 +52,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   la organización inicial.
 - Seguimiento para propietarios de conductores en servicio, con actualización
   automática y detalle reciente de viajes.
+- Creación, suspensión y reactivación segura de conductores por parte del
+  propietario.
+- Contraseña temporal mostrada una sola vez e invalidación inmediata de
+  sesiones suspendidas.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

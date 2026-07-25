@@ -453,6 +453,7 @@ Cada usuario utilizará un nombre de usuario y una contraseña personal.
 - El conductor solo podrá consultar y gestionar sus propias jornadas.
 - El conductor no podrá consultar las jornadas de otros conductores.
 - El propietario podrá crear y suspender conductores de su organización.
+- El propietario podrá reactivar posteriormente un conductor suspendido.
 - El propietario podrá consultar y exportar jornadas ajenas.
 - El propietario podrá consultar el avance de jornadas ajenas activas.
 - El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
@@ -472,6 +473,13 @@ operaciones por conductor.
 
 Las cuentas suspendidas, organizaciones inactivas y membresías inactivas no
 podrán iniciar una sesión individual.
+
+- La suspensión no eliminará jornadas, viajes ni estadísticas.
+- La suspensión tendrá efecto sobre las sesiones ya iniciadas.
+- No se podrá suspender una cuenta propietaria.
+- No se podrá suspender un conductor mientras tenga una jornada activa.
+- La suspensión afectará únicamente la membresía de la organización que la
+  solicita.
 
 Toda cuenta creada por un propietario tendrá una contraseña temporal.
 

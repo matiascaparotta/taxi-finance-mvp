@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "./ui/Card";
 import Stat from "./ui/Stat";
@@ -17,6 +18,7 @@ function OwnerActiveWorkDays() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
+  const navigate = useNavigate();
   const loadActiveWorkDays = useCallback(async ({ silent = false } = {}) => {
     try {
       setError("");
@@ -97,6 +99,14 @@ function OwnerActiveWorkDays() {
           {isRefreshing ? "Actualizando..." : "Actualizar"}
         </button>
       </div>
+
+      <button
+        type="button"
+        onClick={() => navigate("/drivers")}
+        className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+      >
+        Gestionar conductores
+      </button>
 
       {isLoading ? (
         <Card>

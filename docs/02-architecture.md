@@ -1010,6 +1010,28 @@ El sondeo no concede permisos de escritura. El backend continúa comprobando la
 organización para cada lectura y exige propiedad personal para cualquier
 modificación.
 
+## Gestión de conductores
+
+Las rutas `/api/drivers` exigen, en este orden:
+
+1. sesión autenticada;
+2. membresía y organización todavía activas;
+3. contraseña temporal ya reemplazada;
+4. rol de propietario.
+
+La creación utiliza una transacción para guardar usuario y membresía juntos.
+La contraseña temporal se genera con aleatoriedad criptográfica y solo su
+huella llega a `users`.
+
+La suspensión modifica `organization_memberships.status`; no elimina el
+usuario ni sus datos y no afecta una posible membresía en otra organización.
+Antes de suspender se comprueba que el conductor no tenga una jornada abierta.
+
+Las sesiones personales se revalidan contra usuario, organización y membresía
+en cada petición protegida. De esta manera una suspensión tiene efecto
+inmediato aunque la cookie firmada todavía no haya caducado. El modo legado
+permanece compatible durante la transición.
+
 Las sesiones `legacy` no pueden utilizar este endpoint y continúan accediendo
 al flujo vigente durante la transición.
 

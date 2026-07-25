@@ -2,7 +2,9 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 
 const {
+  createRequireActiveUserSession,
   requireCompletedPasswordChange,
+  requireOwner,
 } = require("../src/middleware/authMiddleware");
 
 const createResponse = () => ({
@@ -62,4 +64,64 @@ test("permite cuentas actualizadas y sesiones anteriores", () => {
 
     assert.equal(continued, true);
   }
+});
+
+test("reserva la gestión para cuentas propietarias", () => {
+  for (const auth of [
+    { accessMode: "legacy" },
+    { accessMode: "user", roles: { isOwner: false } },
+  ]) {
+    const response = createResponse();
+    let continued = false;
+    requireOwner({ auth }, response, () => {
+      continued = true;
+    });
+    assert.equal(continued, false);
+    assert.equal(response.statusCode, 403);
+  }
+
+  let ownerContinued = false;
+  requireOwner(
+    {
+      auth: {
+        accessMode: "user",
+        roles: { isOwner: true },
+      },
+    },
+    createResponse(),
+    () => {
+      ownerContinued = true;
+    }
+  );
+  assert.equal(ownerContinued, true);
+});
+
+test("una suspensión invalida una sesión personal existente", async () => {
+  const middleware = createRequireActiveUserSession({
+    repository: {
+      async isUserAccessActive() {
+        return false;
+      },
+    },
+  });
+  const response = createResponse();
+  let continued = false;
+
+  await middleware(
+    {
+      auth: {
+        accessMode: "user",
+        userId: 5,
+        organizationId: 3,
+      },
+    },
+    response,
+    () => {
+      continued = true;
+    }
+  );
+
+  assert.equal(continued, false);
+  assert.equal(response.statusCode, 401);
+  assert.equal(response.body.code, "USER_ACCESS_INACTIVE");
 });

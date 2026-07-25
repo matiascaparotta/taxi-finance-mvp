@@ -194,6 +194,13 @@ sus totales y los cinco viajes más recientes con actualización cada treinta
 segundos. La vista es de solo lectura y permanece separada de la jornada
 personal del propietario. Todavía no fue publicada.
 
+La gestión inicial de conductores está implementada en desarrollo. Un
+propietario puede crear accesos con contraseña temporal, elegir la modalidad
+de combustible y suspender o reactivar conductores no propietarios. La
+suspensión conserva el historial, exige que no exista una jornada activa e
+invalida las sesiones existentes en la siguiente petición. Todavía no fue
+publicada.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

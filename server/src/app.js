@@ -7,12 +7,17 @@ const { createCorsOptions } = require("./config/cors");
 const {
   requireCompletedPasswordChange,
   requireAuthentication,
+  requireActiveUserSession,
+  requireOwner,
 } = require("./middleware/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const healthRoutes = require("./routes/healthRoutes");
 const workDayRoutes = require("./routes/workDayRoutes");
 const tripRoutes = require("./routes/tripRoutes");
 const workDaySummaryRoutes = require("./routes/workDaySummaryRoutes");
+const driverManagementRoutes = require(
+  "./routes/driverManagementRoutes"
+);
 
 getAuthConfig();
 
@@ -26,20 +31,31 @@ app.use("/api/auth", authRoutes);
 app.use(
   "/api/work-days",
   requireAuthentication,
+  requireActiveUserSession,
   requireCompletedPasswordChange,
   workDayRoutes
 );
 app.use(
   "/api/work-days",
   requireAuthentication,
+  requireActiveUserSession,
   requireCompletedPasswordChange,
   workDaySummaryRoutes
 );
 app.use(
   "/api/trips",
   requireAuthentication,
+  requireActiveUserSession,
   requireCompletedPasswordChange,
   tripRoutes
+);
+app.use(
+  "/api/drivers",
+  requireAuthentication,
+  requireActiveUserSession,
+  requireCompletedPasswordChange,
+  requireOwner,
+  driverManagementRoutes
 );
 
 app.use("/api", (req, res) => {
