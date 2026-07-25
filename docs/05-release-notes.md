@@ -328,6 +328,10 @@ Objetivo principal:
 - Las jornadas históricas permanecen sin asignar hasta el aprovisionamiento
   controlado de Lic249.
 - TaxFin conserva las 71 jornadas y 1.221 viajes existentes.
+- Lic249, Matías, José y el vehículo compartido ya fueron creados de forma
+  segura en producción.
+- Las cuentas personales exigen reemplazar su contraseña temporal durante el
+  primer acceso.
 
 ---
 

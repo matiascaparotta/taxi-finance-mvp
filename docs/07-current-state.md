@@ -163,9 +163,10 @@ producción de forma aditiva el 25/07/2026. Las migraciones `008` a `013`
 quedaron registradas sin asignar todavía las jornadas históricas. El acceso
 privado anterior continúa activo.
 
-El aprovisionamiento inicial de Lic249 está preparado para crear a Matías como
-conductor, a José Revilla como propietario y conductor, y el vehículo
-compartido. Todavía no fue ejecutado en producción.
+El aprovisionamiento inicial de Lic249 se ejecutó en producción el 25/07/2026.
+Creó a Matías como conductor, a José Revilla como propietario y conductor, y
+el vehículo compartido `Taxi Lic249`. Ambas cuentas autentican correctamente
+y exigen cambiar su contraseña temporal durante el primer acceso.
 
 Las jornadas ya pueden incorporar referencias opcionales a organización,
 conductor y vehículo. El procedimiento para asignar las jornadas existentes a
@@ -184,8 +185,8 @@ Los conductores solo acceden a sus datos; los propietarios pueden consultar y
 exportar las jornadas de su organización, pero únicamente modifican las
 propias. Las nuevas jornadas reciben conductor y vehículo automáticamente, y
 el kilometraje conserva la continuidad entre los turnos del coche compartido.
-Todavía no fue activado con datos reales porque el aprovisionamiento y la
-asignación histórica permanecen pendientes.
+Todavía no fue activado con datos reales porque la asignación histórica
+permanece pendiente.
 
 La separación de marca está publicada. La aplicación utiliza
 TaxFin en sus pantallas generales y conserva Lic249 como identidad de la
@@ -220,6 +221,10 @@ SHA-256. Después del despliegue se verificaron:
 - 71 jornadas, 1.221 viajes y 70 cierres importados sin cambios;
 - el endpoint de salud de TaxFin;
 - la sesión anterior, la Home y el historial real.
+
+Después del aprovisionamiento se verificó que las 71 jornadas continúan sin
+propietario asignado. Este aislamiento permite probar primero las cuentas y
+realizar la asignación de Matías como una operación posterior separada.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código

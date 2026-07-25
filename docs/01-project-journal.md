@@ -955,6 +955,25 @@ Después de publicar se verificaron:
 El siguiente paso continúa siendo aprovisionar Lic249 y sus primeras cuentas
 en una operación separada y reversible.
 
+## Aprovisionamiento real de Lic249
+
+El 25/07/2026 se ejecutó el aprovisionamiento idempotente sobre producción.
+
+Se crearon:
+
+- la organización `Lic249`;
+- Matías Caparotta como conductor (`mati.caparotta`);
+- José Revilla como propietario y conductor (`jose.revilla`);
+- el vehículo activo y compartido `Taxi Lic249`.
+
+Las dos cuentas nacieron con contraseña temporal y cambio obligatorio en el
+primer acceso. Se verificó la autenticación real mediante la API, incluyendo
+la organización y los roles correctos.
+
+La operación no reasignó jornadas: las 71 existentes continúan con referencias
+de organización, conductor y vehículo vacías. La asignación a Matías permanece
+como siguiente funcionalidad independiente.
+
 ## Estado
 
 🚧 Sprint en desarrollo.
