@@ -41,6 +41,7 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Vehículos compartidos entre turnos.
 - Configuración de combustible por carga real o tarifa por kilómetro.
 - Aprovisionamiento seguro de las cuentas iniciales de Lic249.
+- Asignación protegida de las jornadas existentes a su conductor y vehículo.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

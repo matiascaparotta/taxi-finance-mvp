@@ -420,6 +420,11 @@ Las migraciones multiusuario deberán ser aditivas. No podrán borrar, modificar
 ni reasignar jornadas históricas hasta que las cuentas correspondientes hayan
 sido creadas y verificadas.
 
+Durante la transición, las referencias de organización, conductor y vehículo
+podrán permanecer vacías únicamente para conservar compatibilidad con la
+versión publicada. Después de la asignación verificada serán obligatorias para
+toda jornada nueva.
+
 El acceso general solo podrá retirarse cuando el inicio de sesión individual y
 el flujo completo de jornada hayan superado las pruebas de regresión.
 

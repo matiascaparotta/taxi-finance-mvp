@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS vehicles (
     ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_vehicles_organization (organization_id),
+  CONSTRAINT uq_vehicles_organization_name
+    UNIQUE (organization_id, name),
   CONSTRAINT uq_vehicles_organization_license_plate
     UNIQUE (organization_id, license_plate),
   CONSTRAINT fk_vehicles_organization

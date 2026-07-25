@@ -909,6 +909,15 @@ La transición seguirá estas etapas:
 5. Retirar el acceso general únicamente cuando el acceso individual haya
    superado las pruebas de regresión.
 
+Durante la transición, `work_days` incorpora referencias opcionales a
+organización, conductor y vehículo. Mantenerlas opcionales permite desplegar
+el esquema sin alterar el código que sostiene la versión publicada.
+
+El comando `npm run db:assign:matias --prefix server` realiza posteriormente
+la asignación dentro de una transacción. Bloquea las jornadas mientras trabaja,
+rechaza estados ambiguos y verifica que todas hayan quedado vinculadas antes de
+confirmar.
+
 ## Aprovisionamiento inicial
 
 Las primeras cuentas no se incluyen como datos dentro de una migración SQL.

@@ -785,6 +785,22 @@ El aprovisionamiento todavía no se ejecutó en producción. La creación real d
 las cuentas se realizará después de aplicar las migraciones sobre una copia de
 prueba y verificar un respaldo reciente.
 
+## Tercera funcionalidad
+
+Se preparó la propiedad de las jornadas:
+
+- cada jornada podrá vincularse a una organización, un conductor y un vehículo;
+- las referencias son inicialmente opcionales para conservar compatibilidad;
+- la restricción global de fecha permanece vigente durante la transición;
+- un comando transaccional asignará las jornadas sin propietario a Matías y al
+  vehículo compartido;
+- la operación rechaza datos parciales, jornadas de otros conductores y estados
+  mixtos inesperados;
+- una segunda ejecución conserva la asignación existente.
+
+La migración no contiene actualizaciones de datos y el comando todavía no fue
+ejecutado en producción.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se
