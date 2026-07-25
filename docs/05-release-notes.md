@@ -40,6 +40,7 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Conductores con acceso exclusivo a sus propios datos.
 - Vehículos compartidos entre turnos.
 - Configuración de combustible por carga real o tarifa por kilómetro.
+- Aprovisionamiento seguro de las cuentas iniciales de Lic249.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

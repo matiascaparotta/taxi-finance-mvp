@@ -11,6 +11,7 @@
     "db:backup": "node src/scripts/backupDatabase.js",
     "db:test": "node src/config/testDatabaseConnection.js",
     "db:migrate": "node src/scripts/migrateDatabase.js",
+    "db:provision:lic249": "node src/scripts/provisionLic249.js",
     "test": "node --test"
   },
   "keywords": [],

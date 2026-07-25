@@ -909,6 +909,16 @@ La transición seguirá estas etapas:
 5. Retirar el acceso general únicamente cuando el acceso individual haya
    superado las pruebas de regresión.
 
+## Aprovisionamiento inicial
+
+Las primeras cuentas no se incluyen como datos dentro de una migración SQL.
+El comando `npm run db:provision:lic249 --prefix server` crea la organización,
+las membresías y el vehículo dentro de una transacción.
+
+Las contraseñas temporales se generan durante la ejecución y en la base de
+datos solo se almacena su huella. El comando es idempotente: una segunda
+ejecución conserva usuarios y contraseñas existentes.
+
 ## Aislamiento y permisos
 
 - Un conductor solo podrá consultar y modificar sus propias jornadas.

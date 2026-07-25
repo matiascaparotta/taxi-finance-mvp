@@ -147,6 +147,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 - [x] Definir organizaciones, usuarios, membresías y vehículos.
 - [x] Preparar modalidades de combustible por conductor.
+- [x] Crear un aprovisionamiento seguro e idempotente para Lic249.
 - [ ] Crear la organización Lic249.
 - [ ] Crear las cuentas individuales de Matías y José.
 - [ ] Asignar las 70 jornadas y los 1.203 viajes a Matías.

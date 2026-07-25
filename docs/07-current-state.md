@@ -157,6 +157,10 @@ firmada. Esta solución continuará protegiendo la Beta durante la transición.
 La base de organizaciones, usuarios, membresías y vehículos se incorporará de
 forma aditiva, sin cambiar inicialmente el acceso ni asignar las jornadas.
 
+El aprovisionamiento inicial de Lic249 está preparado para crear a Matías como
+conductor, a José Revilla como propietario y conductor, y el vehículo
+compartido. Todavía no fue ejecutado en producción.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

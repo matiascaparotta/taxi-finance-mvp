@@ -767,6 +767,24 @@ que Matías utiliza diariamente ni modificar los datos históricos.
 - Se crearon migraciones aditivas que no modifican todavía las jornadas.
 - El acceso privado actual permanece vigente durante la transición.
 
+## Segunda funcionalidad
+
+Se preparó el aprovisionamiento inicial de Lic249:
+
+- organización `Lic249`;
+- Matías Caparotta como conductor (`mati.caparotta`);
+- José Revilla como propietario y conductor (`jose.revilla`);
+- vehículo compartido `Taxi Lic249`;
+- modalidad de carga real para ambos conductores.
+
+El proceso se ejecuta dentro de una transacción, genera contraseñas temporales
+seguras y muestra cada una solo cuando crea la cuenta. Puede repetirse sin
+duplicar datos ni cambiar las contraseñas existentes.
+
+El aprovisionamiento todavía no se ejecutó en producción. La creación real de
+las cuentas se realizará después de aplicar las migraciones sobre una copia de
+prueba y verificar un respaldo reciente.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se
