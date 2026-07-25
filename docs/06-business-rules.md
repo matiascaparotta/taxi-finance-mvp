@@ -491,6 +491,16 @@ Toda cuenta creada por un propietario tendrá una contraseña temporal.
 - La contraseña y su confirmación nunca se almacenarán en texto.
 - El cambio no se aplica al modo de acceso privado anterior.
 
+El propietario podrá restablecer la contraseña de un conductor no propietario.
+
+- Se generará una contraseña temporal nueva.
+- La contraseña anterior dejará de funcionar inmediatamente.
+- La contraseña temporal se mostrará una sola vez.
+- Las sesiones abiertas deberán volver al cambio obligatorio de contraseña.
+- No se podrá restablecer una contraseña propietaria desde la gestión de
+  conductores.
+- La operación solo podrá aplicarse a conductores de la misma organización.
+
 Las 70 jornadas y los 1.203 viajes históricos actuales pertenecen a Matías y
 deberán asignarse a su cuenta mediante una migración verificada.
 

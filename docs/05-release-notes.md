@@ -56,6 +56,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de
   sesiones suspendidas.
+- Restablecimiento de contraseña por el propietario, con nueva clave temporal
+  y cambio obligatorio incluso en sesiones que ya estaban abiertas.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

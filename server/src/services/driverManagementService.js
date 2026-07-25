@@ -151,9 +151,50 @@ const updateDriverStatusService = async (
   };
 };
 
+const resetDriverPasswordService = async (
+  organizationId,
+  userId,
+  {
+    repository = driverManagementRepository,
+    passwordGenerator = generateTemporaryPassword,
+    passwordHasher = hashPassword,
+  } = {}
+) => {
+  const membership = await repository.findDriverMembership(
+    organizationId,
+    userId
+  );
+
+  if (!membership) {
+    throw new Error("Conductor no encontrado");
+  }
+
+  if (membership.isOwner) {
+    throw new Error(
+      "No se puede restablecer una contraseña propietaria desde esta pantalla"
+    );
+  }
+
+  const temporaryPassword = passwordGenerator();
+  const updated = await repository.resetDriverPassword(
+    userId,
+    passwordHasher(temporaryPassword)
+  );
+
+  if (!updated) {
+    throw new Error("No se pudo restablecer la contraseña");
+  }
+
+  return {
+    id: Number(userId),
+    temporaryPassword,
+  };
+};
+
 module.exports = {
   createDriverService,
   listDriversService,
+  resetDriverPasswordService,
   updateDriverStatusService,
   validateDriverInput,
 };

@@ -76,6 +76,25 @@ function PrivateApp() {
       );
   }, []);
 
+  useEffect(() => {
+    const handlePasswordChangeRequired = () => {
+      setCurrentUser((user) =>
+        user ? { ...user, mustChangePassword: true } : user
+      );
+    };
+
+    window.addEventListener(
+      "taxfin:password-change-required",
+      handlePasswordChangeRequired
+    );
+
+    return () =>
+      window.removeEventListener(
+        "taxfin:password-change-required",
+        handlePasswordChangeRequired
+      );
+  }, []);
+
   if (authStatus === "loading") {
     return (
       <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">

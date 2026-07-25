@@ -160,12 +160,28 @@ const hasOpenWorkDay = async (organizationId, userId) => {
   return rows.length > 0;
 };
 
+const resetDriverPassword = async (userId, passwordHash) => {
+  const [result] = await pool.query(
+    `
+    UPDATE users
+    SET
+      password_hash = ?,
+      must_change_password = TRUE
+    WHERE id = ?
+    `,
+    [passwordHash, userId]
+  );
+
+  return result.affectedRows === 1;
+};
+
 module.exports = {
   createDriver,
   findDriverMembership,
   findUserByUsername,
   hasOpenWorkDay,
   listDrivers,
+  resetDriverPassword,
   updateDriverStatus,
   withTransaction,
 };

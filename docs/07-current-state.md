@@ -201,6 +201,11 @@ suspensión conserva el historial, exige que no exista una jornada activa e
 invalida las sesiones existentes en la siguiente petición. Todavía no fue
 publicada.
 
+El restablecimiento de contraseñas también está implementado en desarrollo. Un
+propietario puede generar una clave temporal nueva para un conductor de su
+organización; la anterior se invalida y cualquier sesión abierta vuelve al
+cambio obligatorio en su siguiente petición. Todavía no fue publicado.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

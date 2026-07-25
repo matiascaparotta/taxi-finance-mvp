@@ -1032,6 +1032,21 @@ en cada petición protegida. De esta manera una suspensión tiene efecto
 inmediato aunque la cookie firmada todavía no haya caducado. El modo legado
 permanece compatible durante la transición.
 
+## Restablecimiento de contraseña
+
+`POST /api/drivers/:id/reset-password` está protegido por las mismas cuatro
+capas de la gestión de conductores. El Service comprueba que el objetivo
+pertenece a la organización y que no es propietario, genera una contraseña
+temporal y actualiza `password_hash` junto con
+`must_change_password = TRUE`.
+
+La revalidación de sesión devuelve también el estado
+`must_change_password`. Si cambió después de emitir la cookie, el middleware
+actualiza el contexto de la petición y responde con
+`PASSWORD_CHANGE_REQUIRED`. El cliente conserva la respuesta para el formulario
+que originó la llamada y, mediante un evento interno, conduce la sesión abierta
+a `ChangePasswordPage`.
+
 Las sesiones `legacy` no pueden utilizar este endpoint y continúan accediendo
 al flujo vigente durante la transición.
 

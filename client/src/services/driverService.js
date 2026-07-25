@@ -30,3 +30,10 @@ export const updateDriverStatus = async (driverId, status) =>
       body: JSON.stringify({ status }),
     })
   );
+
+export const resetDriverPassword = async (driverId) =>
+  parseResponse(
+    await apiFetch(`/drivers/${driverId}/reset-password`, {
+      method: "POST",
+    })
+  );

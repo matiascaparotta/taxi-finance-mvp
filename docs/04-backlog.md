@@ -158,7 +158,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Preparar la sustitución progresiva de la contraseña general por sesiones
   individuales.
 - [x] Permitir el cambio seguro de la contraseña temporal.
-- [ ] Permitir al propietario restablecer la contraseña de un conductor.
+- [x] Permitir al propietario restablecer la contraseña de un conductor.
 - [x] Vincular cada jornada nueva a un conductor y un vehículo.
 - [x] Aplicar continuidad del cuentakilómetros por vehículo compartido.
 - [x] Permitir la misma fecha para conductores distintos.

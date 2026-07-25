@@ -60,17 +60,21 @@ const createRequireActiveUserSession = ({
   }
 
   try {
-    const active = await repository.isUserAccessActive(
+    const accessState = await repository.getUserAccessState(
       req.auth.userId,
       req.auth.organizationId
     );
 
-    if (!active) {
+    if (!accessState?.active) {
       res.status(401).json({
         code: "USER_ACCESS_INACTIVE",
         message: "La cuenta ya no tiene acceso a esta organización",
       });
       return;
+    }
+
+    if (accessState.mustChangePassword) {
+      req.auth.mustChangePassword = true;
     }
 
     next();

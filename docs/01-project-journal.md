@@ -907,6 +907,24 @@ Se implementó la gestión inicial de conductores:
 
 La funcionalidad permanece en desarrollo y todavía no modifica producción.
 
+## Décima funcionalidad
+
+Se implementó el restablecimiento de contraseñas de conductores:
+
+- el propietario puede generar una contraseña temporal nueva desde la ficha del
+  conductor;
+- la contraseña anterior deja de ser válida inmediatamente;
+- solo se almacena la nueva huella;
+- la contraseña temporal se muestra una única vez y puede copiarse junto al
+  usuario;
+- las sesiones abiertas detectan el restablecimiento en su siguiente petición;
+- el conductor vuelve automáticamente al flujo obligatorio de cambio de
+  contraseña;
+- esta pantalla no permite restablecer contraseñas propietarias;
+- toda operación permanece limitada a la organización del propietario.
+
+La funcionalidad permanece en desarrollo y todavía no modifica producción.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

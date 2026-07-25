@@ -7,6 +7,7 @@ import SectionTitle from "../components/ui/SectionTitle";
 import {
   createDriver,
   getDrivers,
+  resetDriverPassword,
   updateDriverStatus,
 } from "../services/driverService";
 import { copyTextToClipboard } from "../utils/copyTextToClipboard";
@@ -105,6 +106,33 @@ function DriverManagementPage() {
       `Usuario: ${createdAccess.username}\nContraseña temporal: ${createdAccess.temporaryPassword}`
     );
     setMessage("Acceso temporal copiado");
+  };
+
+  const handleResetPassword = async (driver) => {
+    if (
+      !window.confirm(
+        `¿Generar una contraseña temporal nueva para ${driver.displayName}? La contraseña anterior dejará de funcionar.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setError("");
+      setMessage("");
+      setCreatedAccess(null);
+      setUpdatingId(driver.id);
+      const result = await resetDriverPassword(driver.id);
+      setCreatedAccess({
+        username: driver.username,
+        temporaryPassword: result.temporaryPassword,
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (resetError) {
+      setError(resetError.message);
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   return (
@@ -293,18 +321,28 @@ function DriverManagementPage() {
               </div>
 
               {!driver.isOwner && (
-                <button
-                  type="button"
-                  onClick={() => handleStatusChange(driver)}
-                  disabled={updatingId === driver.id}
-                  className="mt-4 w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 disabled:cursor-wait disabled:opacity-50"
-                >
-                  {updatingId === driver.id
-                    ? "Actualizando..."
-                    : driver.status === "ACTIVE"
-                      ? "Suspender acceso"
-                      : "Reactivar acceso"}
-                </button>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => handleResetPassword(driver)}
+                    disabled={updatingId === driver.id}
+                    className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 disabled:cursor-wait disabled:opacity-50"
+                  >
+                    Nueva contraseña
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleStatusChange(driver)}
+                    disabled={updatingId === driver.id}
+                    className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 disabled:cursor-wait disabled:opacity-50"
+                  >
+                    {updatingId === driver.id
+                      ? "Actualizando..."
+                      : driver.status === "ACTIVE"
+                        ? "Suspender acceso"
+                        : "Reactivar acceso"}
+                  </button>
+                </div>
               )}
             </Card>
           ))

@@ -99,8 +99,8 @@ test("reserva la gestión para cuentas propietarias", () => {
 test("una suspensión invalida una sesión personal existente", async () => {
   const middleware = createRequireActiveUserSession({
     repository: {
-      async isUserAccessActive() {
-        return false;
+      async getUserAccessState() {
+        return null;
       },
     },
   });
@@ -124,4 +124,26 @@ test("una suspensión invalida una sesión personal existente", async () => {
   assert.equal(continued, false);
   assert.equal(response.statusCode, 401);
   assert.equal(response.body.code, "USER_ACCESS_INACTIVE");
+});
+
+test("una contraseña restablecida obliga a cambiarla en sesiones abiertas", async () => {
+  const middleware = createRequireActiveUserSession({
+    repository: {
+      async getUserAccessState() {
+        return { active: true, mustChangePassword: true };
+      },
+    },
+  });
+  const request = {
+    auth: {
+      accessMode: "user",
+      userId: 5,
+      organizationId: 3,
+      mustChangePassword: false,
+    },
+  };
+
+  await middleware(request, createResponse(), () => {});
+
+  assert.equal(request.auth.mustChangePassword, true);
 });

@@ -15,5 +15,21 @@ export const apiFetch = async (path, options = {}) => {
     );
   }
 
+  if (
+    response.status === 403 &&
+    !path.startsWith("/auth/")
+  ) {
+    const body = await response
+      .clone()
+      .json()
+      .catch(() => null);
+
+    if (body?.code === "PASSWORD_CHANGE_REQUIRED") {
+      window.dispatchEvent(
+        new CustomEvent("taxfin:password-change-required")
+      );
+    }
+  }
+
   return response;
 };

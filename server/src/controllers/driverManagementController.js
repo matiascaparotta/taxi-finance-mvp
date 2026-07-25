@@ -1,6 +1,7 @@
 const {
   createDriverService,
   listDriversService,
+  resetDriverPasswordService,
   updateDriverStatusService,
 } = require("../services/driverManagementService");
 
@@ -48,8 +49,25 @@ const updateDriverStatus = async (req, res) => {
   }
 };
 
+const resetDriverPassword = async (req, res) => {
+  try {
+    const result = await resetDriverPasswordService(
+      req.auth.organizationId,
+      req.params.id
+    );
+    res.status(200).json({
+      success: true,
+      message: "Contraseña temporal generada correctamente",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createDriver,
   listDrivers,
+  resetDriverPassword,
   updateDriverStatus,
 };

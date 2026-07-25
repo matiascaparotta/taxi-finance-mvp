@@ -3,6 +3,7 @@ const test = require("node:test");
 
 const {
   createDriverService,
+  resetDriverPasswordService,
   updateDriverStatusService,
   validateDriverInput,
 } = require("../src/services/driverManagementService");
@@ -158,4 +159,43 @@ test("suspende y reactiva sin eliminar al conductor", async () => {
 
   assert.equal(savedStatus, "INACTIVE");
   assert.deepEqual(result, { id: 4, status: "INACTIVE" });
+});
+
+test("restablece la contraseña de un conductor no propietario", async () => {
+  let savedHash = null;
+  const repository = {
+    async findDriverMembership() {
+      return { isOwner: false };
+    },
+    async resetDriverPassword(_userId, passwordHash) {
+      savedHash = passwordHash;
+      return true;
+    },
+  };
+
+  const result = await resetDriverPasswordService(3, 4, {
+    repository,
+    passwordGenerator: () => "nueva-temporal-456",
+    passwordHasher: (password) => `hash:${password}`,
+  });
+
+  assert.equal(savedHash, "hash:nueva-temporal-456");
+  assert.deepEqual(result, {
+    id: 4,
+    temporaryPassword: "nueva-temporal-456",
+  });
+});
+
+test("impide restablecer contraseñas propietarias", async () => {
+  await assert.rejects(
+    () =>
+      resetDriverPasswordService(3, 4, {
+        repository: {
+          async findDriverMembership() {
+            return { isOwner: true };
+          },
+        },
+      }),
+    /contraseña propietaria/
+  );
 });

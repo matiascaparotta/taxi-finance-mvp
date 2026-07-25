@@ -82,10 +82,12 @@ const updatePassword = async (
   return result.affectedRows === 1;
 };
 
-const isUserAccessActive = async (userId, organizationId) => {
+const getUserAccessState = async (userId, organizationId) => {
   const [rows] = await pool.query(
     `
-    SELECT 1 AS active
+    SELECT
+      1 AS active,
+      users.must_change_password AS mustChangePassword
     FROM users
     INNER JOIN organization_memberships
       ON organization_memberships.user_id = users.id
@@ -101,12 +103,19 @@ const isUserAccessActive = async (userId, organizationId) => {
     [userId, organizationId]
   );
 
-  return rows.length > 0;
+  if (rows.length === 0) {
+    return null;
+  }
+
+  return {
+    active: true,
+    mustChangePassword: Boolean(rows[0].mustChangePassword),
+  };
 };
 
 module.exports = {
   findActiveUserForLogin,
   findActiveUserForPasswordChange,
-  isUserAccessActive,
+  getUserAccessState,
   updatePassword,
 };
