@@ -164,6 +164,9 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Permitir la misma fecha para conductores distintos.
 - [x] Mantener compatibilidad durante toda la transición.
 - [x] Separar la marca TaxFin de la licencia de cada organización.
+- [x] Publicar las migraciones multiusuario de forma aditiva.
+- [x] Verificar que el acceso legacy, la Home y el historial continúan
+  funcionando después del despliegue.
 
 ---
 

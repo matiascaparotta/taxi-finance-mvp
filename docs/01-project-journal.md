@@ -931,6 +931,30 @@ La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se
 realizarán en una funcionalidad posterior. Separar ambos pasos permite
 verificar las cuentas antes de modificar la propiedad de los datos.
 
+## Primer despliegue compatible
+
+El 25/07/2026 se publicó la base técnica multiusuario sin retirar el acceso
+anterior ni aprovisionar cuentas reales.
+
+Antes del despliegue se generó un respaldo lógico privado con huella SHA-256.
+La base contenía 71 jornadas, 1.221 viajes y 70 cierres importados.
+
+Railway ejecutó correctamente las migraciones `008` a `013`, creando
+organizaciones, usuarios, membresías y vehículos, además de las referencias
+opcionales de propiedad en las jornadas. Ninguna jornada fue reasignada.
+
+Después de publicar se verificaron:
+
+- 109 pruebas automatizadas;
+- compilación y análisis estático del frontend;
+- despliegue activo y endpoint de salud correcto;
+- 13 migraciones registradas;
+- conservación exacta de los recuentos de jornadas y viajes;
+- funcionamiento de la sesión legacy, la Home y el historial real.
+
+El siguiente paso continúa siendo aprovisionar Lic249 y sus primeras cuentas
+en una operación separada y reversible.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

@@ -4,7 +4,7 @@
 
 **Última actualización:** 25/07/2026
 
-**Estado:** Beta 1.0 publicada — transición multiusuario en desarrollo
+**Estado:** Beta 1.0 publicada — base multiusuario compatible desplegada
 
 ---
 
@@ -41,7 +41,7 @@ validación del uso diario sobre el primer deploy privado.
 
 ## Sprint 18 — Base multiusuario
 
-**Estado:** En desarrollo
+**Estado:** Base técnica desplegada; aprovisionamiento pendiente
 
 ### Objetivos
 
@@ -108,7 +108,8 @@ La interfaz permite realizar el flujo completo de una jornada de trabajo, desde 
 # Datos actuales
 
 - 70 jornadas históricas importadas desde el registro de WhatsApp.
-- 1.203 viajes históricos originales.
+- 1 jornada posterior creada durante el uso real.
+- 1.221 viajes almacenados actualmente.
 - Cierres de efectivo y datáfono validados contra la fuente original.
 - La jornada activa se mantiene separada del historial cerrado.
 
@@ -144,9 +145,10 @@ Estado de la preparación:
 11. ✅ Migración y validación de los datos en producción.
 12. Prueba integral desde el móvil.
 
-El traslado de los datos se completó el 24/07/2026. Después de retirar una
-jornada de prueba, producción contiene 70 jornadas, 1.203 viajes y 70
-resúmenes mensuales.
+El traslado inicial de los datos se completó el 24/07/2026. El 25/07/2026,
+antes de publicar la base multiusuario, producción contenía 71 jornadas,
+1.221 viajes y 70 cierres importados. Esos recuentos se conservaron después
+del despliegue.
 
 Existe un comando reproducible para generar respaldos privados con
 `mysqldump` y validar su integridad mediante SHA-256. Railway limita los
@@ -156,8 +158,10 @@ importantes.
 
 La API y el frontend incluyen acceso privado mediante contraseña y sesión
 firmada. Esta solución continuará protegiendo la Beta durante la transición.
-La base de organizaciones, usuarios, membresías y vehículos se incorporará de
-forma aditiva, sin cambiar inicialmente el acceso ni asignar las jornadas.
+La base de organizaciones, usuarios, membresías y vehículos se incorporó en
+producción de forma aditiva el 25/07/2026. Las migraciones `008` a `013`
+quedaron registradas sin asignar todavía las jornadas históricas. El acceso
+privado anterior continúa activo.
 
 El aprovisionamiento inicial de Lic249 está preparado para crear a Matías como
 conductor, a José Revilla como propietario y conductor, y el vehículo
@@ -167,44 +171,55 @@ Las jornadas ya pueden incorporar referencias opcionales a organización,
 conductor y vehículo. El procedimiento para asignar las jornadas existentes a
 Matías está preparado y probado, pero todavía no fue ejecutado en producción.
 
-El inicio de sesión individual está implementado en desarrollo. Convive con el
+El inicio de sesión individual está publicado en producción. Convive con el
 acceso privado actual, conserva las sesiones antiguas y permite identificar al
-usuario, su organización y sus roles. Todavía no filtra jornadas ni fue
-publicado en producción.
+usuario, su organización y sus roles cuando existan cuentas aprovisionadas.
 
 Las cuentas individuales también exigen cambiar la contraseña temporal antes
-de acceder a jornadas o viajes. El flujo está protegido en frontend y backend,
-pero todavía no fue publicado ni ejecutado con cuentas reales.
+de acceder a jornadas o viajes. El flujo ya está publicado y protegido en
+frontend y backend, pero todavía no fue ejecutado con cuentas reales.
 
-El aislamiento por conductor y organización está implementado en desarrollo.
+El aislamiento por conductor y organización está publicado y preparado.
 Los conductores solo acceden a sus datos; los propietarios pueden consultar y
 exportar las jornadas de su organización, pero únicamente modifican las
 propias. Las nuevas jornadas reciben conductor y vehículo automáticamente, y
 el kilometraje conserva la continuidad entre los turnos del coche compartido.
-Esta funcionalidad todavía no fue publicada ni activada con datos reales.
+Todavía no fue activado con datos reales porque el aprovisionamiento y la
+asignación histórica permanecen pendientes.
 
-La separación de marca está implementada en desarrollo. La aplicación utiliza
+La separación de marca está publicada. La aplicación utiliza
 TaxFin en sus pantallas generales y conserva Lic249 como identidad de la
 organización inicial en tarjetas y exportaciones. Las futuras organizaciones
-recibirán su nombre desde los datos de la jornada. Todavía no fue publicada.
+recibirán su nombre desde los datos de la jornada.
 
-El primer panel del propietario también está implementado en desarrollo. Una
+El primer panel del propietario también está publicado y permanece oculto
+hasta que exista una cuenta propietaria aprovisionada. Una
 cuenta propietaria puede seguir las jornadas activas de sus conductores, ver
 sus totales y los cinco viajes más recientes con actualización cada treinta
 segundos. La vista es de solo lectura y permanece separada de la jornada
-personal del propietario. Todavía no fue publicada.
+personal del propietario.
 
-La gestión inicial de conductores está implementada en desarrollo. Un
+La gestión inicial de conductores está publicada y permanece disponible solo
+para cuentas propietarias. Un
 propietario puede crear accesos con contraseña temporal, elegir la modalidad
 de combustible y suspender o reactivar conductores no propietarios. La
 suspensión conserva el historial, exige que no exista una jornada activa e
-invalida las sesiones existentes en la siguiente petición. Todavía no fue
-publicada.
+invalida las sesiones existentes en la siguiente petición.
 
-El restablecimiento de contraseñas también está implementado en desarrollo. Un
+El restablecimiento de contraseñas también está publicado. Un
 propietario puede generar una clave temporal nueva para un conductor de su
 organización; la anterior se invalida y cualquier sesión abierta vuelve al
-cambio obligatorio en su siguiente petición. Todavía no fue publicado.
+cambio obligatorio en su siguiente petición.
+
+Antes del despliegue del 25/07/2026 se creó el respaldo privado
+`taxfin-production-before-multiuser-2026-07-25.sql`, acompañado por su huella
+SHA-256. Después del despliegue se verificaron:
+
+- las 13 migraciones registradas;
+- las cuatro tablas multiusuario;
+- 71 jornadas, 1.221 viajes y 70 cierres importados sin cambios;
+- el endpoint de salud de TaxFin;
+- la sesión anterior, la Home y el historial real.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código

@@ -320,6 +320,15 @@ Objetivo principal:
 - Vehículos compartidos.
 - Migración segura de los datos existentes.
 
+### Base compatible publicada
+
+- Se desplegaron las entidades de organizaciones, usuarios, membresías y
+  vehículos.
+- El acceso privado anterior continúa funcionando durante la transición.
+- Las jornadas históricas permanecen sin asignar hasta el aprovisionamiento
+  controlado de Lic249.
+- TaxFin conserva las 71 jornadas y 1.221 viajes existentes.
+
 ---
 
 ## Sprint 19 — Panel del propietario
