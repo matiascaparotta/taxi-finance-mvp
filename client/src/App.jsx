@@ -142,7 +142,10 @@ function PrivateApp() {
           />
         }
       >
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={<HomePage currentUser={currentUser} />}
+        />
         <Route path="/new-work-day" element={<NewWorkDayPage />} />
         <Route path="/new-trip" element={<NewTripPage />} />
         <Route path="/close-work-day" element={<CloseWorkDayPage />} />

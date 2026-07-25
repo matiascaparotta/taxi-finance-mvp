@@ -188,6 +188,12 @@ TaxFin en sus pantallas generales y conserva Lic249 como identidad de la
 organización inicial en tarjetas y exportaciones. Las futuras organizaciones
 recibirán su nombre desde los datos de la jornada. Todavía no fue publicada.
 
+El primer panel del propietario también está implementado en desarrollo. Una
+cuenta propietaria puede seguir las jornadas activas de sus conductores, ver
+sus totales y los cinco viajes más recientes con actualización cada treinta
+segundos. La vista es de solo lectura y permanece separada de la jornada
+personal del propietario. Todavía no fue publicada.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

@@ -871,6 +871,25 @@ Se separó la marca del producto y la identidad de cada organización:
 
 El cambio permanece en desarrollo y todavía no modifica producción.
 
+## Octava funcionalidad
+
+Se implementó el primer panel de seguimiento del propietario:
+
+- solo aparece para cuentas con rol de propietario;
+- muestra las jornadas activas de otros conductores de la organización;
+- identifica al conductor y presenta kilometraje inicial, viajes, facturación,
+  efectivo y datáfono;
+- muestra los cinco viajes más recientes con hora, método de pago, importe,
+  comisión y propina;
+- se actualiza automáticamente cada treinta segundos y permite actualización
+  manual;
+- las jornadas propias del propietario permanecen separadas de las estadísticas
+  de sus conductores;
+- toda la información ajena continúa siendo de solo lectura;
+- reutiliza el aislamiento ya validado en el backend y no crea accesos nuevos.
+
+La funcionalidad permanece en desarrollo y todavía no modifica producción.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

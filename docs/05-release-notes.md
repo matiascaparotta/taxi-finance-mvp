@@ -50,6 +50,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Continuidad del cuentakilómetros entre turnos del vehículo compartido.
 - Nueva marca de aplicación `TaxFin`, manteniendo `Lic249` en las tarjetas de
   la organización inicial.
+- Seguimiento para propietarios de conductores en servicio, con actualización
+  automática y detalle reciente de viajes.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

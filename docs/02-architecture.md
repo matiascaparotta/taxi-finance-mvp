@@ -996,6 +996,20 @@ actual, valida la nueva y actualiza su huella mediante una comparación atómica
 con la huella anterior. Después renueva la cookie firmada con
 `mustChangePassword = false`.
 
+## Seguimiento del propietario
+
+El inicio recibe la identidad de la sesión y muestra
+`OwnerActiveWorkDays` únicamente cuando `roles.isOwner` es verdadero.
+
+El componente reutiliza las consultas autorizadas de jornadas, resúmenes y
+viajes. Selecciona solo jornadas `OPEN` con `canManage = false`, por lo que la
+jornada propia del propietario permanece en su flujo personal. La actualización
+se ejecuta cada treinta segundos y también puede solicitarse manualmente.
+
+El sondeo no concede permisos de escritura. El backend continúa comprobando la
+organización para cada lectura y exige propiedad personal para cualquier
+modificación.
+
 Las sesiones `legacy` no pueden utilizar este endpoint y continúan accediendo
 al flujo vigente durante la transición.
 

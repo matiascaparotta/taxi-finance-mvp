@@ -454,10 +454,13 @@ Cada usuario utilizará un nombre de usuario y una contraseña personal.
 - El conductor no podrá consultar las jornadas de otros conductores.
 - El propietario podrá crear y suspender conductores de su organización.
 - El propietario podrá consultar y exportar jornadas ajenas.
+- El propietario podrá consultar el avance de jornadas ajenas activas.
 - El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
 - La autorización deberá validarse siempre en el backend.
 - Las jornadas ajenas consultadas por un propietario deberán identificar al
   conductor y mostrarse en modo de solo lectura.
+- El seguimiento activo mostrará importes calculados y viajes recientes sin
+  permitir editar ninguno de sus datos.
 - La fecha mínima se validará respecto de las jornadas del mismo conductor.
 - El kilometraje inicial se validará respecto del último cierre del vehículo
   compartido, aunque corresponda a otro conductor.

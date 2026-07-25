@@ -7,6 +7,7 @@ import SectionTitle from "../components/ui/SectionTitle";
 import Stat from "../components/ui/Stat";
 import WorkDayCard from "../components/WorkDayCard";
 import ActiveTripCard from "../components/ActiveTripCard";
+import OwnerActiveWorkDays from "../components/OwnerActiveWorkDays";
 
 import { getOpenWorkDay, getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
@@ -17,7 +18,7 @@ import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 import { getRecentClosedWorkDays } from "../utils/getRecentClosedWorkDays";
 import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
 
-function HomePage() {
+function HomePage({ currentUser = null }) {
   const [workDays, setWorkDays] = useState([]);
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [activeSummary, setActiveSummary] = useState(null);
@@ -41,8 +42,11 @@ function HomePage() {
 
       const sortedWorkDays =
         sortWorkDaysByDateDescending(workDaysData);
+      const personalSortedWorkDays = sortedWorkDays.filter(
+        (workDay) => workDay.canManage !== false
+      );
       const visibleClosedWorkDayIds = new Set(
-        getRecentClosedWorkDays(sortedWorkDays).map(
+        getRecentClosedWorkDays(personalSortedWorkDays).map(
           (workDay) => workDay.id
         )
       );
@@ -94,7 +98,10 @@ function HomePage() {
     loadHomeData();
   }, [loadHomeData]);
 
-  const closedWorkDays = getClosedWorkDays(workDays);
+  const personalWorkDays = workDays.filter(
+    (workDay) => workDay.canManage !== false
+  );
+  const closedWorkDays = getClosedWorkDays(personalWorkDays);
   const lastWorkDay = closedWorkDays[0];
   const recentWorkDays = closedWorkDays.slice(1, 5);
 
@@ -120,12 +127,15 @@ function HomePage() {
   const visibleActiveTrips = showAllActiveTrips
     ? sortedActiveTrips
     : sortedActiveTrips.slice(0, 5);
+  const firstName =
+    currentUser?.displayName?.trim().split(/\s+/)[0] || "Mati";
+  const isOwner = Boolean(currentUser?.roles?.isOwner);
 
   if (isLoading) {
     return (
       <section className="space-y-8">
         <SectionTitle
-          title="Hola, Mati 👋"
+          title={`Hola, ${firstName} 👋`}
           subtitle="Bienvenido a TaxFin"
         />
 
@@ -142,7 +152,7 @@ function HomePage() {
     return (
       <section className="space-y-8">
         <SectionTitle
-          title="Hola, Mati 👋"
+          title={`Hola, ${firstName} 👋`}
           subtitle="Bienvenido a TaxFin"
         />
 
@@ -168,9 +178,11 @@ function HomePage() {
   return (
     <section className="space-y-8">
       <SectionTitle
-        title="Hola, Mati 👋"
+        title={`Hola, ${firstName} 👋`}
         subtitle="Bienvenido a TaxFin"
       />
+
+      {isOwner && <OwnerActiveWorkDays />}
 
       {openWorkDay ? (
         <Card className="border-emerald-500/30 bg-emerald-500/10">
