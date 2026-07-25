@@ -205,6 +205,13 @@ La corrección del acceso histórico del propietario está publicada. Incorpora
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
 conservar las sesiones ya abiertas sin exigir un nuevo inicio de sesión.
 
+La siguiente mejora está implementada localmente y pendiente de publicación:
+el historial del propietario diferenciará `Mis jornadas` de `Jornadas de
+Matías`, sin una vista combinada, y las jornadas ajenas se identificarán como
+solo lectura. La opción de combustible compartido del conductor conservará el
+reparto 50/50 con una etiqueta genérica, sin vincular la interfaz a un nombre
+personal.
+
 En el cierre de una jornada propia, un propietario registra toda la gasolina
 como gasto propio. La interfaz no ofrece reparto y el backend fuerza la misma
 regla aunque se manipule la petición. Los conductores no propietarios conservan

@@ -21,10 +21,14 @@ import {
 } from "../utils/workDayMonth";
 
 function WorkDayHistoryPage({ currentUser }) {
+  const isOwner = Boolean(
+    currentUser?.roles?.isOwner ?? currentUser?.isOwner
+  );
   const [history, setHistory] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedDriver, setSelectedDriver] = useState(
-    searchParams.get("driver") || ""
+    searchParams.get("driver") ||
+      (isOwner ? String(currentUser?.id || "") : "")
   );
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -38,9 +42,6 @@ function WorkDayHistoryPage({ currentUser }) {
   const [summaryReloadKey, setSummaryReloadKey] = useState(0);
 
   const navigate = useNavigate();
-  const isOwner = Boolean(
-    currentUser?.roles?.isOwner ?? currentUser?.isOwner
-  );
 
   const loadHistory = useCallback(async () => {
     try {
@@ -77,7 +78,7 @@ function WorkDayHistoryPage({ currentUser }) {
       ? filterWorkDaysByDate(history, selectedDate)
       : filterWorkDaysByMonth(history, selectedMonth);
 
-    if (!isOwner || !selectedDriver) {
+    if (!isOwner) {
       return dateFilteredWorkDays;
     }
 
@@ -200,19 +201,42 @@ function WorkDayHistoryPage({ currentUser }) {
   }
 
   const availableMonths = getAvailableWorkDayMonths(history);
-  const availableDrivers = [
-    ...new Map(
-      history
-        .filter((workDay) => workDay.driverUserId)
-        .map((workDay) => [
-          String(workDay.driverUserId),
-          {
-            id: String(workDay.driverUserId),
-            name: workDay.driverName || "Conductor",
-          },
-        ])
-    ).values(),
-  ].sort((left, right) => left.name.localeCompare(right.name, "es"));
+  const driversById = new Map();
+
+  if (isOwner && currentUser?.id) {
+    driversById.set(String(currentUser.id), {
+      id: String(currentUser.id),
+      name: currentUser.displayName || "Propietario",
+    });
+  }
+
+  history
+    .filter((workDay) => workDay.driverUserId)
+    .forEach((workDay) => {
+      driversById.set(String(workDay.driverUserId), {
+        id: String(workDay.driverUserId),
+        name: workDay.driverName || "Conductor",
+      });
+    });
+
+  const availableDrivers = [...driversById.values()].sort(
+    (left, right) => {
+      if (String(left.id) === String(currentUser?.id)) {
+        return -1;
+      }
+
+      if (String(right.id) === String(currentUser?.id)) {
+        return 1;
+      }
+
+      return left.name.localeCompare(right.name, "es");
+    }
+  );
+  const selectedDriverData = availableDrivers.find(
+    (driver) => driver.id === String(selectedDriver)
+  );
+  const isPersonalHistory =
+    String(selectedDriver) === String(currentUser?.id);
   const filteredHistory = visibleWorkDays.map((workDay) => ({
     ...workDay,
     summary: summariesById[workDay.id],
@@ -244,10 +268,20 @@ function WorkDayHistoryPage({ currentUser }) {
     <section className="space-y-8">
       <div className="flex items-start justify-between gap-4">
         <SectionTitle
-          title="Historial"
+          title={
+            isOwner
+              ? isPersonalHistory
+                ? "Mis jornadas"
+                : `Jornadas de ${
+                    selectedDriverData?.name || "conductor"
+                  }`
+              : "Historial"
+          }
           subtitle={
             isOwner
-              ? "Consulta las jornadas de tu organización."
+              ? isPersonalHistory
+                ? "Tu historial personal, separado del resto de conductores."
+                : "Consulta de solo lectura. Tus jornadas permanecen separadas."
               : "Consulta tus jornadas anteriores."
           }
         />
@@ -276,7 +310,7 @@ function WorkDayHistoryPage({ currentUser }) {
                   htmlFor="historyDriver"
                   className="mb-2 block text-sm font-semibold text-slate-300"
                 >
-                  Conductor
+                  Historial
                 </label>
                 <select
                   id="historyDriver"
@@ -284,10 +318,11 @@ function WorkDayHistoryPage({ currentUser }) {
                   onChange={handleDriverChange}
                   className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
                 >
-                  <option value="">Todos los conductores</option>
                   {availableDrivers.map((driver) => (
                     <option key={driver.id} value={driver.id}>
-                      {driver.name}
+                      {String(driver.id) === String(currentUser?.id)
+                        ? `Mis jornadas · ${driver.name}`
+                        : `Jornadas de ${driver.name} · Solo lectura`}
                     </option>
                   ))}
                 </select>

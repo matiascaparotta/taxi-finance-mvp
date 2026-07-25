@@ -463,6 +463,10 @@ Cada usuario utilizará un nombre de usuario y una contraseña personal.
 - El propietario podrá reactivar posteriormente un conductor suspendido.
 - El propietario podrá consultar y exportar jornadas ajenas.
 - El propietario podrá consultar el avance de jornadas ajenas activas.
+- El historial personal del propietario deberá permanecer separado del
+  historial de sus conductores.
+- El acceso a jornadas ajenas deberá realizarse mediante una selección
+  explícita del conductor, sin mezclar todas las jornadas en una única lista.
 - El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
 - La autorización deberá validarse siempre en el backend.
 - Las jornadas ajenas consultadas por un propietario deberán identificar al

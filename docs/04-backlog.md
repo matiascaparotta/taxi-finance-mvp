@@ -178,6 +178,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Consultar jornadas activas de los conductores.
 - [x] Visualizar y exportar jornadas ajenas en modo lectura.
 - [x] Acceder al historial mediante un selector explícito de conductor.
+- [x] Separar el historial personal del propietario del historial de sus
+  conductores.
 - [x] Mantener los permisos de propietario en sesiones personales ya abiertas.
 - [x] Registrar la gasolina del propietario íntegramente como gasto propio.
 - [x] Impedir que el propietario modifique, cierre o elimine jornadas ajenas.

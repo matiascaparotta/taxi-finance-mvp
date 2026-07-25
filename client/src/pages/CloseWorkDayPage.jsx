@@ -297,8 +297,9 @@ function CloseWorkDayPage({ currentUser }) {
                       value: "OWN",
                     },
                     {
-                      label: "Compartida 50 % con José",
-                      description: "El sistema calculará ambas partes.",
+                      label: "Compartida 50 %",
+                      description:
+                        "La mitad corresponde al conductor y la otra mitad al propietario.",
                       value: "SHARED",
                     },
                   ].map((option) => {

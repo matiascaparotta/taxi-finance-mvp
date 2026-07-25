@@ -1020,6 +1020,15 @@ y no ve el selector de reparto. La misma regla se aplica en backend para evitar
 que una petición manipulada genere `Gasolina José`. El flujo de Matías no fue
 modificado y mantiene sus dos opciones actuales.
 
+## Separación visual de jornadas del propietario
+
+La prueba visual posterior pidió una separación más fuerte entre el trabajo
+propio del propietario y el de sus conductores. El historial pasó a abrir las
+jornadas de José por defecto y a mostrar las de Matías únicamente mediante una
+selección explícita, identificada como solo lectura. También se retiró el
+nombre de José de la etiqueta de reparto 50/50 para que la interfaz no quede
+acoplada a una persona concreta.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

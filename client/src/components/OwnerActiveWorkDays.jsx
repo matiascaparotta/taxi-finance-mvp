@@ -136,7 +136,8 @@ function OwnerActiveWorkDays({ currentUser }) {
           Jornadas e historial
         </h3>
         <p className="mt-1 text-sm text-slate-400">
-          Consulta y exporta sus jornadas en modo de solo lectura.
+          Tus jornadas están separadas. Consulta las de cada conductor en modo
+          de solo lectura.
         </p>
 
         {isLoading ? (

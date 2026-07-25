@@ -56,6 +56,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   automática y detalle reciente de viajes.
 - Sección `Mis conductores` y filtro de historial por conductor para consultar
   jornadas ajenas con claridad.
+- Historial del propietario dividido entre `Mis jornadas` y las jornadas de
+  cada conductor, sin listas combinadas.
+- Etiqueta genérica para el reparto 50/50 de combustible, sin mostrar el
+  nombre de José en el formulario del conductor.
 - Corrección del reconocimiento del rol propietario, compatible con sesiones
   personales que ya estaban abiertas.
 - Cierre simplificado para propietarios: la gasolina se guarda íntegramente
