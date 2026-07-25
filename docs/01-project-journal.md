@@ -1004,12 +1004,12 @@ como propietario en la base, pero la interfaz leía el rol desde una estructura
 distinta de la generada por la sesión. Como resultado, veía únicamente su flujo
 personal.
 
-Se implementó localmente la unificación del contrato de roles manteniendo
-compatibilidad con las sesiones ya abiertas. Además, se prepararon
-`Mis conductores` y el selector por conductor del historial. La publicación
-queda pendiente; una vez desplegado, José podrá entrar directamente a las
-jornadas de Matías, consultarlas y exportarlas, mientras las operaciones de
-modificación, cierre y eliminación continuarán reservadas al conductor titular.
+Se publicó la unificación del contrato de roles manteniendo compatibilidad con
+las sesiones ya abiertas. Además, quedaron disponibles `Mis conductores` y el
+selector por conductor del historial. Se verificó en producción que José puede
+entrar directamente a las jornadas de Matías, consultarlas y exportarlas,
+mientras las operaciones de modificación, cierre y eliminación continúan
+reservadas al conductor titular.
 
 ## Estado
 

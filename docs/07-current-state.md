@@ -200,11 +200,10 @@ sus totales y los cinco viajes más recientes con actualización cada treinta
 segundos. La vista es de solo lectura y permanece separada de la jornada
 personal del propietario.
 
-La corrección del acceso histórico del propietario está implementada y
-pendiente de publicación. Incorporará `Mis conductores`, el acceso directo al
-historial de Matías y un selector por conductor. El contrato de sesión
-normalizará los roles nuevos y anteriores para conservar las sesiones ya
-abiertas sin exigir un nuevo inicio de sesión.
+La corrección del acceso histórico del propietario está publicada. Incorpora
+`Mis conductores`, el acceso directo al historial de Matías y un selector por
+conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
+conservar las sesiones ya abiertas sin exigir un nuevo inicio de sesión.
 
 La gestión inicial de conductores está publicada y permanece disponible solo
 para cuentas propietarias. Un
