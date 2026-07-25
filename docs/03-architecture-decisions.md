@@ -1,10 +1,10 @@
 # Lic249 — Architecture Decision Records (ADR)
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
-**Estado:** Beta 1.0 finalizada — estabilización en curso
+**Estado:** Beta 1.0 publicada — base multiusuario en desarrollo
 
 ---
 
@@ -110,6 +110,7 @@ Actualmente, todos los ADR incluidos en este documento corresponden a decisiones
 - ADR-011 — Registro rápido de viajes con QuickTripForm
 - ADR-012 — Diseñar la aplicación alrededor del flujo de trabajo del conductor
 - ADR-013 — Preservar cierres autorizados durante la importación histórica
+- ADR-014 — Incorporar multiusuario mediante migraciones compatibles
 
 ---
 
@@ -799,6 +800,65 @@ el principio de fuente única de verdad.
 La migración a producción deberá incluir tanto las jornadas y viajes como los
 cierres autorizados de la importación. Cualquier futura herramienta de
 importación deberá validar explícitamente esos totales.
+
+---
+
+# ADR-014
+
+## Incorporar multiusuario mediante migraciones compatibles
+
+**Fecha:** 25/07/2026
+
+**Estado:** 🚧 En desarrollo
+
+### Contexto
+
+Lic249 está siendo utilizada diariamente en producción con una contraseña
+general y contiene 70 jornadas históricas y 1.203 viajes de Matías. La
+incorporación de propietarios, conductores y organizaciones no puede
+interrumpir ese uso ni arriesgar los datos existentes.
+
+Además, un propietario puede conducir o limitarse a gestionar, varios
+conductores pueden compartir un vehículo y cada organización debe permanecer
+aislada de las demás.
+
+### Alternativas consideradas
+
+- Reemplazar en un único despliegue el acceso y el modelo de jornadas.
+- Crear una aplicación separada para cada licencia.
+- Incorporar las entidades nuevas y migrar los datos por etapas verificables.
+
+### Decisión
+
+Adoptar un modelo multiusuario compartido y aislado por organización,
+incorporado mediante migraciones aditivas.
+
+La primera etapa crea:
+
+- `organizations`;
+- `users`;
+- `organization_memberships`;
+- `vehicles`.
+
+No modifica todavía `work_days`, `trips`, el acceso general ni los cálculos
+vigentes. Las cuentas, la asignación histórica y el cambio de autenticación se
+realizarán en funcionalidades posteriores con pruebas independientes.
+
+### Beneficios
+
+- Producción permanece utilizable durante la transición.
+- Las jornadas actuales no se reasignan antes de verificar las cuentas.
+- Un propietario puede ser también conductor.
+- Las organizaciones quedan preparadas para aislar sus datos.
+- Los vehículos compartidos podrán mantener una única continuidad de
+  cuentakilómetros.
+- Cada conductor podrá usar carga real o coste de combustible por kilómetro.
+
+### Impacto futuro
+
+Toda consulta de jornadas deberá incorporar el contexto de organización,
+usuario y vehículo. La contraseña general solo podrá retirarse después de
+probar el acceso individual y la autorización en todos los endpoints.
 
 ---
 

@@ -1,8 +1,8 @@
 # 📘 Reglas de negocio
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
 **Estado:** Vigente
 
@@ -411,16 +411,64 @@ El usuario no deberá realizar cálculos manuales durante este proceso.
 
 Las siguientes reglas deberán cumplirse en toda la aplicación.
 
-## Acceso privado
+## Continuidad durante la transición
 
-Mientras Lic249 funcione como aplicación de un único conductor, todas
-las jornadas, viajes y resúmenes estarán protegidos mediante una sesión
-privada. La contraseña será validada únicamente por el backend y no podrá
-incluirse en el código del frontend.
+La contraseña privada actual continuará protegiendo producción mientras se
+desarrolla y prueba el acceso individual.
 
-Esta protección no crea usuarios ni asigna propietarios a las jornadas. La
-separación multiusuario se incorporará únicamente en la fase definida por el
-Roadmap.
+Las migraciones multiusuario deberán ser aditivas. No podrán borrar, modificar
+ni reasignar jornadas históricas hasta que las cuentas correspondientes hayan
+sido creadas y verificadas.
+
+El acceso general solo podrá retirarse cuando el inicio de sesión individual y
+el flujo completo de jornada hayan superado las pruebas de regresión.
+
+## Organizaciones
+
+Cada licencia o empresa constituye una organización independiente.
+
+- Los datos de una organización nunca podrán consultarse desde otra.
+- Una organización podrá tener uno o varios propietarios y conductores.
+- Una persona propietaria podrá ser también conductora.
+- Una persona propietaria podrá no conducir y dedicarse únicamente a gestionar.
+
+## Usuarios y permisos
+
+Cada usuario utilizará un nombre de usuario y una contraseña personal.
+
+- El conductor solo podrá consultar y gestionar sus propias jornadas.
+- El conductor no podrá consultar las jornadas de otros conductores.
+- El propietario podrá crear y suspender conductores de su organización.
+- El propietario podrá consultar y exportar jornadas ajenas.
+- El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
+- La autorización deberá validarse siempre en el backend.
+
+Las 70 jornadas y los 1.203 viajes históricos actuales pertenecen a Matías y
+deberán asignarse a su cuenta mediante una migración verificada.
+
+## Vehículos compartidos
+
+Cada jornada futura pertenecerá a un conductor y a un vehículo.
+
+- Conductores diferentes podrán registrar una jornada en la misma fecha.
+- Un mismo conductor no podrá registrar dos jornadas en la misma fecha.
+- La continuidad del cuentakilómetros se validará por vehículo, no por
+  conductor.
+- Normalmente solo podrá existir una jornada activa por vehículo.
+- El reinicio del cuentakilómetros o cambio de vehículo continuará requiriendo
+  confirmación explícita.
+
+## Modalidades de combustible por conductor
+
+Cada conductor podrá tener una de estas modalidades:
+
+- `ACTUAL_LOAD`: importe real introducido durante el cierre.
+- `DISTANCE_RATE`: kilómetros trabajados multiplicados por una tarifa
+  configurable.
+
+La tarifa por distancia podrá cambiar sin alterar las jornadas cerradas
+anteriormente. La configuración inicial prevista para el padre de Matías será
+de 0,09 € por kilómetro.
 
 ## Consistencia de los datos
 

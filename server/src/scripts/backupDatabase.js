@@ -8,6 +8,10 @@ const { spawn } = require("node:child_process");
 require("dotenv").config();
 
 const BACKUP_TABLES = [
+  "organizations",
+  "users",
+  "organization_memberships",
+  "vehicles",
   "work_days",
   "trips",
   "monthly_work_day_imports",

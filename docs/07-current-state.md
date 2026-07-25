@@ -1,10 +1,10 @@
 # 📍 Estado actual del proyecto
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
-**Estado:** Beta 1.0 publicada — estabilización en producción
+**Estado:** Beta 1.0 publicada — transición multiusuario en desarrollo
 
 ---
 
@@ -37,16 +37,16 @@ validación del uso diario sobre el primer deploy privado.
 
 # Sprint actual
 
-## Sprint 17 — Estabilización
+## Sprint 18 — Base multiusuario
 
 **Estado:** En desarrollo
 
 ### Objetivos
 
-- Corregir errores detectados durante el uso diario.
-- Mejorar el rendimiento general de la aplicación.
-- Optimizar la experiencia de usuario.
-- Realizar ajustes menores en la interfaz.
+- Incorporar organizaciones, usuarios, membresías y vehículos.
+- Mantener disponible e intacto el flujo diario de producción.
+- Preparar la migración de los datos históricos a la cuenta de Matías.
+- Sustituir el acceso general solo después de validar el acceso individual.
 
 ---
 
@@ -152,10 +152,10 @@ respaldos automáticos y PITR al plan Pro; mientras se mantenga Hobby, el
 respaldo manual verificado es obligatorio antes de cambios de datos
 importantes.
 
-La API y el frontend ya incluyen acceso privado mediante contraseña y sesión
-firmada. En producción será obligatorio configurar la huella de la contraseña
-y una clave de sesión. Esta solución protege la Beta individual, pero todavía
-no crea cuentas ni separa datos entre distintos usuarios.
+La API y el frontend incluyen acceso privado mediante contraseña y sesión
+firmada. Esta solución continuará protegiendo la Beta durante la transición.
+La base de organizaciones, usuarios, membresías y vehículos se incorporará de
+forma aditiva, sin cambiar inicialmente el acceso ni asignar las jornadas.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
@@ -193,12 +193,11 @@ Tras la finalización de la Beta 1.0, el desarrollo continuará siguiendo el Roa
 
 Las prioridades actuales son:
 
-1. Sprint 17 — Estabilización.
-2. Sprint 18 — Liquidación mensual.
-3. Sprint 19 — Dashboard.
-4. Sprint 20 — Reportes y exportación.
-5. Sprint 21 — Usuarios y roles.
-6. Sprint 22 — Panel del jefe.
+1. Sprint 18 — Base multiusuario.
+2. Sprint 19 — Panel del propietario.
+3. Sprint 20 — Liquidaciones configurables.
+4. Sprint 21 — Dashboard.
+5. Sprint 22 — Reportes y exportación.
 
 ---
 

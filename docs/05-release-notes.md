@@ -1,10 +1,10 @@
 # Lic249 — Release Notes
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
-**Estado actual:** Beta 1.0
+**Estado actual:** Beta 1.0 — base multiusuario en desarrollo
 
 ---
 
@@ -27,6 +27,22 @@ Cada versión incluye:
 - impacto para el usuario.
 
 Las versiones siguen un orden cronológico y muestran la evolución del producto desde sus primeras funcionalidades hasta la Beta 1.0.
+
+---
+
+# Próxima versión — Base multiusuario
+
+## En desarrollo
+
+- Base de organizaciones independientes.
+- Cuentas personales con nombre de usuario y contraseña.
+- Propietarios que pueden conducir o dedicarse solo a gestionar.
+- Conductores con acceso exclusivo a sus propios datos.
+- Vehículos compartidos entre turnos.
+- Configuración de combustible por carga real o tarifa por kilómetro.
+
+La primera entrega es interna y no cambia todavía la experiencia ni el acceso
+de producción.
 
 ---
 
@@ -276,57 +292,57 @@ Objetivo principal:
 
 ---
 
-## Sprint 18 — Liquidación mensual
+## Sprint 18 — Base multiusuario
 
 Objetivo principal:
 
-- Resumen mensual.
-- Liquidación mensual.
-- Histórico mensual.
-- Comparación entre meses.
+- Organizaciones independientes.
+- Usuarios y acceso individual.
+- Propietarios y conductores.
+- Vehículos compartidos.
+- Migración segura de los datos existentes.
 
 ---
 
-## Sprint 19 — Dashboard
-
-Objetivo principal:
-
-- Dashboard financiero.
-- Indicadores diarios.
-- Indicadores mensuales.
-- Estadísticas generales.
-- Comparativas.
-
----
-
-## Sprint 20 — Reportes y exportación
-
-Objetivo principal:
-
-- Exportación en PDF.
-- Reportes mensuales.
-- Reportes anuales.
-- Mejoras en la generación y compartición de informes.
-
----
-
-## Sprint 21 — Usuarios y roles
-
-Objetivo principal:
-
-- Sistema de autenticación.
-- Gestión de usuarios.
-- Roles y permisos.
-- Preparación para múltiples conductores.
-
----
-
-## Sprint 22 — Panel del jefe
+## Sprint 19 — Panel del propietario
 
 Objetivo principal:
 
 - Gestión de conductores.
-- Consulta de jornadas.
+- Consulta de jornadas activas.
+- Consulta y exportación de jornadas ajenas en modo lectura.
+- Separación de datos entre organizaciones.
+
+---
+
+## Sprint 20 — Liquidaciones configurables
+
+Objetivo principal:
+
+- Liquidación mensual.
+- Liquidación diaria.
+- Acuerdos configurables por conductor.
+- Combustible real o calculado por kilómetros.
+
+---
+
+## Sprint 21 — Dashboard
+
+Objetivo principal:
+
+- Dashboard financiero.
+- Indicadores diarios y mensuales.
+- Estadísticas y comparativas.
+
+---
+
+## Sprint 22 — Reportes y exportación
+
+Objetivo principal:
+
+- Exportación en PDF.
+- Reportes mensuales y anuales.
+- Mejoras en la generación y compartición de informes.
 - Estadísticas por conductor.
 - Herramientas orientadas a la gestión empresarial.
 

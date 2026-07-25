@@ -1,8 +1,8 @@
 # Lic249 — Backlog
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
 **Estado:** Beta 1.0 finalizada
 
@@ -141,18 +141,50 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 ---
 
-# Sprint 18 — Liquidación mensual
+# Sprint 18 — Base multiusuario
 
-## Gestión mensual
+## Fundamentos
 
-- [ ] Resumen mensual.
-- [ ] Liquidación mensual.
-- [ ] Histórico mensual.
-- [ ] Comparación entre meses.
+- [x] Definir organizaciones, usuarios, membresías y vehículos.
+- [x] Preparar modalidades de combustible por conductor.
+- [ ] Crear la organización Lic249.
+- [ ] Crear las cuentas individuales de Matías y José.
+- [ ] Asignar las 70 jornadas y los 1.203 viajes a Matías.
+- [ ] Sustituir progresivamente la contraseña general por sesiones individuales.
+- [ ] Permitir cambio y restablecimiento seguro de contraseña.
+- [ ] Vincular cada jornada a un conductor y un vehículo.
+- [ ] Aplicar continuidad del cuentakilómetros por vehículo.
+- [ ] Mantener compatibilidad durante toda la transición.
 
 ---
 
-# Sprint 19 — Dashboard
+# Sprint 19 — Panel del propietario
+
+## Gestión de conductores
+
+- [ ] Crear y suspender conductores.
+- [ ] Consultar jornadas activas de los conductores.
+- [ ] Visualizar y exportar jornadas ajenas en modo lectura.
+- [ ] Impedir que el propietario modifique, cierre o elimine jornadas ajenas.
+- [ ] Separar completamente los datos entre organizaciones.
+
+---
+
+# Sprint 20 — Liquidaciones configurables
+
+## Gestión financiera
+
+- [ ] Resumen mensual.
+- [ ] Liquidación mensual.
+- [ ] Liquidación diaria.
+- [ ] Histórico mensual.
+- [ ] Comparación entre meses.
+- [ ] Combustible por carga real.
+- [ ] Combustible por kilómetros y tarifa configurable.
+
+---
+
+# Sprint 21 — Dashboard
 
 ## Dashboard financiero
 
@@ -163,7 +195,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 ---
 
-# Sprint 20 — Reportes y exportación
+# Sprint 22 — Reportes y exportación
 
 ## Reportes
 
@@ -172,30 +204,6 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [ ] Reporte anual.
 - [ ] Mejoras en el formato de impresión.
 - [ ] Nuevos formatos de exportación.
-
----
-
-# Sprint 21 — Usuarios y roles
-
-## Gestión de usuarios
-
-- [ ] Sistema de autenticación.
-- [ ] Inicio de sesión.
-- [ ] Gestión de usuarios.
-- [ ] Perfil del conductor.
-- [ ] Roles y permisos.
-
----
-
-# Sprint 22 — Panel del jefe
-
-## Gestión empresarial
-
-- [ ] Panel del jefe.
-- [ ] Consulta de conductores.
-- [ ] Visualización de jornadas por conductor.
-- [ ] Consulta de estadísticas por conductor.
-- [ ] Preparación para entorno multiusuario.
 
 ---
 
@@ -277,12 +285,11 @@ El trabajo pendiente seguirá el orden establecido en el Roadmap oficial.
 
 | Prioridad | Estado |
 |-----------|--------|
-| Sprint 17 | Estabilización y mejoras derivadas del uso diario |
-| Sprint 18 | Liquidación mensual |
-| Sprint 19 | Dashboard financiero |
-| Sprint 20 | Reportes y exportación |
-| Sprint 21 | Usuarios y roles |
-| Sprint 22 | Panel del jefe |
+| Sprint 18 | Base multiusuario compatible con producción |
+| Sprint 19 | Panel del propietario |
+| Sprint 20 | Liquidaciones configurables |
+| Sprint 21 | Dashboard financiero |
+| Sprint 22 | Reportes y exportación |
 
 ---
 

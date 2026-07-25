@@ -1,10 +1,10 @@
 # Lic249 — Architecture
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
-**Estado:** Beta 1.0 finalizada — estabilización en curso
+**Estado:** Beta 1.0 publicada — base multiusuario en desarrollo
 
 ---
 
@@ -777,12 +777,11 @@ Una vez finalizada la Beta 1.0, la arquitectura continuará evolucionando siguie
 
 Las próximas fases previstas son:
 
-1. Estabilización y mejoras derivadas del uso real.
-2. Liquidación mensual.
-3. Dashboard financiero.
-4. Informes y exportación.
-5. Usuarios y roles.
-6. Panel del jefe.
+1. Base multiusuario.
+2. Panel del propietario.
+3. Liquidaciones configurables.
+4. Dashboard financiero.
+5. Informes y exportación.
 
 La arquitectura actual ha sido diseñada para permitir incorporar estas funcionalidades sin necesidad de realizar cambios estructurales importantes.
 
@@ -790,7 +789,7 @@ La arquitectura actual ha sido diseñada para permitir incorporar estas funciona
 
 # Estado de producción
 
-La arquitectura actual funciona como una aplicación de un único conductor.
+La versión actualmente publicada funciona como una aplicación de un único conductor.
 Todas las solicitudes acceden al mismo conjunto de jornadas y viajes en
 MySQL. Todavía no existen autenticación, usuarios, roles ni un propietario
 asociado a cada registro.
@@ -868,6 +867,69 @@ El comando `npm run db:backup` genera un respaldo de datos consistente
 mediante `mysqldump`, sin incluir credenciales en el archivo ni en Git. Cada
 respaldo se acompaña de una huella SHA-256 para comprobar su integridad. Los
 archivos se almacenan en un directorio privado ignorado por el repositorio.
+
+---
+
+# Arquitectura multiusuario
+
+La evolución multiusuario se implementará de forma incremental para que la
+Beta publicada continúe disponible durante todo el desarrollo.
+
+## Entidades base
+
+```text
+Organization
+   │
+   ├── OrganizationMembership ── User
+   │
+   └── Vehicle
+```
+
+- `Organization` aísla los datos de cada licencia o empresa.
+- `User` representa la identidad utilizada para iniciar sesión.
+- `OrganizationMembership` define si una persona es propietaria, conductora o
+  ambas cosas dentro de una organización.
+- `Vehicle` representa el coche y será la referencia para la continuidad del
+  cuentakilómetros compartido.
+
+Una persona propietaria podrá conducir o dedicarse únicamente a administrar.
+Una organización podrá tener uno o varios conductores.
+
+## Incorporación progresiva
+
+La primera migración crea las nuevas entidades sin modificar `work_days`,
+`trips` ni `monthly_work_day_imports`.
+
+La transición seguirá estas etapas:
+
+1. Crear las entidades multiusuario.
+2. Crear y verificar las cuentas reales.
+3. Vincular las jornadas históricas a Matías mediante una migración separada.
+4. Vincular las jornadas nuevas al usuario autenticado y al vehículo.
+5. Retirar el acceso general únicamente cuando el acceso individual haya
+   superado las pruebas de regresión.
+
+## Aislamiento y permisos
+
+- Un conductor solo podrá consultar y modificar sus propias jornadas.
+- Un propietario podrá consultar y exportar las jornadas de los conductores de
+  su organización.
+- Un propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
+- Ningún usuario podrá acceder a datos de otra organización.
+
+La autorización se aplicará en los Services del backend. El frontend podrá
+ocultar acciones, pero nunca será la barrera de seguridad.
+
+## Combustible configurable
+
+La membresía del conductor prepara dos modalidades:
+
+- `ACTUAL_LOAD`: importe real registrado durante el cierre.
+- `DISTANCE_RATE`: kilómetros trabajados multiplicados por una tarifa
+  configurable.
+
+La modalidad y la tarifa se almacenan como configuración; los cálculos se
+implementarán posteriormente para no alterar todavía el cierre vigente.
 
 ---
 

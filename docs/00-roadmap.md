@@ -13,11 +13,11 @@ El objetivo del proyecto es evolucionar desde un MVP funcional hasta una platafo
 # Resumen
 
 - Estado: 🚧 Desarrollo activo
-- Versión del roadmap: **1.0**
-- Sprints completados: **16**
-- Sprint actual: **Sprint 17 — Estabilización**
-- Próximo hito: **Deploy privado seguro**
-- Última actualización: **24/07/2026**
+- Versión del roadmap: **2.0**
+- Sprints completados: **17**
+- Sprint actual: **Sprint 18 — Base multiusuario**
+- Próximo hito: **Acceso individual sin interrumpir producción**
+- Última actualización: **25/07/2026**
 
 ---
 
@@ -41,12 +41,12 @@ El objetivo del proyecto es evolucionar desde un MVP funcional hasta una platafo
 | Sprint 14 | ✅ | Historial de jornadas | Consultar jornadas anteriores |
 | Sprint 15 | ✅ | Registro rápido | Registro tipo calculadora |
 | **Sprint 16** | ✅ | **Beta 1.0 — Cierre del MVP** | **Gestionar una jornada completa con Lic249** |
-| **Sprint 17** | 🚧 | **Estabilización** | **Preparar un uso diario fiable y el deploy privado** |
-| Sprint 18 | ⏳ | Liquidación mensual | Desarrollar el módulo financiero mensual |
-| Sprint 19 | ⏳ | Dashboard financiero | Estadísticas y análisis |
-| Sprint 20 | ⏳ | Informes y exportación | Exportaciones solo si siguen siendo necesarias |
-| Sprint 21 | ⏳ | Usuarios y roles | Login y perfiles |
-| Sprint 22 | ⏳ | Panel del jefe | Consulta de jornadas y conductores |
+| **Sprint 17** | ✅ | **Estabilización** | **Preparar un uso diario fiable y el deploy privado** |
+| **Sprint 18** | 🚧 | **Base multiusuario** | **Organizaciones, usuarios, vehículos y acceso individual** |
+| Sprint 19 | ⏳ | Panel del propietario | Consulta de jornadas y conductores |
+| Sprint 20 | ⏳ | Liquidaciones configurables | Liquidación mensual o diaria según conductor |
+| Sprint 21 | ⏳ | Dashboard financiero | Estadísticas y análisis |
+| Sprint 22 | ⏳ | Informes y exportación | Exportaciones solo si siguen siendo necesarias |
 
 ---
 
@@ -297,17 +297,45 @@ El objetivo es conseguir una aplicación estable y fiable antes de continuar con
 
 ---
 
-# Fase 3 — Liquidación mensual
+# Fase 3 — Base multiusuario
 
-Una vez estabilizada la Beta se desarrollará el módulo financiero mensual.
+Antes de ampliar los cálculos financieros, Lic249 incorporará separación real
+por organizaciones y usuarios.
+
+Incluye:
+
+- organizaciones independientes;
+- propietarios que pueden conducir o dedicarse solo a gestionar;
+- conductores que únicamente acceden a sus propios datos;
+- vehículos compartidos por varios conductores;
+- inicio de sesión individual;
+- migración segura de las jornadas históricas;
+- continuidad de la versión de producción durante toda la transición.
+
+La incorporación será progresiva y compatible con el acceso privado actual.
+Producción no cambiará hasta que el flujo diario existente haya superado las
+pruebas de regresión.
+
+---
+
+# Fase 4 — Panel del propietario
+
+Permitirá al propietario consultar y exportar las jornadas y estadísticas de
+los conductores de su organización sin modificarlas, cerrarlas ni eliminarlas.
+
+---
+
+# Fase 5 — Liquidaciones configurables
+
+Una vez estabilizado el sistema de usuarios se desarrollará el módulo de
+liquidaciones por conductor.
 
 Incluirá, entre otras funcionalidades:
 
-- Liquidación mensual.
+- Liquidación mensual o diaria.
 - Efectivo a rendir.
 - Base a repartir.
-- Gasolina propia.
-- Gasolina José.
+- Combustible por carga real o por coste kilométrico.
 - Nómina.
 - Adelantos.
 - Ganancia estimada.
@@ -315,7 +343,7 @@ Incluirá, entre otras funcionalidades:
 
 ---
 
-# Fase 4 — Dashboard financiero
+# Fase 6 — Dashboard financiero
 
 Una vez completada la liquidación mensual se desarrollará el panel de estadísticas.
 
@@ -330,7 +358,7 @@ Permitirá consultar:
 
 ---
 
-# Fase 5 — Informes y exportación
+# Fase 7 — Informes y exportación
 
 Solo se desarrollará si continúa siendo necesario después del uso real.
 
@@ -342,35 +370,6 @@ Incluirá:
 - Impresión de informes.
 
 La prioridad seguirá siendo compartir la información de la forma más rápida posible.
-
----
-
-# Fase 6 — Usuarios y roles
-
-Cuando la aplicación esté completamente validada se añadirá soporte para múltiples usuarios.
-
-Incluye:
-
-- Login.
-- Gestión de usuarios.
-- Roles.
-- Perfiles.
-- Separación de datos.
-- Configuración individual.
-
----
-
-# Fase 7 — Panel del jefe
-
-Permitirá consultar la información de varios conductores desde una única interfaz.
-
-Incluye:
-
-- Consulta de jornadas.
-- Consulta de viajes.
-- Seguimiento de conductores.
-- Estadísticas generales.
-- Gestión de la información.
 
 ---
 

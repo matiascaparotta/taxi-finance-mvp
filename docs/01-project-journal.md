@@ -1,12 +1,12 @@
 # Lic249 — Project Journal
 
-**Versión:** 2.0
+**Versión:** 2.1
 
-**Última actualización:** 24/07/2026
+**Última actualización:** 25/07/2026
 
-**Sprint actual:** 17
+**Sprint actual:** 18
 
-**Último sprint completado:** 16
+**Último sprint completado:** 17
 
 ---
 
@@ -748,16 +748,46 @@ Estos cambios no representan errores de planificación, sino el aprendizaje obte
 
 ---
 
+# Sprint 18 — Base multiusuario compatible
+
+## Objetivo
+
+Incorporar organizaciones, usuarios y vehículos sin interrumpir la aplicación
+que Matías utiliza diariamente ni modificar los datos históricos.
+
+## Primera funcionalidad
+
+- Se definió el modelo de organización independiente por licencia.
+- Se permitió que un propietario sea también conductor.
+- Se separaron los permisos de consulta del propietario y de gestión del
+  conductor.
+- Se preparó el vehículo compartido como futura referencia del cuentakilómetros.
+- Se prepararon dos modalidades de combustible por conductor: carga real y
+  tarifa por kilómetro.
+- Se crearon migraciones aditivas que no modifican todavía las jornadas.
+- El acceso privado actual permanece vigente durante la transición.
+
+## Decisión de seguridad
+
+La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se
+realizarán en una funcionalidad posterior. Separar ambos pasos permite
+verificar las cuentas antes de modificar la propiedad de los datos.
+
+## Estado
+
+🚧 Sprint en desarrollo.
+
+---
+
 # Próximas fases
 
 Una vez validada la Beta 1.0, Lic249 continuará evolucionando siguiendo el Roadmap oficial del proyecto:
 
-- Sprint 17 — Estabilización y mejoras derivadas del uso real.
-- Sprint 18 — Liquidación mensual.
-- Sprint 19 — Dashboard financiero.
-- Sprint 20 — Informes y exportación.
-- Sprint 21 — Usuarios y roles.
-- Sprint 22 — Panel del jefe.
+- Sprint 18 — Base multiusuario.
+- Sprint 19 — Panel del propietario.
+- Sprint 20 — Liquidaciones configurables.
+- Sprint 21 — Dashboard financiero.
+- Sprint 22 — Informes y exportación.
 
 Cada fase comenzará únicamente cuando la anterior haya sido validada y considerada estable.
 
