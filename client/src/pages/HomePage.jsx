@@ -129,7 +129,9 @@ function HomePage({ currentUser = null }) {
     : sortedActiveTrips.slice(0, 5);
   const firstName =
     currentUser?.displayName?.trim().split(/\s+/)[0] || "Mati";
-  const isOwner = Boolean(currentUser?.roles?.isOwner);
+  const isOwner = Boolean(
+    currentUser?.roles?.isOwner ?? currentUser?.isOwner
+  );
 
   if (isLoading) {
     return (
@@ -182,7 +184,9 @@ function HomePage({ currentUser = null }) {
         subtitle="Bienvenido a TaxFin"
       />
 
-      {isOwner && <OwnerActiveWorkDays />}
+      {isOwner && (
+        <OwnerActiveWorkDays currentUser={currentUser} />
+      )}
 
       {openWorkDay ? (
         <Card className="border-emerald-500/30 bg-emerald-500/10">

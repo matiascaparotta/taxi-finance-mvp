@@ -32,6 +32,10 @@ const requireAuthentication = (req, res, next) => {
   req.auth = {
     ...session,
     accessMode: session.accessMode || "legacy",
+    roles: session.roles || {
+      isOwner: Boolean(session.isOwner),
+      isDriver: Boolean(session.isDriver),
+    },
   };
   next();
 };
@@ -86,9 +90,13 @@ const createRequireActiveUserSession = ({
 const requireActiveUserSession = createRequireActiveUserSession();
 
 const requireOwner = (req, res, next) => {
+  const isOwner = Boolean(
+    req.auth?.roles?.isOwner ?? req.auth?.isOwner
+  );
+
   if (
     req.auth?.accessMode !== "user" ||
-    !req.auth.roles?.isOwner
+    !isOwner
   ) {
     res.status(403).json({
       code: "OWNER_ACCESS_REQUIRED",

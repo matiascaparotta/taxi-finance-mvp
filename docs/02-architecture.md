@@ -952,6 +952,11 @@ ocultar acciones, pero nunca será la barrera de seguridad.
 El alcance de lectura distingue entre conductor y propietario. El alcance de
 escritura siempre exige que la organización y el conductor de la jornada
 coincidan con la sesión, incluso cuando el usuario también sea propietario.
+
+La respuesta pública de sesión expone los roles agrupados bajo `roles` y
+mantiene temporalmente los indicadores planos por compatibilidad. El backend
+normaliza ambos formatos al leer sesiones existentes, evitando que una sesión
+abierta antes de una actualización pierda permisos de propietario.
 Las comprobaciones se reutilizan para jornadas, viajes, resúmenes individuales
 y resúmenes mensuales.
 

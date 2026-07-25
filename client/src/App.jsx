@@ -171,9 +171,12 @@ function PrivateApp() {
         <Route path="/close-work-day" element={<CloseWorkDayPage />} />
         <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />} />
         <Route path="/trips/:id/edit" element={<EditTripPage />} />
-        <Route path="/history" element={<WorkDayHistoryPage />} />
+        <Route
+          path="/history"
+          element={<WorkDayHistoryPage currentUser={currentUser} />}
+        />
         <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
-        {currentUser?.roles?.isOwner && (
+        {(currentUser?.roles?.isOwner ?? currentUser?.isOwner) && (
           <Route
             path="/drivers"
             element={<DriverManagementPage />}

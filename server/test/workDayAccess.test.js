@@ -60,6 +60,23 @@ test("un propietario puede leer la organización pero escribe solo lo propio", (
   );
 });
 
+test("una sesión propietaria ya abierta conserva el alcance de organización", () => {
+  assert.deepEqual(
+    getReadScope({
+      accessMode: "user",
+      userId: 20,
+      organizationId: 3,
+      isOwner: true,
+      isDriver: true,
+    }),
+    {
+      organizationId: 3,
+      userId: 20,
+      canReadOrganization: true,
+    }
+  );
+});
+
 test("el acceso legado conserva el comportamiento actual", () => {
   assert.equal(getReadScope({ accessMode: "legacy" }), null);
   assert.equal(getWriteScope({ accessMode: "legacy" }), null);

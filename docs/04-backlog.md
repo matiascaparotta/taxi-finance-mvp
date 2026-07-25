@@ -177,6 +177,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Crear, suspender y reactivar conductores.
 - [x] Consultar jornadas activas de los conductores.
 - [x] Visualizar y exportar jornadas ajenas en modo lectura.
+- [x] Acceder al historial mediante un selector explícito de conductor.
+- [x] Mantener los permisos de propietario en sesiones personales ya abiertas.
 - [x] Impedir que el propietario modifique, cierre o elimine jornadas ajenas.
 - [x] Separar las consultas de jornadas entre organizaciones.
 

@@ -94,6 +94,21 @@ test("reserva la gestión para cuentas propietarias", () => {
     }
   );
   assert.equal(ownerContinued, true);
+
+  let legacyShapeContinued = false;
+  requireOwner(
+    {
+      auth: {
+        accessMode: "user",
+        isOwner: true,
+      },
+    },
+    createResponse(),
+    () => {
+      legacyShapeContinued = true;
+    }
+  );
+  assert.equal(legacyShapeContinued, true);
 });
 
 test("una suspensión invalida una sesión personal existente", async () => {

@@ -54,6 +54,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   la organización inicial.
 - Seguimiento para propietarios de conductores en servicio, con actualización
   automática y detalle reciente de viajes.
+- Sección `Mis conductores` y filtro de historial por conductor para consultar
+  jornadas ajenas con claridad.
+- Corrección del reconocimiento del rol propietario, compatible con sesiones
+  personales que ya estaban abiertas.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

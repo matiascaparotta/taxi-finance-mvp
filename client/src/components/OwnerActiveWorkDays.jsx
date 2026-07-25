@@ -12,8 +12,9 @@ import { getManagedOpenWorkDays } from "../utils/getManagedOpenWorkDays";
 
 const REFRESH_INTERVAL_MS = 30_000;
 
-function OwnerActiveWorkDays() {
+function OwnerActiveWorkDays({ currentUser }) {
   const [activeWorkDays, setActiveWorkDays] = useState([]);
+  const [managedDrivers, setManagedDrivers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
@@ -30,6 +31,25 @@ function OwnerActiveWorkDays() {
 
       const workDays = await getWorkDays();
       const managedOpenWorkDays = getManagedOpenWorkDays(workDays);
+      const driversById = new Map();
+
+      workDays.forEach((workDay) => {
+        if (
+          workDay.driverUserId &&
+          Number(workDay.driverUserId) !== Number(currentUser?.id)
+        ) {
+          driversById.set(String(workDay.driverUserId), {
+            id: workDay.driverUserId,
+            name: workDay.driverName || "Conductor",
+          });
+        }
+      });
+
+      setManagedDrivers(
+        [...driversById.values()].sort((left, right) =>
+          left.name.localeCompare(right.name, "es")
+        )
+      );
       const workDaysWithDetail = await Promise.all(
         managedOpenWorkDays.map(async (workDay) => {
           const [summary, trips] = await Promise.all([
@@ -62,7 +82,7 @@ function OwnerActiveWorkDays() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [currentUser?.id]);
 
   useEffect(() => {
     loadActiveWorkDays();
@@ -107,6 +127,51 @@ function OwnerActiveWorkDays() {
       >
         Gestionar conductores
       </button>
+
+      <Card>
+        <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
+          MIS CONDUCTORES
+        </p>
+        <h3 className="mt-1 text-xl font-bold text-white">
+          Jornadas e historial
+        </h3>
+        <p className="mt-1 text-sm text-slate-400">
+          Consulta y exporta sus jornadas en modo de solo lectura.
+        </p>
+
+        {isLoading ? (
+          <p className="mt-4 text-sm text-slate-400">
+            Cargando conductores...
+          </p>
+        ) : managedDrivers.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-400">
+            Todavía no hay jornadas de otros conductores.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-2">
+            {managedDrivers.map((driver) => (
+              <button
+                key={driver.id}
+                type="button"
+                onClick={() =>
+                  navigate(`/history?driver=${driver.id}`)
+                }
+                className="flex w-full items-center justify-between rounded-xl border border-slate-700 px-4 py-3 text-left transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]"
+              >
+                <span>
+                  <span className="block font-bold text-white">
+                    {driver.name}
+                  </span>
+                  <span className="mt-1 block text-xs text-slate-400">
+                    Ver jornadas
+                  </span>
+                </span>
+                <span className="text-lg text-emerald-300">→</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </Card>
 
       {isLoading ? (
         <Card>

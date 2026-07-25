@@ -95,6 +95,10 @@ test("crea y renueva una sesión con identidad individual", async () => {
     assert.equal(loginResponse.body.accessMode, "user");
     assert.equal(loginResponse.body.user.username, "mati.caparotta");
     assert.equal(loginResponse.body.user.isDriver, true);
+    assert.deepEqual(loginResponse.body.user.roles, {
+      isOwner: false,
+      isDriver: true,
+    });
 
     const cookie = loginResponse.headers["set-cookie"].split(";")[0];
     const sessionResponse = createResponse();

@@ -8,7 +8,9 @@ const getReadScope = (auth) => {
   return {
     organizationId: Number(auth.organizationId),
     userId: Number(auth.userId),
-    canReadOrganization: Boolean(auth.roles?.isOwner),
+    canReadOrganization: Boolean(
+      auth.roles?.isOwner ?? auth.isOwner
+    ),
   };
 };
 

@@ -37,14 +37,25 @@ const getPublicUser = (session) => {
     return null;
   }
 
+  const isOwner = Boolean(
+    session.roles?.isOwner ?? session.isOwner
+  );
+  const isDriver = Boolean(
+    session.roles?.isDriver ?? session.isDriver
+  );
+
   return {
     id: session.userId,
     username: session.username,
     displayName: session.displayName,
     organizationId: session.organizationId,
     organizationName: session.organizationName,
-    isOwner: Boolean(session.isOwner),
-    isDriver: Boolean(session.isDriver),
+    roles: {
+      isOwner,
+      isDriver,
+    },
+    isOwner,
+    isDriver,
     mustChangePassword: Boolean(session.mustChangePassword),
   };
 };

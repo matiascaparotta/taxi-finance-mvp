@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 
 import SectionTitle from "../components/ui/SectionTitle";
 import Card from "../components/ui/Card";
@@ -17,8 +20,12 @@ import {
   getAvailableWorkDayMonths,
 } from "../utils/workDayMonth";
 
-function WorkDayHistoryPage() {
+function WorkDayHistoryPage({ currentUser }) {
   const [history, setHistory] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedDriver, setSelectedDriver] = useState(
+    searchParams.get("driver") || ""
+  );
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [showDaySearch, setShowDaySearch] = useState(false);
@@ -31,6 +38,9 @@ function WorkDayHistoryPage() {
   const [summaryReloadKey, setSummaryReloadKey] = useState(0);
 
   const navigate = useNavigate();
+  const isOwner = Boolean(
+    currentUser?.roles?.isOwner ?? currentUser?.isOwner
+  );
 
   const loadHistory = useCallback(async () => {
     try {
@@ -62,13 +72,26 @@ function WorkDayHistoryPage() {
     loadHistory();
   }, [loadHistory]);
 
-  const visibleWorkDays = useMemo(
-    () =>
-      selectedDate
-        ? filterWorkDaysByDate(history, selectedDate)
-        : filterWorkDaysByMonth(history, selectedMonth),
-    [history, selectedDate, selectedMonth]
-  );
+  const visibleWorkDays = useMemo(() => {
+    const dateFilteredWorkDays = selectedDate
+      ? filterWorkDaysByDate(history, selectedDate)
+      : filterWorkDaysByMonth(history, selectedMonth);
+
+    if (!isOwner || !selectedDriver) {
+      return dateFilteredWorkDays;
+    }
+
+    return dateFilteredWorkDays.filter(
+      (workDay) =>
+        String(workDay.driverUserId) === String(selectedDriver)
+    );
+  }, [
+    history,
+    isOwner,
+    selectedDate,
+    selectedDriver,
+    selectedMonth,
+  ]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -177,6 +200,19 @@ function WorkDayHistoryPage() {
   }
 
   const availableMonths = getAvailableWorkDayMonths(history);
+  const availableDrivers = [
+    ...new Map(
+      history
+        .filter((workDay) => workDay.driverUserId)
+        .map((workDay) => [
+          String(workDay.driverUserId),
+          {
+            id: String(workDay.driverUserId),
+            name: workDay.driverName || "Conductor",
+          },
+        ])
+    ).values(),
+  ].sort((left, right) => left.name.localeCompare(right.name, "es"));
   const filteredHistory = visibleWorkDays.map((workDay) => ({
     ...workDay,
     summary: summariesById[workDay.id],
@@ -193,12 +229,27 @@ function WorkDayHistoryPage() {
     setShowDaySearch(false);
   };
 
+  const handleDriverChange = (event) => {
+    const driverId = event.target.value;
+    setSelectedDriver(driverId);
+
+    if (driverId) {
+      setSearchParams({ driver: driverId });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
     <section className="space-y-8">
       <div className="flex items-start justify-between gap-4">
         <SectionTitle
           title="Historial"
-          subtitle="Consulta tus jornadas anteriores."
+          subtitle={
+            isOwner
+              ? "Consulta las jornadas de tu organización."
+              : "Consulta tus jornadas anteriores."
+          }
         />
 
         <button
@@ -219,6 +270,30 @@ function WorkDayHistoryPage() {
       ) : (
         <>
           <Card>
+            {isOwner && (
+              <div className="mb-4">
+                <label
+                  htmlFor="historyDriver"
+                  className="mb-2 block text-sm font-semibold text-slate-300"
+                >
+                  Conductor
+                </label>
+                <select
+                  id="historyDriver"
+                  value={selectedDriver}
+                  onChange={handleDriverChange}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-bold text-white outline-none focus:border-emerald-500"
+                >
+                  <option value="">Todos los conductores</option>
+                  {availableDrivers.map((driver) => (
+                    <option key={driver.id} value={driver.id}>
+                      {driver.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className="flex items-end gap-3">
               <div className="min-w-0 flex-1">
                 <label
