@@ -33,6 +33,22 @@ const requireAuthentication = (req, res, next) => {
   next();
 };
 
+const requireCompletedPasswordChange = (req, res, next) => {
+  if (
+    req.auth?.accessMode === "user" &&
+    req.auth.mustChangePassword
+  ) {
+    res.status(403).json({
+      code: "PASSWORD_CHANGE_REQUIRED",
+      message: "Debes cambiar la contraseña temporal",
+    });
+    return;
+  }
+
+  next();
+};
+
 module.exports = {
   requireAuthentication,
+  requireCompletedPasswordChange,
 };

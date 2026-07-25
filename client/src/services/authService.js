@@ -30,3 +30,20 @@ export const logout = async () =>
       method: "POST",
     })
   );
+
+export const changePassword = async ({
+  currentPassword,
+  newPassword,
+}) =>
+  readResponse(
+    await apiFetch("/auth/change-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+      }),
+    })
+  );

@@ -955,6 +955,23 @@ Esta identidad todavía no autoriza el acceso a jornadas. Cada Service deberá
 incorporar posteriormente las comprobaciones de organización, propietario y
 conductor antes de retirar el modo `legacy`.
 
+## Primer cambio de contraseña
+
+Las cuentas aprovisionadas nacen con `must_change_password = TRUE`.
+
+El middleware protege las rutas de jornadas y viajes en dos pasos:
+
+1. comprobar que existe una sesión válida;
+2. comprobar que la cuenta personal ya reemplazó su contraseña temporal.
+
+El endpoint autenticado `POST /api/auth/change-password` verifica la contraseña
+actual, valida la nueva y actualiza su huella mediante una comparación atómica
+con la huella anterior. Después renueva la cookie firmada con
+`mustChangePassword = false`.
+
+Las sesiones `legacy` no pueden utilizar este endpoint y continúan accediendo
+al flujo vigente durante la transición.
+
 ## Combustible configurable
 
 La membresía del conductor prepara dos modalidades:

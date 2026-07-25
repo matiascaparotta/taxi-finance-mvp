@@ -2,6 +2,7 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 
 const {
+  changePassword,
   getSession,
   login,
 } = require("../src/controllers/authController");
@@ -121,4 +122,72 @@ test("crea y renueva una sesión con identidad individual", async () => {
     userAuthRepository.findActiveUserForLogin =
       originalFindActiveUserForLogin;
   }
+});
+
+test("actualiza la sesión después de cambiar la contraseña", async () => {
+  const originalFind =
+    userAuthRepository.findActiveUserForPasswordChange;
+  const originalUpdate = userAuthRepository.updatePassword;
+  userAuthRepository.findActiveUserForPasswordChange = async () => ({
+    userId: 2,
+    passwordHash: hashPassword(
+      "Temporal123",
+      Buffer.alloc(16, 6)
+    ),
+  });
+  userAuthRepository.updatePassword = async () => true;
+
+  try {
+    const response = createResponse();
+
+    await changePassword(
+      {
+        auth: {
+          accessMode: "user",
+          userId: 2,
+          username: "mati.caparotta",
+          displayName: "Matías Caparotta",
+          organizationId: 1,
+          organizationName: "Lic249",
+          isOwner: false,
+          isDriver: true,
+          mustChangePassword: true,
+          expiresAt: Date.now() + 1_000,
+        },
+        body: {
+          currentPassword: "Temporal123",
+          newPassword: "Personal456",
+        },
+      },
+      response
+    );
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.body.user.mustChangePassword, false);
+    assert.match(
+      response.headers["set-cookie"],
+      /taxi_finance_session=/
+    );
+  } finally {
+    userAuthRepository.findActiveUserForPasswordChange =
+      originalFind;
+    userAuthRepository.updatePassword = originalUpdate;
+  }
+});
+
+test("impide cambiar la contraseña desde el acceso anterior", async () => {
+  const response = createResponse();
+
+  await changePassword(
+    {
+      auth: {
+        accessMode: "legacy",
+      },
+      body: {},
+    },
+    response
+  );
+
+  assert.equal(response.statusCode, 403);
+  assert.match(response.body.message, /cuenta personal/);
 });

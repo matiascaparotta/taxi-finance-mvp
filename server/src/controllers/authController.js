@@ -10,6 +10,7 @@ const {
 } = require("../services/authService");
 const {
   authenticateUser,
+  changeUserPassword,
 } = require("../services/userAuthService");
 
 const MAX_ATTEMPTS = 5;
@@ -169,7 +170,45 @@ const logout = (req, res) => {
   res.json({ authenticated: false });
 };
 
+const changePassword = async (req, res) => {
+  const config = getAuthConfig();
+
+  if (req.auth?.accessMode !== "user" || !req.auth.userId) {
+    res.status(403).json({
+      message: "El cambio de contraseña requiere una cuenta personal",
+    });
+    return;
+  }
+
+  try {
+    await changeUserPassword({
+      userId: req.auth.userId,
+      currentPassword: req.body?.currentPassword,
+      newPassword: req.body?.newPassword,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+    return;
+  }
+
+  const { expiresAt, ...sessionData } = req.auth;
+  const updatedSession = {
+    ...sessionData,
+    mustChangePassword: false,
+  };
+  setSessionCookie(res, config, updatedSession);
+
+  res.json({
+    authenticated: true,
+    accessMode: "user",
+    user: getPublicUser(updatedSession),
+  });
+};
+
 module.exports = {
+  changePassword,
   getSession,
   login,
   logout,

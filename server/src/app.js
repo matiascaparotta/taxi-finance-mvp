@@ -5,6 +5,7 @@ const path = require("node:path");
 const { getAuthConfig } = require("./config/auth");
 const { createCorsOptions } = require("./config/cors");
 const {
+  requireCompletedPasswordChange,
   requireAuthentication,
 } = require("./middleware/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
@@ -25,14 +26,21 @@ app.use("/api/auth", authRoutes);
 app.use(
   "/api/work-days",
   requireAuthentication,
+  requireCompletedPasswordChange,
   workDayRoutes
 );
 app.use(
   "/api/work-days",
   requireAuthentication,
+  requireCompletedPasswordChange,
   workDaySummaryRoutes
 );
-app.use("/api/trips", requireAuthentication, tripRoutes);
+app.use(
+  "/api/trips",
+  requireAuthentication,
+  requireCompletedPasswordChange,
+  tripRoutes
+);
 
 app.use("/api", (req, res) => {
   res.status(404).json({

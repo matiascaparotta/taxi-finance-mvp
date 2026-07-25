@@ -456,6 +456,16 @@ operaciones por conductor.
 Las cuentas suspendidas, organizaciones inactivas y membresías inactivas no
 podrán iniciar una sesión individual.
 
+Toda cuenta creada por un propietario tendrá una contraseña temporal.
+
+- Deberá cambiarse durante el primer acceso.
+- Hasta completarlo no se podrán consultar ni gestionar jornadas o viajes.
+- La nueva contraseña tendrá como mínimo diez caracteres, una letra y un
+  número.
+- Deberá ser diferente de la contraseña temporal.
+- La contraseña y su confirmación nunca se almacenarán en texto.
+- El cambio no se aplica al modo de acceso privado anterior.
+
 Las 70 jornadas y los 1.203 viajes históricos actuales pertenecen a Matías y
 deberán asignarse a su cuenta mediante una migración verificada.
 

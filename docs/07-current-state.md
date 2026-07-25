@@ -170,6 +170,10 @@ acceso privado actual, conserva las sesiones antiguas y permite identificar al
 usuario, su organización y sus roles. Todavía no filtra jornadas ni fue
 publicado en producción.
 
+Las cuentas individuales también exigen cambiar la contraseña temporal antes
+de acceder a jornadas o viajes. El flujo está protegido en frontend y backend,
+pero todavía no fue publicado ni ejecutado con cuentas reales.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

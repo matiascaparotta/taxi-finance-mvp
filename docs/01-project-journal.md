@@ -818,6 +818,21 @@ Esta etapa identifica al usuario, pero todavía no filtra jornadas. El acceso
 general se conservará hasta que la autorización por conductor haya sido
 implementada y validada.
 
+## Quinta funcionalidad
+
+Se implementó el cambio obligatorio de la contraseña temporal:
+
+- una cuenta nueva no puede consultar jornadas ni viajes antes de cambiarla;
+- la restricción se aplica tanto en la interfaz como en el backend;
+- el usuario debe confirmar su contraseña temporal;
+- la nueva contraseña requiere al menos diez caracteres, una letra y un número;
+- la huella se actualiza de forma atómica y nunca se devuelve al cliente;
+- la sesión se renueva inmediatamente con el primer acceso completado;
+- el modo de acceso anterior continúa funcionando sin esta obligación.
+
+El restablecimiento de contraseñas por parte del propietario permanece como una
+funcionalidad posterior.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

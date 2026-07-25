@@ -8,6 +8,7 @@ import Card from "./components/ui/Card";
 import Button from "./components/ui/Button";
 import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 import HomePage from "./pages/HomePage";
 import NewWorkDayPage from "./pages/NewWorkDayPage";
 import NewTripPage from "./pages/NewTripPage";
@@ -115,6 +116,18 @@ function PrivateApp() {
           setCurrentUser(session.user || null);
           setAuthStatus("authenticated");
         }}
+      />
+    );
+  }
+
+  if (currentUser?.mustChangePassword) {
+    return (
+      <ChangePasswordPage
+        currentUser={currentUser}
+        onPasswordChanged={(session) =>
+          setCurrentUser(session.user)
+        }
+        onLogout={handleLogout}
       />
     );
   }
