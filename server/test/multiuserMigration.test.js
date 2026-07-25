@@ -14,12 +14,14 @@ const migrationFiles = [
   "010_create_organization_memberships.sql",
   "011_create_vehicles.sql",
   "012_add_work_day_ownership.sql",
+  "013_unique_work_day_date_per_driver.sql",
 ];
 const migrations = migrationFiles.map((file) =>
   fs.readFileSync(path.join(migrationsDirectory, file), "utf8")
 );
 const foundationMigration = migrations.slice(0, 4).join("\n");
 const ownershipMigration = migrations[4];
+const driverDateMigration = migrations[5];
 const migration = migrations.join("\n");
 
 test("la base multiusuario crea las entidades sin alterar jornadas", () => {
@@ -84,4 +86,17 @@ test("la propiedad de jornadas se añade sin reasignar datos", () => {
     /DROP INDEX uq_work_days_date/
   );
   assert.doesNotMatch(ownershipMigration, /UPDATE work_days/);
+});
+
+test("la fecha de jornada es única para cada conductor", () => {
+  assert.match(
+    driverDateMigration,
+    /DROP INDEX uq_work_days_date/
+  );
+  assert.match(
+    driverDateMigration,
+    /UNIQUE \(driver_user_id, date\)/
+  );
+  assert.doesNotMatch(driverDateMigration, /UPDATE work_days/);
+  assert.doesNotMatch(driverDateMigration, /DELETE FROM work_days/);
 });

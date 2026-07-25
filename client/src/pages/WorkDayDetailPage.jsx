@@ -154,7 +154,9 @@ function WorkDayDetailPage() {
     <section className="space-y-8">
       <SectionTitle
         title="Detalle de jornada"
-        subtitle={formatDate(workDay.date)}
+        subtitle={`${formatDate(workDay.date)}${
+          workDay.driverName ? ` · ${workDay.driverName}` : ""
+        }`}
       />
       <div className="space-y-3">
         <WorkDayTicket
@@ -180,7 +182,7 @@ function WorkDayDetailPage() {
         ← Volver al historial
       </button>
 
-      {!workDay.isLocked && (
+      {!workDay.isLocked && workDay.canManage !== false && (
         <Card className="border-red-500/30 bg-red-500/5">
           <h3 className="text-lg font-bold text-red-300">
             Eliminar jornada de prueba
@@ -199,9 +201,11 @@ function WorkDayDetailPage() {
         </Card>
       )}
 
-      {workDay.isLocked && (
+      {(workDay.isLocked || workDay.canManage === false) && (
         <p className="text-center text-xs text-slate-500">
-          Jornada histórica protegida
+          {workDay.canManage === false
+            ? "Consulta de solo lectura"
+            : "Jornada histórica protegida"}
         </p>
       )}
 

@@ -447,6 +447,11 @@ Cada usuario utilizará un nombre de usuario y una contraseña personal.
 - El propietario podrá consultar y exportar jornadas ajenas.
 - El propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
 - La autorización deberá validarse siempre en el backend.
+- Las jornadas ajenas consultadas por un propietario deberán identificar al
+  conductor y mostrarse en modo de solo lectura.
+- La fecha mínima se validará respecto de las jornadas del mismo conductor.
+- El kilometraje inicial se validará respecto del último cierre del vehículo
+  compartido, aunque corresponda a otro conductor.
 
 Durante la transición se permitirá dejar vacío el nombre de usuario y acceder
 con la contraseña privada anterior. Este modo no crea una identidad personal y

@@ -1,14 +1,27 @@
 const {
   getWorkDayWithTrips,
 } = require("../repositories/workDaySummaryRepository");
+const {
+  getWorkDayById,
+} = require("../repositories/workDayRepository");
+const { getReadScope } = require("./workDayAccess");
 
 const roundToTwoDecimals = (value) => {
   return Number(Number(value || 0).toFixed(2));
 };
 
-const getWorkDaySummaryService = async (workDayId) => {
+const getWorkDaySummaryService = async (workDayId, auth = null) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
+  }
+
+  const accessibleWorkDay = await getWorkDayById(
+    workDayId,
+    getReadScope(auth)
+  );
+
+  if (!accessibleWorkDay) {
+    throw new Error("Jornada no encontrada");
   }
 
   const result = await getWorkDayWithTrips(workDayId);

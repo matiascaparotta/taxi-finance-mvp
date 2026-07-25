@@ -52,6 +52,11 @@ function HistoryWorkDayCard({ workDay, onClick }) {
             <h3 className="mt-1 text-lg font-bold text-white">
               {formatDate(workDayDate)}
             </h3>
+            {workDay.driverName && (
+              <p className="mt-1 text-sm font-semibold text-slate-400">
+                {workDay.driverName}
+              </p>
+            )}
           </div>
           <span className="text-xl text-slate-500" aria-hidden="true">
             →

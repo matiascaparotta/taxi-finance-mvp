@@ -10,7 +10,7 @@ const {
 
 const createWorkDay = async (req, res) => {
   try {
-    const result = await createWorkDayService(req.body);
+    const result = await createWorkDayService(req.body, req.auth);
 
     res.status(201).json({
       success: true,
@@ -27,7 +27,7 @@ const createWorkDay = async (req, res) => {
 
 const getAllWorkDays = async (req, res) => {
   try {
-    const result = await getWorkDaysService();
+    const result = await getWorkDaysService(req.auth);
 
     res.status(200).json({
       success: true,
@@ -43,7 +43,7 @@ const getAllWorkDays = async (req, res) => {
 };
 const getWorkDayById = async (req, res) => {
   try {
-    const result = await getWorkDayByIdService(req.params.id);
+    const result = await getWorkDayByIdService(req.params.id, req.auth);
 
     res.status(200).json({
       success: true,
@@ -59,7 +59,7 @@ const getWorkDayById = async (req, res) => {
 };
 const getOpenWorkDay = async (req, res) => {
   try {
-    const result = await getOpenWorkDayService();
+    const result = await getOpenWorkDayService(req.auth);
 
     res.status(200).json({
       success: true,
@@ -74,7 +74,7 @@ const getOpenWorkDay = async (req, res) => {
 };
 const getLatestClosedWorkDay = async (req, res) => {
   try {
-    const result = await getLatestClosedWorkDayService();
+    const result = await getLatestClosedWorkDayService(req.auth);
 
     res.status(200).json({
       success: true,
@@ -89,7 +89,7 @@ const getLatestClosedWorkDay = async (req, res) => {
 };
 const closeWorkDay = async (req, res) => {
   try {
-    const result = await closeWorkDayService(req.params.id, req.body);
+    const result = await closeWorkDayService(req.params.id, req.body, req.auth);
 
     res.status(200).json({
       success: true,
@@ -105,7 +105,7 @@ const closeWorkDay = async (req, res) => {
 };
 const deleteWorkDay = async (req, res) => {
   try {
-    const result = await deleteWorkDayService(req.params.id);
+    const result = await deleteWorkDayService(req.params.id, req.auth);
 
     res.status(200).json({
       success: true,

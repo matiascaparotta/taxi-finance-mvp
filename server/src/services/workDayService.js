@@ -4,6 +4,7 @@ const {
   getWorkDayById,
   getOpenWorkDay,
   getLatestClosedWorkDay,
+  getLatestVehicleClosedWorkDay,
   closeWorkDayById,
   deleteWorkDayById,
 } = require("../repositories/workDayRepository");
@@ -16,15 +17,28 @@ const {
   validateCloseDate,
   validateChronologicalWorkDayDate,
 } = require("../utils/workDayDate");
+const {
+  getReadScope,
+  getWriteScope,
+  canManageWorkDay,
+} = require("./workDayAccess");
 
-const createWorkDayService = async (workDayData) => {
+const serializeWorkDay = (workDay, auth, workedKm) => ({
+  ...workDay,
+  isLocked: Boolean(workDay.isLocked),
+  canManage: canManageWorkDay(workDay, auth),
+  workedKm,
+});
+
+const createWorkDayService = async (workDayData, auth = null) => {
+  const writeScope = getWriteScope(auth);
   const { date, startKm, resetOdometer = false } = workDayData;
 
   if (!date) {
     throw new Error("La fecha es obligatoria");
   }
 
-  const openWorkDay = await getOpenWorkDay();
+  const openWorkDay = await getOpenWorkDay(writeScope);
 
   if (openWorkDay) {
     throw new Error(
@@ -32,84 +46,82 @@ const createWorkDayService = async (workDayData) => {
     );
   }
 
-  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const latestClosedWorkDay = await getLatestClosedWorkDay(writeScope);
+  const latestVehicleWorkDay =
+    await getLatestVehicleClosedWorkDay(writeScope);
   const validatedDate = validateChronologicalWorkDayDate(
     date,
     latestClosedWorkDay?.date
   );
   const validatedStartKm = validateStartKm(
     startKm,
-    latestClosedWorkDay?.endKm,
+    latestVehicleWorkDay?.endKm,
     resetOdometer
   );
 
-  const workDay = await createWorkDay({
-    date: validatedDate,
-    startKm: validatedStartKm,
-  });
+  const workDay = await createWorkDay(
+    {
+      date: validatedDate,
+      startKm: validatedStartKm,
+    },
+    writeScope
+  );
 
-  return {
-    ...workDay,
-    isLocked: Boolean(workDay.isLocked),
-    workedKm: null,
-  };
+  return serializeWorkDay(workDay, auth, null);
 };
 
-const getWorkDaysService = async () => {
-  const workDays = await getWorkDays();
+const getWorkDaysService = async (auth = null) => {
+  const workDays = await getWorkDays(getReadScope(auth));
 
-  return workDays.map((workDay) => ({
-    ...workDay,
-    isLocked: Boolean(workDay.isLocked),
-    workedKm:
+  return workDays.map((workDay) =>
+    serializeWorkDay(
+      workDay,
+      auth,
       workDay.endKm !== null
         ? workDay.endKm - workDay.startKm
-        : null,
-  }));
+        : null
+    )
+  );
 };
 
-const getWorkDayByIdService = async (workDayId) => {
+const getWorkDayByIdService = async (workDayId, auth = null) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
 
-  const workDay = await getWorkDayById(workDayId);
+  const workDay = await getWorkDayById(workDayId, getReadScope(auth));
 
   if (!workDay) {
     throw new Error("Jornada no encontrada");
   }
 
-  return {
-    ...workDay,
-    isLocked: Boolean(workDay.isLocked),
-    workedKm:
-      workDay.endKm !== null
-        ? workDay.endKm - workDay.startKm
-        : null,
-  };
+  return serializeWorkDay(
+    workDay,
+    auth,
+    workDay.endKm !== null
+      ? workDay.endKm - workDay.startKm
+      : null
+  );
 };
-const getOpenWorkDayService = async () => {
-  const openWorkDay = await getOpenWorkDay();
+const getOpenWorkDayService = async (auth = null) => {
+  const openWorkDay = await getOpenWorkDay(getWriteScope(auth));
 
   if (!openWorkDay) {
     return null;
   }
 
-  return {
-    ...openWorkDay,
-    isLocked: Boolean(openWorkDay.isLocked),
-    workedKm: null,
-  };
+  return serializeWorkDay(openWorkDay, auth, null);
 };
 
-const getLatestClosedWorkDayService = async () => {
-  return await getLatestClosedWorkDay();
+const getLatestClosedWorkDayService = async (auth = null) => {
+  return await getLatestClosedWorkDay(getWriteScope(auth));
 };
 
-const closeWorkDayService = async (workDayId, closeData) => {
+const closeWorkDayService = async (workDayId, closeData, auth = null) => {
+  const writeScope = getWriteScope(auth);
   const { date, endKm, fuelAmount, fuelAllocation } = closeData;
 
-  const openWorkDay = await getOpenWorkDay();
+  const openWorkDay = await getOpenWorkDay(writeScope);
 
   if (!openWorkDay) {
     throw new Error("No hay una jornada activa para cerrar");
@@ -120,7 +132,7 @@ const closeWorkDayService = async (workDayId, closeData) => {
   }
 
   const validatedDate = validateCloseDate(date);
-  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const latestClosedWorkDay = await getLatestClosedWorkDay(writeScope);
   validateChronologicalWorkDayDate(
     validatedDate,
     latestClosedWorkDay?.date
@@ -136,28 +148,33 @@ const closeWorkDayService = async (workDayId, closeData) => {
 
   const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
 
-  const closedWorkDay = await closeWorkDayById(workDayId, {
-    date: validatedDate,
-    endKm: Number(endKm),
-    ...fuelSplit,
-  });
+  const closedWorkDay = await closeWorkDayById(
+    workDayId,
+    {
+      date: validatedDate,
+      endKm: Number(endKm),
+      ...fuelSplit,
+    },
+    writeScope
+  );
 
-  return {
-    ...closedWorkDay,
-    isLocked: Boolean(closedWorkDay.isLocked),
-    workedKm: closedWorkDay.endKm - closedWorkDay.startKm,
-  };
+  return serializeWorkDay(
+    closedWorkDay,
+    auth,
+    closedWorkDay.endKm - closedWorkDay.startKm
+  );
 };
 
-const deleteWorkDayService = async (workDayId) => {
+const deleteWorkDayService = async (workDayId, auth = null) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
 
-  const workDay = await getWorkDayById(workDayId);
+  const writeScope = getWriteScope(auth);
+  const workDay = await getWorkDayById(workDayId, writeScope);
   assertWorkDayCanBeDeleted(workDay);
 
-  await deleteWorkDayById(workDayId);
+  await deleteWorkDayById(workDayId, writeScope);
 
   return {
     id: Number(workDayId),

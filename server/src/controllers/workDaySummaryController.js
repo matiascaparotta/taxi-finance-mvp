@@ -4,7 +4,7 @@ const getWorkDaySummaryController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const summary = await getWorkDaySummaryService(id);
+    const summary = await getWorkDaySummaryService(id, req.auth);
 
     res.status(200).json({
       success: true,

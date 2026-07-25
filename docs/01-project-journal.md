@@ -833,6 +833,27 @@ Se implementó el cambio obligatorio de la contraseña temporal:
 El restablecimiento de contraseñas por parte del propietario permanece como una
 funcionalidad posterior.
 
+## Sexta funcionalidad
+
+Se implementó el aislamiento de jornadas por identidad:
+
+- un conductor individual solo consulta y gestiona sus propias jornadas;
+- un propietario consulta todas las jornadas de su organización;
+- las jornadas ajenas se muestran al propietario en modo de solo lectura;
+- el nombre del conductor identifica cada jornada en historial y detalle;
+- las nuevas jornadas se vinculan automáticamente al usuario autenticado y al
+  vehículo activo de su organización;
+- viajes, resúmenes y consultas mensuales aplican el mismo alcance;
+- la fecha continúa validándose por conductor, permitiendo dos turnos distintos
+  el mismo día;
+- una migración sustituye la unicidad global de fecha por la combinación
+  conductor y fecha, sin actualizar ni eliminar jornadas;
+- el kilometraje inicial toma como referencia el último cierre del vehículo
+  compartido, independientemente de quién lo condujo;
+- el acceso anterior conserva temporalmente el comportamiento existente.
+
+La funcionalidad permanece aislada en desarrollo y no modifica producción.
+
 ## Decisión de seguridad
 
 La cuenta de Matías y la asignación de sus 70 jornadas y 1.203 viajes se

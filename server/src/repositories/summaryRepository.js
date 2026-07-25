@@ -1,6 +1,17 @@
 const pool = require("../config/database");
 
-const getMonthlySummaryData = async (month) => {
+const getMonthlySummaryData = async (month, scope = null) => {
+  const accessSql = scope
+    ? scope.canReadOrganization
+      ? "AND organization_id = ?"
+      : "AND organization_id = ? AND driver_user_id = ?"
+    : "";
+  const accessValues = scope
+    ? scope.canReadOrganization
+      ? [scope.organizationId]
+      : [scope.organizationId, scope.userId]
+    : [];
+
   const [rows] = await pool.query(
     `
     SELECT
@@ -10,8 +21,9 @@ const getMonthlySummaryData = async (month) => {
       COALESCE(SUM(fuel_jose), 0) AS totalFuelJose
     FROM work_days
     WHERE DATE_FORMAT(date, '%Y-%m') = ?
+      ${accessSql}
     `,
-    [month]
+    [month, ...accessValues]
   );
 
   return rows[0];

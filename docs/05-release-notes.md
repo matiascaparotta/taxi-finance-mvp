@@ -44,6 +44,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Asignación protegida de las jornadas existentes a su conductor y vehículo.
 - Inicio de sesión individual compatible con el acceso privado actual.
 - Cambio obligatorio y seguro de la contraseña temporal.
+- Jornadas aisladas por conductor y organización.
+- Consulta de jornadas de conductores para el propietario en modo lectura.
+- Identificación del conductor en el historial y el detalle.
+- Continuidad del cuentakilómetros entre turnos del vehículo compartido.
 
 La primera entrega es interna y no cambia todavía la experiencia ni el acceso
 de producción.

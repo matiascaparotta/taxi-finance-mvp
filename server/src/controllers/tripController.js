@@ -8,7 +8,7 @@ const {
 
 const createTripController = async (req, res) => {
   try {
-    const trip = await createTripService(req.body);
+    const trip = await createTripService(req.body, req.auth);
 
     res.status(201).json({
       success: true,
@@ -26,7 +26,7 @@ const getTripByIdController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const trip = await getTripByIdService(id);
+    const trip = await getTripByIdService(id, req.auth);
 
     res.status(200).json({
       success: true,
@@ -44,7 +44,7 @@ const getTripsByWorkDayController = async (req, res) => {
   try {
     const { workDayId } = req.query;
 
-    const trips = await getTripsByWorkDayService(workDayId);
+    const trips = await getTripsByWorkDayService(workDayId, req.auth);
 
     res.status(200).json({
       success: true,
@@ -62,7 +62,7 @@ const updateTripController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedTrip = await updateTripService(id, req.body);
+    const updatedTrip = await updateTripService(id, req.body, req.auth);
 
     res.status(200).json({
       success: true,
@@ -80,7 +80,7 @@ const deleteTripController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedTrip = await deleteTripService(id);
+    const deletedTrip = await deleteTripService(id, req.auth);
 
     res.status(200).json({
       success: true,

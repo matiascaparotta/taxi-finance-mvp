@@ -174,6 +174,13 @@ Las cuentas individuales también exigen cambiar la contraseña temporal antes
 de acceder a jornadas o viajes. El flujo está protegido en frontend y backend,
 pero todavía no fue publicado ni ejecutado con cuentas reales.
 
+El aislamiento por conductor y organización está implementado en desarrollo.
+Los conductores solo acceden a sus datos; los propietarios pueden consultar y
+exportar las jornadas de su organización, pero únicamente modifican las
+propias. Las nuevas jornadas reciben conductor y vehículo automáticamente, y
+el kilometraje conserva la continuidad entre los turnos del coche compartido.
+Esta funcionalidad todavía no fue publicada ni activada con datos reales.
+
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código
 ya implementa esa topología: Express sirve el frontend y agrupa la API bajo

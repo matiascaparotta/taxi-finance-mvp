@@ -936,8 +936,24 @@ ejecución conserva usuarios y contraseñas existentes.
 - Un propietario no podrá modificar, cerrar ni eliminar jornadas ajenas.
 - Ningún usuario podrá acceder a datos de otra organización.
 
-La autorización se aplicará en los Services del backend. El frontend podrá
+La autorización se aplica en los Services del backend. El frontend podrá
 ocultar acciones, pero nunca será la barrera de seguridad.
+
+El alcance de lectura distingue entre conductor y propietario. El alcance de
+escritura siempre exige que la organización y el conductor de la jornada
+coincidan con la sesión, incluso cuando el usuario también sea propietario.
+Las comprobaciones se reutilizan para jornadas, viajes, resúmenes individuales
+y resúmenes mensuales.
+
+Las nuevas jornadas reciben `organization_id`, `driver_user_id` y el primer
+vehículo activo de la organización. La cronología de fechas se valida por
+conductor, mientras la continuidad del cuentakilómetros se consulta por
+organización y vehículo compartido.
+
+La migración `013_unique_work_day_date_per_driver.sql` reemplaza la unicidad
+global de `date` por `UNIQUE (driver_user_id, date)`. Esto permite que dos
+conductores trabajen el mismo día sin permitir fechas duplicadas dentro de la
+cuenta de uno de ellos.
 
 ## Sesiones durante la transición
 
@@ -951,9 +967,10 @@ conservan su modo. La contraseña nunca se incluye en la cookie. Los datos de
 identidad están firmados por el backend y no pueden modificarse desde el
 cliente.
 
-Esta identidad todavía no autoriza el acceso a jornadas. Cada Service deberá
-incorporar posteriormente las comprobaciones de organización, propietario y
-conductor antes de retirar el modo `legacy`.
+Esta identidad ya autoriza el acceso a jornadas según organización,
+propietario y conductor. El modo `legacy` permanece disponible hasta ejecutar
+el aprovisionamiento, asignar los datos históricos y completar la regresión en
+un entorno equivalente a producción.
 
 ## Primer cambio de contraseña
 
