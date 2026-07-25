@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   calculateFuelSplit,
+  resolveFuelAllocation,
   validateFuelAmount,
 } = require("../src/utils/fuel");
 
@@ -71,4 +72,28 @@ test("rechaza una opción de reparto desconocida o ausente", () => {
       /Indica cómo corresponde/
     );
   }
+});
+
+test("un propietario registra toda la carga como gasolina propia", () => {
+  assert.equal(
+    resolveFuelAllocation("SHARED", { isOwner: true }),
+    "OWN"
+  );
+  assert.deepEqual(
+    calculateFuelSplit(
+      "41.50",
+      resolveFuelAllocation("SHARED", { isOwner: true })
+    ),
+    {
+      fuelOwn: 41.5,
+      fuelJose: 0,
+    }
+  );
+});
+
+test("un conductor conserva la opción de compartir combustible", () => {
+  assert.equal(
+    resolveFuelAllocation("SHARED", { isOwner: false }),
+    "SHARED"
+  );
 });

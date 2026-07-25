@@ -252,10 +252,17 @@ El usuario no podrá modificar manualmente este valor.
 
 El combustible se registra únicamente durante el cierre de la jornada.
 
-El usuario podrá indicar una de las siguientes opciones:
+Un conductor no propietario podrá indicar una de las siguientes opciones:
 
 - Toda la carga corresponde al conductor.
 - La carga se comparte al 50 % con José.
+
+Cuando quien cierra la jornada sea propietario:
+
+- toda la carga corresponderá al propietario;
+- no se mostrará ninguna opción de reparto;
+- el backend ignorará cualquier intento de enviar una carga compartida;
+- **Gasolina José** será siempre cero en sus jornadas.
 
 ---
 

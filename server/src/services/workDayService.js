@@ -11,7 +11,10 @@ const {
 const {
   assertWorkDayCanBeDeleted,
 } = require("./workDayProtection");
-const { calculateFuelSplit } = require("../utils/fuel");
+const {
+  calculateFuelSplit,
+  resolveFuelAllocation,
+} = require("../utils/fuel");
 const { validateStartKm } = require("../utils/odometer");
 const {
   validateCloseDate,
@@ -146,7 +149,18 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
     throw new Error("El kilometraje final no puede ser menor al inicial");
   }
 
-  const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
+  const effectiveFuelAllocation = resolveFuelAllocation(
+    fuelAllocation,
+    {
+      isOwner: Boolean(
+        auth?.roles?.isOwner ?? auth?.isOwner
+      ),
+    }
+  );
+  const fuelSplit = calculateFuelSplit(
+    fuelAmount,
+    effectiveFuelAllocation
+  );
 
   const closedWorkDay = await closeWorkDayById(
     workDayId,

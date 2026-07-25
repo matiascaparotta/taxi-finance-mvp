@@ -168,7 +168,10 @@ function PrivateApp() {
         />
         <Route path="/new-work-day" element={<NewWorkDayPage />} />
         <Route path="/new-trip" element={<NewTripPage />} />
-        <Route path="/close-work-day" element={<CloseWorkDayPage />} />
+        <Route
+          path="/close-work-day"
+          element={<CloseWorkDayPage currentUser={currentUser} />}
+        />
         <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />} />
         <Route path="/trips/:id/edit" element={<EditTripPage />} />
         <Route

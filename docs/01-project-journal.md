@@ -1011,6 +1011,15 @@ entrar directamente a las jornadas de Matías, consultarlas y exportarlas,
 mientras las operaciones de modificación, cierre y eliminación continúan
 reservadas al conductor titular.
 
+## Gasolina propia del propietario
+
+La prueba diaria de José mostró que el cierre todavía ofrecía compartir la
+gasolina con José, una opción que solo tiene sentido para Matías. Se separó el
+comportamiento por rol: el propietario registra toda la carga como gasto propio
+y no ve el selector de reparto. La misma regla se aplica en backend para evitar
+que una petición manipulada genere `Gasolina José`. El flujo de Matías no fue
+modificado y mantiene sus dos opciones actuales.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

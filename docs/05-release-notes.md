@@ -58,6 +58,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   jornadas ajenas con claridad.
 - Corrección del reconocimiento del rol propietario, compatible con sesiones
   personales que ya estaban abiertas.
+- Cierre simplificado para propietarios: la gasolina se guarda íntegramente
+  como gasto propio y desaparece la opción de reparto.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de
