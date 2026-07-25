@@ -31,22 +31,10 @@ const assignExistingWorkDays = async (
       );
     }
 
-    if (before.assignedElsewhere > 0) {
-      throw new Error(
-        "Existen jornadas pertenecientes a otro conductor"
-      );
-    }
-
-    if (before.assignedToTarget > 0 && before.unassigned > 0) {
-      throw new Error(
-        "La base contiene una mezcla de jornadas asignadas y sin asignar"
-      );
-    }
-
     if (before.unassigned === 0) {
       return {
         assigned: 0,
-        total: before.total,
+        total: before.assignedToTarget,
         alreadyAssigned: before.assignedToTarget,
       };
     }
@@ -62,18 +50,21 @@ const assignExistingWorkDays = async (
 
     if (
       assigned !== before.unassigned ||
-      after.assignedToTarget !== before.total ||
-      after.unassigned !== 0
+      after.assignedToTarget !==
+        before.assignedToTarget + before.unassigned ||
+      after.unassigned !== 0 ||
+      after.assignedElsewhere !== before.assignedElsewhere ||
+      after.total !== before.total
     ) {
       throw new Error(
-        "No se pudo verificar la asignación de todas las jornadas"
+        "No se pudo verificar la asignación de las jornadas sin propietario"
       );
     }
 
     return {
       assigned,
-      total: after.total,
-      alreadyAssigned: 0,
+      total: after.assignedToTarget,
+      alreadyAssigned: before.assignedToTarget,
     };
   });
 

@@ -153,7 +153,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Exigir el cambio seguro de la contraseña temporal.
 - [x] Crear la organización Lic249.
 - [x] Crear las cuentas individuales de Matías y José.
-- [ ] Ejecutar y verificar la asignación de todas las jornadas existentes a
+- [x] Ejecutar y verificar la asignación de todas las jornadas existentes a
   Matías.
 - [x] Preparar la sustitución progresiva de la contraseña general por sesiones
   individuales.

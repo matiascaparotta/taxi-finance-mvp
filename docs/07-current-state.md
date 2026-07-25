@@ -41,13 +41,13 @@ validación del uso diario sobre el primer deploy privado.
 
 ## Sprint 18 — Base multiusuario
 
-**Estado:** Base técnica desplegada; aprovisionamiento pendiente
+**Estado:** Base técnica, aprovisionamiento y migración histórica desplegados
 
 ### Objetivos
 
 - Incorporar organizaciones, usuarios, membresías y vehículos.
 - Mantener disponible e intacto el flujo diario de producción.
-- Preparar la migración de los datos históricos a la cuenta de Matías.
+- Mantener vinculados los datos históricos a la cuenta de Matías.
 - Sustituir el acceso general solo después de validar el acceso individual.
 
 ---
@@ -160,17 +160,17 @@ La API y el frontend incluyen acceso privado mediante contraseña y sesión
 firmada. Esta solución continuará protegiendo la Beta durante la transición.
 La base de organizaciones, usuarios, membresías y vehículos se incorporó en
 producción de forma aditiva el 25/07/2026. Las migraciones `008` a `013`
-quedaron registradas sin asignar todavía las jornadas históricas. El acceso
-privado anterior continúa activo.
+quedaron registradas y las jornadas históricas se asignaron después mediante
+una operación independiente. El acceso privado anterior continúa activo.
 
 El aprovisionamiento inicial de Lic249 se ejecutó en producción el 25/07/2026.
 Creó a Matías como conductor, a José Revilla como propietario y conductor, y
 el vehículo compartido `Taxi Lic249`. Ambas cuentas autentican correctamente
 y exigen cambiar su contraseña temporal durante el primer acceso.
 
-Las jornadas ya pueden incorporar referencias opcionales a organización,
-conductor y vehículo. El procedimiento para asignar las jornadas existentes a
-Matías está preparado y probado, pero todavía no fue ejecutado en producción.
+Las 71 jornadas históricas y sus 1.221 viajes pertenecen a Matías, dentro de
+Lic249 y vinculadas al vehículo `Taxi Lic249`. La asignación fue transaccional,
+solo afectó jornadas sin propietario y conservó la jornada nueva de José.
 
 El inicio de sesión individual está publicado en producción. Convive con el
 acceso privado actual, conserva las sesiones antiguas y permite identificar al
@@ -178,15 +178,15 @@ usuario, su organización y sus roles cuando existan cuentas aprovisionadas.
 
 Las cuentas individuales también exigen cambiar la contraseña temporal antes
 de acceder a jornadas o viajes. El flujo ya está publicado y protegido en
-frontend y backend, pero todavía no fue ejecutado con cuentas reales.
+frontend y backend; Matías y José ya disponen de sus cuentas reales
+aprovisionadas.
 
-El aislamiento por conductor y organización está publicado y preparado.
+El aislamiento por conductor y organización está publicado y activo.
 Los conductores solo acceden a sus datos; los propietarios pueden consultar y
 exportar las jornadas de su organización, pero únicamente modifican las
 propias. Las nuevas jornadas reciben conductor y vehículo automáticamente, y
 el kilometraje conserva la continuidad entre los turnos del coche compartido.
-Todavía no fue activado con datos reales porque la asignación histórica
-permanece pendiente.
+Los datos reales de Matías y José ya están separados por propietario.
 
 La separación de marca está publicada. La aplicación utiliza
 TaxFin en sus pantallas generales y conserva Lic249 como identidad de la
@@ -222,9 +222,12 @@ SHA-256. Después del despliegue se verificaron:
 - el endpoint de salud de TaxFin;
 - la sesión anterior, la Home y el historial real.
 
-Después del aprovisionamiento se verificó que las 71 jornadas continúan sin
-propietario asignado. Este aislamiento permite probar primero las cuentas y
-realizar la asignación de Matías como una operación posterior separada.
+Antes de la asignación histórica se creó y verificó el respaldo privado
+`taxfin-production-before-workday-assignment-2026-07-25.sql`, con SHA-256
+`1233ceac7bcc26343ce619604fea9a4d62f9912543e3dfbef53316a7d48253a5`.
+Después de la operación se verificaron 72 jornadas y 1.224 viajes totales:
+71 jornadas y 1.221 viajes de Matías, más una jornada y 3 viajes de José.
+No quedó ninguna jornada sin propietario y el acceso legacy continúa activo.
 
 El proveedor de despliegue deberá permitir que frontend y API funcionen bajo
 el mismo sitio para conservar la sesión de forma fiable en el móvil. El código

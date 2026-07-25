@@ -143,17 +143,34 @@ test("rechaza jornadas parcialmente asignadas", async () => {
   );
 });
 
-test("rechaza jornadas que pertenecen a otro conductor", async () => {
-  const repository = createFakeRepository([
+test("conserva jornadas de otros conductores y asigna solo las huérfanas", async () => {
+  const workDays = [
     {
       organizationId: 99,
       userId: 98,
       vehicleId: 97,
     },
-  ]);
+    unassignedWorkDay(),
+  ];
+  const repository = createFakeRepository(workDays);
 
-  await assert.rejects(
-    assignExistingWorkDays(MATIAS_ASSIGNMENT, { repository }),
-    /otro conductor/
-  );
+  const result = await assignExistingWorkDays(MATIAS_ASSIGNMENT, {
+    repository,
+  });
+
+  assert.deepEqual(result, {
+    assigned: 1,
+    total: 1,
+    alreadyAssigned: 0,
+  });
+  assert.deepEqual(workDays[0], {
+    organizationId: 99,
+    userId: 98,
+    vehicleId: 97,
+  });
+  assert.deepEqual(workDays[1], {
+    organizationId: TARGET.organizationId,
+    userId: TARGET.userId,
+    vehicleId: TARGET.vehicleId,
+  });
 });

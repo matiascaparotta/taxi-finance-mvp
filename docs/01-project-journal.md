@@ -974,6 +974,29 @@ La operación no reasignó jornadas: las 71 existentes continúan con referencia
 de organización, conductor y vehículo vacías. La asignación a Matías permanece
 como siguiente funcionalidad independiente.
 
+## Asignación histórica real a Matías
+
+El 25/07/2026 se completó la migración de propiedad de los datos históricos.
+Antes de modificar producción se generó el respaldo privado
+`taxfin-production-before-workday-assignment-2026-07-25.sql` y se verificó su
+huella SHA-256:
+`1233ceac7bcc26343ce619604fea9a4d62f9912543e3dfbef53316a7d48253a5`.
+
+Durante la comprobación previa se detectó que José ya había creado una jornada
+real con 3 viajes. El procedimiento se ajustó para asignar únicamente jornadas
+sin propietario, manteniendo intactas las jornadas completas de otros
+conductores y rechazando cualquier asignación parcial.
+
+La operación transaccional asignó a Matías las 71 jornadas históricas y sus
+1.221 viajes. La verificación posterior confirmó:
+
+- 72 jornadas y 1.224 viajes totales;
+- 71 jornadas y 1.221 viajes pertenecientes a Matías;
+- una jornada y 3 viajes pertenecientes a José;
+- ninguna jornada sin organización, conductor o vehículo;
+- Matías como conductor y José como propietario y conductor de Lic249;
+- API saludable, aplicación disponible y acceso legacy conservado.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

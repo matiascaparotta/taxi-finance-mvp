@@ -42,6 +42,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Configuración de combustible por carga real o tarifa por kilómetro.
 - Aprovisionamiento seguro de las cuentas iniciales de Lic249.
 - Asignación protegida de las jornadas existentes a su conductor y vehículo.
+- Las 71 jornadas históricas y sus 1.221 viajes ya pertenecen a Matías; las
+  jornadas nuevas de otros conductores se conservan sin alteraciones.
 - Inicio de sesión individual compatible con el acceso privado actual.
 - Cambio obligatorio y seguro de la contraseña temporal.
 - Jornadas aisladas por conductor y organización.
@@ -325,9 +327,9 @@ Objetivo principal:
 - Se desplegaron las entidades de organizaciones, usuarios, membresías y
   vehículos.
 - El acceso privado anterior continúa funcionando durante la transición.
-- Las jornadas históricas permanecen sin asignar hasta el aprovisionamiento
-  controlado de Lic249.
-- TaxFin conserva las 71 jornadas y 1.221 viajes existentes.
+- Las 71 jornadas históricas y sus 1.221 viajes quedaron asignados a Matías
+  mediante una operación transaccional y verificada.
+- TaxFin conserva además la jornada nueva de José y sus 3 viajes.
 - Lic249, Matías, José y el vehículo compartido ya fueron creados de forma
   segura en producción.
 - Las cuentas personales exigen reemplazar su contraseña temporal durante el
