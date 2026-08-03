@@ -1113,6 +1113,23 @@ ajenas continúan protegidas. La suite específica, las 30 pruebas del cliente,
 el análisis estático y la compilación finalizaron correctamente. Producción no
 se modificó durante esta implementación.
 
+Ese mismo día se publicó `1cdd5d6` en `main`. Antes de que Railway activara la
+nueva versión se creó el respaldo
+`lic249-2026-08-03T14-23-24-625Z.sql` y se verificó su huella SHA-256
+`54edb2bd794443643a885fdf91542a3f93748d29bc2406b623ec127ab6b93068`,
+su tamaño de 142.112 bytes, sus permisos privados y la presencia de las ocho
+tablas críticas. El despliegue `a34ecae3` finalizó correctamente: las 14
+migraciones estaban actualizadas y la API respondió saludable.
+
+Las comprobaciones de solo lectura conservaron 79 jornadas, 1.354 viajes, 70
+importaciones protegidas y una auditoría preexistente. No había fechas
+duplicadas ni rupturas del kilometraje del vehículo. La sesión real de José
+siguió funcionando y permitió consultar el historial y detalle de Matías en
+modo de solo lectura, sin acciones de modificación. Ambas cuentas continuaron
+activas y con contraseña definitiva. No se utilizó la contraseña privada de
+Matías para repetir un inicio manual, no se corrigió ni eliminó ningún dato
+real y el acceso legacy no fue retirado.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

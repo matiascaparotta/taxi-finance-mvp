@@ -243,7 +243,7 @@ La publicación del commit `64af02b` dejó activa la migración de auditoría. L
 comprobación posterior registró 78 jornadas, 1.344 viajes y 70 importaciones,
 sin cambios en los datos existentes.
 
-El bloque completo de corrección segura está terminado y probado localmente.
+El bloque completo de corrección segura está publicado en producción.
 Además de los viajes, combustible y kilómetros ya publicados, permite corregir
 la fecha sin duplicar jornadas del mismo conductor y vuelve a validar la
 continuidad del vehículo según la nueva posición temporal. La eliminación de
@@ -251,7 +251,24 @@ una jornada completa exige contraseña, motivo y la palabra `ELIMINAR`; la
 auditoría conserva previamente la jornada y todos sus viajes en la misma
 transacción. Solo el conductor propietario puede usar estas operaciones. José
 mantiene lectura sobre jornadas ajenas y las importadas siguen bloqueadas.
-Esta ampliación todavía no se ha aplicado a producción.
+El commit `1cdd5d6` quedó activo en Railway el 03/08/2026. El despliegue
+confirmó que las migraciones estaban actualizadas y la API respondió saludable.
+La comprobación posterior conservó 79 jornadas, 1.354 viajes, 70 importaciones
+protegidas y una auditoría previa. No aparecieron fechas duplicadas ni rupturas
+de continuidad kilométrica y no se modificó ni eliminó ningún dato real.
+
+Antes de publicar se generó el respaldo privado
+`lic249-2026-08-03T14-23-24-625Z.sql`, de 142.112 bytes, con SHA-256
+`54edb2bd794443643a885fdf91542a3f93748d29bc2406b623ec127ab6b93068`.
+El archivo y su checksum tienen permisos privados, fueron verificados y
+permanecen en `backups/`, ignorados por Git.
+
+La sesión personal de José permaneció activa durante el despliegue. Desde ella
+se verificó el acceso al historial y detalle de Matías en modo explícito de solo
+lectura, sin controles de corrección o eliminación. Matías y José permanecen
+activos, con contraseña definitiva. No se cerró la sesión de José ni se pidió
+la contraseña privada de Matías para repetir un inicio manual; el cambio no
+modificó autenticación y el acceso legacy continúa configurado.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
