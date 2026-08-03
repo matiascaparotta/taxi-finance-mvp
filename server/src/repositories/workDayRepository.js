@@ -92,7 +92,7 @@ const getWorkDays = async (scope = null) => {
     `
     SELECT
       work_days.id,
-      work_days.date,
+      DATE_FORMAT(work_days.date, '%Y-%m-%d') AS date,
       work_days.start_km AS startKm,
       work_days.end_km AS endKm,
       work_days.fuel_own AS fuelOwn,
@@ -126,7 +126,7 @@ const getWorkDayById = async (workDayId, scope = null) => {
     `
     SELECT
       work_days.id,
-      work_days.date,
+      DATE_FORMAT(work_days.date, '%Y-%m-%d') AS date,
       work_days.start_km AS startKm,
       work_days.end_km AS endKm,
       work_days.fuel_own AS fuelOwn,

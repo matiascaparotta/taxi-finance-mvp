@@ -104,6 +104,7 @@ function WorkDayDetailPage() {
       await deleteWorkDay(id, {
         correctionReason: deletionReason,
         correctionPassword: deletionPassword,
+        deletionConfirmation,
       });
       navigate("/history");
     } catch (deleteError) {

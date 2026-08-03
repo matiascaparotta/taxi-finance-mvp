@@ -12,6 +12,7 @@ const {
 } = require("../repositories/workDayRepository");
 const {
   assertWorkDayCanBeDeleted,
+  validateWorkDayDeletionConfirmation,
 } = require("./workDayProtection");
 const {
   calculateFuelSplit,
@@ -27,7 +28,7 @@ const {
 const {
   validateCloseDate,
   validateChronologicalWorkDayDate,
-  validateCorrectionDate,
+  resolveCorrectionDate,
 } = require("../utils/workDayDate");
 const {
   getReadScope,
@@ -200,6 +201,9 @@ const deleteWorkDayService = async (workDayId, deletionData = {}, auth = null) =
   const writeScope = getWriteScope(auth);
   const workDay = await getWorkDayById(workDayId, writeScope);
   assertWorkDayCanBeDeleted(workDay);
+  validateWorkDayDeletionConfirmation(
+    deletionData?.deletionConfirmation
+  );
 
   const authorization = await authorizeClosedWorkDayCorrection({
     auth,
@@ -251,7 +255,10 @@ const correctClosedWorkDayService = async (
     password: correctionData?.correctionPassword,
     reason: correctionData?.correctionReason,
   });
-  const correctedDate = validateCorrectionDate(correctionData?.date);
+  const correctedDate = resolveCorrectionDate(
+    correctionData?.date,
+    workDay.date
+  );
   const correctionContext = await getClosedWorkDayCorrectionContext(
     workDayId,
     correctedDate

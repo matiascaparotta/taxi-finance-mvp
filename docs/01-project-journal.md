@@ -1130,6 +1130,16 @@ activas y con contraseña definitiva. No se utilizó la contraseña privada de
 Matías para repetir un inicio manual, no se corrigió ni eliminó ningún dato
 real y el acceso legacy no fue retirado.
 
+La primera prueba posterior reveló que una pestaña que había quedado abierta
+con el paquete anterior enviaba la corrección sin fecha y ejecutaba el flujo
+antiguo de eliminación, que no tenía campos para contraseña y motivo. El
+servidor rechazó correctamente ambas operaciones y no cambió datos. Se añadió
+compatibilidad para conservar la fecha almacenada cuando el cliente anterior
+la omite, una normalización de fechas independiente de la zona horaria y un
+mensaje que indica cerrar y volver a abrir TaxFin ante una pantalla antigua.
+También se reforzó el contrato: `ELIMINAR` debe llegar y validarse en el
+servidor, no solamente en la interfaz.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

@@ -63,10 +63,26 @@ const validateCorrectionDate = (date) => {
   return date;
 };
 
+const resolveCorrectionDate = (requestedDate, storedDate) => {
+  if (requestedDate !== undefined && requestedDate !== null) {
+    return validateCorrectionDate(requestedDate);
+  }
+
+  const normalizedStoredDate =
+    storedDate instanceof Date
+      ? storedDate.toISOString().slice(0, 10)
+      : typeof storedDate === "string"
+        ? storedDate.slice(0, 10)
+        : storedDate;
+
+  return validateCorrectionDate(normalizedStoredDate);
+};
+
 module.exports = {
   formatLocalDate,
   getAllowedCloseDates,
   validateCloseDate,
   validateChronologicalWorkDayDate,
   validateCorrectionDate,
+  resolveCorrectionDate,
 };

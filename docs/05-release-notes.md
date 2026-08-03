@@ -89,6 +89,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   generó y verificó un respaldo nuevo; Railway aplicó las migraciones, mantuvo
   la API saludable y conservó 79 jornadas, 1.354 viajes y 70 importaciones
   protegidas sin ejecutar correcciones ni eliminaciones de prueba.
+- Compatibilidad con pestañas abiertas antes del despliegue: si el formulario
+  anterior no envía fecha, se conserva la fecha almacenada. Las fechas ISO se
+  normalizan sin desplazamientos de zona horaria y la confirmación `ELIMINAR`
+  se valida también en el servidor.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

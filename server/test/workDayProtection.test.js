@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   assertWorkDayCanBeDeleted,
+  validateWorkDayDeletionConfirmation,
 } = require("../src/services/workDayProtection");
 
 test("permite eliminar una jornada nueva", () => {
@@ -22,5 +23,20 @@ test("rechaza eliminar una jornada inexistente", () => {
   assert.throws(
     () => assertWorkDayCanBeDeleted(null),
     /Jornada no encontrada/
+  );
+});
+
+test("exige escribir ELIMINAR para borrar una jornada completa", () => {
+  assert.equal(
+    validateWorkDayDeletionConfirmation(" eliminar "),
+    "ELIMINAR"
+  );
+  assert.throws(
+    () => validateWorkDayDeletionConfirmation("confirmar"),
+    /Escribe ELIMINAR/
+  );
+  assert.throws(
+    () => validateWorkDayDeletionConfirmation(undefined),
+    /pantalla está desactualizada/
   );
 });

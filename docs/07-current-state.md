@@ -270,6 +270,14 @@ activos, con contraseña definitiva. No se cerró la sesión de José ni se pidi
 la contraseña privada de Matías para repetir un inicio manual; el cambio no
 modificó autenticación y el acceso legacy continúa configurado.
 
+Durante la primera prueba real se detectó una pestaña anterior al despliegue
+que enviaba la corrección sin el nuevo campo de fecha y no mostraba los campos
+de seguridad del borrado. La compatibilidad se corrigió conservando la fecha
+almacenada cuando el cliente anterior no la envía, normalizando fechas ISO sin
+desplazarlas por zona horaria y mostrando un aviso explícito para volver a
+abrir TaxFin si la pantalla de eliminación está desactualizada. La palabra
+`ELIMINAR` se exige ahora tanto en el cliente como en el servidor.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

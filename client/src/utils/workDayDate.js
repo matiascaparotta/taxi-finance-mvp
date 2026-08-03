@@ -23,8 +23,10 @@ export function normalizeWorkDayDate(date) {
     return "";
   }
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return date;
+  const datePrefix = date.match(/^(\d{4}-\d{2}-\d{2})/);
+
+  if (datePrefix) {
+    return datePrefix[1];
   }
 
   const parsedDate = new Date(date);
