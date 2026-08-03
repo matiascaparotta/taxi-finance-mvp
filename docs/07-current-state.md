@@ -207,13 +207,24 @@ La primera corrección segura está publicada: un usuario personal
 puede editar un viaje de una jornada propia cerrada y creada en TaxFin. Debe
 confirmar su contraseña y registrar un motivo. TaxFin guarda una auditoría
 transaccional con el usuario y los valores anterior y resultante. Las jornadas
-importadas y las jornadas ajenas continúan protegidas. La eliminación y la
-corrección de los datos generales de la jornada siguen pendientes.
+importadas y las jornadas ajenas continúan protegidas. La eliminación se
+abordó en una entrega separada; la corrección de los datos generales de la
+jornada sigue pendiente.
 
-La segunda corrección segura está implementada localmente: el conductor puede
+La segunda corrección segura está publicada: el conductor puede
 eliminar un viaje de una jornada propia cerrada usando la misma contraseña y
 el mismo motivo de corrección. La eliminación y su auditoría se ejecutan en una
 sola transacción. Las jornadas importadas y ajenas permanecen bloqueadas.
+
+El despliegue de `5b0d5d9` fue verificado con la API saludable y el nuevo
+paquete visible en producción. Los recuentos permanecieron en 78 jornadas,
+1.344 viajes y 70 importaciones; las 70 jornadas importadas siguen marcadas
+como protegidas. La tabla de auditoría existe y no recibió registros de prueba,
+ya que la comprobación no eliminó datos reales. La prueba automatizada confirma
+que una eliminación válida y su auditoría se confirman o revierten juntas.
+José conserva acceso de lectura a las jornadas de Matías, sin permiso de
+escritura. La corrección de fecha continúa pendiente y no forma parte de esta
+entrega.
 
 La publicación del commit `64af02b` dejó activa la migración de auditoría. La
 comprobación posterior registró 78 jornadas, 1.344 viajes y 70 importaciones,

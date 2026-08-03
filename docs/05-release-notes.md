@@ -74,6 +74,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   protegidas frente a esa corrección.
 - Eliminación segura de viajes propios después del cierre, con contraseña,
   motivo, confirmación explícita y auditoría transaccional.
+- Publicación de la eliminación segura en producción mediante `5b0d5d9`, sin
+  cambios en los 78 cierres ni en los 1.344 viajes existentes.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

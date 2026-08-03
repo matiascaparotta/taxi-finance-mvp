@@ -192,7 +192,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [ ] Permitir corregir fecha, combustible y kilometraje con validación de
   continuidad.
 - [ ] Permitir eliminar una jornada propia completa con confirmación reforzada.
-- [ ] Mantener bloqueadas las jornadas históricas importadas.
+- [x] Mantener bloqueadas las jornadas históricas importadas.
 
 ---
 

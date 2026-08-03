@@ -1070,6 +1070,17 @@ el resumen desde los viajes restantes. La eliminación y la auditoría forman
 una única transacción. Continúa pendiente la corrección de fecha, combustible
 y kilómetros, así como la eliminación reforzada de la jornada completa.
 
+La eliminación segura se publicó mediante el commit `5b0d5d9` en `main` y
+`codex/multiuser-foundation`. Antes del despliegue se verificó el respaldo
+`lic249-2026-08-03T13-34-05-546Z.sql`, de 140.209 bytes, con SHA-256
+`09eec13cb0402d6f691557148bb406626318daa8775a895c53c44bfc0ee87006`.
+Railway completó el despliegue con la API saludable y sin alterar los datos:
+78 jornadas, 1.344 viajes y 70 cierres importados. Las 70 jornadas importadas
+continúan bloqueadas. No se ejecutó una eliminación real durante la
+verificación; la atomicidad de eliminación y auditoría quedó cubierta por las
+pruebas automatizadas y la tabla de auditoría permaneció correctamente en cero.
+La corrección de fecha no se inició.
+
 ## Estado
 
 🚧 Sprint en desarrollo.
