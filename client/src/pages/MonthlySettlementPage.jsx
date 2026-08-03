@@ -151,6 +151,12 @@ function MonthlySettlementPage({ currentUser = null }) {
   const averageDailyDriverEarning = calculation.averageDailyDriverEarning ?? (
     calculation.workedDays ? Number(calculation.driverHalf || 0) / calculation.workedDays : 0
   );
+  const previewExpectedDays = Math.max(1, Number(form.expectedWorkDays || 1));
+  const previewMonthlySocialSecurity = Math.max(0, Number(form.socialSecurity || 0));
+  const previewDailySocialSecurity = previewMonthlySocialSecurity / previewExpectedDays;
+  const previewAppliedSocialSecurity = settlement.status === "IN_PROGRESS"
+    ? previewDailySocialSecurity * Math.min(calculation.workedDays, previewExpectedDays)
+    : previewMonthlySocialSecurity;
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
 
   if (salariedDriver) {
@@ -295,9 +301,14 @@ function MonthlySettlementPage({ currentUser = null }) {
           {settlement.status !== "IN_PROGRESS" && settlement.settings.settingsConfirmed && <span className="text-xs font-bold text-emerald-300">Revisados ✓</span>}
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          <label className="text-sm font-semibold">Seguridad Social<input type="number" min="0" step="0.01" disabled={!settlement.canEditSettings} value={form.socialSecurity} onChange={(e) => setForm({ ...form, socialSecurity: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
+          <label className="text-sm font-semibold">Seguridad Social mensual<input type="number" min="0" step="0.01" disabled={!settlement.canEditSettings} value={form.socialSecurity} onChange={(e) => setForm({ ...form, socialSecurity: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
           <label className="text-sm font-semibold">Nómina transferida<input type="number" min="0" step="0.01" disabled={!settlement.canEditSettings} value={form.payrollTransfer} onChange={(e) => setForm({ ...form, payrollTransfer: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
-          <label className="text-sm font-semibold">Días laborables previstos<input type="number" min="1" max="31" step="1" disabled={!settlement.canEditSettings} value={form.expectedWorkDays} onChange={(e) => setForm({ ...form, expectedWorkDays: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
+          <label className="text-sm font-semibold">Días previstos este mes<input type="number" min="1" max="31" step="1" disabled={!settlement.canEditSettings} value={form.expectedWorkDays} onChange={(e) => setForm({ ...form, expectedWorkDays: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4 sm:grid-cols-3">
+          <div><p className="text-xs text-slate-500">Jornadas trabajadas hasta hoy</p><p className="mt-1 text-xl font-black">{calculation.workedDays}</p></div>
+          <div><p className="text-xs text-slate-500">Seguridad Social por día</p><p className="mt-1 text-xl font-black">{formatCurrency(previewDailySocialSecurity)}</p></div>
+          <div className="col-span-2 sm:col-span-1"><p className="text-xs text-sky-300">Seguridad Social aplicada hasta hoy</p><p className="mt-1 text-xl font-black text-white">{formatCurrency(previewAppliedSocialSecurity)}</p></div>
         </div>
         {settlement.canEditSettings && <div className="mt-5 grid gap-3 sm:grid-cols-2"><button type="button" disabled={isSaving} onClick={() => saveSettings(false)} className="rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950 disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar cambios"}</button>{settlement.status !== "IN_PROGRESS" && <button type="button" disabled={isSaving} onClick={() => saveSettings(true)} className="rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200 disabled:opacity-50">Confirmar datos definitivos</button>}</div>}
       </Card>}

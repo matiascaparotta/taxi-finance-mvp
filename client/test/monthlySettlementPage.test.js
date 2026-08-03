@@ -35,6 +35,9 @@ test("permite guardar datos provisionales y confirmarlos al finalizar el mes", (
   assert.match(page, /saveSettings\(false\)/);
   assert.match(page, /Confirmar datos definitivos/);
   assert.match(page, /saveSettings\(true\)/);
+  assert.match(page, /Jornadas trabajadas hasta hoy/);
+  assert.match(page, /Seguridad Social aplicada hasta hoy/);
+  assert.match(page, /previewAppliedSocialSecurity/);
 });
 
 test("el resultado indica correctamente quién entrega el dinero", () => {

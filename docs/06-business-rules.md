@@ -349,6 +349,9 @@ Seguridad Social, nómina transferida y días previstos son editables por ambos.
 Durante el mes se guardan como datos provisionales y cada modificación actualiza
 los cálculos sin marcar la liquidación como revisada. La confirmación definitiva
 es una acción separada disponible cuando el mes ya finalizó.
+La vista de datos muestra en tiempo real la cuota diaria y la Seguridad Social
+aplicada hasta hoy al modificar el importe mensual o los días previstos. Las
+jornadas trabajadas no se editan manualmente: proceden de las jornadas cerradas.
 José puede revisar la liquidación pero no cerrarla. Solo Matías confirma el
 cierre definitivo una vez finalizado el mes. Después del cierre los importes quedan congelados en una
 instantánea y las modificaciones de configuración y el cierre quedan
