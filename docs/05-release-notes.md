@@ -149,6 +149,9 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   y las opciones para compartir permanecen ocultos hasta el cierre. Railway
   sirvió exactamente `dc68c80baf93`; la jornada real activa de Matías se
   comprobó desde José en solo lectura y sin modificar datos.
+- Protección móvil pendiente de publicación: la barra de estado pasa a ser
+  opaca y la cabecera queda fija bajo las áreas seguras, evitando que tarjetas
+  o textos se vean detrás de la hora, notificaciones y batería al desplazarse.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

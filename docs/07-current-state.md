@@ -400,6 +400,13 @@ La jornada real activa de Matías permitió confirmar desde José los viajes y
 acumulados en solo lectura, sin kilometraje final, opciones para compartir ni
 controles de escritura. La PWA se actualizó y ningún dato real fue modificado.
 
+La protección de desplazamiento móvil está implementada localmente y pendiente
+de publicación. La barra de estado de iPhone es opaca y la cabecera de TaxFin
+permanece fija, con fondo sólido y debajo de las áreas seguras de iPhone y
+Android. La revisión móvil confirmó el comportamiento después de desplazar más
+de 600 píxeles, sin que el contenido invada la hora, notificaciones o batería.
+Las 50 pruebas del cliente, análisis estático y compilación finalizaron bien.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

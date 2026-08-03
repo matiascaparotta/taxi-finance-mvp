@@ -124,6 +124,14 @@ acumulados, comisiones y propinas en modo de solo lectura. No aparecieron
 kilometraje final, acciones para compartir ni controles de escritura. La nueva
 PWA se activó desde la propia aplicación y no se modificó ningún dato real.
 
+Se corrigió localmente la superposición durante el desplazamiento móvil. La
+barra de estado de iPhone deja de ser translúcida y la cabecera de TaxFin queda
+fija, opaca y situada bajo las áreas seguras de iPhone y Android. Una prueba
+desplazada más de 600 píxeles confirmó que el contenido pasa por debajo de la
+cabecera y nunca detrás de la hora, notificaciones o batería. Las 50 pruebas del
+cliente, análisis estático y compilación finalizaron correctamente. La
+publicación queda pendiente de autorización.
+
 ## Estado
 
 ✅ Sprint finalizado.

@@ -48,6 +48,10 @@ test("mantiene escala de aplicación y fondo oscuro en toda la pantalla", () => 
 });
 
 test("respeta las áreas seguras superior e inferior del iPhone", () => {
+  const html = fs.readFileSync(
+    path.join(clientRoot, "index.html"),
+    "utf8"
+  );
   const styles = fs.readFileSync(
     path.join(clientRoot, "src/index.css"),
     "utf8"
@@ -60,6 +64,9 @@ test("respeta las áreas seguras superior e inferior del iPhone", () => {
   assert.match(styles, /env\(safe-area-inset-top,\s*0px\)/);
   assert.match(layout, /taxfin-safe-header/);
   assert.match(layout, /env\(safe-area-inset-bottom\)/);
+  assert.match(html, /apple-mobile-web-app-status-bar-style" content="black"/);
+  assert.match(layout, /sticky top-0 z-50/);
+  assert.doesNotMatch(html, /black-translucent/);
 });
 
 test("incluye iconos profesionales para iPhone y Android", () => {
