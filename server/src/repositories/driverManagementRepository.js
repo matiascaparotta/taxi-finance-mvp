@@ -24,6 +24,7 @@ const listDrivers = async (organizationId) => {
       users.username,
       users.display_name AS displayName,
       organization_memberships.is_owner AS isOwner,
+      organization_memberships.is_driver AS isDriver,
       organization_memberships.fuel_calculation_mode AS fuelCalculationMode,
       organization_memberships.fuel_rate_per_km AS fuelRatePerKm,
       organization_memberships.status
@@ -97,6 +98,7 @@ const createDriver = async (
     username,
     displayName,
     isOwner: false,
+    isDriver: true,
     fuelCalculationMode,
     fuelRatePerKm,
     status: "ACTIVE",

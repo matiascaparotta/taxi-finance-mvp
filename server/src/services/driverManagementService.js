@@ -15,6 +15,7 @@ const serializeDriver = (driver) => ({
   ...driver,
   id: Number(driver.id),
   isOwner: Boolean(driver.isOwner),
+  isDriver: Boolean(driver.isDriver),
   fuelRatePerKm:
     driver.fuelRatePerKm === null
       ? null
