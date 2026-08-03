@@ -988,7 +988,7 @@ de solo lectura, sin modificar datos ni retirar el acceso legacy.
 
 **Fecha:** 03/08/2026
 
-**Estado:** 🧪 Implementada localmente, pendiente de publicación
+**Estado:** ✅ Publicada en producción
 
 ### Contexto
 
@@ -1016,6 +1016,15 @@ del historial normal y no impiden iniciar otra jornada en la misma fecha.
 - el propietario conserva solo lectura sobre jornadas ajenas;
 - el acceso legacy permanece compatible, pero no puede cancelar;
 - no se añade ninguna cola ni sincronización financiera sin conexión.
+
+### Publicación y verificación
+
+La decisión se publicó el 03/08/2026 mediante el commit `310d3f5`. Railway
+ejecutó la migración `015` como paso previo obligatorio y dejó saludable
+exactamente el build `310d3f575e6a`. La sesión real de José permaneció activa
+y el historial y detalle de Matías continuaron en modo de solo lectura, sin
+acciones de escritura. No se creó, corrigió, canceló ni eliminó ningún dato real
+y el acceso legacy permaneció activo.
 
 ---
 

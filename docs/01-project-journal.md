@@ -72,8 +72,16 @@ vacía puede cancelarse sin rellenar el cierre. Si ya contiene viajes, TaxFin
 exige contraseña, motivo y la confirmación `CANCELAR`. La jornada no se elimina:
 queda en estado cancelado y la operación se registra de forma transaccional en
 la auditoría. La validación local finalizó con 102 pruebas del servidor, 43 del
-cliente, análisis estático y compilación correctos. La publicación queda
-pendiente de autorización explícita.
+cliente, análisis estático y compilación correctos.
+
+La entrega se publicó mediante `310d3f5`. Railway completó la migración previa
+y dejó activo exactamente `310d3f575e6a`, con `/api/health` saludable. El
+service worker utilizó esa versión real, el manifiesto y los iconos respondieron
+correctamente y `Actualizar TaxFin` activó la nueva versión regresando a `/`.
+La sesión real de José se conservó; el historial y un detalle de Matías se
+comprobaron en solo lectura y sin controles de escritura. No se modificó ningún
+dato real, no se añadió modo offline financiero y el acceso legacy siguió
+activo.
 
 ## Estado
 

@@ -341,8 +341,8 @@ la comprobación, por lo que los acumulados poblados se validaron mediante las
 pruebas y el paquete publicado, sin crear una jornada o un viaje de prueba. No
 se modificaron datos reales y el acceso legacy continúa activo.
 
-La siguiente entrega está implementada localmente y pendiente de autorización
-para publicarse. Inicio queda reducido a un resumen breve y la nueva ruta
+La reorganización de la jornada está publicada desde el 03/08/2026 mediante el
+commit `310d3f5`. Inicio queda reducido a un resumen breve y la nueva ruta
 `/my-work-day` concentra la operativa personal: iniciar jornada, consultar los
 acumulados, registrar viajes, cerrar y cancelar. En móvil la barra inferior
 separa Inicio, Mi jornada e Historial sin desbordamiento horizontal.
@@ -355,7 +355,13 @@ permite iniciar una jornada de reemplazo en esa fecha. La función solo puede
 usarla el conductor sobre su propia jornada con una cuenta personal; la lectura
 del propietario y el acceso legacy no cambian. La verificación local finalizó
 con 102 pruebas del servidor, 43 del cliente, análisis estático y compilación
-correctos. No se incorporó modo offline financiero.
+correctos. Railway ejecutó la migración `015` como paso previo y dejó activo
+exactamente el build `310d3f575e6a`, con `/api/health` saludable. El worker
+publicado utiliza esa versión sin el marcador de compilación; manifiesto e
+iconos respondieron correctamente y la actualización controlada regresó a `/`.
+La sesión real de José permaneció activa y la consulta del historial y detalle
+de Matías continuó sin controles de escritura. No se modificó ningún dato real,
+el acceso legacy siguió activo y no se incorporó modo offline financiero.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
