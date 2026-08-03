@@ -1043,6 +1043,19 @@ jornada completa de prueba. La operación exigirá contraseña, motivo, auditor�
 y validaciones de continuidad; las jornadas históricas importadas continuarán
 protegidas. Esta corrección segura todavía no está implementada.
 
+La primera funcionalidad del bloque quedó implementada de forma aislada: el
+conductor puede corregir un viaje de una jornada propia cerrada y creada en
+TaxFin. Antes de guardar debe introducir su contraseña actual y explicar el
+motivo. La modificación y su registro de auditoría se ejecutan en una misma
+transacción, conservando valores anteriores y resultantes. Las jornadas
+importadas y las jornadas ajenas permanecen en modo lectura. La eliminación
+de viajes y las correcciones de fecha, combustible y kilómetros continúan
+pendientes para funcionalidades separadas.
+
+Antes de preparar su publicación se generó un respaldo nuevo de producción de
+140.209 bytes, conservado fuera de Git, con SHA-256
+`09eec13cb0402d6f691557148bb406626318daa8775a895c53c44bfc0ee87006`.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

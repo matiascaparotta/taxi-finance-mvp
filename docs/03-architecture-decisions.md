@@ -892,6 +892,44 @@ La organización inicial conservará `Lic249`.
 
 ---
 
+# ADR-016
+
+## Corregir jornadas cerradas mediante reautenticación y auditoría transaccional
+
+**Fecha:** 03/08/2026
+
+**Estado:** ✅ Primera funcionalidad implementada en desarrollo
+
+### Contexto
+
+El uso real mostró errores de carga que solo se detectan después del cierre.
+Reabrir la jornada o permitir cambios silenciosos debilitaría la trazabilidad
+financiera. Además, el propietario debe conservar acceso de solo lectura a las
+jornadas de sus conductores y los datos importados no deben alterarse.
+
+### Decisión
+
+Permitir correcciones únicamente sobre jornadas propias creadas en TaxFin. Una
+corrección cerrada exige la contraseña actual y un motivo de entre 5 y 500
+caracteres. El cambio y el registro de auditoría se escriben dentro de la misma
+transacción. La auditoría identifica organización, usuario, jornada, entidad,
+acción, motivo y los valores anteriores y resultantes.
+
+La primera operación habilitada es la edición de un viaje. Las demás
+operaciones se incorporarán de una en una reutilizando el mismo contrato de
+seguridad.
+
+### Consecuencias
+
+- un fallo al guardar la auditoría revierte también la corrección;
+- la contraseña nunca se almacena en el registro de auditoría;
+- el acceso general anterior no puede corregir jornadas cerradas;
+- las jornadas importadas y las jornadas ajenas continúan bloqueadas;
+- fecha, combustible, kilómetros y eliminaciones siguen deshabilitados hasta
+  implementar y probar cada regla específica.
+
+---
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

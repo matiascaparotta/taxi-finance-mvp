@@ -7,18 +7,22 @@ import TripForm from "../components/TripForm";
 import Card from "../components/ui/Card";
 
 import { deleteTrip, getTripById, updateTrip } from "../services/tripService";
+import { getWorkDayById } from "../services/workDayService";
 
 function EditTripPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [trip, setTrip] = useState(null);
+  const [workDay, setWorkDay] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [correctionPassword, setCorrectionPassword] = useState("");
+  const [correctionReason, setCorrectionReason] = useState("");
   const deletingLockRef = useRef(false);
 
   const loadTrip = useCallback(async () => {
@@ -27,7 +31,9 @@ function EditTripPage() {
       setIsLoading(true);
 
       const tripData = await getTripById(id);
+      const workDayData = await getWorkDayById(tripData.workDayId);
       setTrip(tripData);
+      setWorkDay(workDayData);
     } catch (error) {
       setLoadError(error.message);
     } finally {
@@ -40,8 +46,32 @@ function EditTripPage() {
   }, [loadTrip]);
 
   const handleUpdateTrip = async (tripData) => {
-    await updateTrip(id, tripData);
-    navigate("/");
+    const isClosedWorkDay = workDay?.status === "CLOSED";
+
+    if (isClosedWorkDay && correctionReason.trim().length < 5) {
+      throw new Error(
+        "Explica el motivo de la corrección con al menos 5 caracteres"
+      );
+    }
+
+    if (isClosedWorkDay && !correctionPassword) {
+      throw new Error("Escribe tu contraseña actual");
+    }
+
+    await updateTrip(id, {
+      ...tripData,
+      ...(isClosedWorkDay
+        ? {
+            correctionPassword,
+            correctionReason,
+          }
+        : {}),
+    });
+    navigate(
+      isClosedWorkDay
+        ? `/work-day-closed/${workDay.id}`
+        : "/"
+    );
   };
 
   const handleDeleteTrip = async () => {
@@ -116,12 +146,52 @@ function EditTripPage() {
     return null;
   }
 
+  const isClosedWorkDay = workDay?.status === "CLOSED";
+
   return (
     <section className="space-y-8">
       <SectionTitle
-        title="Editar viaje"
-        subtitle="Corrige el importe, método de pago, comisión, propina o nota."
+        title={isClosedWorkDay ? "Corregir viaje" : "Editar viaje"}
+        subtitle={
+          isClosedWorkDay
+            ? "La jornada está cerrada. La corrección quedará registrada."
+            : "Corrige el importe, método de pago, comisión, propina o nota."
+        }
       />
+
+      {isClosedWorkDay && (
+        <Card className="border-amber-500/30 bg-amber-500/5">
+          <h3 className="text-lg font-bold text-amber-200">
+            Confirmación de seguridad
+          </h3>
+          <p className="mt-2 text-sm text-slate-300">
+            Escribe el motivo y tu contraseña. TaxFin guardará quién hizo el cambio, cuándo y qué valores había antes y después.
+          </p>
+
+          <label className="mt-5 block text-sm font-semibold text-slate-200">
+            Motivo de la corrección
+            <textarea
+              value={correctionReason}
+              onChange={(event) => setCorrectionReason(event.target.value)}
+              maxLength={500}
+              rows={3}
+              placeholder="Ej.: importe cargado por error"
+              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-amber-400"
+            />
+          </label>
+
+          <label className="mt-4 block text-sm font-semibold text-slate-200">
+            Contraseña actual
+            <input
+              type="password"
+              autoComplete="current-password"
+              value={correctionPassword}
+              onChange={(event) => setCorrectionPassword(event.target.value)}
+              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-amber-400"
+            />
+          </label>
+        </Card>
+      )}
 
       <TripForm
         initialAmount={trip.amount}
@@ -142,6 +212,7 @@ function EditTripPage() {
         </p>
       )}
 
+      {!isClosedWorkDay && (
       <Card className="border-red-500/30 bg-red-500/10">
         <h3 className="text-lg font-bold text-red-300">Eliminar viaje</h3>
 
@@ -158,6 +229,7 @@ function EditTripPage() {
           Eliminar viaje
         </button>
       </Card>
+      )}
 
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">

@@ -200,9 +200,15 @@ sus totales y todos los viajes con actualización cada treinta segundos. El
 seguimiento incluye acumulados privados de comisión y propina. La vista es de
 solo lectura y permanece separada de la jornada personal del propietario.
 
-Esta mejora está implementada localmente y pendiente de publicación. Las
-imágenes compartidas también dejarán de dibujar comisiones y propinas de los
-viajes, sin eliminar esos datos del sistema.
+Esta mejora está publicada en producción. Las imágenes compartidas omiten
+comisiones y propinas de los viajes, sin eliminar esos datos del sistema.
+
+La primera corrección segura está implementada localmente: un usuario personal
+puede editar un viaje de una jornada propia cerrada y creada en TaxFin. Debe
+confirmar su contraseña y registrar un motivo. TaxFin guarda una auditoría
+transaccional con el usuario y los valores anterior y resultante. Las jornadas
+importadas y las jornadas ajenas continúan protegidas. La eliminación y la
+corrección de los datos generales de la jornada siguen pendientes.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por

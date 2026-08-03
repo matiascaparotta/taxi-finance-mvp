@@ -83,10 +83,17 @@ Una jornada podrá encontrarse únicamente en uno de los siguientes estados:
 
 Mientras una jornada permanezca activa podrán registrarse nuevos viajes.
 
-Una vez cerrada, no podrán añadirse, modificarse ni eliminarse viajes.
+Una vez cerrada, no podrán añadirse viajes. Los viajes de una jornada propia
+creada en TaxFin podrán corregirse mediante una confirmación reforzada que
+exija la contraseña actual y un motivo. El sistema conservará en auditoría el
+usuario, la fecha, el motivo y los valores anteriores y resultantes.
 
 Las jornadas históricas procedentes de la importación estarán protegidas y no
 podrán modificarse ni eliminarse.
+
+El propietario podrá consultar jornadas ajenas, pero no podrá usar la
+corrección segura sobre ellas. Cada conductor solo podrá corregir sus propias
+jornadas.
 
 Las jornadas creadas directamente en Lic249 después de la importación
 podrán eliminarse completas con confirmación explícita. Al eliminarlas se

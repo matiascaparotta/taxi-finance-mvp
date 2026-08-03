@@ -68,6 +68,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   personales que ya estaban abiertas.
 - Cierre simplificado para propietarios: la gasolina se guarda íntegramente
   como gasto propio y desaparece la opción de reparto.
+- Corrección segura de viajes propios después del cierre mediante contraseña,
+  motivo y auditoría de valores anteriores y resultantes.
+- Las jornadas históricas importadas y las jornadas ajenas permanecen
+  protegidas frente a esa corrección.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

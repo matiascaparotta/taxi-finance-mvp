@@ -21,7 +21,12 @@ function formatTripTime(trip) {
   });
 }
 
-function WorkDayTicket({ workDay, summary, trips = [] }) {
+function WorkDayTicket({
+  workDay,
+  summary,
+  trips = [],
+  onEditTrip = null,
+}) {
   const [showAllTrips, setShowAllTrips] = useState(false);
 
   useEffect(() => {
@@ -76,6 +81,16 @@ function WorkDayTicket({ workDay, summary, trips = [] }) {
             <p>Propina: {formatCurrency(trip.tip)}</p>
           )}
         </div>
+      )}
+
+      {onEditTrip && (
+        <button
+          type="button"
+          onClick={() => onEditTrip(trip)}
+          className="mt-3 w-full rounded-xl border border-slate-700 px-3 py-2 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+        >
+          Corregir viaje
+        </button>
       )}
     </>
   );

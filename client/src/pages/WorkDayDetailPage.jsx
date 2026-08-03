@@ -163,6 +163,11 @@ function WorkDayDetailPage() {
           workDay={workDay}
           summary={summary}
           trips={trips}
+          onEditTrip={
+            workDay.canCorrect
+              ? (trip) => navigate(`/trips/${trip.id}/edit`)
+              : null
+          }
         />
 
         <WorkDayShareCard

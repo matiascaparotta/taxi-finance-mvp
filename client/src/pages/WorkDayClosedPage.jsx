@@ -122,7 +122,16 @@ function WorkDayClosedPage() {
         subtitle="Resumen final del turno."
       />
 
-      <WorkDayTicket workDay={workDay} summary={summary} trips={trips} />
+      <WorkDayTicket
+        workDay={workDay}
+        summary={summary}
+        trips={trips}
+        onEditTrip={
+          workDay.canCorrect
+            ? (trip) => navigate(`/trips/${trip.id}/edit`)
+            : null
+        }
+      />
 
       <WorkDayShareCard
         workDay={workDay}

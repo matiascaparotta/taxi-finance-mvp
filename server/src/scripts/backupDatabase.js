@@ -4,6 +4,7 @@ const fsPromises = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const mysql = require("mysql2/promise");
 
 require("dotenv").config();
 
@@ -14,6 +15,7 @@ const BACKUP_TABLES = [
   "vehicles",
   "work_days",
   "trips",
+  "correction_audit_logs",
   "monthly_work_day_imports",
 ];
 
@@ -59,7 +61,38 @@ const calculateChecksum = async (filePath) => {
   return hash.digest("hex");
 };
 
-const runDump = async (configPath, outputPath) => {
+const getExistingBackupTables = async () => {
+  const connection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+  });
+
+  try {
+    const [rows] = await connection.query(
+      `
+      SELECT table_name AS tableName
+      FROM information_schema.tables
+      WHERE table_schema = ?
+        AND table_name IN (?)
+      `,
+      [process.env.DB_NAME, BACKUP_TABLES]
+    );
+    const existingTables = new Set(
+      rows.map((row) => row.tableName)
+    );
+
+    return BACKUP_TABLES.filter((table) =>
+      existingTables.has(table)
+    );
+  } finally {
+    await connection.end();
+  }
+};
+
+const runDump = async (configPath, outputPath, tables) => {
   const output = fs.createWriteStream(outputPath, {
     mode: 0o600,
   });
@@ -73,7 +106,7 @@ const runDump = async (configPath, outputPath) => {
     "--skip-comments",
     "--set-gtid-purged=OFF",
     process.env.DB_NAME,
-    ...BACKUP_TABLES,
+    ...tables,
   ];
 
   const dump = spawn("mysqldump", args, {
@@ -135,7 +168,12 @@ const backupDatabase = async () => {
     await fsPromises.writeFile(configPath, createClientConfig(), {
       mode: 0o600,
     });
-    await runDump(configPath, temporaryBackupPath);
+    const existingTables = await getExistingBackupTables();
+    await runDump(
+      configPath,
+      temporaryBackupPath,
+      existingTables
+    );
 
     const stats = await fsPromises.stat(temporaryBackupPath);
 
