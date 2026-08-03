@@ -25,6 +25,16 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.taxfin-safe-header {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+}
+
+@media (min-width: 640px) {
+  .taxfin-safe-header {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  }
+}
+
 button,
 a,
 input,

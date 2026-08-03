@@ -47,6 +47,21 @@ test("mantiene escala de aplicación y fondo oscuro en toda la pantalla", () => 
   assert.match(styles, /overscroll-behavior:\s*none/);
 });
 
+test("respeta las áreas seguras superior e inferior del iPhone", () => {
+  const styles = fs.readFileSync(
+    path.join(clientRoot, "src/index.css"),
+    "utf8"
+  );
+  const layout = fs.readFileSync(
+    path.join(clientRoot, "src/layouts/MainLayout.jsx"),
+    "utf8"
+  );
+
+  assert.match(styles, /env\(safe-area-inset-top,\s*0px\)/);
+  assert.match(layout, /taxfin-safe-header/);
+  assert.match(layout, /env\(safe-area-inset-bottom\)/);
+});
+
 test("incluye iconos profesionales para iPhone y Android", () => {
   const expectedIcons = [
     ["apple-touch-icon.png", 180],

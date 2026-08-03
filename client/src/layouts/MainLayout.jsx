@@ -90,7 +90,7 @@ function MainLayout({ onLogout = null, currentUser = null }) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800 bg-slate-950/95 shadow-lg shadow-black/10">
-        <div className="mx-auto max-w-6xl px-4 pt-3 sm:px-6 sm:pt-4">
+        <div className="taxfin-safe-header mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex items-center justify-between gap-3">
             <Link
               to="/"
