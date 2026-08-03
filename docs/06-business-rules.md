@@ -346,6 +346,9 @@ Matías y la gasolina de José. La entrega final a José es el efectivo disponib
 menos el importe todavía pendiente para Matías.
 
 Seguridad Social, nómina transferida y días previstos son editables por ambos.
+Durante el mes se guardan como datos provisionales y cada modificación actualiza
+los cálculos sin marcar la liquidación como revisada. La confirmación definitiva
+es una acción separada disponible cuando el mes ya finalizó.
 José puede revisar la liquidación pero no cerrarla. Solo Matías confirma el
 cierre definitivo una vez finalizado el mes. Después del cierre los importes quedan congelados en una
 instantánea y las modificaciones de configuración y el cierre quedan

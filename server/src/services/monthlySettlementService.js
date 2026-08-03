@@ -157,6 +157,7 @@ const updateMonthlySettings = async (month, input, auth, driverUserId) => {
   const expectedWorkDays = Number(input.expectedWorkDays);
   const socialSecurity = Number(input.socialSecurity);
   const payrollTransfer = Number(input.payrollTransfer);
+  const settingsConfirmed = input.settingsConfirmed === true;
   if (!Number.isInteger(expectedWorkDays) || expectedWorkDays < 1 || expectedWorkDays > 31) {
     throw new Error("Los días laborables deben estar entre 1 y 31");
   }
@@ -170,6 +171,7 @@ const updateMonthlySettings = async (month, input, auth, driverUserId) => {
     expectedWorkDays,
     socialSecurity,
     payrollTransfer,
+    settingsConfirmed,
     actorUserId: Number(auth.userId),
   });
   return buildMonthlySettlement(month, auth, driver.id);

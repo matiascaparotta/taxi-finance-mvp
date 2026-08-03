@@ -93,6 +93,7 @@ const saveSettings = async ({
   expectedWorkDays,
   socialSecurity,
   payrollTransfer,
+  settingsConfirmed,
   actorUserId,
 }) => {
   const connection = await pool.getConnection();
@@ -114,16 +115,17 @@ const saveSettings = async ({
         organization_id, driver_user_id, settlement_month,
         expected_work_days, social_security, payroll_transfer,
         settings_confirmed, created_by_user_id, updated_by_user_id
-      ) VALUES (?, ?, CONCAT(?, '-01'), ?, ?, ?, TRUE, ?, ?)
+      ) VALUES (?, ?, CONCAT(?, '-01'), ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
         expected_work_days = VALUES(expected_work_days),
         social_security = VALUES(social_security),
         payroll_transfer = VALUES(payroll_transfer),
-        settings_confirmed = TRUE,
+        settings_confirmed = VALUES(settings_confirmed),
         updated_by_user_id = VALUES(updated_by_user_id)
       `,
       [organizationId, driverUserId, month, expectedWorkDays,
-        socialSecurity, payrollTransfer, actorUserId, actorUserId]
+        socialSecurity, payrollTransfer, settingsConfirmed,
+        actorUserId, actorUserId]
     );
     const [resultRows] = await connection.query(
       `SELECT * FROM monthly_settlements
@@ -136,7 +138,9 @@ const saveSettings = async ({
       organizationId,
       actorUserId,
       action: "UPDATE_SETTINGS",
-      reason: "Revisión de Seguridad Social, nómina y días previstos",
+      reason: settingsConfirmed
+        ? "Confirmación final de Seguridad Social, nómina y días previstos"
+        : "Actualización provisional de Seguridad Social, nómina y días previstos",
       previous: previousRows[0] || {},
       resulting: resultRows[0],
     });

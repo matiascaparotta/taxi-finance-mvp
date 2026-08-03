@@ -64,6 +64,7 @@ function MonthlySettlementPage({ currentUser = null }) {
   const [notice, setNotice] = useState("");
   const [showClose, setShowClose] = useState(false);
   const [confirmation, setConfirmation] = useState("");
+  const [showMonthSettings, setShowMonthSettings] = useState(false);
 
   useEffect(() => {
     if (!owner) return;
@@ -112,13 +113,13 @@ function MonthlySettlementPage({ currentUser = null }) {
     return [...months].sort().reverse();
   }, [history, selectedMonth]);
 
-  const saveSettings = async () => {
+  const saveSettings = async (settingsConfirmed = false) => {
     try {
       setIsSaving(true);
       setError("");
-      const updated = await updateMonthlySettings(selectedMonth, form, driverId);
+      const updated = await updateMonthlySettings(selectedMonth, { ...form, settingsConfirmed }, driverId);
       setSettlement(updated);
-      setNotice("Datos mensuales revisados y guardados");
+      setNotice(settingsConfirmed ? "Datos mensuales confirmados" : "Cambios del mes guardados");
     } catch (saveError) {
       setError(saveError.message);
     } finally {
@@ -147,6 +148,9 @@ function MonthlySettlementPage({ currentUser = null }) {
   }
 
   const calculation = settlement.calculation;
+  const averageDailyDriverEarning = calculation.averageDailyDriverEarning ?? (
+    calculation.workedDays ? Number(calculation.driverHalf || 0) / calculation.workedDays : 0
+  );
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
 
   if (salariedDriver) {
@@ -211,20 +215,23 @@ function MonthlySettlementPage({ currentUser = null }) {
           title="Liquidación mensual"
           subtitle={owner ? `Seguimiento de ${settlement.driver.displayName}` : "Tus cuentas con José, sin cálculos manuales"}
         />
-        <select
-          aria-label="Mes de la liquidación"
-          value={selectedMonth}
-          onChange={(event) => setSelectedMonth(event.target.value)}
-          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 font-bold capitalize text-white"
-        >
-          {availableMonths.map((month) => <option key={month} value={month}>{monthLabel(month)}</option>)}
-        </select>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => setShowMonthSettings((visible) => !visible)} className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-200">{showMonthSettings ? "Volver al resumen" : "Datos del mes"}</button>
+          <select
+            aria-label="Mes de la liquidación"
+            value={selectedMonth}
+            onChange={(event) => { setSelectedMonth(event.target.value); setShowMonthSettings(false); }}
+            className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 font-bold capitalize text-white"
+          >
+            {availableMonths.map((month) => <option key={month} value={month}>{monthLabel(month)}</option>)}
+          </select>
+        </div>
       </div>
 
       {notice && <Card className="border-emerald-500/30 bg-emerald-500/10"><p className="text-sm font-bold text-emerald-300">{notice}</p></Card>}
       {error && <Card className="border-red-500/30"><p className="text-sm text-red-300">{error}</p></Card>}
 
-      <Card className="overflow-hidden border-emerald-500/25">
+      {!showMonthSettings && <Card className="overflow-hidden border-emerald-500/25">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">{monthLabel(selectedMonth)}</p>
@@ -233,15 +240,18 @@ function MonthlySettlementPage({ currentUser = null }) {
           </div>
           <span className={`rounded-full px-3 py-1 text-xs font-bold ${statusClass}`}>{statusText}</span>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
+        <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 to-slate-950 p-5">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-300">Facturación total</p>
+          <p className="mt-2 text-4xl font-black tracking-tight text-white">{formatCurrency(calculation.rawRevenue)}</p>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-3">
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
-          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Ganancia neta aproximada diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyDriverEarning)}</p><p className="mt-1 text-[11px] text-slate-500">Tu 50 % tras gasolina y Seguridad Social</p></div>
+          <div className="rounded-2xl bg-emerald-500/10 p-4"><p className="text-xs text-emerald-300">Ganancia promedio neta diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(averageDailyDriverEarning)}</p></div>
         </div>
-      </Card>
+      </Card>}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      {!showMonthSettings && <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">REPARTO</p>
           <MoneyRow label="Facturación de jornadas" value={calculation.rawRevenue} />
@@ -277,37 +287,38 @@ function MonthlySettlementPage({ currentUser = null }) {
             <p className="mt-1 text-3xl font-black">{formatCurrency(Math.abs(calculation.deliveryToOwner))}</p>
           </div>
         </Card>
-      </div>
+      </div>}
 
-      <Card>
+      {showMonthSettings && <Card>
         <div className="flex items-start justify-between gap-4">
-          <div><h3 className="text-lg font-bold">Datos del mes</h3><p className="mt-1 text-sm text-slate-400">Matías y José pueden revisarlos; ambos ven siempre el mismo registro.</p></div>
-          {settlement.settings.settingsConfirmed && <span className="text-xs font-bold text-emerald-300">Revisados ✓</span>}
+          <div><h3 className="text-lg font-bold">Datos del mes</h3><p className="mt-1 text-sm text-slate-400">Podés actualizarlos durante el mes. Confirmalos cuando recibas la nómina definitiva.</p></div>
+          {settlement.status !== "IN_PROGRESS" && settlement.settings.settingsConfirmed && <span className="text-xs font-bold text-emerald-300">Revisados ✓</span>}
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           <label className="text-sm font-semibold">Seguridad Social<input type="number" min="0" step="0.01" disabled={!settlement.canEditSettings} value={form.socialSecurity} onChange={(e) => setForm({ ...form, socialSecurity: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
           <label className="text-sm font-semibold">Nómina transferida<input type="number" min="0" step="0.01" disabled={!settlement.canEditSettings} value={form.payrollTransfer} onChange={(e) => setForm({ ...form, payrollTransfer: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
           <label className="text-sm font-semibold">Días laborables previstos<input type="number" min="1" max="31" step="1" disabled={!settlement.canEditSettings} value={form.expectedWorkDays} onChange={(e) => setForm({ ...form, expectedWorkDays: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 disabled:opacity-60" /></label>
         </div>
-        {settlement.canEditSettings && <button type="button" disabled={isSaving} onClick={saveSettings} className="mt-5 w-full rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950 disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar y marcar como revisados"}</button>}
-      </Card>
+        {settlement.canEditSettings && <div className="mt-5 grid gap-3 sm:grid-cols-2"><button type="button" disabled={isSaving} onClick={() => saveSettings(false)} className="rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950 disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar cambios"}</button>{settlement.status !== "IN_PROGRESS" && <button type="button" disabled={isSaving} onClick={() => saveSettings(true)} className="rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200 disabled:opacity-50">Confirmar datos definitivos</button>}</div>}
+      </Card>}
 
-      <Card>
+      {!showMonthSettings && <Card>
         <h3 className="text-lg font-bold">Jornadas incluidas</h3>
         {settlement.days.length === 0 ? <p className="mt-3 text-sm text-slate-400">Todavía no hay jornadas cerradas en este mes.</p> : (
           <div className="mt-4 divide-y divide-slate-800">
             {settlement.days.map((day) => {
               const normalizedDate = normalizeWorkDayDate(day.date);
-              const estimatedDailyEarning = (Number(day.totalRevenue) - Number(day.fuelOwn) - Number(calculation.dailySocialSecurity)) / 2;
+              const dailyNetTotal = Number(day.totalRevenue) - Number(day.fuelOwn) - Number(calculation.dailySocialSecurity);
+              const estimatedDailyEarning = dailyNetTotal / 2;
 
-              return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><div className="text-right"><p className="font-black text-emerald-300">{formatCurrency(estimatedDailyEarning)}</p><p className="text-[11px] text-slate-500">Ganancia estimada de Matías</p></div></div>;
+              return <div key={day.workDayId} className="py-4"><div className="flex items-start justify-between gap-4"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><div className="text-right"><p className="text-xs text-slate-500">Neto total del día</p><p className="font-black text-white">{formatCurrency(dailyNetTotal)}</p></div></div><div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-xl bg-emerald-500/10 px-3 py-2"><p className="text-[11px] text-emerald-300">Ganancia neta Matías</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div><div className="rounded-xl bg-sky-500/10 px-3 py-2"><p className="text-[11px] text-sky-300">Ganancia neta José</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div></div></div>;
             })}
           </div>
         )}
-      </Card>
+      </Card>}
 
-      {!owner && settlement.canClose && <button type="button" onClick={() => setShowClose(true)} className="w-full rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200">Cerrar liquidación del mes</button>}
-      {owner && settlement.status !== "CLOSED" && <p className="text-center text-sm text-slate-500">José puede revisar los datos. El cierre definitivo lo confirma Matías.</p>}
+      {!showMonthSettings && !owner && settlement.canClose && <button type="button" onClick={() => setShowClose(true)} className="w-full rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200">Cerrar liquidación del mes</button>}
+      {!showMonthSettings && owner && settlement.status !== "CLOSED" && <p className="text-center text-sm text-slate-500">José puede revisar los datos. El cierre definitivo lo confirma Matías.</p>}
 
       {showClose && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-5"><div className="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-6"><h3 className="text-xl font-black">Cerrar {monthLabel(selectedMonth)}</h3><p className="mt-3 text-sm text-slate-300">Los importes quedarán protegidos como una fotografía definitiva del mes.</p><label className="mt-5 block text-sm font-bold">Escribe CERRAR<input value={confirmation} onChange={(e) => setConfirmation(e.target.value.toUpperCase())} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /></label><button type="button" disabled={isSaving} onClick={closeMonth} className="mt-5 w-full rounded-2xl bg-sky-400 px-5 py-4 font-black text-slate-950 disabled:opacity-50">Confirmar cierre</button><button type="button" onClick={() => setShowClose(false)} className="mt-3 w-full rounded-2xl border border-slate-700 px-5 py-4 font-bold">Volver</button></div></div>}
     </section>
