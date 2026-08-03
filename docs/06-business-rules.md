@@ -92,6 +92,13 @@ La eliminación de un viaje cerrado utilizará la misma confirmación reforzada.
 La auditoría conservará todos los datos que tenía el viaje antes de eliminarlo
 y el resumen de la jornada se recalculará a partir de los viajes restantes.
 
+El combustible y el kilometraje de una jornada propia cerrada podrán
+corregirse con la misma confirmación reforzada. El kilometraje inicial no podrá
+ser inferior al final de la jornada anterior del mismo vehículo, el final no
+podrá ser inferior al inicial ni superar el inicio de la jornada siguiente. El
+combustible se recalculará aplicando nuevamente las reglas de reparto y rol.
+La fecha no cambiará como parte de esta operación.
+
 Las jornadas históricas procedentes de la importación estarán protegidas y no
 podrán modificarse ni eliminarse.
 

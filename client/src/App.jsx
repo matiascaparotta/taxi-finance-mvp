@@ -17,6 +17,7 @@ import WorkDayClosedPage from "./pages/WorkDayClosedPage";
 import EditTripPage from "./pages/EditTripPage";
 import WorkDayHistoryPage from "./pages/WorkDayHistoryPage";
 import WorkDayDetailPage from "./pages/WorkDayDetailPage";
+import EditWorkDayPage from "./pages/EditWorkDayPage";
 import DriverManagementPage from "./pages/DriverManagementPage";
 import {
   getSession,
@@ -179,6 +180,10 @@ function PrivateApp() {
           element={<WorkDayHistoryPage currentUser={currentUser} />}
         />
         <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
+        <Route
+          path="/work-days/:id/edit"
+          element={<EditWorkDayPage currentUser={currentUser} />}
+        />
         {(currentUser?.roles?.isOwner ?? currentUser?.isOwner) && (
           <Route
             path="/drivers"

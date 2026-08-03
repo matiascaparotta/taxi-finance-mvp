@@ -187,6 +187,25 @@ function WorkDayDetailPage() {
         ← Volver al historial
       </button>
 
+      {workDay.canCorrect && workDay.status === "CLOSED" && (
+        <Card>
+          <h3 className="text-lg font-bold text-white">
+            ¿Hay un dato incorrecto?
+          </h3>
+          <p className="mt-2 text-sm text-slate-300">
+            Podés corregir el combustible y los kilómetros con contraseña,
+            motivo y registro de auditoría.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate(`/work-days/${id}/edit`)}
+            className="mt-5 w-full rounded-2xl border border-emerald-400/40 px-5 py-3 text-sm font-bold text-emerald-300"
+          >
+            Corregir combustible y kilómetros
+          </button>
+        </Card>
+      )}
+
       {!workDay.isLocked && workDay.canManage !== false && (
         <Card className="border-red-500/30 bg-red-500/5">
           <h3 className="text-lg font-bold text-red-300">

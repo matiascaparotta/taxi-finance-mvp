@@ -7,6 +7,8 @@ const {
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
   deleteWorkDayById,
+  getAdjacentVehicleWorkDays,
+  updateClosedWorkDayWithAudit,
 } = require("../repositories/workDayRepository");
 const {
   assertWorkDayCanBeDeleted,
@@ -16,6 +18,12 @@ const {
   resolveFuelAllocation,
 } = require("../utils/fuel");
 const { validateStartKm } = require("../utils/odometer");
+const {
+  validateCorrectedKilometres,
+} = require("../utils/closedWorkDayCorrection");
+const {
+  authorizeClosedWorkDayCorrection,
+} = require("./closedWorkDayCorrectionService");
 const {
   validateCloseDate,
   validateChronologicalWorkDayDate,
@@ -199,6 +207,74 @@ const deleteWorkDayService = async (workDayId, auth = null) => {
   };
 };
 
+const correctClosedWorkDayService = async (
+  workDayId,
+  correctionData,
+  auth = null
+) => {
+  if (!workDayId) {
+    throw new Error("El id de la jornada es obligatorio");
+  }
+
+  const writeScope = getWriteScope(auth);
+  const workDay = await getWorkDayById(workDayId, writeScope);
+
+  if (!workDay) {
+    throw new Error("Jornada no encontrada");
+  }
+
+  if (workDay.status !== "CLOSED") {
+    throw new Error("Solo se pueden corregir jornadas cerradas");
+  }
+
+  if (Boolean(workDay.isLocked)) {
+    throw new Error(
+      "Las jornadas históricas importadas están protegidas y no se pueden corregir"
+    );
+  }
+
+  const authorization = await authorizeClosedWorkDayCorrection({
+    auth,
+    password: correctionData?.correctionPassword,
+    reason: correctionData?.correctionReason,
+  });
+  const adjacent = await getAdjacentVehicleWorkDays(workDayId);
+  const kilometres = validateCorrectedKilometres({
+    startKm: correctionData?.startKm,
+    endKm: correctionData?.endKm,
+    previousEndKm: adjacent.previous?.endKm ?? null,
+    nextStartKm: adjacent.next?.startKm ?? null,
+  });
+  const effectiveFuelAllocation = resolveFuelAllocation(
+    correctionData?.fuelAllocation,
+    {
+      isOwner: Boolean(auth?.roles?.isOwner ?? auth?.isOwner),
+    }
+  );
+  const fuel = calculateFuelSplit(
+    correctionData?.fuelAmount,
+    effectiveFuelAllocation
+  );
+
+  const corrected = await updateClosedWorkDayWithAudit({
+    workDayId: Number(workDayId),
+    organizationId: authorization.organizationId,
+    actorUserId: authorization.actorUserId,
+    reason: authorization.reason,
+    previousData: workDay,
+    correctedData: {
+      ...kilometres,
+      ...fuel,
+    },
+  });
+
+  return serializeWorkDay(
+    corrected,
+    auth,
+    corrected.endKm - corrected.startKm
+  );
+};
+
 module.exports = {
   createWorkDayService,
   getWorkDaysService,
@@ -207,4 +283,5 @@ module.exports = {
   getLatestClosedWorkDayService,
   closeWorkDayService,
   deleteWorkDayService,
+  correctClosedWorkDayService,
 };

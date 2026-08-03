@@ -189,8 +189,9 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
   cerradas.
 - [x] Permitir editar o eliminar viajes propios después del cierre con
   confirmación reforzada.
-- [ ] Permitir corregir fecha, combustible y kilometraje con validación de
+- [x] Permitir corregir combustible y kilometraje con validación de
   continuidad.
+- [ ] Permitir corregir la fecha con validación cronológica.
 - [ ] Permitir eliminar una jornada propia completa con confirmación reforzada.
 - [x] Mantener bloqueadas las jornadas históricas importadas.
 

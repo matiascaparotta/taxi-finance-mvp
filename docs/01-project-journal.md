@@ -1081,6 +1081,15 @@ verificación; la atomicidad de eliminación y auditoría quedó cubierta por la
 pruebas automatizadas y la tabla de auditoría permaneció correctamente en cero.
 La corrección de fecha no se inició.
 
+La tercera funcionalidad del bloque permite corregir el combustible y los
+kilómetros de una jornada propia cerrada y creada en TaxFin. Reutiliza la
+contraseña, el motivo y la auditoría transaccional. El kilometraje corregido
+debe quedar entre el cierre anterior y el inicio siguiente del mismo vehículo,
+además de mantener el final igual o por encima del inicio. El combustible se
+recalcula con las reglas vigentes: carga propia o 50/50 para el conductor y
+siempre carga propia para el propietario. Las jornadas importadas y ajenas
+continúan protegidas. La fecha permanece fuera de esta entrega.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

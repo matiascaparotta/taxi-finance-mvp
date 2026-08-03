@@ -295,6 +295,130 @@ const deleteWorkDayById = async (workDayId, scope = null) => {
   return result.affectedRows > 0;
 };
 
+const getAdjacentVehicleWorkDays = async (workDayId) => {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      adjacent.id,
+      adjacent.start_km AS startKm,
+      adjacent.end_km AS endKm,
+      CASE
+        WHEN adjacent.date < current_day.date
+          OR (
+            adjacent.date = current_day.date
+            AND (
+              adjacent.created_at < current_day.created_at
+              OR (
+                adjacent.created_at = current_day.created_at
+                AND adjacent.id < current_day.id
+              )
+            )
+          )
+        THEN 'PREVIOUS'
+        ELSE 'NEXT'
+      END AS position
+    FROM work_days current_day
+    INNER JOIN work_days adjacent
+      ON adjacent.organization_id = current_day.organization_id
+      AND adjacent.vehicle_id = current_day.vehicle_id
+      AND adjacent.status = 'CLOSED'
+      AND adjacent.id <> current_day.id
+    WHERE current_day.id = ?
+      AND (
+        adjacent.date <> current_day.date
+        OR adjacent.created_at <> current_day.created_at
+        OR adjacent.id <> current_day.id
+      )
+    ORDER BY adjacent.date, adjacent.created_at, adjacent.id
+    `,
+    [workDayId]
+  );
+
+  const previousRows = rows.filter((row) => row.position === "PREVIOUS");
+  const nextRows = rows.filter((row) => row.position === "NEXT");
+
+  return {
+    previous: previousRows.at(-1) || null,
+    next: nextRows[0] || null,
+  };
+};
+
+const updateClosedWorkDayWithAudit = async ({
+  workDayId,
+  organizationId,
+  actorUserId,
+  reason,
+  previousData,
+  correctedData,
+}) => {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const [result] = await connection.query(
+      `
+      UPDATE work_days
+      SET start_km = ?, end_km = ?, fuel_own = ?, fuel_jose = ?
+      WHERE id = ? AND organization_id = ? AND driver_user_id = ?
+        AND status = 'CLOSED' AND is_locked = 0
+      `,
+      [
+        correctedData.startKm,
+        correctedData.endKm,
+        correctedData.fuelOwn,
+        correctedData.fuelJose,
+        workDayId,
+        organizationId,
+        actorUserId,
+      ]
+    );
+
+    if (result.affectedRows !== 1) {
+      throw new Error("Jornada no encontrada o protegida");
+    }
+
+    const resultingData = {
+      ...previousData,
+      ...correctedData,
+    };
+
+    await connection.query(
+      `
+      INSERT INTO correction_audit_logs (
+        organization_id,
+        actor_user_id,
+        work_day_id,
+        entity_type,
+        entity_id,
+        action,
+        reason,
+        previous_data,
+        resulting_data
+      )
+      VALUES (?, ?, ?, 'WORK_DAY', ?, 'UPDATE', ?, ?, ?)
+      `,
+      [
+        organizationId,
+        actorUserId,
+        workDayId,
+        workDayId,
+        reason,
+        JSON.stringify(previousData),
+        JSON.stringify(resultingData),
+      ]
+    );
+
+    await connection.commit();
+    return resultingData;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 module.exports = {
   createWorkDay,
   getWorkDays,
@@ -304,4 +428,6 @@ module.exports = {
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
   deleteWorkDayById,
+  getAdjacentVehicleWorkDays,
+  updateClosedWorkDayWithAudit,
 };

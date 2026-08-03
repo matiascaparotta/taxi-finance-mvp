@@ -93,3 +93,20 @@ export const deleteWorkDay = async (workDayId) => {
 
   return data.data;
 };
+
+export const correctClosedWorkDay = async (workDayId, correctionData) => {
+  const response = await apiFetch(`/work-days/${workDayId}/correction`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(correctionData),
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data.data;
+};

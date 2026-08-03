@@ -898,7 +898,7 @@ La organización inicial conservará `Lic249`.
 
 **Fecha:** 03/08/2026
 
-**Estado:** ✅ Primera funcionalidad implementada en desarrollo
+**Estado:** 🚧 Implementación incremental en desarrollo
 
 ### Contexto
 
@@ -925,8 +925,9 @@ seguridad.
 - la contraseña nunca se almacena en el registro de auditoría;
 - el acceso general anterior no puede corregir jornadas cerradas;
 - las jornadas importadas y las jornadas ajenas continúan bloqueadas;
-- fecha, combustible, kilómetros y eliminaciones siguen deshabilitados hasta
-  implementar y probar cada regla específica.
+- la edición y eliminación de viajes, junto con la corrección de combustible y
+  kilómetros, se habilitan únicamente después de probar cada regla específica;
+- la fecha continúa deshabilitada hasta implementar su validación cronológica.
 
 ---
 

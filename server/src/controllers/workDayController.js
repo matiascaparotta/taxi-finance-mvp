@@ -6,6 +6,7 @@ const {
   closeWorkDayService,
   getWorkDayByIdService,
   deleteWorkDayService,
+  correctClosedWorkDayService,
 } = require("../services/workDayService");
 
 const createWorkDay = async (req, res) => {
@@ -119,6 +120,26 @@ const deleteWorkDay = async (req, res) => {
     });
   }
 };
+const correctClosedWorkDay = async (req, res) => {
+  try {
+    const result = await correctClosedWorkDayService(
+      req.params.id,
+      req.body,
+      req.auth
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Jornada corregida correctamente",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createWorkDay,
   getAllWorkDays,
@@ -127,4 +148,5 @@ module.exports = {
   closeWorkDay,
   getWorkDayById,
   deleteWorkDay,
+  correctClosedWorkDay,
 };
