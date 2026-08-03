@@ -324,9 +324,6 @@ async function createTripsCard(
   let tripTop = 275;
 
   trips.forEach((trip) => {
-    const hasCommission = Number(trip.commission || 0) > 0;
-    const hasTip = Number(trip.tip || 0) > 0;
-
     drawPanel(context, 70, tripTop, 940, 92);
     drawText(
       context,
@@ -354,24 +351,6 @@ async function createTripsCard(
       "right"
     );
 
-    if (hasCommission || hasTip) {
-      const details = [
-        ...(hasCommission
-          ? [`Comisión: ${formatCurrency(trip.commission)}`]
-          : []),
-        ...(hasTip ? [`Propina: ${formatCurrency(trip.tip)}`] : []),
-      ].join("   ·   ");
-
-      drawText(
-        context,
-        details,
-        110,
-        tripTop + 57,
-        "400 19px Arial",
-        COLORS.muted
-      );
-    }
-
     tripTop += 102;
   });
 
@@ -383,7 +362,9 @@ export async function createWorkDayShareCards(
   summary,
   trips = []
 ) {
-  const sortedTrips = getSortedTrips(trips);
+  const sortedTrips = getSortedTrips(
+    trips.map(sanitizeTripForSharing)
+  );
   const tripPages = paginateTrips(sortedTrips);
   const summaryCard = await createSummaryCard(workDay, summary);
   const detailCards = await Promise.all(
@@ -398,6 +379,16 @@ export async function createWorkDayShareCards(
   );
 
   return [summaryCard, ...detailCards];
+}
+
+export function sanitizeTripForSharing(trip = {}) {
+  return {
+    id: trip.id,
+    amount: trip.amount,
+    paymentType: trip.paymentType,
+    createdAt: trip.createdAt,
+    created_at: trip.created_at,
+  };
 }
 
 export async function createWorkDayShareCard(

@@ -1029,6 +1029,20 @@ selección explícita, identificada como solo lectura. También se retiró el
 nombre de José de la etiqueta de reparto 50/50 para que la interfaz no quede
 acoplada a una persona concreta.
 
+## Seguimiento completo y futuras correcciones seguras
+
+Después de una semana de uso real se decidió ampliar el seguimiento en vivo:
+José necesita consultar todos los viajes de la jornada activa de Matías, junto
+con los acumulados de comisión y propina. Estos datos permanecen visibles
+dentro de TaxFin, pero se eliminan de las imágenes compartidas.
+
+También se definió el siguiente bloque de trabajo. Cada usuario podrá corregir
+sus propias jornadas creadas en TaxFin después del cierre, incluida la fecha,
+los viajes, el combustible y el kilometraje. Podrá eliminar viajes y una
+jornada completa de prueba. La operación exigirá contraseña, motivo, auditoría
+y validaciones de continuidad; las jornadas históricas importadas continuarán
+protegidas. Esta corrección segura todavía no está implementada.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

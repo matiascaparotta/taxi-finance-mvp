@@ -196,9 +196,13 @@ recibirán su nombre desde los datos de la jornada.
 El primer panel del propietario también está publicado y permanece oculto
 hasta que exista una cuenta propietaria aprovisionada. Una
 cuenta propietaria puede seguir las jornadas activas de sus conductores, ver
-sus totales y los cinco viajes más recientes con actualización cada treinta
-segundos. La vista es de solo lectura y permanece separada de la jornada
-personal del propietario.
+sus totales y todos los viajes con actualización cada treinta segundos. El
+seguimiento incluye acumulados privados de comisión y propina. La vista es de
+solo lectura y permanece separada de la jornada personal del propietario.
+
+Esta mejora está implementada localmente y pendiente de publicación. Las
+imágenes compartidas también dejarán de dibujar comisiones y propinas de los
+viajes, sin eliminar esos datos del sistema.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por

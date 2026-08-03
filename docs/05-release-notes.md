@@ -54,6 +54,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   la organización inicial.
 - Seguimiento para propietarios de conductores en servicio, con actualización
   automática y detalle reciente de viajes.
+- Seguimiento completo de todos los viajes activos, con acumulados privados de
+  comisión y propina para el propietario.
+- Las imágenes compartidas omiten comisiones y propinas aunque los datos se
+  conserven dentro de TaxFin.
 - Sección `Mis conductores` y filtro de historial por conductor para consultar
   jornadas ajenas con claridad.
 - Historial del propietario dividido entre `Mis jornadas` y las jornadas de

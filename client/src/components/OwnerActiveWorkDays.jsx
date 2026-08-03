@@ -65,8 +65,7 @@ function OwnerActiveWorkDays({ currentUser }) {
                 (left, right) =>
                   new Date(right.createdAt || 0) -
                   new Date(left.createdAt || 0)
-              )
-              .slice(0, 5),
+              ),
           };
         })
       );
@@ -241,11 +240,19 @@ function OwnerActiveWorkDays({ currentUser }) {
                   label="💳 Datáfono"
                   value={formatCurrency(workDay.summary.card)}
                 />
+                <Stat
+                  label="Comisiones"
+                  value={formatCurrency(workDay.summary.commission)}
+                />
+                <Stat
+                  label="Propinas"
+                  value={formatCurrency(workDay.summary.tip)}
+                />
               </div>
 
               <div className="mt-5 border-t border-slate-800 pt-4">
                 <h4 className="text-sm font-bold text-white">
-                  Últimos viajes
+                  Todos los viajes
                 </h4>
                 {workDay.trips.length === 0 ? (
                   <p className="mt-2 text-sm text-slate-400">

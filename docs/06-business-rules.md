@@ -345,6 +345,10 @@ Nunca deberán mostrarse:
 - Efectivo real.
 - Cálculos internos del sistema.
 
+Esta restricción corresponde al resumen final del conductor. Como excepción,
+el seguimiento privado del propietario mostrará los totales acumulados de
+comisión y propina mientras una jornada ajena permanezca activa.
+
 ---
 
 # Pantalla principal (Home)
@@ -398,11 +402,29 @@ El PDF no forma parte del flujo principal de la Beta 1.0.
 
 El resumen compartido nunca deberá mostrar:
 
+- comisiones o propinas de viajes individuales;
 - total de comisiones;
 - total de propinas;
 - efectivo bruto;
 - efectivo real;
 - cálculos internos del sistema.
+
+Las comisiones y propinas continuarán registradas en TaxFin y podrán
+consultarse dentro de la aplicación, pero no se dibujarán en las imágenes
+compartidas.
+
+---
+
+# Seguimiento en vivo del propietario
+
+El propietario podrá consultar todos los viajes registrados en una jornada
+ajena activa de su organización.
+
+- La lista no estará limitada a los últimos viajes.
+- Cada viaje podrá mostrar su comisión y propina cuando existan.
+- El panel mostrará los totales acumulados de comisión y propina.
+- La actualización continuará siendo automática y de solo lectura.
+- El propietario no podrá modificar la jornada ni sus viajes.
 
 ---
 

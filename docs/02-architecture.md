@@ -1008,8 +1008,10 @@ El inicio recibe la identidad de la sesión y muestra
 
 El componente reutiliza las consultas autorizadas de jornadas, resúmenes y
 viajes. Selecciona solo jornadas `OPEN` con `canManage = false`, por lo que la
-jornada propia del propietario permanece en su flujo personal. La actualización
-se ejecuta cada treinta segundos y también puede solicitarse manualmente.
+jornada propia del propietario permanece en su flujo personal. Para cada
+jornada presenta todos los viajes y los acumulados de comisión y propina. La
+actualización se ejecuta cada treinta segundos y también puede solicitarse
+manualmente.
 
 El sondeo no concede permisos de escritura. El backend continúa comprobando la
 organización para cada lectura y exige propiedad personal para cualquier
