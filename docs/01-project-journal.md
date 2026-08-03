@@ -115,8 +115,14 @@ facturación, efectivo, datáfono, comisiones y propinas. La jornada abierta no
 muestra kilometraje final ni acciones para compartir; al cerrarse vuelve al
 detalle normal y habilita el resumen compartible. La vista mantiene el alcance
 de solo lectura. La validación terminó con 50 pruebas del cliente, análisis
-estático, compilación y revisión visual móvil correctos. La publicación queda
-pendiente de autorización.
+estático, compilación y revisión visual móvil correctos.
+
+El centro de control se publicó mediante `dc68c80`. Railway dejó activo
+exactamente `dc68c80baf93` y la API permaneció saludable. La jornada real que
+Matías tenía abierta permitió comprobar desde la sesión de José seis viajes,
+acumulados, comisiones y propinas en modo de solo lectura. No aparecieron
+kilometraje final, acciones para compartir ni controles de escritura. La nueva
+PWA se activó desde la propia aplicación y no se modificó ningún dato real.
 
 ## Estado
 
