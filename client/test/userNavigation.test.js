@@ -21,6 +21,10 @@ test("personaliza la identidad visible del conductor", () => {
     getUserNavigation(user).map((item) => item.label),
     ["Inicio", "Mi jornada", "Historial"]
   );
+  assert.equal(
+    getUserNavigation(user).find((item) => item.id === "work-day").to,
+    "/my-work-day"
+  );
 });
 
 test("añade la gestión de conductores al propietario", () => {

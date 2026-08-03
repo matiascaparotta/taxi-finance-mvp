@@ -29,7 +29,7 @@ export const getUserInitials = (displayName = "") => {
 
 export const getUserNavigation = (user) => [
   { id: "home", label: "Inicio", to: "/" },
-  { id: "work-day", label: "Mi jornada", to: "/#mi-jornada" },
+  { id: "work-day", label: "Mi jornada", to: "/my-work-day" },
   ...(isOwnerUser(user)
     ? [{ id: "drivers", label: "Mis conductores", to: "/drivers" }]
     : []),

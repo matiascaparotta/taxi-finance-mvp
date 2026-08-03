@@ -59,7 +59,7 @@ function NewTripPage() {
 
         <button
           type="button"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/my-work-day")}
           className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
         >
           Ver jornada
@@ -73,7 +73,7 @@ function NewTripPage() {
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/my-work-day")}
           className="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-4 font-bold text-white transition hover:border-emerald-500/40 hover:bg-slate-700 active:scale-[0.98]"
         >
           ← Ver jornada

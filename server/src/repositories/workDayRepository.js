@@ -285,6 +285,88 @@ const closeWorkDayById = async (workDayId, closeData, scope = null) => {
   return getWorkDayById(workDayId, scope);
 };
 
+const cancelOpenWorkDayWithAudit = async ({
+  workDayId,
+  organizationId,
+  actorUserId,
+  reason,
+  requireEmpty,
+}) => {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const [workDayRows] = await connection.query(
+      `SELECT id, DATE_FORMAT(date, '%Y-%m-%d') AS date,
+        start_km AS startKm, end_km AS endKm, fuel_own AS fuelOwn,
+        fuel_jose AS fuelJose, status, is_locked AS isLocked,
+        organization_id AS organizationId, driver_user_id AS driverUserId,
+        vehicle_id AS vehicleId, created_at AS createdAt,
+        updated_at AS updatedAt
+       FROM work_days
+       WHERE id = ? AND organization_id = ? AND driver_user_id = ?
+       FOR UPDATE`,
+      [workDayId, organizationId, actorUserId]
+    );
+    const workDay = workDayRows[0];
+
+    if (!workDay || workDay.status !== "OPEN" || Boolean(workDay.isLocked)) {
+      throw new Error("Jornada activa no encontrada o protegida");
+    }
+
+    const [tripRows] = await connection.query(
+      `SELECT id, work_day_id AS workDayId, amount,
+        payment_type AS paymentType, commission, tip, note,
+        created_at AS createdAt
+       FROM trips WHERE work_day_id = ? ORDER BY created_at, id`,
+      [workDayId]
+    );
+
+    if (requireEmpty && tripRows.length > 0) {
+      throw new Error(
+        "La jornada recibió viajes. Vuelve a revisar y confirma la cancelación segura"
+      );
+    }
+
+    await connection.query(
+      `UPDATE work_days SET status = 'CANCELLED'
+       WHERE id = ? AND organization_id = ? AND driver_user_id = ?
+         AND status = 'OPEN'`,
+      [workDayId, organizationId, actorUserId]
+    );
+
+    await connection.query(
+      `INSERT INTO correction_audit_logs (
+        organization_id, actor_user_id, work_day_id, entity_type,
+        entity_id, action, reason, previous_data, resulting_data
+      ) VALUES (?, ?, ?, 'WORK_DAY', ?, 'CANCEL', ?, ?, ?)`,
+      [
+        organizationId,
+        actorUserId,
+        workDayId,
+        workDayId,
+        reason,
+        JSON.stringify({ ...workDay, trips: tripRows }),
+        JSON.stringify({ ...workDay, status: "CANCELLED" }),
+      ]
+    );
+
+    await connection.commit();
+
+    return {
+      id: Number(workDayId),
+      status: "CANCELLED",
+      cancelledTripCount: tripRows.length,
+    };
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 const deleteWorkDayById = async (workDayId, scope = null) => {
   const access = buildScopeClause(scope);
   const [result] = await pool.query(
@@ -532,6 +614,7 @@ module.exports = {
   getLatestClosedWorkDay,
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
+  cancelOpenWorkDayWithAudit,
   deleteWorkDayById,
   deleteWorkDayWithAudit,
   getAdjacentVehicleWorkDays,

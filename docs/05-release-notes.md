@@ -121,6 +121,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   activa y en el seguimiento del propietario. El build `95e4dab6ed2a`, la
   actualización PWA y la salud de la API se verificaron sin crear jornadas ni
   viajes de prueba.
+- Nueva estructura pendiente de publicación: Inicio ofrece el resumen y Mi
+  jornada concentra todas las acciones del turno, con navegación inferior
+  optimizada para móvil y un acceso visual renovado para iniciar jornada.
+- Cancelación segura pendiente de publicación: una jornada vacía puede
+  cancelarse sin completar el cierre; si tiene viajes exige contraseña, motivo
+  y `CANCELAR`. La jornada se conserva como cancelada y queda auditada.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

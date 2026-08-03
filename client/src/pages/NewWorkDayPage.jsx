@@ -77,7 +77,7 @@ function NewWorkDayPage() {
         resetOdometer,
       });
 
-      navigate("/");
+      navigate("/my-work-day");
     } finally {
       startingLockRef.current = false;
       setIsStarting(false);

@@ -61,6 +61,20 @@ Disponer de una arquitectura limpia desde el inicio permitió trabajar posterior
 
 Invertir tiempo en preparar correctamente la base del proyecto simplifica significativamente el desarrollo posterior.
 
+El 03/08/2026 se preparó localmente una reorganización de la experiencia diaria.
+Inicio pasa a ser un resumen breve y `Mi jornada` se convierte en el espacio
+operativo independiente para iniciar, registrar, controlar y cerrar el turno.
+En móvil, Inicio, Mi jornada e Historial permanecen accesibles mediante una
+barra inferior; el propietario mantiene además Mis conductores según su rol.
+
+También se implementó la cancelación segura de jornadas abiertas. Una jornada
+vacía puede cancelarse sin rellenar el cierre. Si ya contiene viajes, TaxFin
+exige contraseña, motivo y la confirmación `CANCELAR`. La jornada no se elimina:
+queda en estado cancelado y la operación se registra de forma transaccional en
+la auditoría. La validación local finalizó con 102 pruebas del servidor, 43 del
+cliente, análisis estático y compilación correctos. La publicación queda
+pendiente de autorización explícita.
+
 ## Estado
 
 ✅ Sprint finalizado.

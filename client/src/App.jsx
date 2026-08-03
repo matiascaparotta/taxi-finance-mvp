@@ -10,6 +10,7 @@ import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import HomePage from "./pages/HomePage";
+import MyWorkDayPage from "./pages/MyWorkDayPage";
 import NewWorkDayPage from "./pages/NewWorkDayPage";
 import NewTripPage from "./pages/NewTripPage";
 import CloseWorkDayPage from "./pages/CloseWorkDayPage";
@@ -167,6 +168,10 @@ function PrivateApp() {
         <Route
           path="/"
           element={<HomePage currentUser={currentUser} />}
+        />
+        <Route
+          path="/my-work-day"
+          element={<MyWorkDayPage currentUser={currentUser} />}
         />
         <Route path="/new-work-day" element={<NewWorkDayPage />} />
         <Route path="/new-trip" element={<NewTripPage />} />

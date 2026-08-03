@@ -4,6 +4,7 @@ const {
   getOpenWorkDayService,
   getLatestClosedWorkDayService,
   closeWorkDayService,
+  cancelOpenWorkDayService,
   getWorkDayByIdService,
   deleteWorkDayService,
   correctClosedWorkDayService,
@@ -104,6 +105,26 @@ const closeWorkDay = async (req, res) => {
     });
   }
 };
+const cancelOpenWorkDay = async (req, res) => {
+  try {
+    const result = await cancelOpenWorkDayService(
+      req.params.id,
+      req.body,
+      req.auth
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Jornada cancelada correctamente",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 const deleteWorkDay = async (req, res) => {
   try {
     const result = await deleteWorkDayService(req.params.id, req.body, req.auth);
@@ -146,6 +167,7 @@ module.exports = {
   getOpenWorkDay,
   getLatestClosedWorkDay,
   closeWorkDay,
+  cancelOpenWorkDay,
   getWorkDayById,
   deleteWorkDay,
   correctClosedWorkDay,

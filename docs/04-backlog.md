@@ -59,6 +59,9 @@ Las siguientes funcionalidades forman parte de la primera versión funcional del
 - [x] Historial de jornadas.
 - [x] Consulta del detalle de una jornada.
 - [x] Ordenación por última jornada registrada.
+- [x] Separar Inicio del espacio operativo Mi jornada.
+- [x] Cancelar una jornada abierta sin completar el cierre, conservando
+  auditoría y reforzando la confirmación cuando contiene viajes.
 
 ---
 

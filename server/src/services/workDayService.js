@@ -6,10 +6,14 @@ const {
   getLatestClosedWorkDay,
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
+  cancelOpenWorkDayWithAudit,
   deleteWorkDayWithAudit,
   getClosedWorkDayCorrectionContext,
   updateClosedWorkDayWithAudit,
 } = require("../repositories/workDayRepository");
+const {
+  getTripsByWorkDayId,
+} = require("../repositories/tripRepository");
 const {
   assertWorkDayCanBeDeleted,
   validateWorkDayDeletionConfirmation,
@@ -35,6 +39,11 @@ const {
   getWriteScope,
   canManageWorkDay,
 } = require("./workDayAccess");
+const {
+  assertActiveWorkDayCanBeCancelled,
+  getCancellationActor,
+  validateCancellationConfirmation,
+} = require("./activeWorkDayCancellation");
 
 const serializeWorkDay = (workDay, auth, workedKm) => ({
   ...workDay,
@@ -193,6 +202,44 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
   );
 };
 
+const cancelOpenWorkDayService = async (
+  workDayId,
+  cancellationData = {},
+  auth = null
+) => {
+  if (!workDayId) {
+    throw new Error("El id de la jornada es obligatorio");
+  }
+
+  const writeScope = getWriteScope(auth);
+  const workDay = await getWorkDayById(workDayId, writeScope);
+  assertActiveWorkDayCanBeCancelled(workDay);
+  validateCancellationConfirmation(
+    cancellationData?.cancellationConfirmation
+  );
+
+  const actor = getCancellationActor(auth);
+  const trips = await getTripsByWorkDayId(workDayId);
+  const hasTrips = trips.length > 0;
+  let reason = "Jornada activa vacía cancelada por el usuario";
+
+  if (hasTrips) {
+    const authorization = await authorizeClosedWorkDayCorrection({
+      auth,
+      password: cancellationData?.cancellationPassword,
+      reason: cancellationData?.cancellationReason,
+    });
+    reason = authorization.reason;
+  }
+
+  return cancelOpenWorkDayWithAudit({
+    workDayId: Number(workDayId),
+    ...actor,
+    reason,
+    requireEmpty: !hasTrips,
+  });
+};
+
 const deleteWorkDayService = async (workDayId, deletionData = {}, auth = null) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
@@ -312,6 +359,7 @@ module.exports = {
   getOpenWorkDayService,
   getLatestClosedWorkDayService,
   closeWorkDayService,
+  cancelOpenWorkDayService,
   deleteWorkDayService,
   correctClosedWorkDayService,
 };

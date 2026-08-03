@@ -68,6 +68,25 @@ export const closeWorkDay = async (workDayId, closeData) => {
 
   return data.data;
 };
+export const cancelOpenWorkDay = async (
+  workDayId,
+  cancellationData
+) => {
+  const response = await apiFetch(`/work-days/${workDayId}/cancel`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cancellationData),
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data.data;
+};
 export const getWorkDayById = async (workDayId) => {
   const response = await apiFetch(`/work-days/${workDayId}`);
 

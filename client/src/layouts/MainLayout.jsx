@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { APP_NAME } from "../config/branding";
 import {
@@ -71,25 +70,18 @@ function MainLayout({ onLogout = null, currentUser = null }) {
   const navigation = getUserNavigation(currentUser);
   const userName = currentUser?.displayName || "Usuario TaxFin";
 
-  useEffect(() => {
-    if (location.hash !== "#mi-jornada") {
-      return;
-    }
-
-    const workDaySection = document.getElementById("mi-jornada");
-    workDaySection?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }, [location.hash, location.pathname]);
-
   const isNavigationActive = (item) => {
     if (item.id === "home") {
-      return location.pathname === "/" && location.hash !== "#mi-jornada";
+      return location.pathname === "/";
     }
 
     if (item.id === "work-day") {
-      return location.pathname === "/" && location.hash === "#mi-jornada";
+      return [
+        "/my-work-day",
+        "/new-work-day",
+        "/new-trip",
+        "/close-work-day",
+      ].some((path) => location.pathname.startsWith(path));
     }
 
     return location.pathname.startsWith(item.to);
@@ -157,7 +149,7 @@ function MainLayout({ onLogout = null, currentUser = null }) {
 
           <nav
             aria-label="Navegación principal"
-            className="mt-3 flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-800 bg-slate-950/98 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl shadow-black sm:static sm:mt-3 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:shadow-none"
           >
             {navigation.map((item) => {
               const active = isNavigationActive(item);
@@ -185,7 +177,7 @@ function MainLayout({ onLogout = null, currentUser = null }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+      <main className="mx-auto max-w-6xl px-4 py-6 pb-28 sm:px-6 sm:py-8">
         <Outlet />
       </main>
     </div>

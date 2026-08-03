@@ -7,6 +7,7 @@ const {
   getOpenWorkDay,
   getLatestClosedWorkDay,
   closeWorkDay,
+  cancelOpenWorkDay,
   deleteWorkDay,
   correctClosedWorkDay,
 } = require("../controllers/workDayController");
@@ -24,6 +25,8 @@ router.get("/:id", getWorkDayById);
 router.post("/", createWorkDay);
 
 router.put("/:id/close", closeWorkDay);
+
+router.put("/:id/cancel", cancelOpenWorkDay);
 
 router.put("/:id/correction", correctClosedWorkDay);
 

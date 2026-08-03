@@ -982,6 +982,43 @@ de solo lectura, sin modificar datos ni retirar el acceso legacy.
 
 ---
 
+# ADR-018
+
+## Cancelar una jornada activa sin borrar su trazabilidad
+
+**Fecha:** 03/08/2026
+
+**Estado:** 🧪 Implementada localmente, pendiente de publicación
+
+### Contexto
+
+Una jornada iniciada por error no debería obligar al conductor a completar los
+datos de cierre. Eliminarla físicamente tampoco es apropiado para una
+aplicación financiera seria, especialmente si ya contiene viajes.
+
+### Decisión
+
+Incorporar el estado `CANCELLED` y conservar la jornada en la base de datos. La
+cancelación solo se permite sobre una jornada propia, abierta y creada desde
+una cuenta personal. Una jornada vacía usa una confirmación simple. Si contiene
+viajes exige motivo, contraseña actual y escribir `CANCELAR`.
+
+La jornada, sus viajes y el registro de auditoría se bloquean y actualizan en
+una única transacción. Las jornadas canceladas quedan fuera de la actividad y
+del historial normal y no impiden iniciar otra jornada en la misma fecha.
+
+### Consecuencias
+
+- no es necesario completar kilómetros ni combustible para corregir un inicio
+  accidental;
+- nunca se borra silenciosamente una jornada activa;
+- una cancelación con viajes queda reforzada y auditada;
+- el propietario conserva solo lectura sobre jornadas ajenas;
+- el acceso legacy permanece compatible, pero no puede cancelar;
+- no se añade ninguna cola ni sincronización financiera sin conexión.
+
+---
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.
