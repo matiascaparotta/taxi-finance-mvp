@@ -15,7 +15,9 @@ test("solo ofrece compartir una liquidación cerrada", () => {
 });
 
 test("la tarjeta contiene el cierre esencial de Matías y José", () => {
-  assert.match(generator, /Facturación total/);
+  assert.match(generator, /LIQUIDACIÓN MENSUAL/);
+  assert.match(generator, /CIERRE DE CAJA/);
+  assert.match(generator, /FACTURACIÓN TOTAL/);
   assert.match(generator, /Ganancia neta Matías/);
   assert.match(generator, /Ganancia neta José/);
   assert.match(generator, /Nómina transferida/);

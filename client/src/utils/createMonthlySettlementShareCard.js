@@ -54,21 +54,25 @@ export async function createMonthlySettlementShareCard(settlement) {
   }
 
   const calculation = settlement.calculation;
-  const rows = [
-    ["Facturación total", calculation.rawRevenue],
+  const settlementRows = [
     ["Efectivo", calculation.cashGenerated],
     ["Datáfono", calculation.cardGenerated],
     ["Gasolina de Matías", -calculation.fuelOwn],
-    ["Gasolina de José", -calculation.fuelJose],
     ["Seguridad Social", -calculation.socialSecurityApplied],
     ["Base neta para repartir", calculation.distributableBase],
     ["Ganancia neta Matías", calculation.driverHalf],
     ["Ganancia neta José", calculation.ownerHalf],
     ["Nómina transferida", calculation.payrollTransfer],
     ["Pendiente para Matías", calculation.pendingForDriver],
-    ["Efectivo disponible", calculation.cashAvailable],
   ];
-  const height = 1660;
+  const cashClosingRows = [
+    ["Efectivo generado", calculation.cashGenerated],
+    ["Gasolina de Matías", -calculation.fuelOwn],
+    ["Gasolina de José", -calculation.fuelJose],
+    ["Efectivo disponible", calculation.cashAvailable],
+    ["Pendiente para Matías", -calculation.pendingForDriver],
+  ];
+  const height = 1840;
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   canvas.width = WIDTH;
@@ -89,13 +93,14 @@ export async function createMonthlySettlementShareCard(settlement) {
   drawText(context, formatCurrency(calculation.rawRevenue), 110, 323, "700 47px Arial", COLORS.text);
   drawText(context, `${calculation.workedDays} jornadas · ${calculation.tripCount} viajes`, 970, 334, "700 23px Arial", COLORS.muted, "right");
 
-  drawPanel(context, 70, 430, 940, 900);
-  rows.forEach(([label, value], index) => {
-    const top = 459 + index * 70;
+  drawText(context, "LIQUIDACIÓN MENSUAL", 70, 438, "700 25px Arial", COLORS.emerald);
+  drawPanel(context, 70, 485, 940, 680);
+  settlementRows.forEach(([label, value], index) => {
+    const top = 513 + index * 69;
     const highlighted = label.includes("Base neta") || label.includes("Ganancia neta");
     drawText(context, label, 110, top, highlighted ? "700 27px Arial" : "400 26px Arial", highlighted ? COLORS.text : COLORS.muted);
     drawText(context, formatCurrency(value), 970, top, "700 29px Arial", highlighted ? COLORS.emerald : COLORS.text, "right");
-    if (index < rows.length - 1) {
+    if (index < settlementRows.length - 1) {
       context.beginPath();
       context.moveTo(110, top + 48);
       context.lineTo(970, top + 48);
@@ -105,12 +110,28 @@ export async function createMonthlySettlementShareCard(settlement) {
     }
   });
 
-  drawPanel(context, 70, 1370, 940, 170, true);
-  const deliveryLabel = calculation.deliveryToOwner >= 0 ? "MATÍAS ENTREGA A JOSÉ" : "JOSÉ ENTREGA A MATÍAS";
-  drawText(context, deliveryLabel, 110, 1405, "700 25px Arial", COLORS.emerald);
-  drawText(context, formatCurrency(Math.abs(calculation.deliveryToOwner)), 110, 1450, "700 48px Arial", COLORS.text);
-  drawText(context, "Liquidación cerrada", 970, 1465, "700 23px Arial", COLORS.sky, "right");
+  drawText(context, "CIERRE DE CAJA", 70, 1215, "700 25px Arial", COLORS.sky);
+  drawPanel(context, 70, 1262, 940, 390);
+  cashClosingRows.forEach(([label, value], index) => {
+    const top = 1290 + index * 68;
+    const highlighted = label === "Efectivo disponible";
+    drawText(context, label, 110, top, highlighted ? "700 27px Arial" : "400 26px Arial", highlighted ? COLORS.text : COLORS.muted);
+    drawText(context, formatCurrency(value), 970, top, "700 29px Arial", highlighted ? COLORS.sky : COLORS.text, "right");
+    if (index < cashClosingRows.length - 1) {
+      context.beginPath();
+      context.moveTo(110, top + 47);
+      context.lineTo(970, top + 47);
+      context.strokeStyle = COLORS.border;
+      context.lineWidth = 2;
+      context.stroke();
+    }
+  });
 
-  drawText(context, "Generado con TaxFin", WIDTH / 2, 1595, "400 22px Arial", COLORS.muted, "center");
+  drawPanel(context, 70, 1685, 940, 105, true);
+  const deliveryLabel = calculation.deliveryToOwner >= 0 ? "MATÍAS ENTREGA A JOSÉ" : "JOSÉ ENTREGA A MATÍAS";
+  drawText(context, deliveryLabel, 110, 1718, "700 24px Arial", COLORS.emerald);
+  drawText(context, formatCurrency(Math.abs(calculation.deliveryToOwner)), 970, 1705, "700 43px Arial", COLORS.text, "right");
+
+  drawText(context, "Liquidación cerrada · Generado con TaxFin", WIDTH / 2, 1805, "400 21px Arial", COLORS.muted, "center");
   return canvasToBlob(canvas);
 }
