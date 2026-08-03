@@ -184,15 +184,15 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Registrar la gasolina del propietario íntegramente como gasto propio.
 - [x] Impedir que el propietario modifique, cierre o elimine jornadas ajenas.
 - [x] Separar las consultas de jornadas entre organizaciones.
-- [ ] Permitir la corrección segura de jornadas propias creadas en TaxFin.
+- [x] Permitir la corrección segura de jornadas propias creadas en TaxFin.
 - [x] Exigir contraseña, motivo y auditoría al editar viajes de jornadas
   cerradas.
 - [x] Permitir editar o eliminar viajes propios después del cierre con
   confirmación reforzada.
 - [x] Permitir corregir combustible y kilometraje con validación de
   continuidad.
-- [ ] Permitir corregir la fecha con validación cronológica.
-- [ ] Permitir eliminar una jornada propia completa con confirmación reforzada.
+- [x] Permitir corregir la fecha con validación cronológica.
+- [x] Permitir eliminar una jornada propia completa con confirmación reforzada.
 - [x] Mantener bloqueadas las jornadas históricas importadas.
 
 ---

@@ -80,9 +80,13 @@ export const getWorkDayById = async (workDayId) => {
   return data.data;
 };
 
-export const deleteWorkDay = async (workDayId) => {
+export const deleteWorkDay = async (workDayId, deletionData) => {
   const response = await apiFetch(`/work-days/${workDayId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(deletionData),
   });
 
   const data = await response.json();

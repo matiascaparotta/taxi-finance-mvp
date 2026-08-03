@@ -106,7 +106,7 @@ const closeWorkDay = async (req, res) => {
 };
 const deleteWorkDay = async (req, res) => {
   try {
-    const result = await deleteWorkDayService(req.params.id, req.auth);
+    const result = await deleteWorkDayService(req.params.id, req.body, req.auth);
 
     res.status(200).json({
       success: true,

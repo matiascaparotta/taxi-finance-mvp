@@ -898,7 +898,7 @@ La organización inicial conservará `Lic249`.
 
 **Fecha:** 03/08/2026
 
-**Estado:** 🚧 Implementación incremental en desarrollo
+**Estado:** ✅ Implementada
 
 ### Contexto
 
@@ -915,9 +915,11 @@ caracteres. El cambio y el registro de auditoría se escriben dentro de la misma
 transacción. La auditoría identifica organización, usuario, jornada, entidad,
 acción, motivo y los valores anteriores y resultantes.
 
-La primera operación habilitada es la edición de un viaje. Las demás
-operaciones se incorporarán de una en una reutilizando el mismo contrato de
-seguridad.
+El contrato se aplica a la edición y eliminación de viajes, a la corrección de
+fecha, combustible y kilometraje, y a la eliminación completa de una jornada.
+La fecha se valida contra la unicidad por conductor y reposiciona la jornada
+para comprobar la continuidad del vehículo. El borrado completo exige además
+escribir `ELIMINAR` y conserva en la auditoría la jornada con todos sus viajes.
 
 ### Consecuencias
 
@@ -925,9 +927,11 @@ seguridad.
 - la contraseña nunca se almacena en el registro de auditoría;
 - el acceso general anterior no puede corregir jornadas cerradas;
 - las jornadas importadas y las jornadas ajenas continúan bloqueadas;
-- la edición y eliminación de viajes, junto con la corrección de combustible y
-  kilómetros, se habilitan únicamente después de probar cada regla específica;
-- la fecha continúa deshabilitada hasta implementar su validación cronológica.
+- la edición y eliminación de viajes, la corrección de datos generales y la
+  eliminación completa reutilizan una única reautenticación;
+- la eliminación completa y su auditoría se confirman o revierten juntas;
+- la fecha corregida no puede duplicar otra jornada del conductor ni romper la
+  continuidad kilométrica del vehículo.
 
 ---
 

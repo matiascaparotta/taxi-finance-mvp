@@ -8,11 +8,13 @@ import {
   correctClosedWorkDay,
   getWorkDayById,
 } from "../services/workDayService";
+import { normalizeWorkDayDate } from "../utils/workDayDate";
 
 function EditWorkDayPage({ currentUser }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [workDay, setWorkDay] = useState(null);
+  const [date, setDate] = useState("");
   const [startKm, setStartKm] = useState("");
   const [endKm, setEndKm] = useState("");
   const [fuelAmount, setFuelAmount] = useState("");
@@ -38,6 +40,7 @@ function EditWorkDayPage({ currentUser }) {
       }
 
       setWorkDay(data);
+      setDate(normalizeWorkDayDate(data.date));
       setStartKm(String(data.startKm));
       setEndKm(String(data.endKm));
       setFuelAmount(
@@ -79,6 +82,7 @@ function EditWorkDayPage({ currentUser }) {
       setIsSaving(true);
       setError("");
       await correctClosedWorkDay(id, {
+        date,
         startKm,
         endKm,
         fuelAmount,
@@ -118,11 +122,20 @@ function EditWorkDayPage({ currentUser }) {
     <section className="space-y-6">
       <SectionTitle
         title="Corregir jornada"
-        subtitle="Combustible y kilometraje · la fecha no cambiará"
+        subtitle="Fecha, combustible y kilometraje · corrección protegida"
       />
 
       <form onSubmit={requestConfirmation} className="space-y-5">
         <Card>
+          <label className="mb-5 block text-sm text-slate-300">
+            Fecha de la jornada
+            <input
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+            />
+          </label>
           <div className="grid grid-cols-2 gap-4">
             <label className="text-sm text-slate-300">
               Km inicial
@@ -223,7 +236,7 @@ function EditWorkDayPage({ currentUser }) {
           <div className="w-full max-w-sm rounded-3xl border border-slate-800 bg-slate-900 p-6">
             <h3 className="text-xl font-bold text-white">¿Guardar corrección?</h3>
             <p className="mt-3 text-sm text-slate-300">
-              TaxFin validará la continuidad del vehículo y registrará los valores anteriores, los nuevos, el motivo y tu usuario.
+              TaxFin comprobará que no tengas otra jornada ese día, validará la continuidad del vehículo y registrará los valores anteriores, los nuevos, el motivo y tu usuario.
             </p>
             <div className="mt-6 space-y-3">
               <button

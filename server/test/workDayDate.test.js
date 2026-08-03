@@ -5,6 +5,7 @@ const {
   getAllowedCloseDates,
   validateCloseDate,
   validateChronologicalWorkDayDate,
+  validateCorrectionDate,
 } = require("../src/utils/workDayDate");
 
 const NOW = new Date(2026, 6, 24, 23, 30);
@@ -75,4 +76,13 @@ test("rechaza una fecha anterior a la última jornada", () => {
       ),
     /debe ser posterior al 24\/07\/2026/
   );
+});
+
+test("acepta una fecha válida al corregir una jornada cerrada", () => {
+  assert.equal(validateCorrectionDate("2026-07-20"), "2026-07-20");
+});
+
+test("rechaza fechas inexistentes o con formato incorrecto al corregir", () => {
+  assert.throws(() => validateCorrectionDate("2026-02-30"), /no es válida/);
+  assert.throws(() => validateCorrectionDate("30/07/2026"), /no es válida/);
 });

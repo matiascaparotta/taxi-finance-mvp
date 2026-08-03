@@ -68,4 +68,25 @@ test("corrige y audita la jornada dentro de la misma transacción", () => {
   assert.match(operation, /resulting_data/);
   assert.match(operation, /commit\(\)/);
   assert.match(operation, /rollback\(\)/);
+  assert.match(operation, /SET date = \?/);
+});
+
+test("elimina una jornada completa y conserva su auditoría", () => {
+  const source = fs.readFileSync(
+    path.resolve(__dirname, "../src/repositories/workDayRepository.js"),
+    "utf8"
+  );
+  const start = source.indexOf("const deleteWorkDayWithAudit");
+  const end = source.indexOf("const getAdjacentVehicleWorkDays", start);
+  const operation = source.slice(start, end);
+
+  assert.match(operation, /beginTransaction\(\)/);
+  assert.match(operation, /FROM trips/);
+  assert.match(operation, /'WORK_DAY'/);
+  assert.match(operation, /'DELETE'/);
+  assert.match(operation, /correction_audit_logs/);
+  assert.match(operation, /DELETE FROM work_days/);
+  assert.match(operation, /driver_user_id = \?/);
+  assert.match(operation, /commit\(\)/);
+  assert.match(operation, /rollback\(\)/);
 });

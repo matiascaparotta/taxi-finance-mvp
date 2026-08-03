@@ -92,12 +92,14 @@ La eliminación de un viaje cerrado utilizará la misma confirmación reforzada.
 La auditoría conservará todos los datos que tenía el viaje antes de eliminarlo
 y el resumen de la jornada se recalculará a partir de los viajes restantes.
 
-El combustible y el kilometraje de una jornada propia cerrada podrán
+La fecha, el combustible y el kilometraje de una jornada propia cerrada podrán
 corregirse con la misma confirmación reforzada. El kilometraje inicial no podrá
 ser inferior al final de la jornada anterior del mismo vehículo, el final no
 podrá ser inferior al inicial ni superar el inicio de la jornada siguiente. El
 combustible se recalculará aplicando nuevamente las reglas de reparto y rol.
-La fecha no cambiará como parte de esta operación.
+La fecha deberá ser válida, no podrá duplicar otra jornada del mismo conductor
+y el cambio conservará la continuidad kilométrica del vehículo en la nueva
+posición cronológica.
 
 Las jornadas históricas procedentes de la importación estarán protegidas y no
 podrán modificarse ni eliminarse.
@@ -106,9 +108,12 @@ El propietario podrá consultar jornadas ajenas, pero no podrá usar la
 corrección segura sobre ellas. Cada conductor solo podrá corregir sus propias
 jornadas.
 
-Las jornadas creadas directamente en Lic249 después de la importación
-podrán eliminarse completas con confirmación explícita. Al eliminarlas se
-eliminarán también sus viajes y la operación será irreversible.
+Las jornadas creadas directamente en TaxFin después de la importación podrán
+eliminarse completas únicamente por su conductor. Se exigirán la contraseña
+actual, un motivo de entre 5 y 500 caracteres y la confirmación escrita
+`ELIMINAR`. La auditoría conservará la jornada y todos sus viajes antes de que
+la eliminación en cascada los retire. El borrado y la auditoría serán una sola
+transacción irreversible.
 
 Para un mismo conductor no podrán existir dos jornadas con la misma fecha.
 

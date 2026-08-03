@@ -295,6 +295,61 @@ const deleteWorkDayById = async (workDayId, scope = null) => {
   return result.affectedRows > 0;
 };
 
+const deleteWorkDayWithAudit = async ({
+  workDayId,
+  organizationId,
+  actorUserId,
+  reason,
+  previousData,
+}) => {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+    const [tripRows] = await connection.query(
+      `SELECT id, work_day_id AS workDayId, amount, payment_type AS paymentType,
+        commission, tip, note, created_at AS createdAt
+       FROM trips WHERE work_day_id = ? ORDER BY created_at, id`,
+      [workDayId]
+    );
+
+    await connection.query(
+      `INSERT INTO correction_audit_logs (
+        organization_id, actor_user_id, work_day_id, entity_type,
+        entity_id, action, reason, previous_data, resulting_data
+      ) VALUES (?, ?, ?, 'WORK_DAY', ?, 'DELETE', ?, ?, ?)`,
+      [
+        organizationId,
+        actorUserId,
+        workDayId,
+        workDayId,
+        reason,
+        JSON.stringify({ ...previousData, trips: tripRows }),
+        JSON.stringify({ deleted: true }),
+      ]
+    );
+
+    const [result] = await connection.query(
+      `DELETE FROM work_days
+       WHERE id = ? AND organization_id = ? AND driver_user_id = ?
+         AND is_locked = 0`,
+      [workDayId, organizationId, actorUserId]
+    );
+
+    if (result.affectedRows !== 1) {
+      throw new Error("Jornada no encontrada o protegida");
+    }
+
+    await connection.commit();
+    return true;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 const getAdjacentVehicleWorkDays = async (workDayId) => {
   const [rows] = await pool.query(
     `
@@ -343,6 +398,55 @@ const getAdjacentVehicleWorkDays = async (workDayId) => {
   };
 };
 
+const getClosedWorkDayCorrectionContext = async (workDayId, date) => {
+  const [duplicateRows] = await pool.query(
+    `SELECT duplicate_day.id
+     FROM work_days current_day
+     INNER JOIN work_days duplicate_day
+       ON duplicate_day.organization_id = current_day.organization_id
+      AND duplicate_day.driver_user_id = current_day.driver_user_id
+      AND duplicate_day.date = ?
+      AND duplicate_day.id <> current_day.id
+     WHERE current_day.id = ?
+     LIMIT 1`,
+    [date, workDayId]
+  );
+
+  const [vehicleRows] = await pool.query(
+    `SELECT adjacent.id, adjacent.start_km AS startKm,
+        adjacent.end_km AS endKm,
+        CASE WHEN adjacent.date < ? OR (
+          adjacent.date = ? AND (
+            adjacent.created_at < current_day.created_at OR
+            (adjacent.created_at = current_day.created_at AND adjacent.id < current_day.id)
+          )
+        ) THEN 'PREVIOUS' ELSE 'NEXT' END AS position
+     FROM work_days current_day
+     INNER JOIN work_days adjacent
+       ON adjacent.organization_id = current_day.organization_id
+      AND adjacent.vehicle_id = current_day.vehicle_id
+      AND adjacent.status = 'CLOSED'
+      AND adjacent.id <> current_day.id
+     WHERE current_day.id = ?
+       AND (adjacent.date < ? OR adjacent.date > ? OR (
+         adjacent.date = ? AND (
+           adjacent.created_at <> current_day.created_at OR adjacent.id <> current_day.id
+         )
+       ))
+     ORDER BY adjacent.date, adjacent.created_at, adjacent.id`,
+    [date, date, workDayId, date, date, date]
+  );
+
+  const previousRows = vehicleRows.filter((row) => row.position === "PREVIOUS");
+  const nextRows = vehicleRows.filter((row) => row.position === "NEXT");
+
+  return {
+    hasDuplicateDriverDate: duplicateRows.length > 0,
+    previous: previousRows.at(-1) || null,
+    next: nextRows[0] || null,
+  };
+};
+
 const updateClosedWorkDayWithAudit = async ({
   workDayId,
   organizationId,
@@ -359,11 +463,12 @@ const updateClosedWorkDayWithAudit = async ({
     const [result] = await connection.query(
       `
       UPDATE work_days
-      SET start_km = ?, end_km = ?, fuel_own = ?, fuel_jose = ?
+      SET date = ?, start_km = ?, end_km = ?, fuel_own = ?, fuel_jose = ?
       WHERE id = ? AND organization_id = ? AND driver_user_id = ?
         AND status = 'CLOSED' AND is_locked = 0
       `,
       [
+        correctedData.date,
         correctedData.startKm,
         correctedData.endKm,
         correctedData.fuelOwn,
@@ -428,6 +533,8 @@ module.exports = {
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
   deleteWorkDayById,
+  deleteWorkDayWithAudit,
   getAdjacentVehicleWorkDays,
+  getClosedWorkDayCorrectionContext,
   updateClosedWorkDayWithAudit,
 };

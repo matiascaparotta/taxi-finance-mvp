@@ -243,6 +243,16 @@ La publicación del commit `64af02b` dejó activa la migración de auditoría. L
 comprobación posterior registró 78 jornadas, 1.344 viajes y 70 importaciones,
 sin cambios en los datos existentes.
 
+El bloque completo de corrección segura está terminado y probado localmente.
+Además de los viajes, combustible y kilómetros ya publicados, permite corregir
+la fecha sin duplicar jornadas del mismo conductor y vuelve a validar la
+continuidad del vehículo según la nueva posición temporal. La eliminación de
+una jornada completa exige contraseña, motivo y la palabra `ELIMINAR`; la
+auditoría conserva previamente la jornada y todos sus viajes en la misma
+transacción. Solo el conductor propietario puede usar estas operaciones. José
+mantiene lectura sobre jornadas ajenas y las importadas siguen bloqueadas.
+Esta ampliación todavía no se ha aplicado a producción.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

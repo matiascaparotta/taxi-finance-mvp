@@ -1100,8 +1100,18 @@ saludable. La comprobación conservadora confirmó la referencia de 78 jornadas,
 importadas permanecen bloqueadas. Las 122 pruebas automatizadas confirmaron
 los permisos de lectura y escritura, la protección de jornadas importadas y
 ajenas, la continuidad del kilometraje y la auditoría transaccional. No se
-modificaron datos reales durante la verificación. La corrección de fecha no se
-inició.
+modificaron datos reales durante la verificación.
+
+El 03/08/2026 se completó localmente el bloque de corrección segura. La fecha
+de una jornada propia cerrada puede modificarse si no duplica otra fecha del
+mismo conductor y si los kilómetros siguen siendo coherentes con las jornadas
+anterior y siguiente del vehículo en la nueva posición cronológica. También se
+reforzó la eliminación completa: exige contraseña, motivo y la palabra
+`ELIMINAR`; antes del borrado, la auditoría conserva los datos de la jornada y
+todos sus viajes dentro de la misma transacción. Las jornadas importadas y las
+ajenas continúan protegidas. La suite específica, las 30 pruebas del cliente,
+el análisis estático y la compilación finalizaron correctamente. Producción no
+se modificó durante esta implementación.
 
 ## Estado
 

@@ -44,9 +44,29 @@ const validateChronologicalWorkDayDate = (date, latestClosedDate) => {
   return date;
 };
 
+const validateCorrectionDate = (date) => {
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error("La fecha de la jornada no es válida");
+  }
+
+  const [year, month, day] = date.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  ) {
+    throw new Error("La fecha de la jornada no es válida");
+  }
+
+  return date;
+};
+
 module.exports = {
   formatLocalDate,
   getAllowedCloseDates,
   validateCloseDate,
   validateChronologicalWorkDayDate,
+  validateCorrectionDate,
 };

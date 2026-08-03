@@ -6,8 +6,8 @@ const {
   getLatestClosedWorkDay,
   getLatestVehicleClosedWorkDay,
   closeWorkDayById,
-  deleteWorkDayById,
-  getAdjacentVehicleWorkDays,
+  deleteWorkDayWithAudit,
+  getClosedWorkDayCorrectionContext,
   updateClosedWorkDayWithAudit,
 } = require("../repositories/workDayRepository");
 const {
@@ -27,6 +27,7 @@ const {
 const {
   validateCloseDate,
   validateChronologicalWorkDayDate,
+  validateCorrectionDate,
 } = require("../utils/workDayDate");
 const {
   getReadScope,
@@ -191,7 +192,7 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
   );
 };
 
-const deleteWorkDayService = async (workDayId, auth = null) => {
+const deleteWorkDayService = async (workDayId, deletionData = {}, auth = null) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
@@ -200,7 +201,19 @@ const deleteWorkDayService = async (workDayId, auth = null) => {
   const workDay = await getWorkDayById(workDayId, writeScope);
   assertWorkDayCanBeDeleted(workDay);
 
-  await deleteWorkDayById(workDayId, writeScope);
+  const authorization = await authorizeClosedWorkDayCorrection({
+    auth,
+    password: deletionData?.correctionPassword,
+    reason: deletionData?.correctionReason,
+  });
+
+  await deleteWorkDayWithAudit({
+    workDayId: Number(workDayId),
+    organizationId: authorization.organizationId,
+    actorUserId: authorization.actorUserId,
+    reason: authorization.reason,
+    previousData: workDay,
+  });
 
   return {
     id: Number(workDayId),
@@ -238,12 +251,21 @@ const correctClosedWorkDayService = async (
     password: correctionData?.correctionPassword,
     reason: correctionData?.correctionReason,
   });
-  const adjacent = await getAdjacentVehicleWorkDays(workDayId);
+  const correctedDate = validateCorrectionDate(correctionData?.date);
+  const correctionContext = await getClosedWorkDayCorrectionContext(
+    workDayId,
+    correctedDate
+  );
+
+  if (correctionContext.hasDuplicateDriverDate) {
+    throw new Error("Ya existe otra jornada tuya con esa fecha");
+  }
+
   const kilometres = validateCorrectedKilometres({
     startKm: correctionData?.startKm,
     endKm: correctionData?.endKm,
-    previousEndKm: adjacent.previous?.endKm ?? null,
-    nextStartKm: adjacent.next?.startKm ?? null,
+    previousEndKm: correctionContext.previous?.endKm ?? null,
+    nextStartKm: correctionContext.next?.startKm ?? null,
   });
   const effectiveFuelAllocation = resolveFuelAllocation(
     correctionData?.fuelAllocation,
@@ -263,6 +285,7 @@ const correctClosedWorkDayService = async (
     reason: authorization.reason,
     previousData: workDay,
     correctedData: {
+      date: correctedDate,
       ...kilometres,
       ...fuel,
     },

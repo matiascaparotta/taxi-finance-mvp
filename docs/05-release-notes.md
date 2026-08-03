@@ -80,7 +80,13 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   respetando la continuidad del vehículo y las reglas de reparto.
 - Publicación de esa corrección en producción mediante `9e6fa03`, con API
   saludable, 78 jornadas, 1.344 viajes, 70 importaciones protegidas y cero
-  auditorías previas; la fecha permanece fuera del alcance.
+  auditorías previas.
+- Corrección segura de la fecha, sin duplicados para el mismo conductor y con
+  validación de la continuidad kilométrica en su nueva posición cronológica.
+- Eliminación completa reforzada de jornadas propias creadas en TaxFin: motivo,
+  contraseña, confirmación escrita y auditoría de la jornada y sus viajes.
+- Este último bloque está implementado y probado localmente; su publicación en
+  producción se registrará después del respaldo y la verificación operativa.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

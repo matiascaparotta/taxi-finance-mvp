@@ -28,6 +28,10 @@ function WorkDayDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deletionReason, setDeletionReason] = useState("");
+  const [deletionPassword, setDeletionPassword] = useState("");
+  const [deletionConfirmation, setDeletionConfirmation] = useState("");
+  const [deletionError, setDeletionError] = useState("");
   const deletingLockRef = useRef(false);
 
   const { id } = useParams();
@@ -83,12 +87,27 @@ function WorkDayDetailPage() {
     setIsDeleting(true);
 
     try {
-      setError("");
-      await deleteWorkDay(id);
+      setDeletionError("");
+
+      if (deletionReason.trim().length < 5) {
+        throw new Error("Explica el motivo con al menos 5 caracteres");
+      }
+
+      if (!deletionPassword) {
+        throw new Error("Escribe tu contraseña actual");
+      }
+
+      if (deletionConfirmation.trim().toUpperCase() !== "ELIMINAR") {
+        throw new Error("Escribe ELIMINAR para confirmar");
+      }
+
+      await deleteWorkDay(id, {
+        correctionReason: deletionReason,
+        correctionPassword: deletionPassword,
+      });
       navigate("/history");
     } catch (deleteError) {
-      setError(deleteError.message);
-      setShowDeleteConfirm(false);
+      setDeletionError(deleteError.message);
     } finally {
       deletingLockRef.current = false;
       setIsDeleting(false);
@@ -193,7 +212,7 @@ function WorkDayDetailPage() {
             ¿Hay un dato incorrecto?
           </h3>
           <p className="mt-2 text-sm text-slate-300">
-            Podés corregir el combustible y los kilómetros con contraseña,
+            Podés corregir la fecha, el combustible y los kilómetros con contraseña,
             motivo y registro de auditoría.
           </p>
           <button
@@ -201,7 +220,7 @@ function WorkDayDetailPage() {
             onClick={() => navigate(`/work-days/${id}/edit`)}
             className="mt-5 w-full rounded-2xl border border-emerald-400/40 px-5 py-3 text-sm font-bold text-emerald-300"
           >
-            Corregir combustible y kilómetros
+            Corregir datos de la jornada
           </button>
         </Card>
       )}
@@ -240,8 +259,44 @@ function WorkDayDetailPage() {
               ¿Eliminar esta jornada?
             </h3>
             <p className="mt-3 text-sm text-slate-300">
-              Se eliminarán también todos sus viajes. Esta acción no se puede deshacer.
+              Se eliminarán también todos sus viajes. Por seguridad, indica el motivo, confirma tu contraseña y escribe ELIMINAR.
             </p>
+            <label className="mt-5 block text-sm font-semibold text-slate-200">
+              Motivo de la eliminación
+              <textarea
+                value={deletionReason}
+                onChange={(event) => setDeletionReason(event.target.value)}
+                maxLength={500}
+                rows={3}
+                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+                placeholder="Ej.: jornada creada para una prueba"
+              />
+            </label>
+            <label className="mt-4 block text-sm font-semibold text-slate-200">
+              Contraseña actual
+              <input
+                type="password"
+                autoComplete="current-password"
+                value={deletionPassword}
+                onChange={(event) => setDeletionPassword(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+              />
+            </label>
+            <label className="mt-4 block text-sm font-semibold text-slate-200">
+              Escribe ELIMINAR
+              <input
+                type="text"
+                autoComplete="off"
+                value={deletionConfirmation}
+                onChange={(event) => setDeletionConfirmation(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+              />
+            </label>
+            {deletionError && (
+              <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                {deletionError}
+              </p>
+            )}
             <div className="mt-6 space-y-3">
               <button
                 type="button"
