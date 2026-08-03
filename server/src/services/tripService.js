@@ -5,6 +5,7 @@ const {
   updateTripById,
   updateClosedTripWithAudit,
   deleteTripById,
+  deleteClosedTripWithAudit,
 } = require("../repositories/tripRepository");
 const {
   assertTripBelongsToOpenWorkDay,
@@ -205,7 +206,11 @@ const updateTripService = async (tripId, tripData, auth = null) => {
   return updatedTrip;
 };
 
-const deleteTripService = async (tripId, auth = null) => {
+const deleteTripService = async (
+  tripId,
+  correctionData = {},
+  auth = null
+) => {
   if (!tripId) {
     throw new Error("El id del viaje es obligatorio");
   }
@@ -216,10 +221,34 @@ const deleteTripService = async (tripId, auth = null) => {
     throw new Error("Viaje no encontrado");
   }
 
-  await assertWorkDayAccess(
+  const workDay = await assertWorkDayAccess(
     existingTrip.workDayId,
     getWriteScope(auth)
   );
+
+  if (workDay.status === "CLOSED") {
+    if (Boolean(workDay.isLocked)) {
+      throw new Error(
+        "Las jornadas históricas importadas están protegidas y no se pueden corregir"
+      );
+    }
+
+    const authorization =
+      await authorizeClosedWorkDayCorrection({
+        auth,
+        password: correctionData?.correctionPassword,
+        reason: correctionData?.correctionReason,
+      });
+
+    return await deleteClosedTripWithAudit({
+      tripId,
+      workDayId: Number(existingTrip.workDayId),
+      organizationId: authorization.organizationId,
+      actorUserId: authorization.actorUserId,
+      reason: authorization.reason,
+      previousData: existingTrip,
+    });
+  }
 
   await assertTripBelongsToOpenWorkDay(tripId);
 

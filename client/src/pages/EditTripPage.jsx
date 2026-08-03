@@ -84,8 +84,32 @@ function EditTripPage() {
 
     try {
       setActionError("");
-      await deleteTrip(id);
-      navigate("/");
+      const isClosedWorkDay = workDay?.status === "CLOSED";
+
+      if (isClosedWorkDay && correctionReason.trim().length < 5) {
+        throw new Error(
+          "Explica el motivo de la eliminación con al menos 5 caracteres"
+        );
+      }
+
+      if (isClosedWorkDay && !correctionPassword) {
+        throw new Error("Escribe tu contraseña actual");
+      }
+
+      await deleteTrip(
+        id,
+        isClosedWorkDay
+          ? {
+              correctionPassword,
+              correctionReason,
+            }
+          : {}
+      );
+      navigate(
+        isClosedWorkDay
+          ? `/work-day-closed/${workDay.id}`
+          : "/"
+      );
     } catch (error) {
       setActionError(error.message);
       setShowDeleteConfirm(false);
@@ -212,12 +236,13 @@ function EditTripPage() {
         </p>
       )}
 
-      {!isClosedWorkDay && (
       <Card className="border-red-500/30 bg-red-500/10">
         <h3 className="text-lg font-bold text-red-300">Eliminar viaje</h3>
 
         <p className="mt-2 text-sm text-slate-300">
-          Esta acción eliminará el viaje y actualizará automáticamente el resumen.
+          {isClosedWorkDay
+            ? "Se eliminará el viaje, se recalculará el resumen y quedará una auditoría permanente."
+            : "Esta acción eliminará el viaje y actualizará automáticamente el resumen."}
         </p>
 
         <button
@@ -229,7 +254,6 @@ function EditTripPage() {
           Eliminar viaje
         </button>
       </Card>
-      )}
 
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
@@ -237,7 +261,9 @@ function EditTripPage() {
             <h3 className="text-xl font-bold text-white">¿Eliminar viaje?</h3>
 
             <p className="mt-3 text-sm text-slate-300">
-              Esta acción no se puede deshacer.
+              {isClosedWorkDay
+                ? "Confirma que deseas eliminarlo. TaxFin registrará el motivo, el usuario y todos los datos que tenía el viaje."
+                : "Esta acción no se puede deshacer."}
             </p>
 
             <div className="mt-6 space-y-3">

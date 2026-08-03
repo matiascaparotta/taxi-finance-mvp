@@ -47,9 +47,13 @@ export const updateTrip = async (tripId, tripData) => {
   return data.data;
 };
 
-export const deleteTrip = async (tripId) => {
+export const deleteTrip = async (tripId, correctionData = {}) => {
   const response = await apiFetch(`/trips/${tripId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(correctionData),
   });
 
   const data = await response.json();

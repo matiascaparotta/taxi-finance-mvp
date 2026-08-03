@@ -80,7 +80,11 @@ const deleteTripController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedTrip = await deleteTripService(id, req.auth);
+    const deletedTrip = await deleteTripService(
+      id,
+      req.body,
+      req.auth
+    );
 
     res.status(200).json({
       success: true,

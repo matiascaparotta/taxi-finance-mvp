@@ -88,6 +88,10 @@ creada en TaxFin podrán corregirse mediante una confirmación reforzada que
 exija la contraseña actual y un motivo. El sistema conservará en auditoría el
 usuario, la fecha, el motivo y los valores anteriores y resultantes.
 
+La eliminación de un viaje cerrado utilizará la misma confirmación reforzada.
+La auditoría conservará todos los datos que tenía el viaje antes de eliminarlo
+y el resumen de la jornada se recalculará a partir de los viajes restantes.
+
 Las jornadas históricas procedentes de la importación estarán protegidas y no
 podrán modificarse ni eliminarse.
 

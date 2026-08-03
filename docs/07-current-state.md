@@ -210,6 +210,11 @@ transaccional con el usuario y los valores anterior y resultante. Las jornadas
 importadas y las jornadas ajenas continúan protegidas. La eliminación y la
 corrección de los datos generales de la jornada siguen pendientes.
 
+La segunda corrección segura está implementada localmente: el conductor puede
+eliminar un viaje de una jornada propia cerrada usando la misma contraseña y
+el mismo motivo de corrección. La eliminación y su auditoría se ejecutan en una
+sola transacción. Las jornadas importadas y ajenas permanecen bloqueadas.
+
 La publicación del commit `64af02b` dejó activa la migración de auditoría. La
 comprobación posterior registró 78 jornadas, 1.344 viajes y 70 importaciones,
 sin cambios en los datos existentes.

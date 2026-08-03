@@ -72,6 +72,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   motivo y auditoría de valores anteriores y resultantes.
 - Las jornadas históricas importadas y las jornadas ajenas permanecen
   protegidas frente a esa corrección.
+- Eliminación segura de viajes propios después del cierre, con contraseña,
+  motivo, confirmación explícita y auditoría transaccional.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

@@ -319,6 +319,67 @@ const deleteTripById = async (tripId) => {
   return rows[0];
 };
 
+const deleteClosedTripWithAudit = async ({
+  tripId,
+  workDayId,
+  organizationId,
+  actorUserId,
+  reason,
+  previousData,
+}) => {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const [result] = await connection.query(
+      `
+      DELETE FROM trips
+      WHERE id = ? AND work_day_id = ?
+      `,
+      [tripId, workDayId]
+    );
+
+    if (result.affectedRows !== 1) {
+      throw new Error("Viaje no encontrado");
+    }
+
+    await connection.query(
+      `
+      INSERT INTO correction_audit_logs (
+        organization_id,
+        actor_user_id,
+        work_day_id,
+        entity_type,
+        entity_id,
+        action,
+        reason,
+        previous_data,
+        resulting_data
+      )
+      VALUES (?, ?, ?, 'TRIP', ?, 'DELETE', ?, ?, ?)
+      `,
+      [
+        organizationId,
+        actorUserId,
+        workDayId,
+        tripId,
+        reason,
+        JSON.stringify(previousData),
+        JSON.stringify({ deleted: true }),
+      ]
+    );
+
+    await connection.commit();
+    return previousData;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 module.exports = {
   createTrip,
   getTripsByWorkDayId,
@@ -326,4 +387,5 @@ module.exports = {
   updateTripById,
   updateClosedTripWithAudit,
   deleteTripById,
+  deleteClosedTripWithAudit,
 };

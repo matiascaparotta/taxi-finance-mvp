@@ -1063,6 +1063,13 @@ viajes, 70 cierres importados y cero auditorías iniciales. La API respondió
 correctamente y la sesión de José mantuvo las jornadas de Matías en modo de
 solo lectura.
 
+La segunda funcionalidad del bloque habilita la eliminación de un viaje
+cerrado sin reabrir la jornada. Reutiliza la contraseña y el motivo de la
+corrección, conserva en auditoría todos los datos previos del viaje y recalcula
+el resumen desde los viajes restantes. La eliminación y la auditoría forman
+una única transacción. Continúa pendiente la corrección de fecha, combustible
+y kilómetros, así como la eliminación reforzada de la jornada completa.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

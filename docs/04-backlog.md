@@ -187,7 +187,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [ ] Permitir la corrección segura de jornadas propias creadas en TaxFin.
 - [x] Exigir contraseña, motivo y auditoría al editar viajes de jornadas
   cerradas.
-- [ ] Permitir editar o eliminar viajes propios después del cierre.
+- [x] Permitir editar o eliminar viajes propios después del cierre con
+  confirmación reforzada.
 - [ ] Permitir corregir fecha, combustible y kilometraje con validación de
   continuidad.
 - [ ] Permitir eliminar una jornada propia completa con confirmación reforzada.
