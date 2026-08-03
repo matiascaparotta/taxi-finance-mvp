@@ -619,8 +619,10 @@ Cada conductor podrá tener una de estas modalidades:
   configurable.
 
 La tarifa por distancia podrá cambiar sin alterar las jornadas cerradas
-anteriormente. La configuración inicial prevista para el padre de Matías será
-de 0,09 € por kilómetro.
+anteriormente. No representa un porcentaje del combustible cargado. Por
+ejemplo, 300 km a 0,10 €/km generan un coste de 30 €, mientras que una carga
+real de 60 € descuenta los 60 € completos. Alberto comienza con `ACTUAL_LOAD`
+hasta que se confirme una tarifa concreta con su empleador.
 
 ## Consistencia de los datos
 

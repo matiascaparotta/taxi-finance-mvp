@@ -70,6 +70,15 @@ offline financiero ni sincronización posterior.
 
 # Sprint actual
 
+## Perfil independiente de Alberto — en preparación
+
+El alta de `Lic1315` crea una organización aislada, el vehículo `Taxi Lic1315`
+y la cuenta personal `alberto.caparotta`. Alberto es propietario y conductor
+de su propia organización, por lo que no pertenece a Lic249 ni puede consultar
+datos de Matías o José. Comienza con combustible por importe real completo; no
+se aplica ningún porcentaje sobre la carga. El aprovisionamiento es idempotente
+y exige un cambio de contraseña en el primer acceso.
+
 ## Sprint 18 — Base multiusuario
 
 **Estado:** Base técnica, aprovisionamiento y migración histórica desplegados

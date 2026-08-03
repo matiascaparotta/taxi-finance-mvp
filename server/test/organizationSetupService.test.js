@@ -8,6 +8,9 @@ const {
 const {
   LIC249_SETUP,
 } = require("../src/scripts/provisionLic249");
+const {
+  LIC1315_SETUP,
+} = require("../src/scripts/provisionLic1315");
 
 const createFakeRepository = () => {
   const state = {
@@ -120,6 +123,36 @@ test("prepara Lic249 con Matías, José y el vehículo compartido", async () => 
   assert.equal(matiasMembership.isDriver, true);
   assert.equal(joseMembership.isOwner, true);
   assert.equal(joseMembership.isDriver, true);
+});
+
+test("prepara Lic1315 aislada con Alberto como propietario conductor", async () => {
+  const repository = createFakeRepository();
+  const result = await provisionOrganization(LIC1315_SETUP, {
+    repository,
+    passwordGenerator: () => "temporal-alberto",
+    passwordHasher: (password) => `hash:${password}`,
+  });
+
+  assert.equal(result.organization.name, "Lic1315");
+  assert.equal(result.organization.slug, "lic1315");
+  assert.equal(result.vehicle.name, "Taxi Lic1315");
+  assert.deepEqual(result.users, [
+    {
+      username: "alberto.caparotta",
+      displayName: "Alberto Caparotta",
+      created: true,
+      temporaryPassword: "temporal-alberto",
+    },
+  ]);
+
+  const alberto = repository.state.users[0];
+  const membership = repository.state.memberships[0];
+
+  assert.equal(membership.userId, alberto.id);
+  assert.equal(membership.isOwner, true);
+  assert.equal(membership.isDriver, true);
+  assert.equal(membership.fuelCalculationMode, "ACTUAL_LOAD");
+  assert.equal(membership.fuelRatePerKm, null);
 });
 
 test("puede repetirse sin duplicar ni cambiar contraseñas", async () => {
