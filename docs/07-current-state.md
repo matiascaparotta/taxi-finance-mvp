@@ -37,6 +37,22 @@ validación del uso diario sobre el primer deploy privado.
 
 ---
 
+# Desarrollo local pendiente de publicación — Liquidación mensual
+
+La nueva pestaña `Mensual` reconstruye los meses de Matías desde jornadas
+cerradas. Incluye reparto 50/50, conciliación de efectivo y datáfono,
+configuración compartida de Seguridad Social y nómina, historial y cierre
+exclusivo por Matías con instantánea y auditoría. No modifica jornadas, no
+habilita escrituras offline y no retira el acceso legacy.
+
+El cotejo de junio contra la liquidación entregada confirmó 20 jornadas,
+364,48 € de gasolina propia, 110,73 € de gasolina de José y 3.179,27 € de
+datáfono. Las jornadas oficiales suman 2.373,50 € de efectivo y 5.122 km. Se
+identificaron como errores manuales del documento anterior una diferencia de
+0,21 € en efectivo y otra de 232 km. Junio queda por tanto conciliado con
+5.188,29 € netos y una entrega final de 1.172,56 € a José, sin modificar
+ninguna jornada. Producción permanece sin cambios hasta publicar la función.
+
 # Sprint actual
 
 ## Sprint 18 — Base multiusuario

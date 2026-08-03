@@ -1091,6 +1091,21 @@ todavía una cola local ni sincronización posterior: esas capacidades requieren
 un diseño separado con identificadores idempotentes antes de utilizarse con
 datos financieros reales.
 
+## Liquidaciones mensuales
+
+`monthly_settlements` conserva únicamente los parámetros revisables y la
+instantánea de un cierre definitivo. Los totales abiertos se derivan siempre de
+las jornadas cerradas y sus resúmenes, manteniendo una sola fuente de verdad.
+La restricción única por organización, conductor y mes impide que Matías y José
+creen copias divergentes.
+
+El Service mensual centraliza el reparto, el prorrateo informativo del mes en
+curso y la conciliación de efectivo. El conductor y el propietario de su
+organización pueden leer el mismo registro y editar Seguridad Social, nómina y
+días previstos. Solo el conductor objetivo puede cerrar. Los cambios de
+configuración y el cierre se auditan, y la instantánea cerrada evita que una
+corrección diaria posterior reescriba silenciosamente un mes ya acordado.
+
 ---
 
 # Conclusión

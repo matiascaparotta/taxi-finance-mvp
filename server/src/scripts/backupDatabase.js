@@ -17,6 +17,8 @@ const BACKUP_TABLES = [
   "trips",
   "correction_audit_logs",
   "monthly_work_day_imports",
+  "monthly_settlements",
+  "monthly_settlement_audit_logs",
 ];
 
 const formatTimestamp = (date) =>

@@ -18,6 +18,9 @@ const workDaySummaryRoutes = require("./routes/workDaySummaryRoutes");
 const driverManagementRoutes = require(
   "./routes/driverManagementRoutes"
 );
+const monthlySettlementRoutes = require(
+  "./routes/monthlySettlementRoutes"
+);
 
 getAuthConfig();
 
@@ -56,6 +59,13 @@ app.use(
   requireCompletedPasswordChange,
   requireOwner,
   driverManagementRoutes
+);
+app.use(
+  "/api/monthly-settlements",
+  requireAuthentication,
+  requireActiveUserSession,
+  requireCompletedPasswordChange,
+  monthlySettlementRoutes
 );
 
 app.use("/api", (req, res) => {

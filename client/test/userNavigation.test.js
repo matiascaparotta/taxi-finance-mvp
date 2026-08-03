@@ -19,7 +19,7 @@ test("personaliza la identidad visible del conductor", () => {
   assert.equal(getUserInitials(user.displayName), "MC");
   assert.deepEqual(
     getUserNavigation(user).map((item) => item.label),
-    ["Inicio", "Mi jornada", "Historial"]
+    ["Inicio", "Mi jornada", "Mensual", "Historial"]
   );
   assert.equal(
     getUserNavigation(user).find((item) => item.id === "work-day").to,
@@ -38,7 +38,7 @@ test("añade la gestión de conductores al propietario", () => {
   assert.equal(getUserInitials(user.displayName), "JR");
   assert.deepEqual(
     getUserNavigation(user).map((item) => item.label),
-    ["Inicio", "Mi jornada", "Mis conductores", "Historial"]
+    ["Inicio", "Mi jornada", "Mis conductores", "Mensual", "Historial"]
   );
 });
 

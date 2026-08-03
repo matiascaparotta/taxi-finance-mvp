@@ -34,6 +34,16 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 
 ## En desarrollo
 
+- Nueva liquidación mensual compartida para Matías y José, derivada de
+  jornadas cerradas y sin duplicar importes financieros.
+- Cálculo automático de facturación neta, Seguridad Social, reparto 50/50,
+  nómina pendiente, efectivo disponible y entrega final.
+- Seguridad Social, nómina y días previstos editables por ambos; cierre
+  definitivo reservado a Matías, con instantánea y auditoría.
+- Reconstrucción automática de meses anteriores y estado pendiente de revisión.
+- Junio conciliado contra sus 20 jornadas oficiales: 5.188,29 € netos,
+  5.122 km y 1.172,56 € para José, sin modificar datos diarios.
+
 - Base de organizaciones independientes.
 - Cuentas personales con nombre de usuario y contraseña.
 - Propietarios que pueden conducir o dedicarse solo a gestionar.

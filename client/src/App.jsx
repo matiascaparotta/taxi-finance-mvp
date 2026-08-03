@@ -20,6 +20,7 @@ import WorkDayHistoryPage from "./pages/WorkDayHistoryPage";
 import WorkDayDetailPage from "./pages/WorkDayDetailPage";
 import EditWorkDayPage from "./pages/EditWorkDayPage";
 import DriverManagementPage from "./pages/DriverManagementPage";
+import MonthlySettlementPage from "./pages/MonthlySettlementPage";
 import PwaStatus from "./components/PwaStatus";
 import {
   getSession,
@@ -184,6 +185,10 @@ function PrivateApp() {
         <Route
           path="/history"
           element={<WorkDayHistoryPage currentUser={currentUser} />}
+        />
+        <Route
+          path="/monthly"
+          element={<MonthlySettlementPage currentUser={currentUser} />}
         />
         <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
         <Route

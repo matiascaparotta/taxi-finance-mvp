@@ -33,5 +33,6 @@ export const getUserNavigation = (user) => [
   ...(isOwnerUser(user)
     ? [{ id: "drivers", label: "Mis conductores", to: "/drivers" }]
     : []),
+  { id: "monthly", label: "Mensual", to: "/monthly" },
   { id: "history", label: "Historial", to: "/history" },
 ];

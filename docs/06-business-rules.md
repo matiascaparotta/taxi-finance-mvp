@@ -311,6 +311,44 @@ Las reglas de visualización son las siguientes:
 
 ---
 
+# Liquidación mensual de Matías
+
+La liquidación mensual es un único registro compartido entre Matías y José.
+Se reconstruye exclusivamente con jornadas cerradas de Matías; una jornada
+activa o cancelada nunca afecta los totales.
+
+## Regla de reparto
+
+1. Sumar la facturación de las jornadas.
+2. Restar la gasolina propia de Matías para obtener la **facturación neta para
+   reparto**.
+3. Restar la Seguridad Social completa del mes.
+4. Dividir la base resultante al 50 % entre Matías y José.
+5. Restar de la mitad de Matías la nómina que José ya transfirió.
+
+La Seguridad Social se paga completa aunque Matías trabaje menos días. Durante
+el mes en curso la aplicación puede mostrar una estimación diaria usando 670 €
+y 22 días como valores iniciales, pero el cierre siempre utiliza el importe
+mensual confirmado.
+
+## Cierre de caja
+
+José recibe todo el datáfono y Matías conserva físicamente el efectivo. El
+efectivo disponible se calcula restando al efectivo generado la gasolina de
+Matías y la gasolina de José. La entrega final a José es el efectivo disponible
+menos el importe todavía pendiente para Matías.
+
+Seguridad Social, nómina transferida y días previstos son editables por ambos.
+José puede revisar la liquidación pero no cerrarla. Solo Matías confirma el
+cierre definitivo una vez finalizado el mes. Después del cierre los importes quedan congelados en una
+instantánea y las modificaciones de configuración y el cierre quedan
+auditados. Las jornadas diarias no se duplican ni se modifican.
+
+Los meses anteriores se reconstruyen automáticamente a partir de las jornadas
+cerradas y permanecen pendientes de revisión hasta confirmar sus datos. El
+acceso legacy continúa disponible para el flujo existente, pero la liquidación
+mensual requiere una cuenta personal para identificar permisos y autoría.
+
 # Resumen diario
 
 ## Objetivo

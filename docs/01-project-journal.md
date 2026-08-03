@@ -132,6 +132,17 @@ cabecera y nunca detrás de la hora, notificaciones o batería. Las 50 pruebas d
 cliente, análisis estático y compilación finalizaron correctamente. La
 publicación queda pendiente de autorización.
 
+El 03/08/2026 comenzó la liquidación mensual de Matías. La implementación
+deriva los cálculos de jornadas cerradas, comparte un único registro con José y
+reserva el cierre definitivo al conductor. La referencia documental de junio
+se convirtió en una prueba de fórmula y se realizó además un cotejo de solo
+lectura contra producción. Coincidieron 20 jornadas y 475,21 € de combustible,
+pero los datos cargados sumaron 0,21 € más de efectivo y 232 km más que el PDF.
+Después de comprobar que los 5.122 km coinciden con la diferencia exacta entre
+los cuentakilómetros inicial y final, se aprobaron las jornadas de TaxFin como
+fuente oficial. Junio queda reconstruido con 5.188,29 € netos y 1.172,56 € para
+entregar a José. No se modificó ninguna jornada ni se retiró el acceso legacy.
+
 ## Estado
 
 ✅ Sprint finalizado.

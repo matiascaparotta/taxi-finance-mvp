@@ -29,6 +29,12 @@ const icons = {
       <path d="M3 3v5h5M12 7v5l3 2" />
     </>
   ),
+  monthly: (
+    <>
+      <rect x="3" y="4" width="18" height="17" rx="2" />
+      <path d="M7 2v4M17 2v4M3 9h18M8 14h2M14 14h2M8 18h2" />
+    </>
+  ),
 };
 
 function NavigationIcon({ id }) {

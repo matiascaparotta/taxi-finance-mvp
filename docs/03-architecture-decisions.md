@@ -1028,6 +1028,34 @@ y el acceso legacy permaneció activo.
 
 ---
 
+# ADR-019
+
+## Liquidación mensual derivada, compartida y con cierre inmutable
+
+**Fecha:** 03/08/2026
+
+**Estado:** 🧪 Implementada y validada localmente; pendiente de publicación
+
+### Decisión
+
+Calcular la liquidación de Matías desde sus jornadas cerradas, sin copiar
+facturación ni medios de pago a una tabla mensual. Matías y José comparten un
+solo registro de parámetros por mes. Ambos pueden confirmar Seguridad Social,
+nómina transferida y días previstos; solo Matías puede cerrar.
+
+El cierre almacena una instantánea económica y una auditoría. Los meses
+anteriores aparecen automáticamente como pendientes de revisión. El acceso
+legacy no se retira, pero esta función exige identidad personal.
+
+### Consecuencias
+
+- mayo, junio y julio pueden reconstruirse sin alterar jornadas reales;
+- una liquidación abierta refleja correcciones autorizadas de sus jornadas;
+- una liquidación cerrada no cambia silenciosamente;
+- José mantiene solo lectura sobre jornadas ajenas y no puede cerrar por
+  Matías;
+- no se incorpora modo offline financiero ni sincronización posterior.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

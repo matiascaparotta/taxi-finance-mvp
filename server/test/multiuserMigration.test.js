@@ -66,6 +66,11 @@ test("el respaldo incluye las nuevas entidades multiusuario", () => {
     "organization_memberships",
     "vehicles",
   ]);
+  assert.equal(BACKUP_TABLES.includes("monthly_settlements"), true);
+  assert.equal(
+    BACKUP_TABLES.includes("monthly_settlement_audit_logs"),
+    true
+  );
 });
 
 test("la propiedad de jornadas se añade sin reasignar datos", () => {
