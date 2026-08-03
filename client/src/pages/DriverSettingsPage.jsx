@@ -44,6 +44,23 @@ function DriverSettingsPage() {
     } catch (saveError) { setError(saveError.message); }
   };
 
+  const updateCompanyDraft = (id, field, value) => {
+    setSettings({
+      ...settings,
+      companies: settings.companies.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      ),
+    });
+  };
+
+  const saveCompany = async (item) => {
+    try {
+      await saveCommissionCompany(item);
+      setNotice("Empresa actualizada");
+      await load();
+    } catch (saveError) { setError(saveError.message); }
+  };
+
   if (!settings) return <Card><p className="text-center text-slate-300">Preparando configuración...</p>{error && <p className="mt-3 text-red-300">{error}</p>}</Card>;
 
   return <section className="space-y-6">
@@ -70,7 +87,7 @@ function DriverSettingsPage() {
       </form>
       <div className="mt-5 space-y-3">
         {settings.companies.length === 0 && <p className="rounded-xl border border-dashed border-slate-700 p-4 text-sm text-slate-400">Todavía no agregaste empresas.</p>}
-        {settings.companies.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/60 p-4"><div><p className="font-bold">{item.name}</p><p className="text-sm text-emerald-300">{item.commissionRate} % de comisión</p></div><button type="button" onClick={() => toggleCompany(item)} className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold">{item.status === "ACTIVE" ? "Retirar" : "Reactivar"}</button></div>)}
+        {settings.companies.map((item) => <div key={item.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"><div className="grid gap-3 sm:grid-cols-[1fr_9rem_auto_auto]"><input aria-label={`Nombre de ${item.name}`} value={item.name} onChange={(e) => updateCompanyDraft(item.id, "name", e.target.value)} className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 font-bold" /><label className="relative"><input aria-label={`Comisión de ${item.name}`} type="number" min="0" max="100" step="0.01" value={item.commissionRate} onChange={(e) => updateCompanyDraft(item.id, "commissionRate", e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 pr-7 text-emerald-300" /><span className="absolute right-3 top-2 text-slate-500">%</span></label><button type="button" onClick={() => saveCompany(item)} className="rounded-xl bg-emerald-400 px-3 py-2 text-sm font-bold text-slate-950">Guardar</button><button type="button" onClick={() => toggleCompany(item)} className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold">{item.status === "ACTIVE" ? "Retirar" : "Reactivar"}</button></div></div>)}
       </div>
     </Card>
   </section>;
