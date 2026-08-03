@@ -42,6 +42,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Navegación específica para Alberto: `Mi jornada`, `Mensual` e `Historial`,
   sin Inicio de propietario, Equipo ni Mis conductores. Su resumen mensual
   muestra únicamente sus propios datos y no aplica las reglas de Lic249.
+- Configuración laboral publicada mediante `58cc1c9`: tarifa por kilómetro,
+  Seguridad Social diaria y catálogo editable de empresas con comisión.
+  Cada viaje conserva empresa, porcentaje e importe, y los resúmenes activo,
+  diario y mensual presentan comisiones, propinas y desglose por empresa.
 
 - Nueva liquidación mensual compartida para Matías y José, derivada de
   jornadas cerradas y sin duplicar importes financieros.

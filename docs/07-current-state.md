@@ -93,11 +93,14 @@ trabajados por la tarifa activa, muestra el resultado antes de confirmar y lo
 guarda como coste propio. El servidor repite el cálculo para impedir que un
 cliente alterado envíe otro importe.
 
-La siguiente evolución incorpora una pantalla `Configuración` exclusiva de
+La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con su porcentaje. Los viajes guardan una
 instantánea de empresa y porcentaje. Los resúmenes activo, diario y mensual
 presentan comisiones y propinas, incluida la distribución visual por empresa.
+Railway aplicó las migraciones `018`, `019` y `020`, dejó configurados
+0,10 €/km y 35 € diarios y mantuvo `/api/health` saludable. El catálogo se
+publicó vacío para que Alberto cargue únicamente empresas reales.
 
 La experiencia de `Lic1315` se limita a `Mi jornada`, `Mensual` e `Historial`.
 No muestra Inicio de propietario, Equipo ni Mis conductores. El logotipo abre
