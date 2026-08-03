@@ -632,9 +632,9 @@ kilómetro, el importe diario de Seguridad Social y su catálogo de empresas u
 hoteles con comisión. Retirar una empresa la desactiva para viajes nuevos, pero
 no borra su historial.
 
-Al elegir una empresa en un viaje, TaxFin calcula la comisión sobre el importe
-del viaje y guarda como instantánea el nombre, el porcentaje y el importe. Un
-cambio posterior de porcentaje no modifica viajes anteriores. Las propinas
+Al elegir una empresa en un viaje, TaxFin aplica el importe fijo configurado
+para esa empresa y guarda como instantánea el nombre y el importe. Un
+cambio posterior del importe no modifica viajes anteriores. Las propinas
 pertenecen íntegramente a Alberto.
 
 La jornada activa, el detalle cerrado y el resumen mensual muestran la comisión

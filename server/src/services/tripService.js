@@ -121,13 +121,11 @@ const createTripService = async (tripData, auth = null) => {
     );
     if (!company) throw new Error("La empresa de comisión no está disponible");
     normalizedTrip.commissionCompanyName = company.name;
-    normalizedTrip.commissionRate = Number(company.commissionRate);
-    normalizedTrip.commission = Number(
-      (normalizedTrip.amount * normalizedTrip.commissionRate / 100).toFixed(2)
-    );
+    normalizedTrip.commissionCompanyAmount = Number(company.commissionAmount);
+    normalizedTrip.commission = normalizedTrip.commissionCompanyAmount;
   } else {
     normalizedTrip.commissionCompanyName = null;
-    normalizedTrip.commissionRate = null;
+    normalizedTrip.commissionCompanyAmount = null;
   }
 
   return await createTrip(normalizedTrip);

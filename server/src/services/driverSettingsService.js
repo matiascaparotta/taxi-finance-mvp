@@ -23,10 +23,10 @@ const rate = (value) => {
 
 const companyInput = (input) => {
   const name = input?.name?.trim();
-  const commissionRate = Number(input?.commissionRate);
+  const commissionAmount = Number(input?.commissionAmount);
   if (!name || name.length > 120) throw new Error("El nombre de la empresa es obligatorio");
-  if (!Number.isFinite(commissionRate) || commissionRate < 0 || commissionRate > 100) throw new Error("La comisión debe estar entre 0 y 100 %");
-  return { name, commissionRate: Number(commissionRate.toFixed(4)) };
+  if (!Number.isFinite(commissionAmount) || commissionAmount < 0 || commissionAmount > 10000) throw new Error("El importe de comisión no es válido");
+  return { name, commissionAmount: Number(commissionAmount.toFixed(2)) };
 };
 
 const getDriverSettings = async (auth) => {
@@ -38,7 +38,7 @@ const getDriverSettings = async (auth) => {
   return {
     fuelRatePerKm: Number(settings?.fuelRatePerKm || 0),
     dailySocialSecurity: Number(settings?.dailySocialSecurity || 0),
-    companies: companies.map((company) => ({ ...company, id: Number(company.id), commissionRate: Number(company.commissionRate) })),
+    companies: companies.map((company) => ({ ...company, id: Number(company.id), commissionAmount: Number(company.commissionAmount) })),
   };
 };
 

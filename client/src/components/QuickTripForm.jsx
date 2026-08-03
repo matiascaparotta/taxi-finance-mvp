@@ -201,9 +201,9 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
             Empresa con comisión
             <select value={commissionCompanyId} onChange={(event) => setCommissionCompanyId(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white">
               <option value="">Sin comisión de empresa</option>
-              {commissionCompanies.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.commissionRate} %</option>)}
+              {commissionCompanies.map((item) => <option key={item.id} value={item.id}>{item.name} · {Number(item.commissionAmount).toFixed(2)} €</option>)}
             </select>
-            {commissionCompanyId && amount && <span className="mt-2 block text-xs text-emerald-300">Comisión calculada: {(parseMoneyInput(amount) * Number(commissionCompanies.find((item) => String(item.id) === String(commissionCompanyId))?.commissionRate || 0) / 100).toFixed(2)} €</span>}
+            {commissionCompanyId && <span className="mt-2 block text-xs text-emerald-300">Comisión fija: {Number(commissionCompanies.find((item) => String(item.id) === String(commissionCompanyId))?.commissionAmount || 0).toFixed(2)} €</span>}
           </label>
         )}
 

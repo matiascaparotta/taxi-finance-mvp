@@ -25,7 +25,7 @@ const updateSettings = async (organizationId, userId, settings) => {
 
 const listCompanies = async (organizationId, userId) => {
   const [rows] = await pool.query(
-    `SELECT id, name, commission_rate AS commissionRate, status
+    `SELECT id, name, commission_amount AS commissionAmount, status
      FROM commission_companies
      WHERE organization_id = ? AND driver_user_id = ?
      ORDER BY status = 'ACTIVE' DESC, name`,
@@ -36,7 +36,7 @@ const listCompanies = async (organizationId, userId) => {
 
 const getActiveCompany = async (organizationId, userId, companyId) => {
   const [rows] = await pool.query(
-    `SELECT id, name, commission_rate AS commissionRate
+    `SELECT id, name, commission_amount AS commissionAmount
      FROM commission_companies
      WHERE id = ? AND organization_id = ? AND driver_user_id = ? AND status = 'ACTIVE'`,
     [companyId, organizationId, userId]
@@ -47,9 +47,9 @@ const getActiveCompany = async (organizationId, userId, companyId) => {
 const createCompany = async (organizationId, userId, company) => {
   const [result] = await pool.query(
     `INSERT INTO commission_companies
-       (organization_id, driver_user_id, name, commission_rate)
+       (organization_id, driver_user_id, name, commission_amount)
      VALUES (?, ?, ?, ?)`,
-    [organizationId, userId, company.name, company.commissionRate]
+    [organizationId, userId, company.name, company.commissionAmount]
   );
   return { id: result.insertId, ...company, status: "ACTIVE" };
 };
@@ -57,9 +57,9 @@ const createCompany = async (organizationId, userId, company) => {
 const updateCompany = async (organizationId, userId, companyId, company) => {
   const [result] = await pool.query(
     `UPDATE commission_companies
-     SET name = ?, commission_rate = ?, status = ?
+     SET name = ?, commission_amount = ?, status = ?
      WHERE id = ? AND organization_id = ? AND driver_user_id = ?`,
-    [company.name, company.commissionRate, company.status, companyId, organizationId, userId]
+    [company.name, company.commissionAmount, company.status, companyId, organizationId, userId]
   );
   return result.affectedRows === 1
     ? { id: Number(companyId), ...company }

@@ -173,7 +173,7 @@ por completo Equipo, Mis conductores y las reglas económicas de Lic249.
 La configuración laboral de Alberto se publicó mediante `58cc1c9`. Railway
 aplicó `018`, `019` y `020`, configuró 0,10 €/km y 35 € diarios y dejó vacío el
 catálogo de empresas. Alberto puede administrarlo desde TaxFin. Los viajes
-nuevos guardarán una instantánea de empresa, porcentaje e importe; la jornada
+nuevos guardarán una instantánea de empresa e importe fijo; la jornada
 activa y los resúmenes diario y mensual mostrarán comisiones, propinas y el
 desglose visual por empresa. No se creó ninguna empresa, jornada o viaje real.
 

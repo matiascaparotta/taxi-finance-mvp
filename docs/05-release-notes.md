@@ -44,7 +44,7 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   muestra únicamente sus propios datos y no aplica las reglas de Lic249.
 - Configuración laboral publicada mediante `58cc1c9`: tarifa por kilómetro,
   Seguridad Social diaria y catálogo editable de empresas con comisión.
-  Cada viaje conserva empresa, porcentaje e importe, y los resúmenes activo,
+  Cada viaje conserva empresa e importe fijo, y los resúmenes activo,
   diario y mensual presentan comisiones, propinas y desglose por empresa.
 
 - Nueva liquidación mensual compartida para Matías y José, derivada de

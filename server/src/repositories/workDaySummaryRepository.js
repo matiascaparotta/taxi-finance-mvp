@@ -28,7 +28,7 @@ const getWorkDayWithTrips = async (workDayId) => {
       payment_type AS paymentType,
       commission,
       commission_company_name AS commissionCompanyName,
-      commission_rate AS commissionRate,
+      commission_company_amount AS commissionCompanyAmount,
       tip,
       note
     FROM trips

@@ -95,8 +95,8 @@ cliente alterado envíe otro importe.
 
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
-agregar, retirar o reactivar empresas con su porcentaje. Los viajes guardan una
-instantánea de empresa y porcentaje. Los resúmenes activo, diario y mensual
+agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una
+instantánea de empresa e importe. Los resúmenes activo, diario y mensual
 presentan comisiones y propinas, incluida la distribución visual por empresa.
 Railway aplicó las migraciones `018`, `019` y `020`, dejó configurados
 0,10 €/km y 35 € diarios y mantuvo `/api/health` saludable. El catálogo se
