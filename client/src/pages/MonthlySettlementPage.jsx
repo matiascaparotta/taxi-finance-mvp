@@ -11,6 +11,7 @@ import {
 } from "../services/monthlySettlementService";
 import { formatCurrency } from "../utils/formatCurrency";
 import { isOwnerUser } from "../utils/userNavigation";
+import { normalizeWorkDayDate } from "../utils/workDayDate";
 
 const currentMonth = () => {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -239,7 +240,11 @@ function MonthlySettlementPage({ currentUser = null }) {
         <h3 className="text-lg font-bold">Jornadas incluidas</h3>
         {settlement.days.length === 0 ? <p className="mt-3 text-sm text-slate-400">Todavía no hay jornadas cerradas en este mes.</p> : (
           <div className="mt-4 divide-y divide-slate-800">
-            {settlement.days.map((day) => <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${day.date}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><p className="font-black">{formatCurrency(day.netRevenue)}</p></div>)}
+            {settlement.days.map((day) => {
+              const normalizedDate = normalizeWorkDayDate(day.date);
+
+              return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><p className="font-black">{formatCurrency(day.netRevenue)}</p></div>;
+            })}
           </div>
         )}
       </Card>

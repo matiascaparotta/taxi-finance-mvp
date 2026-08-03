@@ -28,3 +28,7 @@ test("el resultado indica correctamente quién entrega el dinero", () => {
   assert.match(page, /José entrega a Matías/);
   assert.match(page, /Math\.abs\(calculation\.deliveryToOwner\)/);
 });
+
+test("normaliza las fechas SQL antes de presentar cada jornada", () => {
+  assert.match(page, /normalizeWorkDayDate\(day\.date\)/);
+});
