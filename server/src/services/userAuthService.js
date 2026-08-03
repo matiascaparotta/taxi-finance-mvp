@@ -37,6 +37,11 @@ const authenticateUser = async (
     organizationName: user.organizationName,
     isOwner: Boolean(user.isOwner),
     isDriver: Boolean(user.isDriver),
+    fuelCalculationMode: user.fuelCalculationMode || "ACTUAL_LOAD",
+    fuelRatePerKm:
+      user.fuelRatePerKm === null || user.fuelRatePerKm === undefined
+        ? null
+        : Number(user.fuelRatePerKm),
     mustChangePassword: Boolean(user.mustChangePassword),
   };
 };

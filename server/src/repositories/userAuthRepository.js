@@ -12,7 +12,9 @@ const findActiveUserForLogin = async (username) => {
       organizations.id AS organizationId,
       organizations.name AS organizationName,
       organization_memberships.is_owner AS isOwner,
-      organization_memberships.is_driver AS isDriver
+      organization_memberships.is_driver AS isDriver,
+      organization_memberships.fuel_calculation_mode AS fuelCalculationMode,
+      organization_memberships.fuel_rate_per_km AS fuelRatePerKm
     FROM users
     INNER JOIN organization_memberships
       ON organization_memberships.user_id = users.id
@@ -87,7 +89,11 @@ const getUserAccessState = async (userId, organizationId) => {
     `
     SELECT
       1 AS active,
-      users.must_change_password AS mustChangePassword
+      users.must_change_password AS mustChangePassword,
+      organization_memberships.is_owner AS isOwner,
+      organization_memberships.is_driver AS isDriver,
+      organization_memberships.fuel_calculation_mode AS fuelCalculationMode,
+      organization_memberships.fuel_rate_per_km AS fuelRatePerKm
     FROM users
     INNER JOIN organization_memberships
       ON organization_memberships.user_id = users.id
@@ -110,6 +116,13 @@ const getUserAccessState = async (userId, organizationId) => {
   return {
     active: true,
     mustChangePassword: Boolean(rows[0].mustChangePassword),
+    isOwner: Boolean(rows[0].isOwner),
+    isDriver: Boolean(rows[0].isDriver),
+    fuelCalculationMode: rows[0].fuelCalculationMode,
+    fuelRatePerKm:
+      rows[0].fuelRatePerKm === null
+        ? null
+        : Number(rows[0].fuelRatePerKm),
   };
 };
 

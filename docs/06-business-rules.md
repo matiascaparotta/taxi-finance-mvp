@@ -621,8 +621,9 @@ Cada conductor podrá tener una de estas modalidades:
 La tarifa por distancia podrá cambiar sin alterar las jornadas cerradas
 anteriormente. No representa un porcentaje del combustible cargado. Por
 ejemplo, 300 km a 0,10 €/km generan un coste de 30 €, mientras que una carga
-real de 60 € descuenta los 60 € completos. Alberto comienza con `ACTUAL_LOAD`
-hasta que se confirme una tarifa concreta con su empleador.
+real de 60 € descuenta los 60 € completos. Alberto utiliza `DISTANCE_RATE` a
+0,10 €/km. TaxFin calcula y guarda ese coste automáticamente al cerrar la
+jornada; la tarifa podrá cambiar para jornadas futuras sin recalcular cierres.
 
 ## Consistencia de los datos
 

@@ -81,6 +81,15 @@ const createRequireActiveUserSession = ({
       req.auth.mustChangePassword = true;
     }
 
+    req.auth.isOwner = accessState.isOwner;
+    req.auth.isDriver = accessState.isDriver;
+    req.auth.roles = {
+      isOwner: accessState.isOwner,
+      isDriver: accessState.isDriver,
+    };
+    req.auth.fuelCalculationMode = accessState.fuelCalculationMode;
+    req.auth.fuelRatePerKm = accessState.fuelRatePerKm;
+
     next();
   } catch (error) {
     next(error);

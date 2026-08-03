@@ -87,6 +87,12 @@ contraseña obligatorio. Hasta realizar ese cambio, la API rechaza el acceso a
 jornadas. No se creó ninguna jornada, viaje ni dato financiero y Lic249 no se
 modificó.
 
+El combustible de Alberto se calcula por distancia a 0,10 €/km. En el cierre
+solo introduce el kilometraje final: TaxFin multiplica los kilómetros
+trabajados por la tarifa activa, muestra el resultado antes de confirmar y lo
+guarda como coste propio. El servidor repite el cálculo para impedir que un
+cliente alterado envíe otro importe.
+
 La experiencia de `Lic1315` se limita a `Mi jornada`, `Mensual` e `Historial`.
 No muestra Inicio de propietario, Equipo ni Mis conductores. El logotipo abre
 directamente la jornada. El resumen mensual contiene únicamente jornadas,

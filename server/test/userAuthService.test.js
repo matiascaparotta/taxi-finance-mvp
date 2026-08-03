@@ -56,6 +56,8 @@ test("autentica una cuenta activa y devuelve datos públicos", async () => {
     organizationName: "Lic249",
     isOwner: false,
     isDriver: true,
+    fuelCalculationMode: "ACTUAL_LOAD",
+    fuelRatePerKm: null,
     mustChangePassword: true,
   });
   assert.equal("passwordHash" in user, false);

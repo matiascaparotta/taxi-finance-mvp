@@ -56,6 +56,11 @@ const getPublicUser = (session) => {
     },
     isOwner,
     isDriver,
+    fuelCalculationMode: session.fuelCalculationMode || "ACTUAL_LOAD",
+    fuelRatePerKm:
+      session.fuelRatePerKm === null || session.fuelRatePerKm === undefined
+        ? null
+        : Number(session.fuelRatePerKm),
     mustChangePassword: Boolean(session.mustChangePassword),
   };
 };

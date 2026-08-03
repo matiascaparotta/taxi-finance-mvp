@@ -172,16 +172,27 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
     throw new Error("El kilometraje final no puede ser menor al inicial");
   }
 
-  const effectiveFuelAllocation = resolveFuelAllocation(
-    fuelAllocation,
-    {
-      isOwner: Boolean(
-        auth?.roles?.isOwner ?? auth?.isOwner
-      ),
-    }
-  );
+  const distanceFuelMode =
+    auth?.fuelCalculationMode === "DISTANCE_RATE";
+  const workedKm = Number(endKm) - Number(openWorkDay.startKm);
+  const effectiveFuelAmount = distanceFuelMode
+    ? Number((workedKm * Number(auth?.fuelRatePerKm || 0)).toFixed(2))
+    : fuelAmount;
+  if (distanceFuelMode && !(Number(auth?.fuelRatePerKm) > 0)) {
+    throw new Error("La tarifa de combustible por kilómetro no está configurada");
+  }
+  const effectiveFuelAllocation = distanceFuelMode
+    ? "OWN"
+    : resolveFuelAllocation(
+      fuelAllocation,
+      {
+        isOwner: Boolean(
+          auth?.roles?.isOwner ?? auth?.isOwner
+        ),
+      }
+    );
   const fuelSplit = calculateFuelSplit(
-    fuelAmount,
+    effectiveFuelAmount,
     effectiveFuelAllocation
   );
 

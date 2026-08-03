@@ -151,8 +151,8 @@ test("prepara Lic1315 aislada con Alberto como conductor asalariado", async () =
   assert.equal(membership.userId, alberto.id);
   assert.equal(membership.isOwner, false);
   assert.equal(membership.isDriver, true);
-  assert.equal(membership.fuelCalculationMode, "ACTUAL_LOAD");
-  assert.equal(membership.fuelRatePerKm, null);
+  assert.equal(membership.fuelCalculationMode, "DISTANCE_RATE");
+  assert.equal(membership.fuelRatePerKm, 0.1);
 });
 
 test("puede repetirse sin duplicar ni cambiar contraseñas", async () => {

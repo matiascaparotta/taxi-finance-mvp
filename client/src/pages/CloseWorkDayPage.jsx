@@ -32,6 +32,9 @@ function CloseWorkDayPage({ currentUser }) {
   const isOwner = Boolean(
     currentUser?.roles?.isOwner ?? currentUser?.isOwner
   );
+  const distanceFuelMode =
+    currentUser?.fuelCalculationMode === "DISTANCE_RATE";
+  const fuelRatePerKm = Number(currentUser?.fuelRatePerKm || 0);
   const effectiveFuelAllocation = isOwner
     ? "OWN"
     : fuelAllocation;
@@ -99,7 +102,7 @@ function CloseWorkDayPage({ currentUser }) {
       return;
     }
 
-    if (!/^\d+(?:\.\d{1,2})?$/.test(fuelAmount)) {
+    if (!distanceFuelMode && !/^\d+(?:\.\d{1,2})?$/.test(fuelAmount)) {
       setError("Introduce un importe de combustible válido, con hasta 2 decimales");
       return;
     }
@@ -137,8 +140,10 @@ function CloseWorkDayPage({ currentUser }) {
 
   const dateOptions = getCloseDateOptions();
   const fuelSplit = calculateFuelSplit(
-    fuelAmount,
-    effectiveFuelAllocation
+    distanceFuelMode && workedKm !== null
+      ? (workedKm * fuelRatePerKm).toFixed(2)
+      : fuelAmount,
+    distanceFuelMode ? "OWN" : effectiveFuelAllocation
   );
 
   if (isLoading) {
@@ -253,6 +258,17 @@ function CloseWorkDayPage({ currentUser }) {
           )}
 
           <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+            {distanceFuelMode ? (
+              <div>
+                <p className="text-sm font-medium text-slate-200">⛽ Combustible por kilómetros</p>
+                <p className="mt-2 text-2xl font-black text-white">
+                  {workedKm === null ? "Pendiente de kilometraje final" : formatCurrency(workedKm * fuelRatePerKm)}
+                </p>
+                <p className="mt-2 text-xs text-slate-400">
+                  {workedKm === null ? `Tarifa configurada: ${fuelRatePerKm.toFixed(2)} €/km` : `${workedKm} km × ${fuelRatePerKm.toFixed(2)} €/km`}
+                </p>
+              </div>
+            ) : <>
             <label
               htmlFor="fuelAmount"
               className="mb-2 block text-sm font-medium text-slate-200"
@@ -369,6 +385,7 @@ function CloseWorkDayPage({ currentUser }) {
                 )}
               </div>
             )}
+            </>}
           </div>
 
           <div>
