@@ -32,7 +32,7 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 
 # Próxima versión — Base multiusuario
 
-## En desarrollo
+## Publicado el 03/08/2026
 
 - Nueva liquidación mensual compartida para Matías y José, derivada de
   jornadas cerradas y sin duplicar importes financieros.
@@ -43,6 +43,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Reconstrucción automática de meses anteriores y estado pendiente de revisión.
 - Junio conciliado contra sus 20 jornadas oficiales: 5.188,29 € netos,
   5.122 km y 1.172,56 € para José, sin modificar datos diarios.
+- Publicación mediante `f2769a5`, con correcciones operativas `fc8ed9c`,
+  `4c6106e` y `f1bfc05`. Railway sirve exactamente `f1bfc054889c`, con
+  migraciones actualizadas y API saludable.
+- Verificación real de solo lectura con José: junio coincide, las fechas se
+  muestran correctamente y el cierre definitivo no está disponible para él.
+  El acceso legacy continúa activo y no se modificó ningún dato real.
 
 - Base de organizaciones independientes.
 - Cuentas personales con nombre de usuario y contraseña.

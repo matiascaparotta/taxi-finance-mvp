@@ -1034,7 +1034,7 @@ y el acceso legacy permaneció activo.
 
 **Fecha:** 03/08/2026
 
-**Estado:** 🧪 Implementada y validada localmente; pendiente de publicación
+**Estado:** ✅ Publicada y verificada en producción
 
 ### Decisión
 
@@ -1055,6 +1055,17 @@ legacy no se retira, pero esta función exige identidad personal.
 - José mantiene solo lectura sobre jornadas ajenas y no puede cerrar por
   Matías;
 - no se incorpora modo offline financiero ni sincronización posterior.
+
+### Publicación
+
+La funcionalidad se publicó el 03/08/2026 mediante `f2769a5`. Las migraciones
+se separaron para respetar la ejecución transaccional del migrador en
+`fc8ed9c`; la identificación del conductor se corrigió en `4c6106e` y la
+presentación de fechas en `f1bfc05`. Railway desplegó exactamente
+`f1bfc054889c`, aplicó las migraciones `016` y `017` y mantuvo saludable
+`/api/health`. La verificación real con la sesión de José confirmó el acceso
+compartido, junio conciliado y la ausencia del control de cierre para el
+propietario, sin escribir datos financieros.
 
 # Conclusión
 

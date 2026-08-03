@@ -2,7 +2,7 @@
 
 **Versión:** 2.1
 
-**Última actualización:** 25/07/2026
+**Última actualización:** 03/08/2026
 
 **Estado:** Beta 1.0 publicada — base multiusuario compatible desplegada
 
@@ -37,7 +37,7 @@ validación del uso diario sobre el primer deploy privado.
 
 ---
 
-# Desarrollo local pendiente de publicación — Liquidación mensual
+# Liquidación mensual publicada
 
 La nueva pestaña `Mensual` reconstruye los meses de Matías desde jornadas
 cerradas. Incluye reparto 50/50, conciliación de efectivo y datáfono,
@@ -51,7 +51,22 @@ datáfono. Las jornadas oficiales suman 2.373,50 € de efectivo y 5.122 km. Se
 identificaron como errores manuales del documento anterior una diferencia de
 0,21 € en efectivo y otra de 232 km. Junio queda por tanto conciliado con
 5.188,29 € netos y una entrega final de 1.172,56 € a José, sin modificar
-ninguna jornada. Producción permanece sin cambios hasta publicar la función.
+ninguna jornada.
+
+La función está publicada desde el 03/08/2026. El historial de commits es
+`f2769a5` (funcionalidad), `fc8ed9c` (migraciones separadas), `4c6106e`
+(identificación de conductores) y `f1bfc05` (fechas normalizadas). Railway
+desplegó exactamente `f1bfc054889c`; las migraciones `016` y `017` quedaron
+aplicadas y `/api/health` respondió saludable.
+
+La comprobación de solo lectura con la sesión real de José confirmó la pestaña
+`Mensual`, los 20 días de junio con fechas válidas, todos los importes
+conciliados y el mensaje que reserva el cierre definitivo a Matías. José no ve
+el botón de cierre. No se guardó configuración, no se cerró ninguna
+liquidación y no se creó, corrigió ni eliminó ninguna jornada o viaje. El
+service worker activo usa la versión real `taxfin-app-shell-f1bfc054889c`, sin
+el marcador de compilación. El acceso legacy continúa activo y no existe modo
+offline financiero ni sincronización posterior.
 
 # Sprint actual
 

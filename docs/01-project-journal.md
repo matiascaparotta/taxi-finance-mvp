@@ -143,6 +143,20 @@ los cuentakilómetros inicial y final, se aprobaron las jornadas de TaxFin como
 fuente oficial. Junio queda reconstruido con 5.188,29 € netos y 1.172,56 € para
 entregar a José. No se modificó ninguna jornada ni se retiró el acceso legacy.
 
+La liquidación mensual se publicó el 03/08/2026 mediante `f2769a5`. El primer
+despliegue detectó que el migrador exige una sentencia por archivo y producción
+continuó disponible sobre la versión anterior. `fc8ed9c` separó las migraciones
+`016` y `017`; `4c6106e` expuso correctamente la identidad de conductor y
+`f1bfc05` normalizó las fechas de las jornadas. Railway desplegó finalmente
+`f1bfc054889c`, aplicó ambas migraciones y mantuvo saludable `/api/health`.
+
+La sesión real de José confirmó en producción la pestaña mensual, los importes
+oficiales de junio, sus 20 jornadas con fechas válidas y la reserva del cierre
+definitivo a Matías. La comprobación fue completamente de solo lectura: no se
+guardaron parámetros ni se modificaron jornadas, viajes o liquidaciones. El
+service worker usa `taxfin-app-shell-f1bfc054889c`, el acceso legacy permanece
+activo y no se incorporó ninguna operación financiera offline.
+
 ## Estado
 
 ✅ Sprint finalizado.
