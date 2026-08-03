@@ -69,7 +69,7 @@ test("prorratea la seguridad social solo durante el mes en curso", () => {
   assert.equal(result.dailySocialSecurity, 30.45);
   assert.equal(result.socialSecurityApplied, 335);
   assert.equal(result.distributableBase, 765);
-  assert.equal(result.averageDailyRevenue, 69.55);
+  assert.equal(result.averageDailyDriverEarning, 34.77);
 });
 
 test("calcula el promedio diario después de gasolina y seguridad social", () => {
@@ -84,7 +84,7 @@ test("calcula el promedio diario después de gasolina y seguridad social", () =>
   });
 
   assert.equal(result.distributableBase, 350);
-  assert.equal(result.averageDailyRevenue, 175);
+  assert.equal(result.averageDailyDriverEarning, 87.5);
 });
 
 test("descuenta por separado la gasolina propia y la de José de caja", () => {

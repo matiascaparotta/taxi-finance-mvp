@@ -51,7 +51,10 @@ const calculateMonthlySettlement = ({
     cashAvailable - pendingForDriver
   );
   const averageDailyRevenue = workedDays
-    ? roundMoney(distributableBase / workedDays)
+    ? roundMoney(netRevenueForSplit / workedDays)
+    : 0;
+  const averageDailyDriverEarning = workedDays
+    ? roundMoney(distributableBase / workedDays / 2)
     : 0;
 
   return {
@@ -76,6 +79,7 @@ const calculateMonthlySettlement = ({
     cashAvailable,
     deliveryToOwner,
     averageDailyRevenue,
+    averageDailyDriverEarning,
     projectedNetRevenue: roundMoney(
       averageDailyRevenue * safeExpectedDays
     ),

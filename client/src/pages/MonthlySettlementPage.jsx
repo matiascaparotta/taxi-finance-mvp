@@ -237,7 +237,7 @@ function MonthlySettlementPage({ currentUser = null }) {
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
-          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Promedio diario tras gasolina y S. Social</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyRevenue)}</p></div>
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Ganancia neta aproximada diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyDriverEarning)}</p><p className="mt-1 text-[11px] text-slate-500">Tu 50 % tras gasolina y Seguridad Social</p></div>
         </div>
       </Card>
 
@@ -298,8 +298,9 @@ function MonthlySettlementPage({ currentUser = null }) {
           <div className="mt-4 divide-y divide-slate-800">
             {settlement.days.map((day) => {
               const normalizedDate = normalizeWorkDayDate(day.date);
+              const estimatedDailyEarning = (Number(day.totalRevenue) - Number(day.fuelOwn) - Number(calculation.dailySocialSecurity)) / 2;
 
-              return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><p className="font-black">{formatCurrency(day.netRevenue)}</p></div>;
+              return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><div className="text-right"><p className="font-black text-emerald-300">{formatCurrency(estimatedDailyEarning)}</p><p className="text-[11px] text-slate-500">Ganancia estimada de Matías</p></div></div>;
             })}
           </div>
         )}
