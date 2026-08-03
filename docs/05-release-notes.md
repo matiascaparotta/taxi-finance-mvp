@@ -130,6 +130,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   Railway sirvió exactamente `310d3f575e6a`, con la migración previa y la API
   saludables. La sesión de José, la actualización PWA, el inicio en `/` y la
   lectura protegida de Matías se verificaron sin modificar datos reales.
+- Experiencia móvil estabilizada mediante `4395366`: TaxFin conserva su fondo
+  oscuro al desplazar o reducir la vista, evita zoom accidental y cubre las
+  áreas completas de iPhone. Railway sirvió exactamente `43953668fe97` con la
+  API saludable.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

@@ -83,6 +83,13 @@ comprobaron en solo lectura y sin controles de escritura. No se modificó ningú
 dato real, no se añadió modo offline financiero y el acceso legacy siguió
 activo.
 
+La presentación móvil se reforzó después de detectar que Safari permitía
+reducir la página y mostraba el fondo blanco del navegador. El commit `4395366`
+fijó la escala de aplicación, extendió el fondo oscuro a todo el documento,
+controló el rebote y evitó desbordamientos horizontales. Railway publicó
+exactamente `43953668fe97`; la API y el worker permanecieron saludables. La
+mejora no modificó datos ni incorporó operaciones financieras offline.
+
 ## Estado
 
 ✅ Sprint finalizado.

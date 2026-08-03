@@ -363,6 +363,13 @@ La sesión real de José permaneció activa y la consulta del historial y detall
 de Matías continuó sin controles de escritura. No se modificó ningún dato real,
 el acceso legacy siguió activo y no se incorporó modo offline financiero.
 
+La interfaz móvil mantiene ahora una escala estable y un fondo oscuro continuo
+en `html`, `body` y la raíz de React. El viewport cubre las áreas completas del
+iPhone, evita el zoom accidental y el rebote ya no descubre el fondo blanco del
+navegador. La mejora se publicó mediante `4395366`; Railway dejó activo
+`43953668fe97`, con `/api/health` saludable y el worker correctamente
+versionado. No hubo cambios de datos.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
