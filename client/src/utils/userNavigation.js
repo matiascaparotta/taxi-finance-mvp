@@ -1,13 +1,18 @@
 export const isOwnerUser = (user) =>
   Boolean(user?.roles?.isOwner ?? user?.isOwner);
 
+export const isSalariedDriverUser = (user) =>
+  user?.organizationName === "Lic1315" &&
+  !isOwnerUser(user) &&
+  Boolean(user?.roles?.isDriver ?? user?.isDriver);
+
 export const getUserRoleLabel = (user) => {
   if (isOwnerUser(user)) {
     return "Propietario";
   }
 
   if (user?.roles?.isDriver ?? user?.isDriver) {
-    return "Conductor";
+    return isSalariedDriverUser(user) ? "Conductor asalariado" : "Conductor";
   }
 
   return "Usuario";
@@ -28,7 +33,9 @@ export const getUserInitials = (displayName = "") => {
 };
 
 export const getUserNavigation = (user) => [
-  { id: "home", label: "Inicio", to: "/" },
+  ...(isSalariedDriverUser(user)
+    ? []
+    : [{ id: "home", label: "Inicio", to: "/" }]),
   { id: "work-day", label: "Mi jornada", to: "/my-work-day" },
   ...(isOwnerUser(user)
     ? [{ id: "drivers", label: "Mis conductores", to: "/drivers" }]

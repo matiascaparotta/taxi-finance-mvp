@@ -4,6 +4,7 @@ import {
   getUserInitials,
   getUserNavigation,
   getUserRoleLabel,
+  isSalariedDriverUser,
 } from "../utils/userNavigation";
 
 const icons = {
@@ -75,6 +76,9 @@ function MainLayout({ onLogout = null, currentUser = null }) {
   const location = useLocation();
   const navigation = getUserNavigation(currentUser);
   const userName = currentUser?.displayName || "Usuario TaxFin";
+  const brandTarget = isSalariedDriverUser(currentUser)
+    ? "/my-work-day"
+    : "/";
 
   const isNavigationActive = (item) => {
     if (item.id === "home") {
@@ -99,8 +103,12 @@ function MainLayout({ onLogout = null, currentUser = null }) {
         <div className="taxfin-safe-header mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex items-center justify-between gap-3">
             <Link
-              to="/"
-              aria-label="Ir al inicio de TaxFin"
+              to={brandTarget}
+              aria-label={
+                brandTarget === "/"
+                  ? "Ir al inicio de TaxFin"
+                  : "Ir a mi jornada"
+              }
               className="flex min-w-0 items-center gap-3 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-400"
             >
               <img

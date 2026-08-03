@@ -35,10 +35,13 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 ## Publicado el 03/08/2026
 
 - Perfil independiente de Alberto Caparotta publicado mediante `64632da`:
-  organización `Lic1315`, cuenta propietaria y conductora, vehículo propio y
+  organización `Lic1315`, cuenta de conductor asalariado, vehículo propio y
   combustible inicial por importe real completo. El primer acceso exige
   cambiar la contraseña temporal. La verificación no creó datos financieros y
   confirmó el aislamiento respecto de Lic249.
+- Navegación específica para Alberto: `Mi jornada`, `Mensual` e `Historial`,
+  sin Inicio de propietario, Equipo ni Mis conductores. Su resumen mensual
+  muestra únicamente sus propios datos y no aplica las reglas de Lic249.
 
 - Nueva liquidación mensual compartida para Matías y José, derivada de
   jornadas cerradas y sin duplicar importes financieros.

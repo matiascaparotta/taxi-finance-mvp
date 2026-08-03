@@ -32,3 +32,10 @@ test("el resultado indica correctamente quién entrega el dinero", () => {
 test("normaliza las fechas SQL antes de presentar cada jornada", () => {
   assert.match(page, /normalizeWorkDayDate\(day\.date\)/);
 });
+
+test("Alberto recibe un resumen mensual propio sin el reparto de Lic249", () => {
+  assert.match(page, /isSalariedDriverUser/);
+  assert.match(page, /Tus jornadas y tu facturación del mes/);
+  assert.match(page, /Facturación menos combustible/);
+  assert.match(page, /Mis jornadas del mes/);
+});

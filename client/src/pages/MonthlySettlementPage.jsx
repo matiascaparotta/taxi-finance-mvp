@@ -10,7 +10,7 @@ import {
   updateMonthlySettings,
 } from "../services/monthlySettlementService";
 import { formatCurrency } from "../utils/formatCurrency";
-import { isOwnerUser } from "../utils/userNavigation";
+import { isOwnerUser, isSalariedDriverUser } from "../utils/userNavigation";
 import { normalizeWorkDayDate } from "../utils/workDayDate";
 
 const currentMonth = () => {
@@ -52,6 +52,7 @@ function MoneyRow({ label, value, emphasis = false, detail = "" }) {
 
 function MonthlySettlementPage({ currentUser = null }) {
   const owner = isOwnerUser(currentUser);
+  const salariedDriver = isSalariedDriverUser(currentUser);
   const [driverId, setDriverId] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth());
   const [settlement, setSettlement] = useState(null);
@@ -147,6 +148,56 @@ function MonthlySettlementPage({ currentUser = null }) {
 
   const calculation = settlement.calculation;
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
+
+  if (salariedDriver) {
+    return (
+      <section className="space-y-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <SectionTitle
+            title="Resumen mensual"
+            subtitle="Tus jornadas y tu facturación del mes"
+          />
+          <select
+            aria-label="Mes del resumen"
+            value={selectedMonth}
+            onChange={(event) => setSelectedMonth(event.target.value)}
+            className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 font-bold capitalize text-white"
+          >
+            {availableMonths.map((month) => <option key={month} value={month}>{monthLabel(month)}</option>)}
+          </select>
+        </div>
+
+        {error && <Card className="border-red-500/30"><p className="text-sm text-red-300">{error}</p></Card>}
+
+        <Card className="border-emerald-500/25">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">{monthLabel(selectedMonth)}</p>
+          <h2 className="mt-2 text-2xl font-black">{calculation.workedDays} jornadas cerradas</h2>
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Promedio diario</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyRevenue)}</p></div>
+          </div>
+          <div className="mt-4 rounded-2xl bg-emerald-500/10 p-4">
+            <div className="flex items-center justify-between gap-4"><p className="text-sm text-emerald-200">Combustible registrado</p><p className="font-black">{formatCurrency(calculation.fuelOwn)}</p></div>
+            <div className="mt-3 flex items-center justify-between gap-4 border-t border-emerald-500/20 pt-3"><p className="font-bold text-white">Facturación menos combustible</p><p className="text-xl font-black">{formatCurrency(calculation.netRevenueForSplit)}</p></div>
+          </div>
+        </Card>
+
+        <Card>
+          <h3 className="text-lg font-bold">Mis jornadas del mes</h3>
+          {settlement.days.length === 0 ? <p className="mt-3 text-sm text-slate-400">Todavía no hay jornadas cerradas en este mes.</p> : (
+            <div className="mt-4 divide-y divide-slate-800">
+              {settlement.days.map((day) => {
+                const normalizedDate = normalizeWorkDayDate(day.date);
+                return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · combustible {formatCurrency(day.fuelOwn)}</p></div><p className="font-black">{formatCurrency(day.netRevenue)}</p></div>;
+              })}
+            </div>
+          )}
+        </Card>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-6">

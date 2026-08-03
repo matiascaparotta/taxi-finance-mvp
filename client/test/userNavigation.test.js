@@ -42,6 +42,20 @@ test("añade la gestión de conductores al propietario", () => {
   );
 });
 
+test("simplifica la navegación del conductor asalariado", () => {
+  const user = {
+    displayName: "Alberto Caparotta",
+    organizationName: "Lic1315",
+    roles: { isOwner: false, isDriver: true },
+  };
+
+  assert.equal(getUserRoleLabel(user), "Conductor asalariado");
+  assert.deepEqual(
+    getUserNavigation(user).map((item) => item.label),
+    ["Mi jornada", "Mensual", "Historial"]
+  );
+});
+
 test("conserva una identidad segura si falta el usuario", () => {
   assert.equal(getUserInitials(), "TF");
   assert.equal(getUserRoleLabel(null), "Usuario");

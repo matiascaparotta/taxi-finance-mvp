@@ -4,6 +4,7 @@ const {
 } = require("../services/organizationSetupService");
 
 const LIC1315_SETUP = {
+  allowDriverOnly: true,
   organization: {
     name: "Lic1315",
     slug: "lic1315",
@@ -12,7 +13,7 @@ const LIC1315_SETUP = {
     {
       username: "alberto.caparotta",
       displayName: "Alberto Caparotta",
-      isOwner: true,
+      isOwner: false,
       isDriver: true,
       fuelCalculationMode: "ACTUAL_LOAD",
     },

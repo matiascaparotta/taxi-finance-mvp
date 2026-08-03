@@ -3,7 +3,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import Card from "./components/ui/Card";
 import Button from "./components/ui/Button";
 import MainLayout from "./layouts/MainLayout";
@@ -26,6 +26,7 @@ import {
   getSession,
   logout,
 } from "./services/authService";
+import { isSalariedDriverUser } from "./utils/userNavigation";
 
 function PrivateApp() {
   const [authStatus, setAuthStatus] = useState("loading");
@@ -168,7 +169,11 @@ function PrivateApp() {
       >
         <Route
           path="/"
-          element={<HomePage currentUser={currentUser} />}
+          element={
+            isSalariedDriverUser(currentUser)
+              ? <Navigate to="/my-work-day" replace />
+              : <HomePage currentUser={currentUser} />
+          }
         />
         <Route
           path="/my-work-day"

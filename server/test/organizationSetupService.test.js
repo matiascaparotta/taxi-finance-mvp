@@ -125,7 +125,7 @@ test("prepara Lic249 con Matías, José y el vehículo compartido", async () => 
   assert.equal(joseMembership.isDriver, true);
 });
 
-test("prepara Lic1315 aislada con Alberto como propietario conductor", async () => {
+test("prepara Lic1315 aislada con Alberto como conductor asalariado", async () => {
   const repository = createFakeRepository();
   const result = await provisionOrganization(LIC1315_SETUP, {
     repository,
@@ -149,7 +149,7 @@ test("prepara Lic1315 aislada con Alberto como propietario conductor", async () 
   const membership = repository.state.memberships[0];
 
   assert.equal(membership.userId, alberto.id);
-  assert.equal(membership.isOwner, true);
+  assert.equal(membership.isOwner, false);
   assert.equal(membership.isDriver, true);
   assert.equal(membership.fuelCalculationMode, "ACTUAL_LOAD");
   assert.equal(membership.fuelRatePerKm, null);

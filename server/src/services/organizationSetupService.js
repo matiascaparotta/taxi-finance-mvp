@@ -11,7 +11,12 @@ const FUEL_MODES = new Set(["ACTUAL_LOAD", "DISTANCE_RATE"]);
 const generateTemporaryPassword = () =>
   crypto.randomBytes(18).toString("base64url");
 
-const validateSetup = ({ organization, users, vehicle }) => {
+const validateSetup = ({
+  allowDriverOnly = false,
+  organization,
+  users,
+  vehicle,
+}) => {
   if (!organization?.name?.trim() || !organization?.slug?.trim()) {
     throw new Error("La organización necesita nombre y slug");
   }
@@ -63,7 +68,7 @@ const validateSetup = ({ organization, users, vehicle }) => {
     usernames.add(user.username);
   }
 
-  if (!users.some((user) => user.isOwner)) {
+  if (!allowDriverOnly && !users.some((user) => user.isOwner)) {
     throw new Error("La organización necesita al menos un propietario");
   }
 };
