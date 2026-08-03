@@ -157,6 +157,14 @@ guardaron parámetros ni se modificaron jornadas, viajes o liquidaciones. El
 service worker usa `taxfin-app-shell-f1bfc054889c`, el acceso legacy permanece
 activo y no se incorporó ninguna operación financiera offline.
 
+El 03/08/2026 se creó el primer perfil independiente fuera de Lic249. El commit
+`64632da` añadió un aprovisionamiento idempotente para Alberto Caparotta como
+propietario y conductor de `Lic1315`, con vehículo propio y combustible por
+importe real. Railway desplegó `64632da9b276`; la API continuó saludable y el
+alta produjo una contraseña temporal de un solo uso. La autenticación confirmó
+el aislamiento y el cambio obligatorio de contraseña antes de acceder a datos
+financieros. No se creó ninguna jornada o viaje durante la verificación.
+
 ## Estado
 
 ✅ Sprint finalizado.

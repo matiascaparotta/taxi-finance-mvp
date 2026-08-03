@@ -70,7 +70,7 @@ offline financiero ni sincronización posterior.
 
 # Sprint actual
 
-## Perfil independiente de Alberto — en preparación
+## Perfil independiente de Alberto — publicado
 
 El alta de `Lic1315` crea una organización aislada, el vehículo `Taxi Lic1315`
 y la cuenta personal `alberto.caparotta`. Alberto es propietario y conductor
@@ -78,6 +78,14 @@ de su propia organización, por lo que no pertenece a Lic249 ni puede consultar
 datos de Matías o José. Comienza con combustible por importe real completo; no
 se aplica ningún porcentaje sobre la carga. El aprovisionamiento es idempotente
 y exige un cambio de contraseña en el primer acceso.
+
+El perfil se publicó el 03/08/2026 mediante `64632da`. Railway desplegó
+exactamente `64632da9b276` y `/api/health` permaneció saludable. El alta segura
+creó el usuario con identificador 3 dentro de la organización 2. Una
+autenticación de comprobación confirmó su nombre, licencia, roles y cambio de
+contraseña obligatorio. Hasta realizar ese cambio, la API rechaza el acceso a
+jornadas. No se creó ninguna jornada, viaje ni dato financiero y Lic249 no se
+modificó.
 
 ## Sprint 18 — Base multiusuario
 
