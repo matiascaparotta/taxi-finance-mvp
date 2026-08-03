@@ -1090,6 +1090,19 @@ recalcula con las reglas vigentes: carga propia o 50/50 para el conductor y
 siempre carga propia para el propietario. Las jornadas importadas y ajenas
 continúan protegidas. La fecha permanece fuera de esta entrega.
 
+La corrección de combustible y kilometraje se publicó mediante el commit
+`9e6fa03` en `main` y `codex/multiuser-foundation`. Antes de publicar se
+verificó el respaldo `lic249-2026-08-03T13-34-05-546Z.sql` con SHA-256
+`09eec13cb0402d6f691557148bb406626318daa8775a895c53c44bfc0ee87006`.
+Railway dejó activo el despliegue con el mensaje del commit y la API respondió
+saludable. La comprobación conservadora confirmó la referencia de 78 jornadas,
+1.344 viajes, 70 importaciones y cero auditorías previas; las 70 jornadas
+importadas permanecen bloqueadas. Las 122 pruebas automatizadas confirmaron
+los permisos de lectura y escritura, la protección de jornadas importadas y
+ajenas, la continuidad del kilometraje y la auditoría transaccional. No se
+modificaron datos reales durante la verificación. La corrección de fecha no se
+inició.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

@@ -226,14 +226,18 @@ José conserva acceso de lectura a las jornadas de Matías, sin permiso de
 escritura. La corrección de fecha continúa pendiente y no forma parte de esta
 entrega.
 
-La tercera corrección segura está implementada localmente. Un usuario personal
+La tercera corrección segura está publicada. Un usuario personal
 puede corregir el combustible y los kilómetros de una jornada propia cerrada.
 La operación exige contraseña, motivo y confirmación; valida la continuidad
 contra las jornadas anterior y siguiente del vehículo y registra valores
 anteriores y resultantes dentro de la misma transacción. El propietario solo
 puede registrar combustible propio y el conductor conserva el reparto 50/50.
-Las jornadas importadas y ajenas siguen bloqueadas. La fecha continúa
-pendiente.
+Las jornadas importadas y ajenas siguen bloqueadas. El despliegue de `9e6fa03`
+quedó activo en Railway y la API respondió saludable. La verificación mantuvo
+la referencia de 78 jornadas, 1.344 viajes, 70 importaciones protegidas y cero
+auditorías previas, sin efectuar correcciones reales. Las 122 pruebas
+automatizadas finalizaron correctamente. La fecha continúa pendiente y no se
+inició en esta entrega.
 
 La publicación del commit `64af02b` dejó activa la migración de auditoría. La
 comprobación posterior registró 78 jornadas, 1.344 viajes y 70 importaciones,

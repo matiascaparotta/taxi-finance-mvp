@@ -78,6 +78,9 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   cambios en los 78 cierres ni en los 1.344 viajes existentes.
 - Corrección segura de combustible y kilometraje en jornadas propias cerradas,
   respetando la continuidad del vehículo y las reglas de reparto.
+- Publicación de esa corrección en producción mediante `9e6fa03`, con API
+  saludable, 78 jornadas, 1.344 viajes, 70 importaciones protegidas y cero
+  auditorías previas; la fecha permanece fuera del alcance.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de
