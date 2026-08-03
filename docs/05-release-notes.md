@@ -143,6 +143,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   en modo de solo lectura. Railway sirvió exactamente `341d6c465e16`; la sesión
   real de José, la actualización PWA y la protección de Matías se verificaron
   sin modificar datos.
+- Centro de control del propietario pendiente de publicación: una jornada
+  activa abre seguimiento en vivo con refresco automático, todos los viajes y
+  acumulados de efectivo, datáfono, comisiones y propinas. El kilometraje final
+  y las opciones para compartir permanecen ocultos hasta el cierre.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

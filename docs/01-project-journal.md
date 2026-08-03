@@ -108,6 +108,16 @@ su identidad, mostró a Matías en una única fila fuera de servicio y abrió su
 historial en modo de solo lectura, sin controles de escritura. La actualización
 PWA se activó sin perder la pantalla consultada. No se modificaron datos reales.
 
+Después de reunificar el Inicio se preparó localmente un centro de control en
+vivo para el propietario. Al tocar un conductor en servicio, el detalle se
+actualiza automáticamente cada diez segundos y muestra todos los viajes,
+facturación, efectivo, datáfono, comisiones y propinas. La jornada abierta no
+muestra kilometraje final ni acciones para compartir; al cerrarse vuelve al
+detalle normal y habilita el resumen compartible. La vista mantiene el alcance
+de solo lectura. La validación terminó con 50 pruebas del cliente, análisis
+estático, compilación y revisión visual móvil correctos. La publicación queda
+pendiente de autorización.
+
 ## Estado
 
 ✅ Sprint finalizado.

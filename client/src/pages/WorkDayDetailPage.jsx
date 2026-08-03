@@ -18,6 +18,11 @@ import { getTripsByWorkDay } from "../services/tripService";
 import { formatDate } from "../utils/formatDate";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
 import { copyTextToClipboard } from "../utils/copyTextToClipboard";
+import { formatCurrency } from "../utils/formatCurrency";
+import { getDisplayedCash } from "../utils/getDisplayedCash";
+import { tripCountLabel } from "../utils/tripCountLabel";
+
+const LIVE_REFRESH_INTERVAL_MS = 10_000;
 
 function WorkDayDetailPage() {
   const [workDay, setWorkDay] = useState(null);
@@ -26,6 +31,8 @@ function WorkDayDetailPage() {
   const [copyMessage, setCopyMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deletionReason, setDeletionReason] = useState("");
@@ -37,10 +44,14 @@ function WorkDayDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const loadWorkDayDetail = useCallback(async () => {
+  const loadWorkDayDetail = useCallback(async ({ silent = false } = {}) => {
     try {
       setError("");
-      setIsLoading(true);
+      if (silent) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
 
       const [workDayData, summaryData, tripsData] = await Promise.all([
         getWorkDayById(id),
@@ -51,16 +62,31 @@ function WorkDayDetailPage() {
       setWorkDay(workDayData);
       setSummary(summaryData);
       setTrips(tripsData);
+      setLastUpdatedAt(new Date());
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   }, [id]);
 
   useEffect(() => {
     loadWorkDayDetail();
   }, [loadWorkDayDetail]);
+
+  useEffect(() => {
+    if (workDay?.status !== "OPEN" || workDay?.canManage !== false) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(
+      () => loadWorkDayDetail({ silent: true }),
+      LIVE_REFRESH_INTERVAL_MS
+    );
+
+    return () => window.clearInterval(intervalId);
+  }, [loadWorkDayDetail, workDay?.canManage, workDay?.status]);
 
   const handleCopySummary = async () => {
     if (!workDay || !summary) {
@@ -170,6 +196,153 @@ function WorkDayDetailPage() {
     );
   }
 
+  const isLiveReadOnly =
+    workDay.status === "OPEN" && workDay.canManage === false;
+
+  if (isLiveReadOnly) {
+    const sortedTrips = [...trips].sort(
+      (left, right) =>
+        new Date(right.createdAt || 0) - new Date(left.createdAt || 0)
+    );
+
+    return (
+      <section className="space-y-6">
+        <SectionTitle
+          title="Centro de control en vivo"
+          subtitle={`${workDay.driverName || "Conductor"} · ${formatDate(workDay.date)} · Solo lectura`}
+        />
+
+        <Card className="border-emerald-500/30 bg-emerald-500/5" aria-live="polite">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
+                JORNADA EN CURSO
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-white">
+                {workDay.driverName || "Conductor"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Km inicial: {workDay.startKm}
+              </p>
+            </div>
+            <span className="flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-300">
+              <span aria-hidden="true" className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              En vivo
+            </span>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Viajes</p>
+              <p className="mt-1 text-lg font-bold text-white">{summary.tripCount}</p>
+            </div>
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Facturación</p>
+              <p className="mt-1 text-lg font-bold text-white">{formatCurrency(summary.totalRevenue)}</p>
+            </div>
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Efectivo</p>
+              <p className="mt-1 text-lg font-bold text-white">{formatCurrency(getDisplayedCash(summary))}</p>
+              <p className="mt-1 text-xs text-slate-500">{tripCountLabel(summary.cashTripCount)}</p>
+            </div>
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Datáfono</p>
+              <p className="mt-1 text-lg font-bold text-white">{formatCurrency(summary.card)}</p>
+              <p className="mt-1 text-xs text-slate-500">{tripCountLabel(summary.cardTripCount)}</p>
+            </div>
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Comisiones</p>
+              <p className="mt-1 text-lg font-bold text-white">{formatCurrency(summary.commission)}</p>
+            </div>
+            <div className="rounded-2xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Propinas</p>
+              <p className="mt-1 text-lg font-bold text-white">{formatCurrency(summary.tip)}</p>
+            </div>
+          </div>
+
+          <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-800 pt-4">
+            <p className="text-xs text-slate-500">
+              {lastUpdatedAt
+                ? `Actualizado a las ${lastUpdatedAt.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`
+                : "Actualizando..."}
+            </p>
+            <button
+              type="button"
+              onClick={() => loadWorkDayDetail({ silent: true })}
+              disabled={isRefreshing}
+              className="rounded-xl border border-slate-700 px-3 py-2 text-xs font-bold text-slate-300 disabled:opacity-50"
+            >
+              {isRefreshing ? "Actualizando..." : "Actualizar"}
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-slate-500">
+            TaxFin incorpora automáticamente cada viaje nuevo cada 10 segundos.
+          </p>
+        </Card>
+
+        <Card>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="flex items-center gap-2 text-xs font-bold tracking-[0.16em] text-emerald-300">
+                <span aria-hidden="true" className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                ACTIVIDAD EN VIVO
+              </p>
+              <h3 className="mt-1 text-xl font-bold text-white">Todos los viajes</h3>
+            </div>
+            <span className="text-sm font-bold text-slate-400">{summary.tripCount}</span>
+          </div>
+
+          {sortedTrips.length === 0 ? (
+            <p className="mt-5 text-sm text-slate-400">Todavía no registró viajes.</p>
+          ) : (
+            <div className="mt-4 divide-y divide-slate-800 border-y border-slate-800">
+              {sortedTrips.map((trip) => (
+                <div key={trip.id} className="py-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-bold text-white">
+                        {trip.paymentType === "cash" ? "Efectivo" : "Datáfono"}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {new Date(trip.createdAt).toLocaleTimeString("es-ES", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <p className="text-lg font-bold text-white">{formatCurrency(trip.amount)}</p>
+                  </div>
+                  {(Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0) && (
+                    <p className="mt-2 text-xs text-slate-400">
+                      {Number(trip.commission || 0) > 0 && `Comisión ${formatCurrency(trip.commission)}`}
+                      {Number(trip.commission || 0) > 0 && Number(trip.tip || 0) > 0 && " · "}
+                      {Number(trip.tip || 0) > 0 && `Propina ${formatCurrency(trip.tip)}`}
+                    </p>
+                  )}
+                  {trip.note && <p className="mt-2 text-xs text-slate-500">{trip.note}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        <Card className="border-slate-800 bg-slate-900/40">
+          <p className="text-sm text-slate-300">
+            El resumen para compartir estará disponible cuando Matías cierre la jornada.
+          </p>
+        </Card>
+
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="w-full rounded-2xl border border-slate-700 px-5 py-3 text-sm font-bold text-slate-300"
+        >
+          ← Volver al equipo
+        </button>
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-8">
       <SectionTitle
@@ -190,13 +363,15 @@ function WorkDayDetailPage() {
           }
         />
 
-        <WorkDayShareCard
-          workDay={workDay}
-          summary={summary}
-          trips={trips}
-          onCopySummary={handleCopySummary}
-          copyMessage={copyMessage}
-        />
+        {workDay.status === "CLOSED" && (
+          <WorkDayShareCard
+            workDay={workDay}
+            summary={summary}
+            trips={trips}
+            onCopySummary={handleCopySummary}
+            copyMessage={copyMessage}
+          />
+        )}
       </div>
 
       <button

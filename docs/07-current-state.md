@@ -387,6 +387,15 @@ fuera de servicio y su historial continuó en modo de solo lectura, sin acciones
 de escritura. La actualización PWA no perdió la pantalla consultada y ningún
 dato real fue modificado.
 
+El centro de control en vivo del propietario está implementado localmente y
+pendiente de publicación. Al tocar un conductor en servicio, José ve todos los
+viajes y los acumulados de facturación, efectivo, datáfono, comisiones y
+propinas, con actualización automática cada diez segundos. La vista abierta no
+muestra kilometraje final ni permite compartir. Cuando el conductor cierra la
+jornada, el detalle pasa al modo cerrado y habilita el resumen compartible. El
+acceso permanece en solo lectura. La validación finalizó con 50 pruebas del
+cliente, análisis estático, compilación y revisión visual móvil correctos.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
