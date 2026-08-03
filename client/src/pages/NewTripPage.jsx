@@ -1,13 +1,34 @@
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import ActivePaymentProgress from "../components/ActivePaymentProgress";
 import SectionTitle from "../components/ui/SectionTitle";
 import QuickTripForm from "../components/QuickTripForm";
 
 import { createTrip } from "../services/tripService";
 import { getOpenWorkDay } from "../services/workDayService";
+import { getWorkDaySummary } from "../services/summaryService";
 
 function NewTripPage() {
   const navigate = useNavigate();
+  const [activeSummary, setActiveSummary] = useState(null);
+
+  const loadActiveSummary = useCallback(async () => {
+    const openWorkDay = await getOpenWorkDay();
+
+    if (!openWorkDay) {
+      setActiveSummary(null);
+      return;
+    }
+
+    setActiveSummary(await getWorkDaySummary(openWorkDay.id));
+  }, []);
+
+  useEffect(() => {
+    loadActiveSummary().catch((error) => {
+      console.error("No se pudo cargar el acumulado de la jornada", error);
+    });
+  }, [loadActiveSummary]);
 
   const handleCreateTrip = async (tripData) => {
     const openWorkDay = await getOpenWorkDay();
@@ -20,6 +41,12 @@ function NewTripPage() {
       workDayId: openWorkDay.id,
       ...tripData,
     });
+
+    try {
+      setActiveSummary(await getWorkDaySummary(openWorkDay.id));
+    } catch (error) {
+      console.error("El viaje se guardó, pero no se pudo actualizar el acumulado", error);
+    }
   };
 
   return (
@@ -38,6 +65,8 @@ function NewTripPage() {
           Ver jornada
         </button>
       </div>
+
+      <ActivePaymentProgress summary={activeSummary} />
 
       <QuickTripForm onSubmit={handleCreateTrip} />
 

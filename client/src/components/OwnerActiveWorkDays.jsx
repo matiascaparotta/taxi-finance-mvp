@@ -9,6 +9,7 @@ import { getTripsByWorkDay } from "../services/tripService";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
 import { getManagedOpenWorkDays } from "../utils/getManagedOpenWorkDays";
+import { tripCountLabel } from "../utils/tripCountLabel";
 
 const REFRESH_INTERVAL_MS = 30_000;
 
@@ -235,10 +236,16 @@ function OwnerActiveWorkDays({ currentUser }) {
                   value={formatCurrency(
                     getDisplayedCash(workDay.summary)
                   )}
+                  detail={tripCountLabel(
+                    workDay.summary.cashTripCount
+                  )}
                 />
                 <Stat
                   label="💳 Datáfono"
                   value={formatCurrency(workDay.summary.card)}
+                  detail={tripCountLabel(
+                    workDay.summary.cardTripCount
+                  )}
                 />
                 <Stat
                   label="Comisiones"

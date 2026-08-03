@@ -17,6 +17,7 @@ import { getDisplayedCash } from "../utils/getDisplayedCash";
 import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 import { getRecentClosedWorkDays } from "../utils/getRecentClosedWorkDays";
 import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
+import { tripCountLabel } from "../utils/tripCountLabel";
 
 function HomePage({ currentUser = null }) {
   const [workDays, setWorkDays] = useState([]);
@@ -227,11 +228,13 @@ function HomePage({ currentUser = null }) {
               <Stat
                 label="💵 Efectivo"
                 value={formatCurrency(getDisplayedCash(activeSummary))}
+                detail={tripCountLabel(activeSummary.cashTripCount)}
               />
 
               <Stat
                 label="💳 Datáfono"
                 value={formatCurrency(activeSummary.card)}
+                detail={tripCountLabel(activeSummary.cardTripCount)}
               />
             </div>
           )}
