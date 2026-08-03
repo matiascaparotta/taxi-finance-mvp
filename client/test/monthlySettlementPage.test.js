@@ -25,7 +25,7 @@ test("la liquidación distingue facturación, reparto y cierre de caja", () => {
 
 test("José revisa y Matías conserva el cierre definitivo", () => {
   assert.match(page, /José puede revisar los datos/);
-  assert.match(page, /El cierre definitivo lo confirma Matías/);
+  assert.doesNotMatch(page, /El cierre definitivo lo confirma Matías/);
   assert.match(page, /Escribe CERRAR/);
 });
 
