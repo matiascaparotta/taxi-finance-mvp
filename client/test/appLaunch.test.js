@@ -29,6 +29,24 @@ test("la página registra el manifiesto de TaxFin", () => {
   assert.match(html, /rel="apple-touch-icon"/);
 });
 
+test("mantiene escala de aplicación y fondo oscuro en toda la pantalla", () => {
+  const html = fs.readFileSync(
+    path.join(clientRoot, "index.html"),
+    "utf8"
+  );
+  const styles = fs.readFileSync(
+    path.join(clientRoot, "src/index.css"),
+    "utf8"
+  );
+
+  assert.match(html, /maximum-scale=1/);
+  assert.match(html, /user-scalable=no/);
+  assert.match(html, /viewport-fit=cover/);
+  assert.match(styles, /html,\s*body,\s*#root/);
+  assert.match(styles, /background-color:\s*#020617/);
+  assert.match(styles, /overscroll-behavior:\s*none/);
+});
+
 test("incluye iconos profesionales para iPhone y Android", () => {
   const expectedIcons = [
     ["apple-touch-icon.png", 180],

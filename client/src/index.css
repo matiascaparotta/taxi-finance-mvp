@@ -1,1 +1,34 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  background-color: #020617;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: #020617;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
