@@ -100,8 +100,13 @@ equipo y actividad personal. Cada conductor ocupa una única fila; si está en
 servicio muestra de forma discreta viajes, facturación, efectivo y datáfono, y
 abre el detalle completo en solo lectura. La lista extensa de viajes y las
 tarjetas históricas dejan de duplicarse en Inicio. La validación terminó con 47
-pruebas del cliente, análisis estático y compilación correctos. Esta parte queda
-pendiente de autorización para publicarse.
+pruebas del cliente, análisis estático y compilación correctos.
+
+La reunificación se publicó mediante `341d6c4`. Railway dejó activo exactamente
+`341d6c465e16` y la API permaneció saludable. La sesión real de José conservó
+su identidad, mostró a Matías en una única fila fuera de servicio y abrió su
+historial en modo de solo lectura, sin controles de escritura. La actualización
+PWA se activó sin perder la pantalla consultada. No se modificaron datos reales.
 
 ## Estado
 

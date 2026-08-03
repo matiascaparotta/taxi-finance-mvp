@@ -137,10 +137,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Áreas seguras de iPhone y Android publicadas mediante `afe5710`: la cabecera
   evita la barra de estado, cámaras y recortes, y la navegación inferior respeta
   los controles del sistema. Railway sirvió exactamente `afe571066031`.
-- Inicio del propietario reunificado y pendiente de publicación: resumen del
+- Inicio del propietario reunificado mediante `341d6c4`: resumen del
   día, equipo y actividad personal sustituyen las tarjetas repetidas. La fila
   del conductor conserva sus acumulados esenciales y abre el detalle completo
-  en modo de solo lectura.
+  en modo de solo lectura. Railway sirvió exactamente `341d6c465e16`; la sesión
+  real de José, la actualización PWA y la protección de Matías se verificaron
+  sin modificar datos.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

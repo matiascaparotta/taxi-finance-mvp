@@ -375,12 +375,17 @@ exactamente `afe571066031`; la cabecera queda debajo de la barra de estado, la
 cámara y los recortes de iPhone y Android, mientras la navegación inferior
 respeta los controles del sistema.
 
-El Inicio reunificado del propietario está implementado localmente y pendiente
-de publicación. El estado general, el equipo y la actividad personal forman una
+El Inicio reunificado del propietario está publicado desde el 03/08/2026
+mediante `341d6c4`. El estado general, el equipo y la actividad personal forman una
 jerarquía compacta. Cada conductor aparece una sola vez y, cuando trabaja,
 muestra viajes, facturación, efectivo y datáfono sin desplegar toda la jornada.
 Al tocarlo se conserva el detalle completo de solo lectura. La validación local
 finalizó con 47 pruebas del cliente, análisis estático y compilación correctos.
+Railway sirve exactamente `341d6c465e16` y `/api/health` permanece saludable.
+La sesión real de José conservó su identidad; Matías apareció en una única fila
+fuera de servicio y su historial continuó en modo de solo lectura, sin acciones
+de escritura. La actualización PWA no perdió la pantalla consultada y ningún
+dato real fue modificado.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
