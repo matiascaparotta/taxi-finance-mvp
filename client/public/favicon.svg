@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#020617"/>
+  <path d="M118 190h276l38 112v82h-48v-42H128v42H80v-82l38-112Z" fill="#34d399"/>
+  <path d="M151 132h210l33 58H118l33-58Z" fill="#f8fafc"/>
+  <path d="M151 214h210l20 60H131l20-60Z" fill="#0f172a"/>
+  <circle cx="145" cy="315" r="28" fill="#f8fafc"/>
+  <circle cx="367" cy="315" r="28" fill="#f8fafc"/>
+  <text x="256" y="176" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#020617">TAXFIN</text>
+</svg>

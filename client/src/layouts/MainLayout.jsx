@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { APP_NAME } from "../config/branding";
 
 function MainLayout({ onLogout = null, currentUser = null }) {
@@ -6,12 +6,12 @@ function MainLayout({ onLogout = null, currentUser = null }) {
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div>
+          <Link to="/" aria-label="Ir al inicio de TaxFin">
             <h1 className="text-2xl font-bold">🚖 {APP_NAME}</h1>
             <p className="text-sm text-slate-400">
               Gestión financiera para conductores de taxi
             </p>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
             {currentUser && (

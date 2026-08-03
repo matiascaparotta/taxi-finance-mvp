@@ -278,6 +278,14 @@ desplazarlas por zona horaria y mostrando un aviso explícito para volver a
 abrir TaxFin si la pantalla de eliminación está desactualizada. La palabra
 `ELIMINAR` se exige ahora tanto en el cliente como en el servidor.
 
+TaxFin incorpora un manifiesto de aplicación con inicio en `/`, alcance global
+y modo independiente. Los accesos instalados nuevos abren la Home en lugar de
+conservar la URL de un detalle. El encabezado TaxFin también permite volver al
+inicio desde cualquier pantalla. Un acceso directo creado antes de esta mejora
+puede requerir eliminarse y añadirse nuevamente una sola vez.
+La identidad instalada utiliza un icono propio de taxi con la marca TaxFin,
+fondo oscuro y formatos específicos para iPhone y Android.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

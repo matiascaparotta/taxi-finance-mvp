@@ -1140,6 +1140,15 @@ mensaje que indica cerrar y volver a abrir TaxFin ante una pantalla antigua.
 También se reforzó el contrato: `ELIMINAR` debe llegar y validarse en el
 servidor, no solamente en la interfaz.
 
+También se corrigió el punto de entrada de la aplicación instalada. Hasta ese
+momento no existía manifiesto web y un acceso creado desde el detalle podía
+seguir abriendo esa URL. El manifiesto de TaxFin fija `/` como inicio y alcance,
+activa el modo independiente y define su identidad visual. Además, la marca del
+encabezado pasa a enlazar con la Home sin afectar la navegación interna.
+Se añadió además un icono propio en SVG y variantes PNG de 180, 192 y 512
+píxeles para que el acceso de pantalla de inicio tenga una presentación
+consistente y profesional en iPhone y Android.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

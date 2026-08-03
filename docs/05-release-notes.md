@@ -93,6 +93,11 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   anterior no envía fecha, se conserva la fecha almacenada. Las fechas ISO se
   normalizan sin desplazamientos de zona horaria y la confirmación `ELIMINAR`
   se valida también en el servidor.
+- Inicio de la aplicación instalada configurado en la Home mediante el
+  manifiesto web de TaxFin. La marca del encabezado también funciona como
+  acceso directo al inicio.
+- Icono propio de TaxFin para pantalla de inicio, preparado en tamaños de 180,
+  192 y 512 píxeles para iPhone y Android.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de
