@@ -90,6 +90,19 @@ controló el rebote y evitó desbordamientos horizontales. Railway publicó
 exactamente `43953668fe97`; la API y el worker permanecieron saludables. La
 mejora no modificó datos ni incorporó operaciones financieras offline.
 
+El commit `afe5710` extendió las áreas seguras a la cabecera móvil. Railway
+publicó exactamente `afe571066031`, de modo que hora, cámara, señal, batería y
+navegación inferior quedan fuera de la interfaz tanto en iPhone como en Android.
+
+A continuación se aprobó y preparó localmente la reunificación del Inicio del
+propietario. El seguimiento se resume en tres niveles: estado general del día,
+equipo y actividad personal. Cada conductor ocupa una única fila; si está en
+servicio muestra de forma discreta viajes, facturación, efectivo y datáfono, y
+abre el detalle completo en solo lectura. La lista extensa de viajes y las
+tarjetas históricas dejan de duplicarse en Inicio. La validación terminó con 47
+pruebas del cliente, análisis estático y compilación correctos. Esta parte queda
+pendiente de autorización para publicarse.
+
 ## Estado
 
 ✅ Sprint finalizado.

@@ -2,16 +2,24 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Card from "./ui/Card";
-import Stat from "./ui/Stat";
 import { getWorkDays } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
-import { getTripsByWorkDay } from "../services/tripService";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
 import { getManagedOpenWorkDays } from "../utils/getManagedOpenWorkDays";
-import { tripCountLabel } from "../utils/tripCountLabel";
 
 const REFRESH_INTERVAL_MS = 30_000;
+
+function DriverStatusDot({ active }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+        active ? "bg-emerald-400 shadow-sm shadow-emerald-400" : "bg-slate-500"
+      }`}
+    />
+  );
+}
 
 function OwnerActiveWorkDays({ currentUser }) {
   const [activeWorkDays, setActiveWorkDays] = useState([]);
@@ -21,7 +29,8 @@ function OwnerActiveWorkDays({ currentUser }) {
   const [error, setError] = useState("");
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   const navigate = useNavigate();
-  const loadActiveWorkDays = useCallback(async ({ silent = false } = {}) => {
+
+  const loadOverview = useCallback(async ({ silent = false } = {}) => {
     try {
       setError("");
       if (silent) {
@@ -31,7 +40,7 @@ function OwnerActiveWorkDays({ currentUser }) {
       }
 
       const workDays = await getWorkDays();
-      const managedOpenWorkDays = getManagedOpenWorkDays(workDays);
+      const openWorkDays = getManagedOpenWorkDays(workDays);
       const driversById = new Map();
 
       workDays.forEach((workDay) => {
@@ -46,38 +55,22 @@ function OwnerActiveWorkDays({ currentUser }) {
         }
       });
 
+      const detailedOpenWorkDays = await Promise.all(
+        openWorkDays.map(async (workDay) => ({
+          ...workDay,
+          summary: await getWorkDaySummary(workDay.id),
+        }))
+      );
+
       setManagedDrivers(
         [...driversById.values()].sort((left, right) =>
           left.name.localeCompare(right.name, "es")
         )
       );
-      const workDaysWithDetail = await Promise.all(
-        managedOpenWorkDays.map(async (workDay) => {
-          const [summary, trips] = await Promise.all([
-            getWorkDaySummary(workDay.id),
-            getTripsByWorkDay(workDay.id),
-          ]);
-
-          return {
-            ...workDay,
-            summary,
-            trips: [...trips]
-              .sort(
-                (left, right) =>
-                  new Date(right.createdAt || 0) -
-                  new Date(left.createdAt || 0)
-              ),
-          };
-        })
-      );
-
-      setActiveWorkDays(workDaysWithDetail);
+      setActiveWorkDays(detailedOpenWorkDays);
       setLastUpdatedAt(new Date());
     } catch (loadError) {
-      setError(
-        loadError.message ||
-          "No se pudo actualizar el seguimiento de conductores"
-      );
+      setError(loadError.message || "No se pudo actualizar el equipo");
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -85,245 +78,158 @@ function OwnerActiveWorkDays({ currentUser }) {
   }, [currentUser?.id]);
 
   useEffect(() => {
-    loadActiveWorkDays();
-
+    loadOverview();
     const intervalId = window.setInterval(
-      () => loadActiveWorkDays({ silent: true }),
+      () => loadOverview({ silent: true }),
       REFRESH_INTERVAL_MS
     );
-
     return () => window.clearInterval(intervalId);
-  }, [loadActiveWorkDays]);
+  }, [loadOverview]);
+
+  const activeByDriver = new Map(
+    activeWorkDays.map((workDay) => [String(workDay.driverUserId), workDay])
+  );
+  const activeCount = activeWorkDays.length;
 
   return (
-    <section className="space-y-3">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
-            SEGUIMIENTO
-          </p>
-          <h2 className="mt-1 text-2xl font-bold text-white">
-            Conductores en servicio
-          </h2>
-          <p className="mt-1 text-sm text-slate-400">
-            Vista de solo lectura · actualización cada 30 segundos
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => loadActiveWorkDays({ silent: true })}
-          disabled={isLoading || isRefreshing}
-          className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 disabled:cursor-wait disabled:opacity-50"
-        >
-          {isRefreshing ? "Actualizando..." : "Actualizar"}
-        </button>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => navigate("/drivers")}
-        className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
-      >
-        Gestionar conductores
-      </button>
-
-      <Card>
-        <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
-          MIS CONDUCTORES
-        </p>
-        <h3 className="mt-1 text-xl font-bold text-white">
-          Jornadas e historial
-        </h3>
-        <p className="mt-1 text-sm text-slate-400">
-          Tus jornadas están separadas. Consulta las de cada conductor en modo
-          de solo lectura.
-        </p>
-
-        {isLoading ? (
-          <p className="mt-4 text-sm text-slate-400">
-            Cargando conductores...
-          </p>
-        ) : managedDrivers.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-400">
-            Todavía no hay jornadas de otros conductores.
-          </p>
-        ) : (
-          <div className="mt-4 space-y-2">
-            {managedDrivers.map((driver) => (
-              <button
-                key={driver.id}
-                type="button"
-                onClick={() =>
-                  navigate(`/history?driver=${driver.id}`)
-                }
-                className="flex w-full items-center justify-between rounded-xl border border-slate-700 px-4 py-3 text-left transition hover:border-emerald-500/40 hover:bg-slate-900 active:scale-[0.99]"
-              >
-                <span>
-                  <span className="block font-bold text-white">
-                    {driver.name}
-                  </span>
-                  <span className="mt-1 block text-xs text-slate-400">
-                    Ver jornadas
-                  </span>
-                </span>
-                <span className="text-lg text-emerald-300">→</span>
-              </button>
-            ))}
+    <section className="space-y-4">
+      <Card className={activeCount > 0 ? "border-emerald-500/30" : ""}>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-2xl text-emerald-300">
+              ↗
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
+                RESUMEN DEL DÍA
+              </p>
+              <div className="mt-1 flex items-center gap-2">
+                <DriverStatusDot active={activeCount > 0} />
+                <h2 className="truncate text-lg font-bold text-white">
+                  {isLoading
+                    ? "Comprobando el equipo..."
+                    : activeCount === 0
+                      ? "Sin conductores en servicio"
+                      : activeCount === 1
+                        ? "1 conductor en servicio"
+                        : `${activeCount} conductores en servicio`}
+                </h2>
+              </div>
+              {lastUpdatedAt && !isLoading && (
+                <p className="mt-1 text-xs text-slate-500">
+                  Actualizado a las {lastUpdatedAt.toLocaleTimeString("es-ES", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              )}
+            </div>
           </div>
-        )}
+          <button
+            type="button"
+            onClick={() => loadOverview({ silent: true })}
+            disabled={isLoading || isRefreshing}
+            aria-label="Actualizar resumen del equipo"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 text-lg text-slate-400 transition hover:border-emerald-500/40 hover:text-emerald-300 disabled:opacity-50"
+          >
+            {isRefreshing ? "…" : "↻"}
+          </button>
+        </div>
+        {error && <p className="mt-4 text-sm text-red-300">{error}</p>}
       </Card>
 
-      {isLoading ? (
-        <Card>
-          <p className="text-center text-slate-300">
-            Buscando jornadas activas...
-          </p>
-        </Card>
-      ) : error ? (
-        <Card className="border-red-500/30">
-          <p className="font-bold text-white">
-            No pudimos actualizar el seguimiento
-          </p>
-          <p className="mt-2 text-sm text-red-300">{error}</p>
-        </Card>
-      ) : activeWorkDays.length === 0 ? (
-        <Card>
-          <p className="font-semibold text-white">
-            No hay conductores trabajando ahora.
-          </p>
-          <p className="mt-1 text-sm text-slate-400">
-            Las jornadas aparecerán aquí cuando comiencen.
-          </p>
-        </Card>
-      ) : (
-        <div className="grid gap-4">
-          {activeWorkDays.map((workDay) => (
-            <Card
-              key={workDay.id}
-              className="border-emerald-500/30 bg-emerald-500/5"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-bold text-emerald-300">
-                    EN SERVICIO
-                  </p>
-                  <h3 className="mt-1 text-2xl font-bold text-white">
-                    {workDay.driverName || "Conductor"}
-                  </h3>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Km inicial: {workDay.startKm}
-                  </p>
-                </div>
-                <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-300">
-                  En vivo
-                </span>
-              </div>
-
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <Stat
-                  label="🚖 Viajes"
-                  value={workDay.summary.tripCount}
-                />
-                <Stat
-                  label="💶 Facturación"
-                  value={formatCurrency(
-                    workDay.summary.totalRevenue
-                  )}
-                />
-                <Stat
-                  label="💵 Efectivo"
-                  value={formatCurrency(
-                    getDisplayedCash(workDay.summary)
-                  )}
-                  detail={tripCountLabel(
-                    workDay.summary.cashTripCount
-                  )}
-                />
-                <Stat
-                  label="💳 Datáfono"
-                  value={formatCurrency(workDay.summary.card)}
-                  detail={tripCountLabel(
-                    workDay.summary.cardTripCount
-                  )}
-                />
-                <Stat
-                  label="Comisiones"
-                  value={formatCurrency(workDay.summary.commission)}
-                />
-                <Stat
-                  label="Propinas"
-                  value={formatCurrency(workDay.summary.tip)}
-                />
-              </div>
-
-              <div className="mt-5 border-t border-slate-800 pt-4">
-                <h4 className="text-sm font-bold text-white">
-                  Todos los viajes
-                </h4>
-                {workDay.trips.length === 0 ? (
-                  <p className="mt-2 text-sm text-slate-400">
-                    Todavía no registró viajes.
-                  </p>
-                ) : (
-                  <div className="mt-3 space-y-2">
-                    {workDay.trips.map((trip) => (
-                      <div
-                        key={trip.id}
-                        className="rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <p className="text-xs text-slate-400">
-                              {new Date(
-                                trip.createdAt
-                              ).toLocaleTimeString("es-ES", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}{" "}
-                              ·{" "}
-                              {trip.paymentType === "cash"
-                                ? "Efectivo"
-                                : "Datáfono"}
-                            </p>
-                            {(Number(trip.commission || 0) > 0 ||
-                              Number(trip.tip || 0) > 0) && (
-                              <p className="mt-1 text-xs text-slate-400">
-                                {Number(trip.commission || 0) > 0 &&
-                                  `Comisión ${formatCurrency(
-                                    trip.commission
-                                  )}`}
-                                {Number(trip.commission || 0) > 0 &&
-                                  Number(trip.tip || 0) > 0 &&
-                                  " · "}
-                                {Number(trip.tip || 0) > 0 &&
-                                  `Propina ${formatCurrency(trip.tip)}`}
-                              </p>
-                            )}
-                          </div>
-                          <p className="font-bold text-white">
-                            {formatCurrency(trip.amount)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Card>
-          ))}
+      <Card>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold tracking-[0.16em] text-emerald-300">
+              EQUIPO
+            </p>
+            <h2 className="mt-1 text-xl font-bold text-white">Mis conductores</h2>
+          </div>
+          <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold text-slate-300">
+            {managedDrivers.length}
+          </span>
         </div>
-      )}
 
-      {lastUpdatedAt && (
-        <p className="text-right text-xs text-slate-500">
-          Actualizado a las{" "}
-          {lastUpdatedAt.toLocaleTimeString("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </p>
-      )}
+        <div className="mt-4 divide-y divide-slate-800 border-y border-slate-800">
+          {isLoading ? (
+            <p className="py-5 text-sm text-slate-400">Cargando equipo...</p>
+          ) : managedDrivers.length === 0 ? (
+            <p className="py-5 text-sm text-slate-400">
+              Todavía no hay jornadas de otros conductores.
+            </p>
+          ) : (
+            managedDrivers.map((driver) => {
+              const activeWorkDay = activeByDriver.get(String(driver.id));
+              return (
+                <button
+                  key={driver.id}
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      activeWorkDay
+                        ? `/work-days/${activeWorkDay.id}`
+                        : `/history?driver=${driver.id}`
+                    )
+                  }
+                  className="flex w-full items-center gap-3 py-4 text-left transition hover:bg-slate-900/60"
+                  aria-label={`${driver.name}: ${
+                    activeWorkDay ? "en servicio" : "fuera de servicio"
+                  }`}
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-800 text-sm font-black text-slate-200">
+                    {driver.name
+                      .split(/\s+/)
+                      .slice(0, 2)
+                      .map((part) => part[0])
+                      .join("")
+                      .toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-bold text-white">
+                      {driver.name}
+                    </span>
+                    <span className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                      <DriverStatusDot active={Boolean(activeWorkDay)} />
+                      {activeWorkDay ? "En servicio" : "Fuera de servicio"}
+                    </span>
+                    {activeWorkDay?.summary && (
+                      <span className="mt-2 block space-y-1 text-xs text-slate-300">
+                        <span className="block">
+                          {activeWorkDay.summary.tripCount} viajes · {formatCurrency(
+                            activeWorkDay.summary.totalRevenue
+                          )}
+                        </span>
+                        <span className="block text-slate-500">
+                          E {formatCurrency(getDisplayedCash(activeWorkDay.summary))} ({activeWorkDay.summary.cashTripCount}) · D {formatCurrency(activeWorkDay.summary.card)} ({activeWorkDay.summary.cardTripCount})
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-2xl text-slate-500">›</span>
+                </button>
+              );
+            })
+          )}
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/history")}
+            className="rounded-2xl border border-slate-700 px-3 py-3 text-sm font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300"
+          >
+            Ver jornadas
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/drivers")}
+            className="rounded-2xl border border-slate-700 px-3 py-3 text-sm font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-emerald-300"
+          >
+            Gestionar conductores
+          </button>
+        </div>
+      </Card>
     </section>
   );
 }

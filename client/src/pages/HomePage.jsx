@@ -113,7 +113,7 @@ function HomePage({ currentUser = null }) {
         </Card>
       )}
 
-      {closedWorkDays[0] && (
+      {!isOwner && closedWorkDays[0] && (
         <section className="space-y-3">
           <SectionTitle
             title="Última jornada"
@@ -123,7 +123,7 @@ function HomePage({ currentUser = null }) {
         </section>
       )}
 
-      <section className="space-y-3">
+      {!isOwner && <section className="space-y-3">
         <div className="flex items-start justify-between gap-4">
           <SectionTitle
             title="Actividad reciente"
@@ -142,7 +142,7 @@ function HomePage({ currentUser = null }) {
             <WorkDayCard key={workDay.id} workDay={workDay} />
           ))}
         </div>
-      </section>
+      </section>}
     </section>
   );
 }

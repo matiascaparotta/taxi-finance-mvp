@@ -370,6 +370,18 @@ navegador. La mejora se publicó mediante `4395366`; Railway dejó activo
 `43953668fe97`, con `/api/health` saludable y el worker correctamente
 versionado. No hubo cambios de datos.
 
+Las áreas seguras móviles están publicadas mediante `afe5710`. Railway sirve
+exactamente `afe571066031`; la cabecera queda debajo de la barra de estado, la
+cámara y los recortes de iPhone y Android, mientras la navegación inferior
+respeta los controles del sistema.
+
+El Inicio reunificado del propietario está implementado localmente y pendiente
+de publicación. El estado general, el equipo y la actividad personal forman una
+jerarquía compacta. Cada conductor aparece una sola vez y, cuando trabaja,
+muestra viajes, facturación, efectivo y datáfono sin desplegar toda la jornada.
+Al tocarlo se conserva el detalle completo de solo lectura. La validación local
+finalizó con 47 pruebas del cliente, análisis estático y compilación correctos.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

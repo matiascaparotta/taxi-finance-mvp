@@ -134,6 +134,13 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   oscuro al desplazar o reducir la vista, evita zoom accidental y cubre las
   áreas completas de iPhone. Railway sirvió exactamente `43953668fe97` con la
   API saludable.
+- Áreas seguras de iPhone y Android publicadas mediante `afe5710`: la cabecera
+  evita la barra de estado, cámaras y recortes, y la navegación inferior respeta
+  los controles del sistema. Railway sirvió exactamente `afe571066031`.
+- Inicio del propietario reunificado y pendiente de publicación: resumen del
+  día, equipo y actividad personal sustituyen las tarjetas repetidas. La fila
+  del conductor conserva sus acumulados esenciales y abre el detalle completo
+  en modo de solo lectura.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de
