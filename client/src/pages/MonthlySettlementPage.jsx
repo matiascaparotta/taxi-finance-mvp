@@ -329,8 +329,6 @@ function MonthlySettlementPage({ currentUser = null }) {
       </Card>}
 
       {!showMonthSettings && !owner && settlement.canClose && <button type="button" onClick={() => setShowClose(true)} className="w-full rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200">Cerrar liquidación del mes</button>}
-      {!showMonthSettings && owner && settlement.status !== "CLOSED" && <p className="text-center text-sm text-slate-500">José puede revisar los datos.</p>}
-
       {showClose && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-5"><div className="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-6"><h3 className="text-xl font-black">Cerrar {monthLabel(selectedMonth)}</h3><p className="mt-3 text-sm text-slate-300">Los importes quedarán protegidos como una fotografía definitiva del mes.</p><label className="mt-5 block text-sm font-bold">Escribe CERRAR<input value={confirmation} onChange={(e) => setConfirmation(e.target.value.toUpperCase())} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /></label><button type="button" disabled={isSaving} onClick={closeMonth} className="mt-5 w-full rounded-2xl bg-sky-400 px-5 py-4 font-black text-slate-950 disabled:opacity-50">Confirmar cierre</button><button type="button" onClick={() => setShowClose(false)} className="mt-3 w-full rounded-2xl border border-slate-700 px-5 py-4 font-bold">Volver</button></div></div>}
     </section>
   );
