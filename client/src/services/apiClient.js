@@ -1,6 +1,18 @@
 import { API_URL } from "../config/api";
 
 export const apiFetch = async (path, options = {}) => {
+  const method = String(options.method || "GET").toUpperCase();
+
+  if (
+    typeof navigator !== "undefined" &&
+    navigator.onLine === false &&
+    !["GET", "HEAD"].includes(method)
+  ) {
+    throw new Error(
+      "Sin conexión. TaxFin no guardó ningún cambio. Recupera internet e inténtalo nuevamente."
+    );
+  }
+
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     credentials: "include",

@@ -935,6 +935,38 @@ escribir `ELIMINAR` y conserva en la auditoría la jornada con todos sus viajes.
 
 ---
 
+# ADR-017
+
+## PWA sin escrituras financieras offline
+
+**Fecha:** 03/08/2026
+
+**Estado:** ✅ Implementada localmente
+
+### Contexto
+
+TaxFin se utiliza diariamente desde móviles y necesita instalación,
+disponibilidad rápida y actualizaciones claras. Sin embargo, sincronizar viajes
+sin conexión podría duplicar importes o alterar el orden de la jornada.
+
+### Decisión
+
+Implementar primero una PWA que almacene exclusivamente la interfaz estática.
+Las API, sesiones y respuestas financieras no se cachean. Toda escritura exige
+conexión y las versiones nuevas esperan una confirmación del usuario antes de
+recargar la aplicación.
+
+### Consecuencias
+
+- TaxFin puede abrir su interfaz cuando la red se interrumpe;
+- ninguna operación financiera queda pendiente silenciosamente;
+- el usuario recibe un mensaje inequívoco cuando un cambio no fue guardado;
+- cada build genera un worker distinto y limpia cachés antiguas;
+- el modo offline con sincronización queda fuera de alcance hasta diseñar una
+  cola idempotente y auditable.
+
+---
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

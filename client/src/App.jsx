@@ -19,6 +19,7 @@ import WorkDayHistoryPage from "./pages/WorkDayHistoryPage";
 import WorkDayDetailPage from "./pages/WorkDayDetailPage";
 import EditWorkDayPage from "./pages/EditWorkDayPage";
 import DriverManagementPage from "./pages/DriverManagementPage";
+import PwaStatus from "./components/PwaStatus";
 import {
   getSession,
   logout,
@@ -197,9 +198,12 @@ function PrivateApp() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <PrivateApp />
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <PrivateApp />
+      </BrowserRouter>
+      <PwaStatus />
+    </>
   );
 }
 

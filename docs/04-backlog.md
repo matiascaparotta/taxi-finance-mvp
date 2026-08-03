@@ -253,8 +253,10 @@ No están planificadas para las próximas versiones, pero representan posibles l
 
 ## Mejoras técnicas
 
-- [ ] Progressive Web App (PWA).
-- [ ] Funcionamiento offline.
+- [x] Progressive Web App (PWA) instalable, actualizable y con interfaz básica
+  disponible sin conexión.
+- [ ] Funcionamiento offline para operaciones financieras y sincronización
+  posterior segura.
 - [ ] Sincronización en la nube.
 - [ ] Exportación a Excel.
 - [ ] Aplicación para Android.

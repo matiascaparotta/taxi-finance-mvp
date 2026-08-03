@@ -43,3 +43,30 @@ test("incluye iconos profesionales para iPhone y Android", () => {
     assert.equal(png.readUInt32BE(20), expectedSize);
   }
 });
+
+test("registra una PWA que nunca guarda respuestas financieras", () => {
+  const mainSource = fs.readFileSync(
+    path.join(clientRoot, "src/main.jsx"),
+    "utf8"
+  );
+  const workerSource = fs.readFileSync(
+    path.join(clientRoot, "public/sw.js"),
+    "utf8"
+  );
+
+  assert.match(mainSource, /registerTaxFinServiceWorker/);
+  assert.match(workerSource, /request\.method !== "GET"/);
+  assert.match(workerSource, /url\.pathname\.startsWith\("\/api\/"\)/);
+  assert.match(workerSource, /SKIP_WAITING/);
+  assert.match(workerSource, /__TAXFIN_BUILD_VERSION__/);
+});
+
+test("bloquea escrituras cuando el dispositivo está sin conexión", () => {
+  const apiSource = fs.readFileSync(
+    path.join(clientRoot, "src/services/apiClient.js"),
+    "utf8"
+  );
+
+  assert.match(apiSource, /navigator\.onLine === false/);
+  assert.match(apiSource, /TaxFin no guardó ningún cambio/);
+});

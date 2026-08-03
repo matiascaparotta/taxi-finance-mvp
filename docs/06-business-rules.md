@@ -590,6 +590,21 @@ Toda operación deberá mantener la consistencia de la información almacenada.
 
 No podrán existir datos duplicados ni valores calculados manualmente.
 
+## Conectividad y PWA
+
+TaxFin podrá instalarse y abrir su interfaz básica sin conexión. En esta
+primera etapa no guardará localmente jornadas, viajes, cierres, correcciones ni
+eliminaciones pendientes. Toda operación que modifique información financiera
+requerirá conexión confirmada con el servidor.
+
+Si el dispositivo está sin conexión, la aplicación deberá avisarlo y rechazar
+la escritura indicando expresamente que no se guardó ningún cambio. Las
+respuestas de `/api`, las sesiones y los datos financieros nunca formarán parte
+de la caché del service worker.
+
+Las nuevas versiones se activarán mediante una confirmación visible para no
+recargar TaxFin mientras el conductor está introduciendo un viaje.
+
 ---
 
 ## Recalculo automático

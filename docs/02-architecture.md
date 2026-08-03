@@ -1068,6 +1068,29 @@ La membresía del conductor prepara dos modalidades:
 La modalidad y la tarifa se almacenan como configuración; los cálculos se
 implementarán posteriormente para no alterar todavía el cierre vigente.
 
+## Progressive Web App
+
+`client/public/sw.js` implementa la primera etapa PWA sin dependencias
+externas. Durante la instalación obtiene el HTML de producción, descubre sus
+archivos compilados con nombre versionado y guarda únicamente la interfaz,
+manifest e iconos en `taxfin-app-shell-<versión>`.
+
+Las navegaciones usan red primero y recurren al inicio almacenado solo cuando
+no existe conexión. Los archivos compilados usan caché primero porque su nombre
+cambia con el contenido. Las rutas `/api/` y todas las peticiones distintas de
+`GET` quedan excluidas del service worker.
+
+El build sustituye `__TAXFIN_BUILD_VERSION__` con el commit de Railway o una
+versión local única. De esta forma cada despliegue instala un worker nuevo y
+elimina las cachés anteriores. `pwaService.js` detecta el worker en espera y
+`PwaStatus` permite al usuario activarlo. El cambio de controlador recarga una
+sola vez la aplicación.
+
+`apiClient.js` bloquea escrituras cuando `navigator.onLine` es falso. No existe
+todavía una cola local ni sincronización posterior: esas capacidades requieren
+un diseño separado con identificadores idempotentes antes de utilizarse con
+datos financieros reales.
+
 ---
 
 # Conclusión

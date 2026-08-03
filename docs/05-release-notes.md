@@ -98,6 +98,11 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   acceso directo al inicio.
 - Icono propio de TaxFin para pantalla de inicio, preparado en tamaños de 180,
   192 y 512 píxeles para iPhone y Android.
+- Primera PWA completa: interfaz disponible sin conexión, aviso de estado de
+  red y actualización controlada desde la propia aplicación.
+- Las operaciones financieras continúan requiriendo internet y TaxFin informa
+  expresamente cuando no guardó un cambio; no existe sincronización offline en
+  esta etapa.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

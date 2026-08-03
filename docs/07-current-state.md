@@ -286,6 +286,13 @@ puede requerir eliminarse y añadirse nuevamente una sola vez.
 La identidad instalada utiliza un icono propio de taxi con la marca TaxFin,
 fondo oscuro y formatos específicos para iPhone y Android.
 
+La primera etapa PWA está implementada localmente y pendiente de publicación.
+El service worker almacena solamente la interfaz, el manifest y los iconos;
+excluye completamente `/api`, sesiones y datos financieros. TaxFin avisa al
+perder conexión, bloquea escrituras sin red y permite activar una nueva versión
+mediante el botón `Actualizar TaxFin`. El modo offline con cola de viajes no
+forma parte de esta entrega.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para

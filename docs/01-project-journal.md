@@ -1149,6 +1149,16 @@ Se añadió además un icono propio en SVG y variantes PNG de 180, 192 y 512
 píxeles para que el acceso de pantalla de inicio tenga una presentación
 consistente y profesional en iPhone y Android.
 
+El 03/08/2026 comenzó la primera etapa PWA. Se incorporó un service worker
+propio y versionado en cada build que conserva únicamente la interfaz, el
+manifest y los iconos. Las navegaciones pueden recuperar la Home almacenada
+cuando falla la red, pero las rutas `/api`, las sesiones y la información
+financiera quedan fuera de la caché. El cliente bloquea cualquier escritura sin
+conexión y aclara que no guardó cambios. Una versión nueva permanece en espera
+hasta que el usuario pulse `Actualizar TaxFin`, evitando recargas durante la
+carga de un viaje. La sincronización offline se pospuso hasta poder diseñarla
+con idempotencia y auditoría.
+
 ## Estado
 
 🚧 Sprint en desarrollo.
