@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import Button from "./ui/Button";
-import { createWorkDayShareCards } from "../utils/createWorkDayShareCard";
+import { createWorkDayShareCard } from "../utils/createWorkDayShareCard";
 import {
   getOrganizationFileSlug,
   getWorkDayOrganizationName,
@@ -10,12 +10,10 @@ import {
 function WorkDayShareCard({
   workDay,
   summary,
-  trips = [],
   onCopySummary,
   copyMessage = "",
 }) {
   const [shareFiles, setShareFiles] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState([]);
   const [message, setMessage] = useState("");
   const [isPreparing, setIsPreparing] = useState(true);
   const [isSharing, setIsSharing] = useState(false);
@@ -28,19 +26,15 @@ function WorkDayShareCard({
     }
 
     let isCancelled = false;
-    let generatedUrls = [];
-
     const prepareShareCard = async () => {
       try {
         setIsPreparing(true);
         setShareFiles([]);
-        setPreviewUrls([]);
         setMessage("");
 
-        const blobs = await createWorkDayShareCards(
+        const blob = await createWorkDayShareCard(
           workDay,
-          summary,
-          trips
+          summary
         );
 
         if (isCancelled) {
@@ -49,24 +43,11 @@ function WorkDayShareCard({
 
         const dateKey = String(workDay.date).split("T")[0];
         const organizationSlug = getOrganizationFileSlug(workDay);
-        const files = blobs.map(
-          (blob, index) =>
-            new File(
-              [blob],
-              index === 0
-                ? `${organizationSlug}-${dateKey}-resumen.png`
-                : `${organizationSlug}-${dateKey}-viajes-${String(
-                    index
-                  ).padStart(2, "0")}.png`,
-              { type: "image/png" }
-            )
-        );
-
-        generatedUrls = blobs.map((blob) =>
-          URL.createObjectURL(blob)
-        );
-        setShareFiles(files);
-        setPreviewUrls(generatedUrls);
+        setShareFiles([new File(
+          [blob],
+          `${organizationSlug}-${dateKey}-resumen.png`,
+          { type: "image/png" }
+        )]);
       } catch (error) {
         if (!isCancelled) {
           setMessage(error.message);
@@ -83,9 +64,8 @@ function WorkDayShareCard({
     return () => {
       isCancelled = true;
 
-      generatedUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [workDay, summary, trips]);
+  }, [workDay, summary]);
 
   const downloadShareFiles = () => {
     shareFiles.forEach((file) => {
@@ -182,44 +162,11 @@ function WorkDayShareCard({
           Imagen o texto, como prefieras
         </h3>
         <p className="mt-1 text-sm text-slate-400">
-          El resumen se enviará primero y después el detalle de los viajes.
+          Un resumen compacto. El detalle completo permanece en TaxFin.
         </p>
       </div>
 
-      {previewUrls.length > 0 ? (
-        <div className="space-y-3">
-          <img
-            src={previewUrls[0]}
-            alt="Vista previa del resumen de jornada"
-            className="w-full rounded-3xl border border-emerald-500/30 shadow-xl"
-          />
-
-          {previewUrls.length > 1 && (
-            <div>
-              <p className="mb-2 text-sm font-semibold text-slate-300">
-                {previewUrls.length - 1}{" "}
-                {previewUrls.length === 2
-                  ? "página de viajes"
-                  : "páginas de viajes"}
-              </p>
-              <div className="flex gap-3 overflow-x-auto pb-2">
-                {previewUrls.slice(1).map((url, index) => (
-                  <img
-                    key={url}
-                    src={url}
-                    alt={`Vista previa de viajes ${index + 1}`}
-                    className="w-40 shrink-0 rounded-2xl border border-slate-700"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="rounded-3xl border border-slate-800 bg-slate-950 p-8 text-center text-sm text-slate-400">
-          Preparando tarjeta...
-        </div>
-      )}
+      <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl">↗</div><div><p className="text-sm font-bold text-white">Una imagen de resumen</p><p className="text-xs text-slate-400">Lista para enviar o guardar en el móvil</p></div></div>
 
       <Button
         onClick={handleShare}
@@ -229,9 +176,7 @@ function WorkDayShareCard({
           ? "Preparando imágenes..."
           : isSharing
             ? "Abriendo opciones..."
-            : shareFiles.length > 1
-              ? `Compartir ${shareFiles.length} imágenes`
-              : "Compartir tarjeta"}
+            : "Compartir resumen"}
       </Button>
 
       <div className="grid grid-cols-2 gap-3">
@@ -243,9 +188,7 @@ function WorkDayShareCard({
         >
           {isSavingImages
             ? "Guardando..."
-            : shareFiles.length > 1
-              ? "Guardar imágenes"
-              : "Guardar imagen"}
+            : "Guardar imagen"}
         </button>
 
         <button

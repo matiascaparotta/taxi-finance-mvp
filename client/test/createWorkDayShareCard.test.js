@@ -2,9 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  createWorkDayShareCard,
   paginateTrips,
   sanitizeTripForSharing,
 } from "../src/utils/createWorkDayShareCard.js";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const testDirectory = path.dirname(fileURLToPath(import.meta.url));
+const shareComponent = fs.readFileSync(path.resolve(testDirectory, "../src/components/WorkDayShareCard.jsx"), "utf8");
 
 const trips = Array.from({ length: 17 }, (_, index) => ({
   id: index + 1,
@@ -46,4 +53,11 @@ test("elimina comisión y propina antes de generar imágenes", () => {
       created_at: undefined,
     }
   );
+});
+
+test("la interfaz comparte solo el resumen sin páginas de viajes", () => {
+  assert.equal(typeof createWorkDayShareCard, "function");
+  assert.match(shareComponent, /createWorkDayShareCard/);
+  assert.match(shareComponent, /Una imagen de resumen/);
+  assert.doesNotMatch(shareComponent, /previewUrls|página de viajes|Compartir.*imágenes/);
 });

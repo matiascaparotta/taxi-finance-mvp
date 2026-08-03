@@ -34,3 +34,9 @@ test("la vista en vivo no muestra kilometraje final", () => {
   assert.match(liveBranch, /Km inicial/);
   assert.doesNotMatch(liveBranch, /Km final|endKm/);
 });
+
+test("simplifica la acción final para eliminar una jornada", () => {
+  assert.match(source, />\s*Eliminar jornada\s*</);
+  assert.doesNotMatch(source, /Eliminar jornada de prueba/);
+  assert.doesNotMatch(source, /Eliminará la jornada completa y todos sus viajes/);
+});

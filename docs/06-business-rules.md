@@ -369,6 +369,11 @@ efectivo disponible y entrega final. No incluye el detalle individual de viajes.
 La composición separa visualmente la liquidación económica del cierre de caja
 para no confundir el reparto de ganancias con el movimiento físico del efectivo.
 
+Al compartir una jornada cerrada se genera únicamente la imagen de resumen. El
+detalle de viajes se consulta dentro de TaxFin y no se duplica en páginas de
+imagen; el bloque de compartir permanece compacto y permite enviar, guardar o
+copiar el resumen.
+
 # Resumen diario
 
 ## Objetivo

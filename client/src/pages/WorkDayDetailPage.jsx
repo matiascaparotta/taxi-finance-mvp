@@ -403,17 +403,11 @@ function WorkDayDetailPage() {
 
       {!workDay.isLocked && workDay.canManage !== false && (
         <Card className="border-red-500/30 bg-red-500/5">
-          <h3 className="text-lg font-bold text-red-300">
-            Eliminar jornada de prueba
-          </h3>
-          <p className="mt-2 text-sm text-slate-300">
-            Eliminará la jornada completa y todos sus viajes.
-          </p>
           <button
             type="button"
             onClick={() => setShowDeleteConfirm(true)}
             disabled={isDeleting}
-            className="mt-5 w-full rounded-2xl border border-red-500/40 px-5 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/10 disabled:cursor-wait disabled:opacity-50"
+            className="w-full rounded-2xl border border-red-500/40 px-5 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/10 disabled:cursor-wait disabled:opacity-50"
           >
             Eliminar jornada
           </button>
@@ -445,7 +439,7 @@ function WorkDayDetailPage() {
                 maxLength={500}
                 rows={3}
                 className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
-                placeholder="Ej.: jornada creada para una prueba"
+                placeholder="Describe por qué necesitás eliminarla"
               />
             </label>
             <label className="mt-4 block text-sm font-semibold text-slate-200">
