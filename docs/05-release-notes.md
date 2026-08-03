@@ -115,6 +115,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   conductores. El build `1f49f4a521b3`, la actualización PWA, la sesión real de
   José y el acceso de solo lectura a Matías se verificaron en producción sin
   modificar datos ni retirar el acceso legacy.
+- Acumulado compacto durante el registro rápido mediante `95e4dab`:
+  facturación total, efectivo y datáfono, con número de viajes total y por
+  medio de pago. Los recuentos aparecen también de forma secundaria en la Home
+  activa y en el seguimiento del propietario. El build `95e4dab6ed2a`, la
+  actualización PWA y la salud de la API se verificaron sin crear jornadas ni
+  viajes de prueba.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

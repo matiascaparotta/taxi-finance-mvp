@@ -1185,6 +1185,22 @@ después de activar la versión nueva mediante `Actualizar TaxFin`. El historial
 de Matías continuó en solo lectura y no se creó ni modificó ningún dato real.
 El acceso legacy no se retiró.
 
+El mismo día se publicó `95e4dab`, que mantiene visibles durante el registro
+rápido la facturación total y los acumulados de efectivo y datáfono. Cada medio
+incluye debajo su cantidad de viajes y la facturación muestra el total de
+viajes. El resumen se actualiza después de guardar sin convertir un fallo de
+refresco posterior en un falso error de escritura. Los mismos recuentos se
+muestran de forma secundaria en la jornada personal y en el seguimiento de
+solo lectura del propietario.
+
+Railway sirvió exactamente `95e4dab6ed2a`, completó las migraciones y mantuvo
+la API saludable. Las 41 pruebas del cliente, el análisis estático y la
+compilación finalizaron correctamente. José activó la versión nueva y conservó
+su sesión. Como no había conductores trabajando, no se creó una jornada ni un
+viaje real para forzar la visualización; el componente y sus textos se
+confirmaron en el paquete publicado. Ningún dato real cambió y el acceso legacy
+permaneció activo.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

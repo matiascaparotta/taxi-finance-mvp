@@ -326,6 +326,21 @@ con `Actualizar TaxFin`; el historial de Matías continuó identificado como
 solo lectura. No se escribió ni modificó ningún dato real y el acceso legacy
 permanece activo.
 
+El seguimiento de una jornada activa incorpora acumulados discretos por medio
+de pago desde el commit `95e4dab`. Encima de la calculadora de viajes aparecen
+la facturación total, el efectivo y el datáfono; cada bloque indica además la
+cantidad de viajes correspondiente y se actualiza después de guardar. La Home
+personal y el seguimiento de solo lectura del propietario muestran también los
+recuentos de efectivo y datáfono como información secundaria bajo cada importe.
+
+Railway publicó exactamente el build `95e4dab6ed2a`, con migraciones
+actualizadas y `/api/health` saludable. Las 41 pruebas del cliente, el análisis
+estático y la compilación finalizaron correctamente. La sesión real de José
+activó la nueva PWA sin perder acceso. No había conductores en servicio durante
+la comprobación, por lo que los acumulados poblados se validaron mediante las
+pruebas y el paquete publicado, sin crear una jornada o un viaje de prueba. No
+se modificaron datos reales y el acceso legacy continúa activo.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
