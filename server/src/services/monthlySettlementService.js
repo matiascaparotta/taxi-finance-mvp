@@ -90,11 +90,25 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
     ...settings,
     useProratedSocialSecurity: current,
   });
+  const commissionByCompany = Object.values(summaries.reduce((groups, summary) => {
+    for (const item of summary.commissionByCompany || []) {
+      groups[item.name] ||= { name: item.name, amount: 0, tripCount: 0 };
+      groups[item.name].amount += Number(item.amount || 0);
+      groups[item.name].tripCount += Number(item.tripCount || 0);
+    }
+    return groups;
+  }, {})).map((item) => ({ ...item, amount: Number(item.amount.toFixed(2)) }));
+  const salariedMetrics = {
+    commission: Number(summaries.reduce((total, item) => total + Number(item.commission || 0), 0).toFixed(2)),
+    tip: Number(summaries.reduce((total, item) => total + Number(item.tip || 0), 0).toFixed(2)),
+    commissionByCompany,
+  };
   return {
     month,
     driver: { id: driver.id, displayName: driver.displayName },
     settings,
     calculation,
+    salariedMetrics,
     days: summaries.map((summary) => ({
       workDayId: summary.workDayId,
       date: summary.date,

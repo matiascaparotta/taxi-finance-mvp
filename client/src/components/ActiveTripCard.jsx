@@ -39,6 +39,7 @@ function ActiveTripCard({ trip, time, onClick }) {
               <strong className="text-white">
                 {formatCurrency(commission)}
               </strong>
+              {trip.commissionCompanyName && <span className="ml-1 text-sky-300">· {trip.commissionCompanyName}</span>}
             </p>
           )}
 

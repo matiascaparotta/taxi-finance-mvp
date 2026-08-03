@@ -42,4 +42,7 @@ export const getUserNavigation = (user) => [
     : []),
   { id: "monthly", label: "Mensual", to: "/monthly" },
   { id: "history", label: "Historial", to: "/history" },
+  ...(isSalariedDriverUser(user)
+    ? [{ id: "settings", label: "Configuración", to: "/settings" }]
+    : []),
 ];

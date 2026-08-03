@@ -21,6 +21,7 @@ import WorkDayDetailPage from "./pages/WorkDayDetailPage";
 import EditWorkDayPage from "./pages/EditWorkDayPage";
 import DriverManagementPage from "./pages/DriverManagementPage";
 import MonthlySettlementPage from "./pages/MonthlySettlementPage";
+import DriverSettingsPage from "./pages/DriverSettingsPage";
 import PwaStatus from "./components/PwaStatus";
 import {
   getSession,
@@ -180,7 +181,7 @@ function PrivateApp() {
           element={<MyWorkDayPage currentUser={currentUser} />}
         />
         <Route path="/new-work-day" element={<NewWorkDayPage />} />
-        <Route path="/new-trip" element={<NewTripPage />} />
+        <Route path="/new-trip" element={<NewTripPage currentUser={currentUser} />} />
         <Route
           path="/close-work-day"
           element={<CloseWorkDayPage currentUser={currentUser} />}
@@ -195,6 +196,9 @@ function PrivateApp() {
           path="/monthly"
           element={<MonthlySettlementPage currentUser={currentUser} />}
         />
+        {isSalariedDriverUser(currentUser) && (
+          <Route path="/settings" element={<DriverSettingsPage />} />
+        )}
         <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
         <Route
           path="/work-days/:id/edit"

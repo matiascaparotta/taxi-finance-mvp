@@ -136,6 +136,7 @@ const provisionOrganization = async (
         isDriver: userSetup.isDriver,
         fuelCalculationMode: userSetup.fuelCalculationMode,
         fuelRatePerKm: userSetup.fuelRatePerKm ?? null,
+        dailySocialSecurity: userSetup.dailySocialSecurity ?? 0,
       });
 
       provisionedUsers.push({

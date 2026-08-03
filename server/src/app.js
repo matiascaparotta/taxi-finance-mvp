@@ -21,6 +21,7 @@ const driverManagementRoutes = require(
 const monthlySettlementRoutes = require(
   "./routes/monthlySettlementRoutes"
 );
+const driverSettingsRoutes = require("./routes/driverSettingsRoutes");
 
 getAuthConfig();
 
@@ -59,6 +60,13 @@ app.use(
   requireCompletedPasswordChange,
   requireOwner,
   driverManagementRoutes
+);
+app.use(
+  "/api/driver-settings",
+  requireAuthentication,
+  requireActiveUserSession,
+  requireCompletedPasswordChange,
+  driverSettingsRoutes
 );
 app.use(
   "/api/monthly-settlements",

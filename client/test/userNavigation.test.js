@@ -52,7 +52,7 @@ test("simplifica la navegación del conductor asalariado", () => {
   assert.equal(getUserRoleLabel(user), "Conductor asalariado");
   assert.deepEqual(
     getUserNavigation(user).map((item) => item.label),
-    ["Mi jornada", "Mensual", "Historial"]
+    ["Mi jornada", "Mensual", "Historial", "Configuración"]
   );
 });
 

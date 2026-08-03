@@ -112,6 +112,7 @@ const saveMembership = async (
     isDriver,
     fuelCalculationMode,
     fuelRatePerKm,
+    dailySocialSecurity,
   }
 ) => {
   const existing = await findMembership(
@@ -124,6 +125,7 @@ const saveMembership = async (
     isDriver,
     fuelCalculationMode,
     fuelRatePerKm,
+    dailySocialSecurity,
   ];
 
   if (existing) {
@@ -135,6 +137,7 @@ const saveMembership = async (
         is_driver = ?,
         fuel_calculation_mode = ?,
         fuel_rate_per_km = ?,
+        daily_social_security = ?,
         status = 'ACTIVE'
       WHERE id = ?
       `,
@@ -152,9 +155,10 @@ const saveMembership = async (
       is_owner,
       is_driver,
       fuel_calculation_mode,
-      fuel_rate_per_km
+      fuel_rate_per_km,
+      daily_social_security
     )
-    VALUES (?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
     `,
     [organizationId, userId, ...values]
   );

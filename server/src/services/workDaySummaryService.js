@@ -57,6 +57,17 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     return total + Number(trip.tip || 0);
   }, 0);
 
+  const commissionByCompany = Object.values(
+    trips.reduce((groups, trip) => {
+      if (!trip.commissionCompanyName || Number(trip.commission || 0) <= 0) return groups;
+      const name = trip.commissionCompanyName;
+      groups[name] ||= { name, amount: 0, tripCount: 0 };
+      groups[name].amount += Number(trip.commission);
+      groups[name].tripCount += 1;
+      return groups;
+    }, {})
+  ).map((group) => ({ ...group, amount: roundToTwoDecimals(group.amount) }));
+
   const displayedCash = importedSummary
     ? Number(importedSummary.cash || 0)
     : cash - commission - tip;
@@ -104,6 +115,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     totalRevenue: roundToTwoDecimals(totalRevenue),
 
     commission: roundToTwoDecimals(commission),
+    commissionByCompany,
     tip: roundToTwoDecimals(tip),
     realCash: roundToTwoDecimals(realCash),
 

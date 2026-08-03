@@ -29,7 +29,7 @@ function ActivePaymentProgress({ summary }) {
   ];
 
   return (
-    <aside
+    <div className="space-y-2"><aside
       aria-label="Acumulado de la jornada"
       className="grid grid-cols-3 divide-x divide-slate-800 rounded-2xl border border-slate-800 bg-slate-900/50"
     >
@@ -46,7 +46,7 @@ function ActivePaymentProgress({ summary }) {
           </p>
         </div>
       ))}
-    </aside>
+    </aside>{(Number(summary.commission || 0) > 0 || Number(summary.tip || 0) > 0) && <div className="rounded-xl border border-sky-500/20 bg-sky-500/10 px-3 py-2 text-xs text-slate-300"><span>Comisiones <strong className="text-white">{formatCurrency(summary.commission)}</strong></span><span className="ml-4">Propinas <strong className="text-white">{formatCurrency(summary.tip)}</strong></span>{summary.commissionByCompany?.map((item) => <span key={item.name} className="ml-4 text-sky-200">{item.name}: {formatCurrency(item.amount)}</span>)}</div>}</div>
   );
 }
 

@@ -625,6 +625,22 @@ real de 60 € descuenta los 60 € completos. Alberto utiliza `DISTANCE_RATE` a
 0,10 €/km. TaxFin calcula y guarda ese coste automáticamente al cerrar la
 jornada; la tarifa podrá cambiar para jornadas futuras sin recalcular cierres.
 
+## Configuración laboral de Alberto
+
+Alberto puede gestionar desde su propia cuenta la tarifa de combustible por
+kilómetro, el importe diario de Seguridad Social y su catálogo de empresas u
+hoteles con comisión. Retirar una empresa la desactiva para viajes nuevos, pero
+no borra su historial.
+
+Al elegir una empresa en un viaje, TaxFin calcula la comisión sobre el importe
+del viaje y guarda como instantánea el nombre, el porcentaje y el importe. Un
+cambio posterior de porcentaje no modifica viajes anteriores. Las propinas
+pertenecen íntegramente a Alberto.
+
+La jornada activa, el detalle cerrado y el resumen mensual muestran la comisión
+total, la propina total y el desglose por empresa con cantidad de viajes e
+importe acumulado.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.

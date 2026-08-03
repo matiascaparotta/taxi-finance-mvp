@@ -75,7 +75,7 @@ function WorkDayTicket({
         Number(trip.tip || 0) > 0) && (
         <div className="mt-3 space-y-1 border-t border-slate-800 pt-3 text-xs text-slate-400">
           {Number(trip.commission || 0) > 0 && (
-            <p>Comisión: {formatCurrency(trip.commission)}</p>
+            <p>Comisión{trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""}: {formatCurrency(trip.commission)}</p>
           )}
           {Number(trip.tip || 0) > 0 && (
             <p>Propina: {formatCurrency(trip.tip)}</p>

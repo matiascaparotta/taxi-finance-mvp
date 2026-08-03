@@ -182,6 +182,11 @@ function MonthlySettlementPage({ currentUser = null }) {
             <div className="flex items-center justify-between gap-4"><p className="text-sm text-emerald-200">Combustible registrado</p><p className="font-black">{formatCurrency(calculation.fuelOwn)}</p></div>
             <div className="mt-3 flex items-center justify-between gap-4 border-t border-emerald-500/20 pt-3"><p className="font-bold text-white">Facturación menos combustible</p><p className="text-xl font-black">{formatCurrency(calculation.netRevenueForSplit)}</p></div>
           </div>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-sky-500/10 p-4"><p className="text-xs text-sky-300">Comisiones</p><p className="mt-1 text-xl font-black">{formatCurrency(settlement.salariedMetrics?.commission)}</p></div>
+            <div className="rounded-2xl bg-amber-500/10 p-4"><p className="text-xs text-amber-300">Propinas</p><p className="mt-1 text-xl font-black">{formatCurrency(settlement.salariedMetrics?.tip)}</p></div>
+          </div>
+          {settlement.salariedMetrics?.commissionByCompany?.length > 0 && <div className="mt-4 rounded-2xl border border-sky-500/20 p-4"><p className="text-sm font-bold text-sky-300">Comisiones por empresa</p><div className="mt-3 space-y-2">{settlement.salariedMetrics.commissionByCompany.map((item) => <div key={item.name} className="flex justify-between gap-4 text-sm"><span>{item.name} · {item.tripCount} viajes</span><strong>{formatCurrency(item.amount)}</strong></div>)}</div></div>}
         </Card>
 
         <Card>

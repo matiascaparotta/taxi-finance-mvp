@@ -21,11 +21,12 @@ const KEYS = [
   "⌫",
 ];
 
-function QuickTripForm({ onSubmit, nextTripNumber = null }) {
+function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = [] }) {
   const [amount, setAmount] = useState("");
   const [commission, setCommission] = useState("");
   const [tip, setTip] = useState("");
   const [note, setNote] = useState("");
+  const [commissionCompanyId, setCommissionCompanyId] = useState("");
   const [activeField, setActiveField] = useState("amount");
   const [showNote, setShowNote] = useState(false);
 
@@ -74,6 +75,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
     setCommission("");
     setTip("");
     setNote("");
+    setCommissionCompanyId("");
     setActiveField("amount");
     setShowNote(false);
   };
@@ -131,6 +133,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
         amount: numericAmount,
         paymentType,
         commission: numericCommission,
+        commissionCompanyId: commissionCompanyId || null,
         tip: numericTip,
         note: note.trim() || null,
       });
@@ -193,8 +196,19 @@ function QuickTripForm({ onSubmit, nextTripNumber = null }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          {["commission", "tip"].map((field) => {
+        {commissionCompanies.length > 0 && (
+          <label className="block text-sm font-semibold text-slate-300">
+            Empresa con comisión
+            <select value={commissionCompanyId} onChange={(event) => setCommissionCompanyId(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white">
+              <option value="">Sin comisión de empresa</option>
+              {commissionCompanies.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.commissionRate} %</option>)}
+            </select>
+            {commissionCompanyId && amount && <span className="mt-2 block text-xs text-emerald-300">Comisión calculada: {(parseMoneyInput(amount) * Number(commissionCompanies.find((item) => String(item.id) === String(commissionCompanyId))?.commissionRate || 0) / 100).toFixed(2)} €</span>}
+          </label>
+        )}
+
+        <div className={`grid gap-2 ${commissionCompanies.length > 0 ? "grid-cols-1" : "grid-cols-2"}`}>
+          {(commissionCompanies.length > 0 ? ["tip"] : ["commission", "tip"]).map((field) => {
             const config = moneyFields[field];
             const isActive = activeField === field;
 

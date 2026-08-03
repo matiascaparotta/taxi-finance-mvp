@@ -17,6 +17,7 @@ const LIC1315_SETUP = {
       isDriver: true,
       fuelCalculationMode: "DISTANCE_RATE",
       fuelRatePerKm: 0.1,
+      dailySocialSecurity: 35,
     },
   ],
   vehicle: {

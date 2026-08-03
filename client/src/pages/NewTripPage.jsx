@@ -8,10 +8,13 @@ import QuickTripForm from "../components/QuickTripForm";
 import { createTrip } from "../services/tripService";
 import { getOpenWorkDay } from "../services/workDayService";
 import { getWorkDaySummary } from "../services/summaryService";
+import { getDriverSettings } from "../services/driverSettingsService";
+import { isSalariedDriverUser } from "../utils/userNavigation";
 
-function NewTripPage() {
+function NewTripPage({ currentUser = null }) {
   const navigate = useNavigate();
   const [activeSummary, setActiveSummary] = useState(null);
+  const [commissionCompanies, setCommissionCompanies] = useState([]);
 
   const loadActiveSummary = useCallback(async () => {
     const openWorkDay = await getOpenWorkDay();
@@ -29,6 +32,13 @@ function NewTripPage() {
       console.error("No se pudo cargar el acumulado de la jornada", error);
     });
   }, [loadActiveSummary]);
+
+  useEffect(() => {
+    if (!isSalariedDriverUser(currentUser)) return;
+    getDriverSettings()
+      .then((data) => setCommissionCompanies(data.companies.filter((item) => item.status === "ACTIVE")))
+      .catch((error) => console.error("No se pudieron cargar las empresas", error));
+  }, [currentUser]);
 
   const handleCreateTrip = async (tripData) => {
     const openWorkDay = await getOpenWorkDay();
@@ -68,7 +78,7 @@ function NewTripPage() {
 
       <ActivePaymentProgress summary={activeSummary} />
 
-      <QuickTripForm onSubmit={handleCreateTrip} />
+      <QuickTripForm onSubmit={handleCreateTrip} commissionCompanies={commissionCompanies} />
 
       <div className="grid grid-cols-2 gap-3">
         <button

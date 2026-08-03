@@ -60,10 +60,11 @@ test("el combustible admite carga real o tarifa por distancia", () => {
 });
 
 test("el respaldo incluye las nuevas entidades multiusuario", () => {
-  assert.deepEqual(BACKUP_TABLES.slice(0, 4), [
+  assert.deepEqual(BACKUP_TABLES.slice(0, 5), [
     "organizations",
     "users",
     "organization_memberships",
+    "commission_companies",
     "vehicles",
   ]);
   assert.equal(BACKUP_TABLES.includes("monthly_settlements"), true);

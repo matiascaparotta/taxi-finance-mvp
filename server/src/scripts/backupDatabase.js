@@ -12,6 +12,7 @@ const BACKUP_TABLES = [
   "organizations",
   "users",
   "organization_memberships",
+  "commission_companies",
   "vehicles",
   "work_days",
   "trips",

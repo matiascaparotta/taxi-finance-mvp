@@ -314,7 +314,7 @@ function WorkDayDetailPage() {
                   </div>
                   {(Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0) && (
                     <p className="mt-2 text-xs text-slate-400">
-                      {Number(trip.commission || 0) > 0 && `Comisión ${formatCurrency(trip.commission)}`}
+                      {Number(trip.commission || 0) > 0 && `Comisión${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""} ${formatCurrency(trip.commission)}`}
                       {Number(trip.commission || 0) > 0 && Number(trip.tip || 0) > 0 && " · "}
                       {Number(trip.tip || 0) > 0 && `Propina ${formatCurrency(trip.tip)}`}
                     </p>

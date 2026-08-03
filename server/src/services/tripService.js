@@ -20,6 +20,7 @@ const {
 const {
   authorizeClosedWorkDayCorrection,
 } = require("./closedWorkDayCorrectionService");
+const driverSettingsRepository = require("../repositories/driverSettingsRepository");
 
 const assertWorkDayAccess = async (workDayId, scope) => {
   const workDay = await getWorkDayById(workDayId, scope);
@@ -111,6 +112,23 @@ const createTripService = async (tripData, auth = null) => {
   );
 
   const normalizedTrip = normalizeTripData(tripData);
+
+  if (auth?.organizationName === "Lic1315" && tripData.commissionCompanyId) {
+    const company = await driverSettingsRepository.getActiveCompany(
+      Number(auth.organizationId),
+      Number(auth.userId),
+      Number(tripData.commissionCompanyId)
+    );
+    if (!company) throw new Error("La empresa de comisión no está disponible");
+    normalizedTrip.commissionCompanyName = company.name;
+    normalizedTrip.commissionRate = Number(company.commissionRate);
+    normalizedTrip.commission = Number(
+      (normalizedTrip.amount * normalizedTrip.commissionRate / 100).toFixed(2)
+    );
+  } else {
+    normalizedTrip.commissionCompanyName = null;
+    normalizedTrip.commissionRate = null;
+  }
 
   return await createTrip(normalizedTrip);
 };
