@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
@@ -29,6 +29,7 @@ function HomePage({ currentUser = null }) {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loadHomeData = useCallback(async () => {
     try {
@@ -97,6 +98,17 @@ function HomePage({ currentUser = null }) {
   useEffect(() => {
     loadHomeData();
   }, [loadHomeData]);
+
+  useEffect(() => {
+    if (isLoading || location.hash !== "#mi-jornada") {
+      return;
+    }
+
+    document.getElementById("mi-jornada")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [isLoading, location.hash]);
 
   const personalWorkDays = workDays.filter(
     (workDay) => workDay.canManage !== false
@@ -188,6 +200,7 @@ function HomePage({ currentUser = null }) {
         <OwnerActiveWorkDays currentUser={currentUser} />
       )}
 
+      <section id="mi-jornada" className="scroll-mt-36">
       {openWorkDay ? (
         <Card className="border-emerald-500/30 bg-emerald-500/10">
           <p className="text-sm font-medium text-emerald-300">
@@ -303,6 +316,7 @@ function HomePage({ currentUser = null }) {
           </div>
         </Card>
       )}
+      </section>
 
       {lastWorkDay && (
         <section className="space-y-3">
