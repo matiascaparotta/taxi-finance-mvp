@@ -286,12 +286,29 @@ puede requerir eliminarse y añadirse nuevamente una sola vez.
 La identidad instalada utiliza un icono propio de taxi con la marca TaxFin,
 fondo oscuro y formatos específicos para iPhone y Android.
 
-La primera etapa PWA está implementada localmente y pendiente de publicación.
+La primera etapa PWA está publicada en producción desde el 03/08/2026 mediante
+el commit `1ae3285`.
 El service worker almacena solamente la interfaz, el manifest y los iconos;
 excluye completamente `/api`, sesiones y datos financieros. TaxFin avisa al
 perder conexión, bloquea escrituras sin red y permite activar una nueva versión
 mediante el botón `Actualizar TaxFin`. El modo offline con cola de viajes no
 forma parte de esta entrega.
+
+Railway sirvió exactamente el build `1ae3285a1f98`, después de completar el
+paso obligatorio de migraciones y superar el healthcheck de `/api/health`. El
+worker publicado usa `taxfin-app-shell-1ae3285a1f98` y ya no contiene
+`__TAXFIN_BUILD_VERSION__`. `/sw.js`, `/manifest.webmanifest`, los iconos de
+180, 192 y 512 píxeles y el favicon respondieron correctamente. El manifiesto
+conserva `start_url` y `scope` en `/`; el registro, control e inicio desde la
+Home quedaron verificados, igual que la activación segura de versiones nuevas
+mediante `Actualizar TaxFin`.
+
+La comprobación funcional se realizó con la sesión real y ya iniciada de José,
+sin introducir ni enviar datos. La Home y el historial de Matías cargaron
+correctamente; tanto el selector como el detalle identificaron la consulta como
+solo lectura y no ofrecieron acciones de edición, corrección o eliminación. No
+se creó, corrigió ni eliminó ninguna jornada o viaje real. El acceso legacy
+continúa activo.
 
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por

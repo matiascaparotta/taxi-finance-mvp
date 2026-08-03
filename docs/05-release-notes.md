@@ -103,6 +103,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Las operaciones financieras continúan requiriendo internet y TaxFin informa
   expresamente cuando no guardó un cambio; no existe sincronización offline en
   esta etapa.
+- Publicación de la PWA mediante `1ae3285`: Railway completó las migraciones,
+  `/api/health` permaneció saludable y el worker quedó versionado como
+  `taxfin-app-shell-1ae3285a1f98`, sin el marcador de build. El manifiesto, los
+  iconos, el inicio en `/`, la actualización segura y la sesión real de José se
+  verificaron sin modificar datos. Las jornadas de Matías continúan en modo de
+  solo lectura y el acceso legacy permanece activo.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

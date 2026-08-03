@@ -941,7 +941,7 @@ escribir `ELIMINAR` y conserva en la auditoría la jornada con todos sus viajes.
 
 **Fecha:** 03/08/2026
 
-**Estado:** ✅ Implementada localmente
+**Estado:** ✅ Publicada en producción
 
 ### Contexto
 
@@ -964,6 +964,21 @@ recargar la aplicación.
 - cada build genera un worker distinto y limpia cachés antiguas;
 - el modo offline con sincronización queda fuera de alcance hasta diseñar una
   cola idempotente y auditable.
+
+### Publicación y verificación
+
+La decisión se publicó en Railway el 03/08/2026 mediante el commit `1ae3285`.
+El service worker servido en producción utiliza la caché
+`taxfin-app-shell-1ae3285a1f98`, sin conservar el marcador
+`__TAXFIN_BUILD_VERSION__`. El manifiesto mantiene inicio y alcance en `/`, y
+los iconos de 180, 192 y 512 píxeles y el favicon respondieron correctamente.
+
+La instalación registró el worker bajo el dominio de TaxFin, el inicio volvió
+a la Home y la activación controlada conserva `SKIP_WAITING` únicamente tras la
+acción `Actualizar TaxFin`. La API permaneció saludable y las migraciones
+previas al despliegue finalizaron actualizadas. La sesión real de José siguió
+activa y las jornadas de Matías continuaron disponibles exclusivamente en modo
+de solo lectura, sin modificar datos ni retirar el acceso legacy.
 
 ---
 

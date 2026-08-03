@@ -1159,6 +1159,17 @@ hasta que el usuario pulse `Actualizar TaxFin`, evitando recargas durante la
 carga de un viaje. La sincronización offline se pospuso hasta poder diseñarla
 con idempotencia y auditoría.
 
+Ese mismo día se publicó el commit `1ae3285` en `main`. Railway completó el
+paso previo de migraciones y dejó activo exactamente el build
+`1ae3285a1f98`; `/api/health` respondió saludable. El service worker publicado
+utilizó `taxfin-app-shell-1ae3285a1f98`, sin el marcador de compilación, y el
+manifiesto, los iconos y el inicio en `/` quedaron disponibles. También se
+verificaron el registro y control del worker y el flujo de actualización
+confirmada por el usuario. La sesión real de José continuó abierta y permitió
+consultar el historial y un detalle de Matías en modo de solo lectura, sin
+acciones de modificación. No se creó, corrigió ni eliminó ningún dato real y
+el acceso legacy permaneció activo.
+
 ## Estado
 
 🚧 Sprint en desarrollo.
