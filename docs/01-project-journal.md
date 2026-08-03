@@ -1056,6 +1056,13 @@ Antes de preparar su publicación se generó un respaldo nuevo de producción de
 140.209 bytes, conservado fuera de Git, con SHA-256
 `09eec13cb0402d6f691557148bb406626318daa8775a895c53c44bfc0ee87006`.
 
+La funcionalidad se publicó mediante el commit `64af02b`. Railway aplicó la
+migración `014_create_correction_audit_logs.sql` y activó el despliegue sin
+interrumpir el servicio. La verificación posterior confirmó 78 jornadas, 1.344
+viajes, 70 cierres importados y cero auditorías iniciales. La API respondió
+correctamente y la sesión de José mantuvo las jornadas de Matías en modo de
+solo lectura.
+
 ## Estado
 
 🚧 Sprint en desarrollo.
