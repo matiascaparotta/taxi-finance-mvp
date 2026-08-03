@@ -362,6 +362,11 @@ cerradas y permanecen pendientes de revisión hasta confirmar sus datos. El
 acceso legacy continúa disponible para el flujo existente, pero la liquidación
 mensual requiere una cuenta personal para identificar permisos y autoría.
 
+Una liquidación cerrada puede compartirse como una única tarjeta gráfica. La
+tarjeta contiene el período, jornadas, viajes, facturación, medios de pago,
+combustible, Seguridad Social, base neta, reparto entre Matías y José, nómina,
+efectivo disponible y entrega final. No incluye el detalle individual de viajes.
+
 # Resumen diario
 
 ## Objetivo
