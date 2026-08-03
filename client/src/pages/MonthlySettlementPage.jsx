@@ -237,7 +237,7 @@ function MonthlySettlementPage({ currentUser = null }) {
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
-          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Promedio neto</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyRevenue)}</p></div>
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Promedio diario tras gasolina y S. Social</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyRevenue)}</p></div>
         </div>
       </Card>
 

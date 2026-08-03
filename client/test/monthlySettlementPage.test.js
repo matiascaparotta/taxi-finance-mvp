@@ -15,6 +15,7 @@ test("la liquidación distingue facturación, reparto y cierre de caja", () => {
   assert.match(page, /Base a dividir/);
   assert.match(page, /CIERRE DE CAJA/);
   assert.match(page, /Gasolina de José/);
+  assert.match(page, /Promedio diario tras gasolina y S\. Social/);
 });
 
 test("José revisa y Matías conserva el cierre definitivo", () => {

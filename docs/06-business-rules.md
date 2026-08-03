@@ -331,6 +331,11 @@ el mes en curso la aplicación puede mostrar una estimación diaria usando 670 �
 y 22 días como valores iniciales, pero el cierre siempre utiliza el importe
 mensual confirmado.
 
+El promedio diario mostrado a Matías y José se calcula sobre la base posterior
+a ambos descuentos: facturación menos gasolina propia de Matías menos la
+Seguridad Social aplicada, dividida entre las jornadas cerradas del período.
+La gasolina de José afecta al cierre de caja, no a este promedio.
+
 ## Cierre de caja
 
 José recibe todo el datáfono y Matías conserva físicamente el efectivo. El
