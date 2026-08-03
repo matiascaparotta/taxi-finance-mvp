@@ -1170,6 +1170,21 @@ consultar el historial y un detalle de Matías en modo de solo lectura, sin
 acciones de modificación. No se creó, corrigió ni eliminó ningún dato real y
 el acceso legacy permaneció activo.
 
+Después se publicó la nueva navegación identificada mediante el commit
+`1f49f4a`. La cabecera reutiliza el icono real de TaxFin, presenta nombre, rol e
+iniciales y convierte el cierre de sesión en una acción secundaria accesible.
+El conductor recibe accesos a Inicio, su jornada y su historial; el propietario
+añade la gestión de conductores sin duplicar la aplicación ni relajar permisos.
+La variante de José se verificó en tamaño iPhone sin desbordamiento horizontal.
+
+Railway dejó activo exactamente `1f49f4a521b3` después de completar las
+migraciones, y la API respondió saludable. La suite completa terminó con 98
+pruebas del servidor y 40 del cliente, además del análisis estático y la
+compilación. La sesión real de José conservó su identidad y sus cuatro accesos
+después de activar la versión nueva mediante `Actualizar TaxFin`. El historial
+de Matías continuó en solo lectura y no se creó ni modificó ningún dato real.
+El acceso legacy no se retiró.
+
 ## Estado
 
 🚧 Sprint en desarrollo.

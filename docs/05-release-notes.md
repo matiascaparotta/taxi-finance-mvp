@@ -109,6 +109,12 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   iconos, el inicio en `/`, la actualización segura y la sesión real de José se
   verificaron sin modificar datos. Las jornadas de Matías continúan en modo de
   solo lectura y el acceso legacy permanece activo.
+- Cabecera profesional personalizada por sesión mediante `1f49f4a`: icono de
+  TaxFin con regreso a Inicio, nombre, rol, iniciales y cierre de sesión
+  secundario. Matías dispone de Inicio, Mi jornada e Historial; José añade Mis
+  conductores. El build `1f49f4a521b3`, la actualización PWA, la sesión real de
+  José y el acceso de solo lectura a Matías se verificaron en producción sin
+  modificar datos ni retirar el acceso legacy.
 - Creación, suspensión y reactivación segura de conductores por parte del
   propietario.
 - Contraseña temporal mostrada una sola vez e invalidación inmediata de

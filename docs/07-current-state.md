@@ -310,6 +310,22 @@ solo lectura y no ofrecieron acciones de edición, corrección o eliminación. N
 se creó, corrigió ni eliminó ninguna jornada o viaje real. El acceso legacy
 continúa activo.
 
+La cabecera personalizada por usuario está publicada desde el 03/08/2026
+mediante el commit `1f49f4a`. TaxFin muestra el icono de la aplicación, el
+nombre, el rol, las iniciales y una salida de sesión secundaria. El icono y la
+marca regresan a Inicio. Matías dispone de `Inicio`, `Mi jornada` e
+`Historial`; José añade `Mis conductores` por su rol propietario. La navegación
+móvil distribuye todas las opciones sin desbordamiento y `Mi jornada` lleva a
+la acción personal sin crear una ruta de escritura nueva.
+
+Railway sirvió exactamente el build `1f49f4a521b3`, completó las migraciones
+previas y mantuvo `/api/health` saludable. Las 98 pruebas del servidor, las 40
+del cliente, el análisis estático y la compilación finalizaron correctamente.
+La sesión real de José conservó el acceso después de activar la versión nueva
+con `Actualizar TaxFin`; el historial de Matías continuó identificado como
+solo lectura. No se escribió ni modificó ningún dato real y el acceso legacy
+permanece activo.
+
 La corrección del acceso histórico del propietario está publicada. Incorpora
 `Mis conductores`, el acceso directo al historial de Matías y un selector por
 conductor. El contrato de sesión normaliza los roles nuevos y anteriores para
