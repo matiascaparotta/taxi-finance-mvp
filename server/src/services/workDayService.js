@@ -172,8 +172,21 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
     throw new Error("El kilometraje final no puede ser menor al inicial");
   }
 
-  const distanceFuelMode =
-    auth?.fuelCalculationMode === "DISTANCE_RATE";
+  const salariedLic1315 =
+    auth?.organizationName === "Lic1315" &&
+    !(auth?.roles?.isOwner ?? auth?.isOwner);
+  const requestedFuelMode = closeData?.fuelCalculationMode;
+  if (
+    salariedLic1315 &&
+    requestedFuelMode &&
+    !["ACTUAL_LOAD", "DISTANCE_RATE"].includes(requestedFuelMode)
+  ) {
+    throw new Error("El modo de combustible no es válido");
+  }
+  const effectiveFuelMode = salariedLic1315 && requestedFuelMode
+    ? requestedFuelMode
+    : auth?.fuelCalculationMode;
+  const distanceFuelMode = effectiveFuelMode === "DISTANCE_RATE";
   const workedKm = Number(endKm) - Number(openWorkDay.startKm);
   const effectiveFuelAmount = distanceFuelMode
     ? Number((workedKm * Number(auth?.fuelRatePerKm || 0)).toFixed(2))
@@ -181,9 +194,6 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
   if (distanceFuelMode && !(Number(auth?.fuelRatePerKm) > 0)) {
     throw new Error("La tarifa de combustible por kilómetro no está configurada");
   }
-  const salariedLic1315 =
-    auth?.organizationName === "Lic1315" &&
-    !(auth?.roles?.isOwner ?? auth?.isOwner);
   const effectiveFuelAllocation = distanceFuelMode || salariedLic1315
     ? "OWN"
     : resolveFuelAllocation(

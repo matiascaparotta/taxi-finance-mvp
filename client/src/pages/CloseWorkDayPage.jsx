@@ -21,6 +21,9 @@ function CloseWorkDayPage({ currentUser }) {
   const [selectedDate, setSelectedDate] = useState("");
   const [fuelAmount, setFuelAmount] = useState("0");
   const [fuelAllocation, setFuelAllocation] = useState("OWN");
+  const [selectedFuelMode, setSelectedFuelMode] = useState(
+    currentUser?.fuelCalculationMode || "ACTUAL_LOAD"
+  );
   const [endKm, setEndKm] = useState("");
   const [error, setError] = useState("");
   const [loadError, setLoadError] = useState("");
@@ -33,9 +36,10 @@ function CloseWorkDayPage({ currentUser }) {
   const isOwner = Boolean(
     currentUser?.roles?.isOwner ?? currentUser?.isOwner
   );
-  const distanceFuelMode =
-    currentUser?.fuelCalculationMode === "DISTANCE_RATE";
   const isSalariedDriver = isSalariedDriverUser(currentUser);
+  const distanceFuelMode = isSalariedDriver
+    ? selectedFuelMode === "DISTANCE_RATE"
+    : currentUser?.fuelCalculationMode === "DISTANCE_RATE";
   const fuelRatePerKm = Number(currentUser?.fuelRatePerKm || 0);
   const effectiveFuelAllocation = isOwner || isSalariedDriver
     ? "OWN"
@@ -128,6 +132,9 @@ function CloseWorkDayPage({ currentUser }) {
         endKm,
         fuelAmount,
         fuelAllocation: effectiveFuelAllocation,
+        fuelCalculationMode: distanceFuelMode
+          ? "DISTANCE_RATE"
+          : "ACTUAL_LOAD",
       });
 
       navigate(`/work-day-closed/${closedWorkDay.id}`);
@@ -207,6 +214,26 @@ function CloseWorkDayPage({ currentUser }) {
 
       <Card>
         <form onSubmit={handleSubmit} className="space-y-5">
+          {isSalariedDriver && (
+            <fieldset>
+              <legend className="mb-3 block text-sm text-slate-300">
+                ¿Cómo quieres cargar la gasolina de hoy?
+              </legend>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: "ACTUAL_LOAD", label: "Importe del ticket", detail: "Escribir el total pagado" },
+                  { value: "DISTANCE_RATE", label: "Por kilómetros", detail: `${fuelRatePerKm.toFixed(2)} €/km` },
+                ].map((option) => (
+                  <label key={option.value} className={`cursor-pointer rounded-2xl border p-4 text-center ${selectedFuelMode === option.value ? "border-emerald-400 bg-emerald-400/10" : "border-slate-700 bg-slate-950/60"}`}>
+                    <input type="radio" name="fuelCalculationMode" value={option.value} checked={selectedFuelMode === option.value} onChange={(event) => setSelectedFuelMode(event.target.value)} className="sr-only" />
+                    <span className="block font-bold text-white">{option.label}</span>
+                    <span className="mt-1 block text-xs text-slate-400">{option.detail}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
           <fieldset>
             <legend className="mb-3 block text-sm text-slate-300">
               ¿A qué día corresponde esta jornada?
