@@ -7,6 +7,7 @@ function WorkDayShareCard({
   workDay,
   summary,
   trips = [],
+  user = null,
   onCopySummary,
   copyMessage = "",
 }) {
@@ -33,10 +34,14 @@ function WorkDayShareCard({
         setPreviewUrls([]);
         setMessage("");
 
+        const brand = user?.taxiLicense
+          ? `Lic${user.taxiLicense}`
+          : "Taxi Finance";
         const blobs = await createWorkDayShareCards(
           workDay,
           summary,
-          trips
+          trips,
+          brand
         );
 
         if (isCancelled) {
@@ -49,8 +54,8 @@ function WorkDayShareCard({
             new File(
               [blob],
               index === 0
-                ? `lic249-${dateKey}-resumen.png`
-                : `lic249-${dateKey}-viajes-${String(
+                ? `taxi-${user?.taxiLicense || "finance"}-${dateKey}-resumen.png`
+                : `taxi-${user?.taxiLicense || "finance"}-${dateKey}-viajes-${String(
                     index
                   ).padStart(2, "0")}.png`,
               { type: "image/png" }
@@ -80,7 +85,7 @@ function WorkDayShareCard({
 
       generatedUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [workDay, summary, trips]);
+  }, [workDay, summary, trips, user]);
 
   const downloadShareFiles = () => {
     shareFiles.forEach((file) => {
@@ -113,7 +118,7 @@ function WorkDayShareCard({
       ) {
         await navigator.share({
           files: shareFiles,
-          title: "Resumen de jornada — Lic249",
+          title: `Resumen de jornada — ${user?.taxiLicense ? `Lic${user.taxiLicense}` : "Taxi Finance"}`,
         });
         setMessage(
           `${shareFiles.length} ${

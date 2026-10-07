@@ -1,12 +1,16 @@
 import { Outlet } from "react-router-dom";
 
-function MainLayout({ onLogout = null }) {
+function MainLayout({ onLogout = null, user = null }) {
+  const brand = user?.taxiLicense
+    ? `Lic${user.taxiLicense}`
+    : "Taxi Finance";
+
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-slate-800">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
-            <h1 className="text-2xl font-bold">🚖 Lic249</h1>
+            <h1 className="text-2xl font-bold">🚖 {brand}</h1>
             <p className="text-sm text-slate-400">
               Gestión financiera para conductores de taxi
             </p>

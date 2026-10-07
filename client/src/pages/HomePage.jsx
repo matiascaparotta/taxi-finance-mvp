@@ -17,13 +17,14 @@ import { getClosedWorkDays } from "../utils/getClosedWorkDays";
 import { getRecentClosedWorkDays } from "../utils/getRecentClosedWorkDays";
 import { sortWorkDaysByDateDescending } from "../utils/sortWorkDaysByDate";
 
-function HomePage() {
+function HomePage({ user }) {
+  const brand = user?.taxiLicense
+    ? `Lic${user.taxiLicense}`
+    : "Taxi Finance";
   const [workDays, setWorkDays] = useState([]);
   const [openWorkDay, setOpenWorkDay] = useState(null);
   const [activeSummary, setActiveSummary] = useState(null);
   const [activeTrips, setActiveTrips] = useState([]);
-  const [showAllActiveTrips, setShowAllActiveTrips] =
-    useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -73,11 +74,9 @@ function HomePage() {
 
         setActiveSummary(summary);
         setActiveTrips(trips);
-        setShowAllActiveTrips(false);
       } else {
         setActiveSummary(null);
         setActiveTrips([]);
-        setShowAllActiveTrips(false);
       }
     } catch (error) {
       console.error(error);
@@ -117,16 +116,12 @@ function HomePage() {
 
     return dateB - dateA;
   });
-  const visibleActiveTrips = showAllActiveTrips
-    ? sortedActiveTrips
-    : sortedActiveTrips.slice(0, 5);
-
   if (isLoading) {
     return (
       <section className="space-y-8">
         <SectionTitle
-          title="Hola, Mati 👋"
-          subtitle="Bienvenido a Lic249"
+          title={`Hola, ${user?.fullName?.split(" ")[0] || "Mati"} 👋`}
+          subtitle={`Bienvenido a ${brand}`}
         />
 
         <Card>
@@ -142,8 +137,8 @@ function HomePage() {
     return (
       <section className="space-y-8">
         <SectionTitle
-          title="Hola, Mati 👋"
-          subtitle="Bienvenido a Lic249"
+          title={`Hola, ${user?.fullName?.split(" ")[0] || "Mati"} 👋`}
+          subtitle={`Bienvenido a ${brand}`}
         />
 
         <Card className="border-red-500/30">
@@ -168,8 +163,8 @@ function HomePage() {
   return (
     <section className="space-y-8">
       <SectionTitle
-        title="Hola, Mati 👋"
-        subtitle="Bienvenido a Lic249"
+        title={`Hola, ${user?.fullName?.split(" ")[0] || "Mati"} 👋`}
+        subtitle={`Bienvenido a ${brand}`}
       />
 
       {openWorkDay ? (
@@ -226,11 +221,11 @@ function HomePage() {
           <div className="mt-6 border-t border-emerald-500/20 pt-5">
             <div>
               <h3 className="text-lg font-bold text-white">
-                Últimos viajes
+                Todos los viajes
               </h3>
 
               <p className="mt-1 text-sm text-slate-400">
-                Registro rápido de la jornada activa
+                Registro completo de la jornada activa
               </p>
             </div>
 
@@ -240,7 +235,7 @@ function HomePage() {
               </p>
             ) : (
               <div className="mt-4 space-y-3">
-                {visibleActiveTrips.map((trip) => (
+                {sortedActiveTrips.map((trip) => (
                   <ActiveTripCard
                     key={trip.id}
                     trip={trip}
@@ -248,20 +243,6 @@ function HomePage() {
                     onClick={() => navigate(`/trips/${trip.id}/edit`)}
                   />
                 ))}
-
-                {sortedActiveTrips.length > 5 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowAllActiveTrips((current) => !current)
-                    }
-                    className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
-                  >
-                    {showAllActiveTrips
-                      ? "Mostrar menos"
-                      : `Ver los ${sortedActiveTrips.length} viajes`}
-                  </button>
-                )}
               </div>
             )}
           </div>

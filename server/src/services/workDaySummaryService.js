@@ -6,12 +6,12 @@ const roundToTwoDecimals = (value) => {
   return Number(Number(value || 0).toFixed(2));
 };
 
-const getWorkDaySummaryService = async (workDayId) => {
+const getWorkDaySummaryService = async (userId, workDayId) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
 
-  const result = await getWorkDayWithTrips(workDayId);
+  const result = await getWorkDayWithTrips(userId, workDayId);
 
   if (!result) {
     throw new Error("Jornada no encontrada");

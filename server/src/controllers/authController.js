@@ -6,8 +6,9 @@ const {
   serializeSessionCookie,
   signSession,
   verifyPassword,
-  verifySession,
+  readSession,
 } = require("../services/authService");
+const { getUserByUsername } = require("../repositories/userRepository");
 
 const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
@@ -28,7 +29,7 @@ const getAttemptState = (address, now = Date.now()) => {
   return current;
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
   const config = getAuthConfig();
 
   if (!config.required) {
@@ -46,10 +47,29 @@ const login = (req, res) => {
     return;
   }
 
+  const username = String(req.body?.username || "matias").trim().toLowerCase();
+  const password = req.body?.password;
+  let user = null;
+
   if (
-    typeof req.body?.password !== "string" ||
-    !verifyPassword(req.body.password, config.passwordHash)
+    username === "matias" &&
+    verifyPassword(password || "", config.passwordHash)
   ) {
+    user = {
+      id: 1,
+      username: "matias",
+      fullName: "Matías Caparotta",
+      taxiLicense: "249",
+      role: "owner",
+    };
+  } else if (username !== "matias" && typeof password === "string") {
+    user = await getUserByUsername(username);
+    if (!user?.isActive || !verifyPassword(password, user.passwordHash)) {
+      user = null;
+    }
+  }
+
+  if (!user) {
     attemptState.count += 1;
     res.status(401).json({
       message: "Contraseña incorrecta",
@@ -61,7 +81,9 @@ const login = (req, res) => {
 
   const token = signSession(
     config.sessionSecret,
-    config.sessionDurationMs
+    config.sessionDurationMs,
+    Date.now(),
+    sanitizeUser(user)
   );
 
   res.setHeader(
@@ -73,8 +95,16 @@ const login = (req, res) => {
       ),
     })
   );
-  res.json({ authenticated: true });
+  res.json({ authenticated: true, user: sanitizeUser(user) });
 };
+
+const sanitizeUser = (user) => ({
+  id: user.id,
+  username: user.username,
+  fullName: user.fullName,
+  taxiLicense: user.taxiLicense,
+  role: user.role,
+});
 
 const getSession = (req, res) => {
   const config = getAuthConfig();
@@ -88,15 +118,18 @@ const getSession = (req, res) => {
   }
 
   const cookies = parseCookies(req.headers.cookie);
-  const authenticated = verifySession(
+  const session = readSession(
     cookies[COOKIE_NAME],
     config.sessionSecret
   );
+  const authenticated = Boolean(session);
 
   if (authenticated) {
     const token = signSession(
       config.sessionSecret,
-      config.sessionDurationMs
+      config.sessionDurationMs,
+      Date.now(),
+      session.user || session.userId || 1
     );
 
     res.setHeader(
@@ -113,6 +146,8 @@ const getSession = (req, res) => {
   res.json({
     authenticated,
     authRequired: true,
+    userId: authenticated ? session.userId || 1 : null,
+    user: authenticated ? session.user || null : null,
   });
 };
 

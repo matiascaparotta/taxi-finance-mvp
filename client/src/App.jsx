@@ -24,6 +24,7 @@ import {
 function PrivateApp() {
   const [authStatus, setAuthStatus] = useState("loading");
   const [authRequired, setAuthRequired] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [authError, setAuthError] = useState("");
 
   const checkSession = useCallback(async () => {
@@ -32,6 +33,7 @@ function PrivateApp() {
       setAuthStatus("loading");
       const session = await getSession();
       setAuthRequired(session.authRequired);
+      setCurrentUser(session.user || null);
       setAuthStatus(
         session.authenticated ? "authenticated" : "anonymous"
       );
@@ -45,6 +47,7 @@ function PrivateApp() {
     try {
       await logout();
     } finally {
+      setCurrentUser(null);
       setAuthStatus("anonymous");
     }
   };
@@ -106,9 +109,10 @@ function PrivateApp() {
   if (authStatus === "anonymous") {
     return (
       <LoginPage
-        onAuthenticated={() =>
+        onAuthenticated={(user) => {
+          setCurrentUser(user);
           setAuthStatus("authenticated")
-        }
+        }}
       />
     );
   }
@@ -119,17 +123,18 @@ function PrivateApp() {
         element={
           <MainLayout
             onLogout={authRequired ? handleLogout : null}
+            user={currentUser}
           />
         }
       >
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage user={currentUser} />} />
         <Route path="/new-work-day" element={<NewWorkDayPage />} />
         <Route path="/new-trip" element={<NewTripPage />} />
         <Route path="/close-work-day" element={<CloseWorkDayPage />} />
-        <Route path="/work-day-closed/:id" element={<WorkDayClosedPage />} />
+        <Route path="/work-day-closed/:id" element={<WorkDayClosedPage user={currentUser} />} />
         <Route path="/trips/:id/edit" element={<EditTripPage />} />
         <Route path="/history" element={<WorkDayHistoryPage />} />
-        <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
+        <Route path="/work-days/:id" element={<WorkDayDetailPage user={currentUser} />} />
       </Route>
     </Routes>
   );

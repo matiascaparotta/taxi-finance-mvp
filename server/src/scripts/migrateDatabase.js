@@ -24,6 +24,7 @@ const migrateDatabase = async () => {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
+    multipleStatements: true,
   });
 
   try {
@@ -60,6 +61,13 @@ const migrateDatabase = async () => {
       );
 
       console.log(`Applied migration: ${migrationFile}`);
+    }
+
+    if (process.env.ACCESS_PASSWORD_HASH) {
+      await connection.query(
+        "UPDATE users SET password_hash = ? WHERE password_hash = 'MIGRATE_FROM_ACCESS_PASSWORD_HASH'",
+        [process.env.ACCESS_PASSWORD_HASH]
+      );
     }
 
     console.log("Database migrations are up to date");

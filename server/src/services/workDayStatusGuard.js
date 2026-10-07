@@ -3,10 +3,11 @@ const {
 } = require("../repositories/workDayStatusRepository");
 
 const assertTripBelongsToOpenWorkDay = async (
+  userId,
   tripId,
   getStatus = getTripWorkDayStatus
 ) => {
-  const status = await getStatus(tripId);
+  const status = await getStatus(userId, tripId);
 
   if (!status) {
     throw new Error("Viaje no encontrado");

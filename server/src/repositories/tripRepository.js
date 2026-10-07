@@ -1,6 +1,6 @@
 const pool = require("../config/database");
 
-const createTrip = async (tripData) => {
+const createTrip = async (userId, tripData) => {
   const {
     workDayId,
     amount,
@@ -24,7 +24,9 @@ const createTrip = async (tripData) => {
       cash_adjustment,
       adjustment_reason
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    SELECT ?, ?, ?, ?, ?, ?, ?, ?
+    FROM work_days
+    WHERE id = ? AND user_id = ? AND status = 'OPEN'
     `,
     [
       workDayId,
@@ -35,23 +37,29 @@ const createTrip = async (tripData) => {
       note,
       cashAdjustment,
       adjustmentReason,
+      workDayId,
+      userId,
     ]
   );
+
+  if (result.affectedRows !== 1) {
+    throw new Error("La jornada no existe, no está abierta o no te pertenece");
+  }
 
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      work_day_id AS workDayId,
-      amount,
-      payment_type AS paymentType,
-      commission,
-      tip,
-      note,
-      cash_adjustment AS cashAdjustment,
-      adjustment_reason AS adjustmentReason,
-      created_at AS createdAt,
-      updated_at AS updatedAt
+      trips.id,
+      trips.work_day_id AS workDayId,
+      trips.amount,
+      trips.payment_type AS paymentType,
+      trips.commission,
+      trips.tip,
+      trips.note,
+      trips.cash_adjustment AS cashAdjustment,
+      trips.adjustment_reason AS adjustmentReason,
+      trips.created_at AS createdAt,
+      trips.updated_at AS updatedAt
     FROM trips
     WHERE id = ?
     `,
@@ -61,56 +69,58 @@ const createTrip = async (tripData) => {
   return rows[0];
 };
 
-const getTripsByWorkDayId = async (workDayId) => {
+const getTripsByWorkDayId = async (userId, workDayId) => {
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      work_day_id AS workDayId,
-      amount,
-      payment_type AS paymentType,
-      commission,
-      tip,
-      note,
-      cash_adjustment AS cashAdjustment,
-      adjustment_reason AS adjustmentReason,
-      created_at AS createdAt,
-      updated_at AS updatedAt
+      trips.id,
+      trips.work_day_id AS workDayId,
+      trips.amount,
+      trips.payment_type AS paymentType,
+      trips.commission,
+      trips.tip,
+      trips.note,
+      trips.cash_adjustment AS cashAdjustment,
+      trips.adjustment_reason AS adjustmentReason,
+      trips.created_at AS createdAt,
+      trips.updated_at AS updatedAt
     FROM trips
-    WHERE work_day_id = ?
-    ORDER BY created_at ASC
+    INNER JOIN work_days ON work_days.id = trips.work_day_id
+    WHERE trips.work_day_id = ? AND work_days.user_id = ?
+    ORDER BY trips.created_at ASC
     `,
-    [workDayId]
+    [workDayId, userId]
   );
 
   return rows;
 };
 
-const getTripById = async (tripId) => {
+const getTripById = async (userId, tripId) => {
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      work_day_id AS workDayId,
-      amount,
-      payment_type AS paymentType,
-      commission,
-      tip,
-      note,
-      cash_adjustment AS cashAdjustment,
-      adjustment_reason AS adjustmentReason,
-      created_at AS createdAt,
-      updated_at AS updatedAt
+      trips.id,
+      trips.work_day_id AS workDayId,
+      trips.amount,
+      trips.payment_type AS paymentType,
+      trips.commission,
+      trips.tip,
+      trips.note,
+      trips.cash_adjustment AS cashAdjustment,
+      trips.adjustment_reason AS adjustmentReason,
+      trips.created_at AS createdAt,
+      trips.updated_at AS updatedAt
     FROM trips
-    WHERE id = ?
+    INNER JOIN work_days ON work_days.id = trips.work_day_id
+    WHERE trips.id = ? AND work_days.user_id = ?
     `,
-    [tripId]
+    [tripId, userId]
   );
 
   return rows[0] || null;
 };
 
-const updateTripById = async (tripId, tripData) => {
+const updateTripById = async (userId, tripId, tripData) => {
   const {
     amount,
     paymentType,
@@ -132,7 +142,7 @@ const updateTripById = async (tripId, tripData) => {
       note = ?,
       cash_adjustment = ?,
       adjustment_reason = ?
-    WHERE id = ?
+    WHERE id = ? AND work_day_id IN (SELECT id FROM work_days WHERE user_id = ?)
     `,
     [
       amount,
@@ -143,6 +153,7 @@ const updateTripById = async (tripId, tripData) => {
       cashAdjustment,
       adjustmentReason,
       tripId,
+      userId,
     ]
   );
 
@@ -153,45 +164,47 @@ const updateTripById = async (tripId, tripData) => {
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      work_day_id AS workDayId,
-      amount,
-      payment_type AS paymentType,
-      commission,
-      tip,
-      note,
-      cash_adjustment AS cashAdjustment,
-      adjustment_reason AS adjustmentReason,
-      created_at AS createdAt,
-      updated_at AS updatedAt
+      trips.id,
+      trips.work_day_id AS workDayId,
+      trips.amount,
+      trips.payment_type AS paymentType,
+      trips.commission,
+      trips.tip,
+      trips.note,
+      trips.cash_adjustment AS cashAdjustment,
+      trips.adjustment_reason AS adjustmentReason,
+      trips.created_at AS createdAt,
+      trips.updated_at AS updatedAt
     FROM trips
-    WHERE id = ?
+    INNER JOIN work_days ON work_days.id = trips.work_day_id
+    WHERE trips.id = ? AND work_days.user_id = ?
     `,
-    [tripId]
+    [tripId, userId]
   );
 
   return rows[0] || null;
 };
 
-const deleteTripById = async (tripId) => {
+const deleteTripById = async (userId, tripId) => {
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      work_day_id AS workDayId,
-      amount,
-      payment_type AS paymentType,
-      commission,
-      tip,
-      note,
-      cash_adjustment AS cashAdjustment,
-      adjustment_reason AS adjustmentReason,
-      created_at AS createdAt,
-      updated_at AS updatedAt
+      trips.id,
+      trips.work_day_id AS workDayId,
+      trips.amount,
+      trips.payment_type AS paymentType,
+      trips.commission,
+      trips.tip,
+      trips.note,
+      trips.cash_adjustment AS cashAdjustment,
+      trips.adjustment_reason AS adjustmentReason,
+      trips.created_at AS createdAt,
+      trips.updated_at AS updatedAt
     FROM trips
-    WHERE id = ?
+    INNER JOIN work_days ON work_days.id = trips.work_day_id
+    WHERE trips.id = ? AND work_days.user_id = ?
     `,
-    [tripId]
+    [tripId, userId]
   );
 
   if (rows.length === 0) {

@@ -1,6 +1,6 @@
 const pool = require("../config/database");
 
-const getMonthlySummaryData = async (month) => {
+const getMonthlySummaryData = async (userId, month) => {
   const [rows] = await pool.query(
     `
     SELECT
@@ -9,9 +9,9 @@ const getMonthlySummaryData = async (month) => {
       COALESCE(SUM(fuel_own), 0) AS totalFuelOwn,
       COALESCE(SUM(fuel_jose), 0) AS totalFuelJose
     FROM work_days
-    WHERE DATE_FORMAT(date, '%Y-%m') = ?
+    WHERE user_id = ? AND DATE_FORMAT(date, '%Y-%m') = ?
     `,
-    [month]
+    [userId, month]
   );
 
   return rows[0];

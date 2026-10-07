@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import { login } from "../services/authService";
 
 function LoginPage({ onAuthenticated }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,9 +20,9 @@ function LoginPage({ onAuthenticated }) {
     try {
       setError("");
       setIsSubmitting(true);
-      await login(password);
+      const session = await login(username, password);
       setPassword("");
-      onAuthenticated();
+      onAuthenticated(session.user);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -34,7 +35,7 @@ function LoginPage({ onAuthenticated }) {
       <div className="mx-auto max-w-md space-y-8">
         <div className="text-center">
           <p className="text-sm font-bold tracking-widest text-emerald-300">
-            Lic249
+            Taxi Finance
           </p>
           <h1 className="mt-3 text-3xl font-bold">
             Acceso privado
@@ -46,6 +47,21 @@ function LoginPage({ onAuthenticated }) {
 
         <Card>
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="username" className="mb-2 block text-sm font-semibold text-slate-300">
+                Usuario
+              </label>
+              <input
+                id="username"
+                type="text"
+                autoComplete="username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                required
+                autoFocus
+                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
+              />
+            </div>
             <div>
               <label
                 htmlFor="accessPassword"
@@ -62,7 +78,6 @@ function LoginPage({ onAuthenticated }) {
                   setPassword(event.target.value)
                 }
                 required
-                autoFocus
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-4 text-lg text-white outline-none focus:border-emerald-500"
               />
             </div>

@@ -19,7 +19,7 @@ import { formatDate } from "../utils/formatDate";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
 import { copyTextToClipboard } from "../utils/copyTextToClipboard";
 
-function WorkDayDetailPage() {
+function WorkDayDetailPage({ user }) {
   const [workDay, setWorkDay] = useState(null);
   const [summary, setSummary] = useState(null);
   const [trips, setTrips] = useState([]);
@@ -161,12 +161,14 @@ function WorkDayDetailPage() {
           workDay={workDay}
           summary={summary}
           trips={trips}
+          user={user}
         />
 
         <WorkDayShareCard
           workDay={workDay}
           summary={summary}
           trips={trips}
+          user={user}
           onCopySummary={handleCopySummary}
           copyMessage={copyMessage}
         />

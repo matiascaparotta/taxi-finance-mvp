@@ -1,15 +1,15 @@
 const pool = require("../config/database");
 
-const getTripWorkDayStatus = async (tripId) => {
+const getTripWorkDayStatus = async (userId, tripId) => {
   const [rows] = await pool.query(
     `
     SELECT work_days.status
     FROM trips
     INNER JOIN work_days
       ON work_days.id = trips.work_day_id
-    WHERE trips.id = ?
+    WHERE trips.id = ? AND work_days.user_id = ?
     `,
-    [tripId]
+    [tripId, userId]
   );
 
   return rows[0]?.status ?? null;

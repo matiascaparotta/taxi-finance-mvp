@@ -1,6 +1,6 @@
 const pool = require("../config/database");
 
-const getWorkDayWithTrips = async (workDayId) => {
+const getWorkDayWithTrips = async (userId, workDayId) => {
   const [workDayRows] = await pool.query(
     `
     SELECT
@@ -11,9 +11,9 @@ const getWorkDayWithTrips = async (workDayId) => {
       fuel_own AS fuelOwn,
       fuel_jose AS fuelJose
     FROM work_days
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [workDayId]
+    [workDayId, userId]
   );
 
   if (workDayRows.length === 0) {
@@ -42,11 +42,11 @@ const getWorkDayWithTrips = async (workDayId) => {
       card,
       source
     FROM monthly_work_day_imports
-    WHERE date = ?
+    WHERE date = ? AND user_id = ?
     ORDER BY id DESC
     LIMIT 1
     `,
-    [workDayRows[0].date]
+    [workDayRows[0].date, userId]
   );
 
   return {

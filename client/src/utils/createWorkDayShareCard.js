@@ -103,10 +103,10 @@ function createCanvas(height) {
   return { canvas, context };
 }
 
-function drawBrandHeader(context, title) {
+function drawBrandHeader(context, title, brand = "Taxi Finance") {
   drawText(
     context,
-    "Lic249",
+    brand,
     CARD_WIDTH / 2,
     58,
     "700 32px Arial",
@@ -146,7 +146,7 @@ export function paginateTrips(
   return pages;
 }
 
-async function createSummaryCard(workDay, summary) {
+async function createSummaryCard(workDay, summary, brand) {
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
   const summaryRows = [
@@ -174,7 +174,7 @@ async function createSummaryCard(workDay, summary) {
   const cardHeight = summaryTop + summaryHeight + 60;
   const { canvas, context } = createCanvas(cardHeight);
 
-  drawBrandHeader(context, "JORNADA FINALIZADA");
+  drawBrandHeader(context, "JORNADA FINALIZADA", brand);
   drawText(
     context,
     "JORNADA",
@@ -289,11 +289,12 @@ async function createTripsCard(
   workDay,
   trips,
   pageIndex,
-  totalPages
+  totalPages,
+  brand
 ) {
   const { canvas, context } = createCanvas(TRIPS_PAGE_HEIGHT);
 
-  drawBrandHeader(context, "DETALLE DE VIAJES");
+  drawBrandHeader(context, "DETALLE DE VIAJES", brand);
   drawText(
     context,
     formatDate(workDay.date),
@@ -372,18 +373,20 @@ async function createTripsCard(
 export async function createWorkDayShareCards(
   workDay,
   summary,
-  trips = []
+  trips = [],
+  brand = "Taxi Finance"
 ) {
   const sortedTrips = getSortedTrips(trips);
   const tripPages = paginateTrips(sortedTrips);
-  const summaryCard = await createSummaryCard(workDay, summary);
+  const summaryCard = await createSummaryCard(workDay, summary, brand);
   const detailCards = await Promise.all(
     tripPages.map((pageTrips, pageIndex) =>
       createTripsCard(
         workDay,
         pageTrips,
         pageIndex,
-        tripPages.length
+        tripPages.length,
+        brand
       )
     )
   );

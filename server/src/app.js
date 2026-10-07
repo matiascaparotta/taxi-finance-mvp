@@ -12,6 +12,7 @@ const healthRoutes = require("./routes/healthRoutes");
 const workDayRoutes = require("./routes/workDayRoutes");
 const tripRoutes = require("./routes/tripRoutes");
 const workDaySummaryRoutes = require("./routes/workDaySummaryRoutes");
+const summaryRoutes = require("./routes/summaryRoutes");
 
 getAuthConfig();
 
@@ -33,6 +34,7 @@ app.use(
   workDaySummaryRoutes
 );
 app.use("/api/trips", requireAuthentication, tripRoutes);
+app.use("/api/summary", requireAuthentication, summaryRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({

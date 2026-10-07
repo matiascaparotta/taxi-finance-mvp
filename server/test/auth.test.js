@@ -5,6 +5,7 @@ const { getAuthConfig } = require("../src/config/auth");
 const {
   hashPassword,
   parseCookies,
+  readSession,
   serializeSessionCookie,
   signSession,
   verifyPassword,
@@ -37,6 +38,24 @@ test("firma sesiones, rechaza alteraciones y respeta la expiración", () => {
     verifySession(`${token}alterado`, secret, 10_500),
     false
   );
+});
+
+test("la sesión conserva la identidad del usuario", () => {
+  const secret = "b".repeat(32);
+  const token = signSession(secret, 1_000, 10_000, 2);
+  const session = readSession(token, secret, 10_500);
+
+  assert.equal(session.userId, 2);
+});
+
+test("la sesión puede conservar el perfil visible", () => {
+  const secret = "c".repeat(32);
+  const identity = { id: 2, fullName: "Alberto Caparotta" };
+  const token = signSession(secret, 1_000, 10_000, identity);
+  const session = readSession(token, secret, 10_500);
+
+  assert.equal(session.userId, 2);
+  assert.equal(session.user.fullName, "Alberto Caparotta");
 });
 
 test("crea una cookie privada que JavaScript no puede leer", () => {

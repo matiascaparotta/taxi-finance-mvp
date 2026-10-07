@@ -1,18 +1,19 @@
 const pool = require("../config/database");
 
-const createWorkDay = async (workDayData) => {
+const createWorkDay = async (userId, workDayData) => {
   const { date, startKm } = workDayData;
 
   const [result] = await pool.query(
     `
     INSERT INTO work_days (
+      user_id,
       date,
       start_km,
       status
     )
-    VALUES (?, ?, 'OPEN')
+    VALUES (?, ?, ?, 'OPEN')
     `,
-    [date, startKm]
+    [userId, date, startKm]
   );
 
   const [rows] = await pool.query(
@@ -29,15 +30,15 @@ const createWorkDay = async (workDayData) => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [result.insertId]
+    [result.insertId, userId]
   );
 
   return rows[0];
 };
 
-const getWorkDays = async () => {
+const getWorkDays = async (userId) => {
   const [rows] = await pool.query(
     `
     SELECT
@@ -52,13 +53,14 @@ const getWorkDays = async () => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
+    WHERE user_id = ?
     ORDER BY date DESC
     `
-  );
+    , [userId]);
 
   return rows;
 };
-const getWorkDayById = async (workDayId) => {
+const getWorkDayById = async (userId, workDayId) => {
   const [rows] = await pool.query(
     `
     SELECT
@@ -73,15 +75,15 @@ const getWorkDayById = async (workDayId) => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [workDayId]
+    [workDayId, userId]
   );
 
   return rows[0] || null;
 };
 
-const getOpenWorkDay = async () => {
+const getOpenWorkDay = async (userId) => {
   const [rows] = await pool.query(
     `
     SELECT
@@ -96,16 +98,16 @@ const getOpenWorkDay = async () => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
-    WHERE status = 'OPEN'
+    WHERE status = 'OPEN' AND user_id = ?
     ORDER BY created_at DESC
     LIMIT 1
     `
-  );
+    , [userId]);
 
   return rows[0] || null;
 };
 
-const getLatestClosedWorkDay = async () => {
+const getLatestClosedWorkDay = async (userId) => {
   const [rows] = await pool.query(
     `
     SELECT
@@ -118,16 +120,16 @@ const getLatestClosedWorkDay = async () => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
-    WHERE status = 'CLOSED'
+    WHERE status = 'CLOSED' AND user_id = ?
     ORDER BY date DESC, id DESC
     LIMIT 1
     `
-  );
+    , [userId]);
 
   return rows[0] || null;
 };
 
-const closeWorkDayById = async (workDayId, closeData) => {
+const closeWorkDayById = async (userId, workDayId, closeData) => {
   const { date, endKm, fuelOwn, fuelJose } = closeData;
 
   await pool.query(
@@ -139,9 +141,9 @@ const closeWorkDayById = async (workDayId, closeData) => {
       fuel_own = ?,
       fuel_jose = ?,
       status = 'CLOSED'
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [date, endKm, fuelOwn, fuelJose, workDayId]
+    [date, endKm, fuelOwn, fuelJose, workDayId, userId]
   );
 
   const [rows] = await pool.query(
@@ -158,18 +160,18 @@ const closeWorkDayById = async (workDayId, closeData) => {
       created_at AS createdAt,
       updated_at AS updatedAt
     FROM work_days
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [workDayId]
+    [workDayId, userId]
   );
 
   return rows[0] || null;
 };
 
-const deleteWorkDayById = async (workDayId) => {
+const deleteWorkDayById = async (userId, workDayId) => {
   const [result] = await pool.query(
-    "DELETE FROM work_days WHERE id = ?",
-    [workDayId]
+    "DELETE FROM work_days WHERE id = ? AND user_id = ?",
+    [workDayId, userId]
   );
 
   return result.affectedRows > 0;

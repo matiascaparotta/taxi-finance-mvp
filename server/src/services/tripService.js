@@ -78,30 +78,30 @@ const normalizeTripData = (tripData) => {
   };
 };
 
-const createTripService = async (tripData) => {
+const createTripService = async (userId, tripData) => {
   if (!tripData.workDayId) {
     throw new Error("El workDayId es obligatorio");
   }
 
   const normalizedTrip = normalizeTripData(tripData);
 
-  return await createTrip(normalizedTrip);
+  return await createTrip(userId, normalizedTrip);
 };
 
-const getTripsByWorkDayService = async (workDayId) => {
+const getTripsByWorkDayService = async (userId, workDayId) => {
   if (!workDayId) {
     throw new Error("El workDayId es obligatorio");
   }
 
-  return await getTripsByWorkDayId(workDayId);
+  return await getTripsByWorkDayId(userId, workDayId);
 };
 
-const getTripByIdService = async (tripId) => {
+const getTripByIdService = async (userId, tripId) => {
   if (!tripId) {
     throw new Error("El id del viaje es obligatorio");
   }
 
-  const trip = await getTripById(tripId);
+  const trip = await getTripById(userId, tripId);
 
   if (!trip) {
     throw new Error("Viaje no encontrado");
@@ -110,14 +110,14 @@ const getTripByIdService = async (tripId) => {
   return trip;
 };
 
-const updateTripService = async (tripId, tripData) => {
+const updateTripService = async (userId, tripId, tripData) => {
   if (!tripId) {
     throw new Error("El id del viaje es obligatorio");
   }
 
-  await assertTripBelongsToOpenWorkDay(tripId);
+  await assertTripBelongsToOpenWorkDay(userId, tripId);
 
-  const existingTrip = await getTripById(tripId);
+  const existingTrip = await getTripById(userId, tripId);
 
   if (!existingTrip) {
     throw new Error("Viaje no encontrado");
@@ -129,6 +129,7 @@ const updateTripService = async (tripId, tripData) => {
   });
 
   const updatedTrip = await updateTripById(
+    userId,
     tripId,
     normalizedTrip
   );
@@ -140,20 +141,20 @@ const updateTripService = async (tripId, tripData) => {
   return updatedTrip;
 };
 
-const deleteTripService = async (tripId) => {
+const deleteTripService = async (userId, tripId) => {
   if (!tripId) {
     throw new Error("El id del viaje es obligatorio");
   }
 
-  await assertTripBelongsToOpenWorkDay(tripId);
+  await assertTripBelongsToOpenWorkDay(userId, tripId);
 
-  const existingTrip = await getTripById(tripId);
+  const existingTrip = await getTripById(userId, tripId);
 
   if (!existingTrip) {
     throw new Error("Viaje no encontrado");
   }
 
-  const deletedTrip = await deleteTripById(tripId);
+  const deletedTrip = await deleteTripById(userId, tripId);
 
   return deletedTrip;
 };

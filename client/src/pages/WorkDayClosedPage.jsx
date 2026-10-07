@@ -13,7 +13,7 @@ import { getTripsByWorkDay } from "../services/tripService";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
 import { copyTextToClipboard } from "../utils/copyTextToClipboard";
 
-function WorkDayClosedPage() {
+function WorkDayClosedPage({ user }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -122,12 +122,13 @@ function WorkDayClosedPage() {
         subtitle="Resumen final del turno."
       />
 
-      <WorkDayTicket workDay={workDay} summary={summary} trips={trips} />
+      <WorkDayTicket workDay={workDay} summary={summary} trips={trips} user={user} />
 
       <WorkDayShareCard
         workDay={workDay}
         summary={summary}
         trips={trips}
+        user={user}
       />
 
       <div className="space-y-3">

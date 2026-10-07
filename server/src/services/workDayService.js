@@ -17,14 +17,14 @@ const {
   validateChronologicalWorkDayDate,
 } = require("../utils/workDayDate");
 
-const createWorkDayService = async (workDayData) => {
+const createWorkDayService = async (userId, workDayData) => {
   const { date, startKm, resetOdometer = false } = workDayData;
 
   if (!date) {
     throw new Error("La fecha es obligatoria");
   }
 
-  const openWorkDay = await getOpenWorkDay();
+  const openWorkDay = await getOpenWorkDay(userId);
 
   if (openWorkDay) {
     throw new Error(
@@ -32,7 +32,7 @@ const createWorkDayService = async (workDayData) => {
     );
   }
 
-  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const latestClosedWorkDay = await getLatestClosedWorkDay(userId);
   const validatedDate = validateChronologicalWorkDayDate(
     date,
     latestClosedWorkDay?.date
@@ -43,7 +43,7 @@ const createWorkDayService = async (workDayData) => {
     resetOdometer
   );
 
-  const workDay = await createWorkDay({
+  const workDay = await createWorkDay(userId, {
     date: validatedDate,
     startKm: validatedStartKm,
   });
@@ -55,8 +55,8 @@ const createWorkDayService = async (workDayData) => {
   };
 };
 
-const getWorkDaysService = async () => {
-  const workDays = await getWorkDays();
+const getWorkDaysService = async (userId) => {
+  const workDays = await getWorkDays(userId);
 
   return workDays.map((workDay) => ({
     ...workDay,
@@ -68,12 +68,12 @@ const getWorkDaysService = async () => {
   }));
 };
 
-const getWorkDayByIdService = async (workDayId) => {
+const getWorkDayByIdService = async (userId, workDayId) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
 
-  const workDay = await getWorkDayById(workDayId);
+  const workDay = await getWorkDayById(userId, workDayId);
 
   if (!workDay) {
     throw new Error("Jornada no encontrada");
@@ -88,8 +88,8 @@ const getWorkDayByIdService = async (workDayId) => {
         : null,
   };
 };
-const getOpenWorkDayService = async () => {
-  const openWorkDay = await getOpenWorkDay();
+const getOpenWorkDayService = async (userId) => {
+  const openWorkDay = await getOpenWorkDay(userId);
 
   if (!openWorkDay) {
     return null;
@@ -102,14 +102,14 @@ const getOpenWorkDayService = async () => {
   };
 };
 
-const getLatestClosedWorkDayService = async () => {
-  return await getLatestClosedWorkDay();
+const getLatestClosedWorkDayService = async (userId) => {
+  return await getLatestClosedWorkDay(userId);
 };
 
-const closeWorkDayService = async (workDayId, closeData) => {
+const closeWorkDayService = async (userId, workDayId, closeData) => {
   const { date, endKm, fuelAmount, fuelAllocation } = closeData;
 
-  const openWorkDay = await getOpenWorkDay();
+  const openWorkDay = await getOpenWorkDay(userId);
 
   if (!openWorkDay) {
     throw new Error("No hay una jornada activa para cerrar");
@@ -120,7 +120,7 @@ const closeWorkDayService = async (workDayId, closeData) => {
   }
 
   const validatedDate = validateCloseDate(date);
-  const latestClosedWorkDay = await getLatestClosedWorkDay();
+  const latestClosedWorkDay = await getLatestClosedWorkDay(userId);
   validateChronologicalWorkDayDate(
     validatedDate,
     latestClosedWorkDay?.date
@@ -136,7 +136,7 @@ const closeWorkDayService = async (workDayId, closeData) => {
 
   const fuelSplit = calculateFuelSplit(fuelAmount, fuelAllocation);
 
-  const closedWorkDay = await closeWorkDayById(workDayId, {
+  const closedWorkDay = await closeWorkDayById(userId, workDayId, {
     date: validatedDate,
     endKm: Number(endKm),
     ...fuelSplit,
@@ -149,15 +149,15 @@ const closeWorkDayService = async (workDayId, closeData) => {
   };
 };
 
-const deleteWorkDayService = async (workDayId) => {
+const deleteWorkDayService = async (userId, workDayId) => {
   if (!workDayId) {
     throw new Error("El id de la jornada es obligatorio");
   }
 
-  const workDay = await getWorkDayById(workDayId);
+  const workDay = await getWorkDayById(userId, workDayId);
   assertWorkDayCanBeDeleted(workDay);
 
-  await deleteWorkDayById(workDayId);
+  await deleteWorkDayById(userId, workDayId);
 
   return {
     id: Number(workDayId),
