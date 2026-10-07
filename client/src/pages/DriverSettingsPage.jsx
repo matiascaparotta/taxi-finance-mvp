@@ -5,7 +5,7 @@ import { addCommissionCompany, getDriverSettings, saveCommissionCompany, saveDri
 
 const emptyCompany = { name: "", commissionAmount: "" };
 
-function DriverSettingsPage() {
+function DriverSettingsPage({ onSettingsSaved = async () => {} }) {
   const [settings, setSettings] = useState(null);
   const [company, setCompany] = useState(emptyCompany);
   const [error, setError] = useState("");
@@ -23,6 +23,7 @@ function DriverSettingsPage() {
       await saveDriverSettings(settings);
       setNotice("Configuración guardada");
       await load();
+      await onSettingsSaved();
     } catch (saveError) { setError(saveError.message); }
   };
 
@@ -71,7 +72,8 @@ function DriverSettingsPage() {
     <Card>
       <h3 className="text-lg font-bold">Condiciones diarias</h3>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <label className="text-sm font-semibold">Combustible por kilómetro<input aria-label="Tarifa por kilómetro" type="number" min="0.0001" step="0.01" value={settings.fuelRatePerKm} onChange={(e) => setSettings({ ...settings, fuelRatePerKm: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /><span className="mt-1 block text-xs text-slate-500">€/km · se aplica a jornadas futuras</span></label>
+        <label className="text-sm font-semibold">Cómo calcular el combustible<select aria-label="Modo de combustible" value={settings.fuelCalculationMode} onChange={(e) => setSettings({ ...settings, fuelCalculationMode: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3"><option value="ACTUAL_LOAD">Importe real al cerrar</option><option value="DISTANCE_RATE">Precio por kilómetro</option></select><span className="mt-1 block text-xs text-slate-500">El importe real se descuenta directamente del total del día</span></label>
+        {settings.fuelCalculationMode === "DISTANCE_RATE" && <label className="text-sm font-semibold">Combustible por kilómetro<input aria-label="Tarifa por kilómetro" type="number" min="0.0001" step="0.01" value={settings.fuelRatePerKm} onChange={(e) => setSettings({ ...settings, fuelRatePerKm: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /><span className="mt-1 block text-xs text-slate-500">€/km · se aplica a jornadas futuras</span></label>}
         <label className="text-sm font-semibold">Seguridad Social diaria<input aria-label="Seguridad Social diaria" type="number" min="0" step="0.01" value={settings.dailySocialSecurity} onChange={(e) => setSettings({ ...settings, dailySocialSecurity: e.target.value })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /><span className="mt-1 block text-xs text-slate-500">Se descuenta antes del reparto diario</span></label>
       </div>
       <button type="button" onClick={saveGeneral} className="mt-5 w-full rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950">Guardar condiciones</button>

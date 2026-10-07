@@ -21,6 +21,8 @@ const rate = (value) => {
   return Number(number.toFixed(4));
 };
 
+const FUEL_MODES = new Set(["ACTUAL_LOAD", "DISTANCE_RATE"]);
+
 const companyInput = (input) => {
   const name = input?.name?.trim();
   const commissionAmount = Number(input?.commissionAmount);
@@ -36,6 +38,7 @@ const getDriverSettings = async (auth) => {
     repository.listCompanies(scope.organizationId, scope.userId),
   ]);
   return {
+    fuelCalculationMode: settings?.fuelCalculationMode || "ACTUAL_LOAD",
     fuelRatePerKm: Number(settings?.fuelRatePerKm || 0),
     dailySocialSecurity: Number(settings?.dailySocialSecurity || 0),
     companies: companies.map((company) => ({ ...company, id: Number(company.id), commissionAmount: Number(company.commissionAmount) })),
@@ -44,8 +47,16 @@ const getDriverSettings = async (auth) => {
 
 const updateDriverSettings = async (input, auth) => {
   const scope = requireAlbertoScope(auth);
+  const fuelCalculationMode = input?.fuelCalculationMode || "ACTUAL_LOAD";
+  if (!FUEL_MODES.has(fuelCalculationMode)) {
+    throw new Error("El modo de combustible no es válido");
+  }
   return repository.updateSettings(scope.organizationId, scope.userId, {
-    fuelRatePerKm: rate(input?.fuelRatePerKm),
+    fuelCalculationMode,
+    fuelRatePerKm:
+      fuelCalculationMode === "DISTANCE_RATE"
+        ? rate(input?.fuelRatePerKm)
+        : Number(input?.fuelRatePerKm || 0),
     dailySocialSecurity: money(input?.dailySocialSecurity, "La Seguridad Social diaria"),
   });
 };

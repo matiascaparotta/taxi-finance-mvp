@@ -197,7 +197,7 @@ function PrivateApp() {
           element={<MonthlySettlementPage currentUser={currentUser} />}
         />
         {isSalariedDriverUser(currentUser) && (
-          <Route path="/settings" element={<DriverSettingsPage />} />
+          <Route path="/settings" element={<DriverSettingsPage onSettingsSaved={checkSession} />} />
         )}
         <Route path="/work-days/:id" element={<WorkDayDetailPage />} />
         <Route

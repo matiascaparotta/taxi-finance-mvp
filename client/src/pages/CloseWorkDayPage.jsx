@@ -13,6 +13,7 @@ import {
   getCloseDateOptions,
   normalizeWorkDayDate,
 } from "../utils/workDayDate";
+import { isSalariedDriverUser } from "../utils/userNavigation";
 
 function CloseWorkDayPage({ currentUser }) {
   const [openWorkDay, setOpenWorkDay] = useState(null);
@@ -34,8 +35,9 @@ function CloseWorkDayPage({ currentUser }) {
   );
   const distanceFuelMode =
     currentUser?.fuelCalculationMode === "DISTANCE_RATE";
+  const isSalariedDriver = isSalariedDriverUser(currentUser);
   const fuelRatePerKm = Number(currentUser?.fuelRatePerKm || 0);
-  const effectiveFuelAllocation = isOwner
+  const effectiveFuelAllocation = isOwner || isSalariedDriver
     ? "OWN"
     : fuelAllocation;
 
@@ -290,13 +292,15 @@ function CloseWorkDayPage({ currentUser }) {
               Si no cargaste combustible, deja el importe en 0 €.
             </p>
 
-            {isOwner ? (
+            {isOwner || isSalariedDriver ? (
               <div className="mt-5 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3">
                 <p className="font-bold text-white">
-                  Gasolina propia
+                  {isSalariedDriver ? "Descuento completo del día" : "Gasolina propia"}
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
-                  La carga completa se guardará como gasto del propietario.
+                  {isSalariedDriver
+                    ? "La carga completa se descontará antes de calcular el reparto."
+                    : "La carga completa se guardará como gasto del propietario."}
                 </p>
               </div>
             ) : (
@@ -362,7 +366,7 @@ function CloseWorkDayPage({ currentUser }) {
             {fuelSplit && Number(fuelAmount) > 0 && (
               <div
                 className={`mt-4 grid gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 ${
-                  isOwner ? "grid-cols-1" : "grid-cols-2"
+                  isOwner || isSalariedDriver ? "grid-cols-1" : "grid-cols-2"
                 }`}
               >
                 <div>
@@ -373,7 +377,7 @@ function CloseWorkDayPage({ currentUser }) {
                     {formatCurrency(fuelSplit.fuelOwn)}
                   </p>
                 </div>
-                {!isOwner && (
+                {!isOwner && !isSalariedDriver && (
                   <div>
                     <p className="text-xs text-emerald-300">
                       Gasolina José

@@ -25,3 +25,9 @@ test("una jornada vacía puede cancelarse sin completar el cierre", () => {
   assert.match(source, /No aparecerá en el historial/);
   assert.match(source, /cancellationConfirmation: hasTrips/);
 });
+
+test("muestra todos los viajes de la jornada activa", () => {
+  assert.match(source, /Todos los viajes de la jornada/);
+  assert.match(source, /sortedTrips\.map/);
+  assert.doesNotMatch(source, /sortedTrips\.slice\(0, 5\)/);
+});

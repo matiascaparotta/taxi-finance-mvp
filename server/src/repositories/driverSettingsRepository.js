@@ -15,10 +15,10 @@ const getSettings = async (organizationId, userId) => {
 const updateSettings = async (organizationId, userId, settings) => {
   await pool.query(
     `UPDATE organization_memberships
-     SET fuel_calculation_mode = 'DISTANCE_RATE',
+     SET fuel_calculation_mode = ?,
          fuel_rate_per_km = ?, daily_social_security = ?
      WHERE organization_id = ? AND user_id = ? AND status = 'ACTIVE'`,
-    [settings.fuelRatePerKm, settings.dailySocialSecurity, organizationId, userId]
+    [settings.fuelCalculationMode, settings.fuelRatePerKm, settings.dailySocialSecurity, organizationId, userId]
   );
   return getSettings(organizationId, userId);
 };

@@ -195,12 +195,12 @@ function MyWorkDayPage({ currentUser = null }) {
       </Card>
 
       <Card>
-        <h3 className="text-lg font-bold">Últimos viajes</h3>
+        <h3 className="text-lg font-bold">Todos los viajes de la jornada</h3>
         {sortedTrips.length === 0 ? (
           <p className="mt-3 text-sm text-slate-400">Todavía no registraste viajes.</p>
         ) : (
           <div className="mt-4 space-y-3">
-            {sortedTrips.slice(0, 5).map((trip) => (
+            {sortedTrips.map((trip) => (
               <ActiveTripCard
                 key={trip.id}
                 trip={trip}

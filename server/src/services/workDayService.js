@@ -181,7 +181,10 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
   if (distanceFuelMode && !(Number(auth?.fuelRatePerKm) > 0)) {
     throw new Error("La tarifa de combustible por kilómetro no está configurada");
   }
-  const effectiveFuelAllocation = distanceFuelMode
+  const salariedLic1315 =
+    auth?.organizationName === "Lic1315" &&
+    !(auth?.roles?.isOwner ?? auth?.isOwner);
+  const effectiveFuelAllocation = distanceFuelMode || salariedLic1315
     ? "OWN"
     : resolveFuelAllocation(
       fuelAllocation,
