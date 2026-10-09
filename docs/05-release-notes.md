@@ -35,6 +35,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 ## En desarrollo — Liquidación diaria de Alberto
 
 - Motor de cálculo diario aislado y cubierto por pruebas.
+- Perfil de liquidación por relación laboral, sin condiciones basadas en
+  nombres de usuario u organización.
+- Migraciones aditivas `023` y `024`: Alberto queda en cierre diario 50/50 y
+  gasolina manual; Matías conserva la modalidad mensual y José no cambia.
 - Gasolina introducida manualmente, descontada antes del reparto y reintegrada
   íntegramente a Alberto.
 - Reparto 50/50 posterior a Seguridad Social y gasolina, con indicación de quién

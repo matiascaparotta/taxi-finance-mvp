@@ -100,6 +100,13 @@ reparte la base al 50 %, reintegra la gasolina completa a Alberto y compara su
 derecho total con el efectivo conservado. Aún no está conectado al cierre ni
 desplegado, por lo que no altera el uso diario actual.
 
+También está preparada localmente una migración aditiva para declarar la
+modalidad y el porcentaje de liquidación en cada relación laboral. Configura a
+Alberto con `DAILY_50_50`, 50 % y combustible manual; conserva a Matías con
+`MONTHLY_50_50` y deja a José sin liquidación de asalariado. Las sesiones
+personales exponen y refrescan estos parámetros, pero las migraciones `023` y
+`024` aún no están publicadas.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

@@ -650,6 +650,11 @@ real de 60 € descuenta los 60 € completos.
 
 ## Configuración laboral de Alberto
 
+La modalidad de liquidación pertenece a la relación laboral, no al nombre del
+usuario o de la organización. Alberto utiliza `DAILY_50_50` con 5.000 puntos
+básicos para el conductor (50 %). Matías conserva `MONTHLY_50_50` y José
+`NONE`; por tanto, la nueva regla no modifica la liquidación vigente de Lic249.
+
 Alberto registra manualmente al cerrar cada jornada el importe de gasolina que
 corresponde. No se calcula por kilómetros y la gasolina no se reparte al 50 %:
 se descuenta completa antes del reparto y se reintegra completa a Alberto porque

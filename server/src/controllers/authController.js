@@ -61,6 +61,11 @@ const getPublicUser = (session) => {
       session.fuelRatePerKm === null || session.fuelRatePerKm === undefined
         ? null
         : Number(session.fuelRatePerKm),
+    dailySocialSecurity: Number(session.dailySocialSecurity || 0),
+    settlementMode: session.settlementMode || "NONE",
+    driverShareBasisPoints: Number(
+      session.driverShareBasisPoints || 0
+    ),
     mustChangePassword: Boolean(session.mustChangePassword),
   };
 };

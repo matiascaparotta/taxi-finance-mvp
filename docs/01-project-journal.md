@@ -184,6 +184,13 @@ primero un motor económico aislado, calculado en céntimos y sin conectarlo aú
 a las pantallas ni a producción. El caso real de referencia devuelve 33,22 € a
 favor de Alberto.
 
+En el siguiente paso del mismo 09/10/2026 se incorporó el perfil general de
+liquidación por relación laboral. Las migraciones aditivas `023` y `024`
+añaden modalidad y porcentaje, convierten a Alberto a gasolina manual y lo
+configuran con cierre diario 50/50. Matías conserva su modalidad mensual y
+José no recibe reglas de asalariado. Los parámetros viajan en la sesión y se
+refrescan desde la base; todavía no se conectó el cálculo al resumen cerrado.
+
 ## Estado
 
 ✅ Sprint finalizado.

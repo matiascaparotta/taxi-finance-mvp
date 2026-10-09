@@ -89,6 +89,10 @@ const createRequireActiveUserSession = ({
     };
     req.auth.fuelCalculationMode = accessState.fuelCalculationMode;
     req.auth.fuelRatePerKm = accessState.fuelRatePerKm;
+    req.auth.dailySocialSecurity = accessState.dailySocialSecurity;
+    req.auth.settlementMode = accessState.settlementMode;
+    req.auth.driverShareBasisPoints =
+      accessState.driverShareBasisPoints;
 
     next();
   } catch (error) {

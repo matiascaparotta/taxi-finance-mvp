@@ -14,7 +14,10 @@ const findActiveUserForLogin = async (username) => {
       organization_memberships.is_owner AS isOwner,
       organization_memberships.is_driver AS isDriver,
       organization_memberships.fuel_calculation_mode AS fuelCalculationMode,
-      organization_memberships.fuel_rate_per_km AS fuelRatePerKm
+      organization_memberships.fuel_rate_per_km AS fuelRatePerKm,
+      organization_memberships.daily_social_security AS dailySocialSecurity,
+      organization_memberships.settlement_mode AS settlementMode,
+      organization_memberships.driver_share_basis_points AS driverShareBasisPoints
     FROM users
     INNER JOIN organization_memberships
       ON organization_memberships.user_id = users.id
@@ -93,7 +96,10 @@ const getUserAccessState = async (userId, organizationId) => {
       organization_memberships.is_owner AS isOwner,
       organization_memberships.is_driver AS isDriver,
       organization_memberships.fuel_calculation_mode AS fuelCalculationMode,
-      organization_memberships.fuel_rate_per_km AS fuelRatePerKm
+      organization_memberships.fuel_rate_per_km AS fuelRatePerKm,
+      organization_memberships.daily_social_security AS dailySocialSecurity,
+      organization_memberships.settlement_mode AS settlementMode,
+      organization_memberships.driver_share_basis_points AS driverShareBasisPoints
     FROM users
     INNER JOIN organization_memberships
       ON organization_memberships.user_id = users.id
@@ -123,6 +129,11 @@ const getUserAccessState = async (userId, organizationId) => {
       rows[0].fuelRatePerKm === null
         ? null
         : Number(rows[0].fuelRatePerKm),
+    dailySocialSecurity: Number(rows[0].dailySocialSecurity || 0),
+    settlementMode: rows[0].settlementMode || "NONE",
+    driverShareBasisPoints: Number(
+      rows[0].driverShareBasisPoints || 0
+    ),
   };
 };
 

@@ -18,6 +18,11 @@ const activeUser = {
   organizationName: "Lic249",
   isOwner: 0,
   isDriver: 1,
+  fuelCalculationMode: "ACTUAL_LOAD",
+  fuelRatePerKm: null,
+  dailySocialSecurity: 0,
+  settlementMode: "MONTHLY_50_50",
+  driverShareBasisPoints: 5000,
 };
 
 test("normaliza el nombre de usuario", () => {
@@ -58,6 +63,9 @@ test("autentica una cuenta activa y devuelve datos públicos", async () => {
     isDriver: true,
     fuelCalculationMode: "ACTUAL_LOAD",
     fuelRatePerKm: null,
+    dailySocialSecurity: 0,
+    settlementMode: "MONTHLY_50_50",
+    driverShareBasisPoints: 5000,
     mustChangePassword: true,
   });
   assert.equal("passwordHash" in user, false);

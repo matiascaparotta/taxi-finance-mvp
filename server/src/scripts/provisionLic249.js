@@ -15,6 +15,8 @@ const LIC249_SETUP = {
       isOwner: false,
       isDriver: true,
       fuelCalculationMode: "ACTUAL_LOAD",
+      settlementMode: "MONTHLY_50_50",
+      driverShareBasisPoints: 5000,
     },
     {
       username: "jose.revilla",
@@ -22,6 +24,7 @@ const LIC249_SETUP = {
       isOwner: true,
       isDriver: true,
       fuelCalculationMode: "ACTUAL_LOAD",
+      settlementMode: "NONE",
     },
   ],
   vehicle: {

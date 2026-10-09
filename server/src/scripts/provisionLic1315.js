@@ -15,9 +15,11 @@ const LIC1315_SETUP = {
       displayName: "Alberto Caparotta",
       isOwner: false,
       isDriver: true,
-      fuelCalculationMode: "DISTANCE_RATE",
-      fuelRatePerKm: 0.1,
+      fuelCalculationMode: "ACTUAL_LOAD",
+      fuelRatePerKm: null,
       dailySocialSecurity: 35,
+      settlementMode: "DAILY_50_50",
+      driverShareBasisPoints: 5000,
     },
   ],
   vehicle: {

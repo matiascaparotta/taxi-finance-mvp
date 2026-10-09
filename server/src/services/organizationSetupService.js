@@ -7,6 +7,11 @@ const { hashPassword } = require("./authService");
 
 const USERNAME_PATTERN = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
 const FUEL_MODES = new Set(["ACTUAL_LOAD", "DISTANCE_RATE"]);
+const SETTLEMENT_MODES = new Set([
+  "NONE",
+  "MONTHLY_50_50",
+  "DAILY_50_50",
+]);
 
 const generateTemporaryPassword = () =>
   crypto.randomBytes(18).toString("base64url");
@@ -62,6 +67,27 @@ const validateSetup = ({
     ) {
       throw new Error(
         `La tarifa por kilómetro de ${user.username} debe ser positiva`
+      );
+    }
+
+    const settlementMode = user.settlementMode || "NONE";
+    if (!SETTLEMENT_MODES.has(settlementMode)) {
+      throw new Error(
+        `Modalidad de liquidación inválida para ${user.username}`
+      );
+    }
+
+    const driverShareBasisPoints = Number(
+      user.driverShareBasisPoints || 0
+    );
+    if (
+      settlementMode !== "NONE" &&
+      (!Number.isInteger(driverShareBasisPoints) ||
+        driverShareBasisPoints <= 0 ||
+        driverShareBasisPoints > 10000)
+    ) {
+      throw new Error(
+        `Porcentaje de reparto inválido para ${user.username}`
       );
     }
 
@@ -137,6 +163,9 @@ const provisionOrganization = async (
         fuelCalculationMode: userSetup.fuelCalculationMode,
         fuelRatePerKm: userSetup.fuelRatePerKm ?? null,
         dailySocialSecurity: userSetup.dailySocialSecurity ?? 0,
+        settlementMode: userSetup.settlementMode || "NONE",
+        driverShareBasisPoints:
+          userSetup.driverShareBasisPoints || 0,
       });
 
       provisionedUsers.push({

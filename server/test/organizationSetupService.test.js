@@ -121,8 +121,11 @@ test("prepara Lic249 con Matías, José y el vehículo compartido", async () => 
 
   assert.equal(matiasMembership.isOwner, false);
   assert.equal(matiasMembership.isDriver, true);
+  assert.equal(matiasMembership.settlementMode, "MONTHLY_50_50");
+  assert.equal(matiasMembership.driverShareBasisPoints, 5000);
   assert.equal(joseMembership.isOwner, true);
   assert.equal(joseMembership.isDriver, true);
+  assert.equal(joseMembership.settlementMode, "NONE");
 });
 
 test("prepara Lic1315 aislada con Alberto como conductor asalariado", async () => {
@@ -151,8 +154,11 @@ test("prepara Lic1315 aislada con Alberto como conductor asalariado", async () =
   assert.equal(membership.userId, alberto.id);
   assert.equal(membership.isOwner, false);
   assert.equal(membership.isDriver, true);
-  assert.equal(membership.fuelCalculationMode, "DISTANCE_RATE");
-  assert.equal(membership.fuelRatePerKm, 0.1);
+  assert.equal(membership.fuelCalculationMode, "ACTUAL_LOAD");
+  assert.equal(membership.fuelRatePerKm, null);
+  assert.equal(membership.dailySocialSecurity, 35);
+  assert.equal(membership.settlementMode, "DAILY_50_50");
+  assert.equal(membership.driverShareBasisPoints, 5000);
 });
 
 test("puede repetirse sin duplicar ni cambiar contraseñas", async () => {
@@ -205,5 +211,15 @@ test("exige al menos un propietario en la organización", () => {
   assert.throws(
     () => validateSetup(setup),
     /al menos un propietario/
+  );
+});
+
+test("exige un porcentaje válido para una liquidación configurada", () => {
+  const setup = structuredClone(LIC1315_SETUP);
+  setup.users[0].driverShareBasisPoints = 0;
+
+  assert.throws(
+    () => validateSetup(setup),
+    /Porcentaje de reparto/
   );
 });

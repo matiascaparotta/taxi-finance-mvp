@@ -42,6 +42,11 @@ const authenticateUser = async (
       user.fuelRatePerKm === null || user.fuelRatePerKm === undefined
         ? null
         : Number(user.fuelRatePerKm),
+    dailySocialSecurity: Number(user.dailySocialSecurity || 0),
+    settlementMode: user.settlementMode || "NONE",
+    driverShareBasisPoints: Number(
+      user.driverShareBasisPoints || 0
+    ),
     mustChangePassword: Boolean(user.mustChangePassword),
   };
 };

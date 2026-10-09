@@ -1088,6 +1088,11 @@ se descuenta antes del reparto y se reintegra completa. No se incorpora cálculo
 por distancia ni selección de origen del pago. Una excepción futura requerirá
 una decisión explícita y no se inferirá automáticamente.
 
+La selección del cálculo se almacena en `organization_memberships` mediante
+`settlement_mode` y `driver_share_basis_points`. Esto representa la relación
+laboral y permite reutilizar la regla con otras personas sin comprobar nombres,
+licencias u organizaciones en tiempo de ejecución.
+
 ### Consecuencias
 
 - la regla se puede probar antes de conectarla al cierre o a datos reales;
