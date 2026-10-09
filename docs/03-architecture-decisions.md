@@ -1067,6 +1067,35 @@ presentación de fechas en `f1bfc05`. Railway desplegó exactamente
 compartido, junio conciliado y la ausencia del control de cierre para el
 propietario, sin escribir datos financieros.
 
+# ADR-020
+
+## Cálculo diario configurable separado del cierre de jornada
+
+**Fecha:** 09/10/2026
+
+**Estado:** En implementación
+
+### Decisión
+
+Mantener el cálculo de la liquidación diaria en un módulo económico puro,
+independiente de controladores, repositorios y nombres de organizaciones. Para
+Alberto recibe facturación neta, efectivo conservado, gasolina manual,
+Seguridad Social y porcentaje; opera en céntimos y devuelve la base, ambas
+partes y el sentido del saldo.
+
+La primera regla admite únicamente gasolina pagada por Alberto de su bolsillo:
+se descuenta antes del reparto y se reintegra completa. No se incorpora cálculo
+por distancia ni selección de origen del pago. Una excepción futura requerirá
+una decisión explícita y no se inferirá automáticamente.
+
+### Consecuencias
+
+- la regla se puede probar antes de conectarla al cierre o a datos reales;
+- no se condiciona el comportamiento al nombre `Lic1315` ni al usuario Alberto;
+- Matías y José conservan sin cambios su liquidación mensual;
+- la interfaz y la persistencia del cierre diario se implementarán en pasos
+  posteriores sobre este cálculo único.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

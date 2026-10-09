@@ -93,6 +93,13 @@ trabajados por la tarifa activa, muestra el resultado antes de confirmar y lo
 guarda como coste propio. El servidor repite el cálculo para impedir que un
 cliente alterado envíe otro importe.
 
+Esta es todavía la conducta de producción. El 09/10/2026 se acordó sustituirla
+por un importe de gasolina introducido manualmente en el cierre. Ya existe un
+motor aislado y probado para la liquidación diaria: resta 35 € y la gasolina,
+reparte la base al 50 %, reintegra la gasolina completa a Alberto y compara su
+derecho total con el efectivo conservado. Aún no está conectado al cierre ni
+desplegado, por lo que no altera el uso diario actual.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

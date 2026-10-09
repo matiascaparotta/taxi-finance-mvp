@@ -646,16 +646,31 @@ Cada conductor podrá tener una de estas modalidades:
 La tarifa por distancia podrá cambiar sin alterar las jornadas cerradas
 anteriormente. No representa un porcentaje del combustible cargado. Por
 ejemplo, 300 km a 0,10 €/km generan un coste de 30 €, mientras que una carga
-real de 60 € descuenta los 60 € completos. Alberto utiliza `DISTANCE_RATE` a
-0,10 €/km. TaxFin calcula y guarda ese coste automáticamente al cerrar la
-jornada; la tarifa podrá cambiar para jornadas futuras sin recalcular cierres.
+real de 60 € descuenta los 60 € completos.
 
 ## Configuración laboral de Alberto
 
-Alberto puede gestionar desde su propia cuenta la tarifa de combustible por
-kilómetro, el importe diario de Seguridad Social y su catálogo de empresas u
-hoteles con comisión. Retirar una empresa la desactiva para viajes nuevos, pero
-no borra su historial.
+Alberto registra manualmente al cerrar cada jornada el importe de gasolina que
+corresponde. No se calcula por kilómetros y la gasolina no se reparte al 50 %:
+se descuenta completa antes del reparto y se reintegra completa a Alberto porque
+la pagó de su bolsillo. Un importe sin completar no equivale a cero; si no hubo
+gasto deberá confirmar `0 €`.
+
+El cierre diario se calcula en céntimos y en este orden:
+
+1. `base repartible = facturación neta - Seguridad Social diaria - gasolina`;
+2. `parte de Alberto = base repartible × 50 %`;
+3. `derecho total de Alberto = parte de Alberto + gasolina`;
+4. `saldo diario = derecho total de Alberto - efectivo conservado`.
+
+Un saldo positivo significa que el jefe debe pagar a Alberto. Un saldo negativo
+significa que Alberto debe entregar al jefe el valor absoluto. Cero significa
+que la jornada está saldada. El céntimo indivisible del reparto queda en la
+parte de Alberto y el resto se asigna al jefe.
+
+Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
+Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa
+la desactiva para viajes nuevos, pero no borra su historial.
 
 Al elegir una empresa en un viaje, TaxFin aplica el importe fijo configurado
 para esa empresa y guarda como instantánea el nombre y el importe. Un

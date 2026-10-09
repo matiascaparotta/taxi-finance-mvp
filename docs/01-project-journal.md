@@ -177,6 +177,13 @@ nuevos guardarán una instantánea de empresa e importe fijo; la jornada
 activa y los resúmenes diario y mensual mostrarán comisiones, propinas y el
 desglose visual por empresa. No se creó ninguna empresa, jornada o viaje real.
 
+El 09/10/2026 se confirmó la regla definitiva del cierre diario de Alberto. La
+gasolina será un importe manual, se descontará íntegra antes del reparto 50/50
+y se reintegrará íntegra porque Alberto la paga de su bolsillo. Se implementó
+primero un motor económico aislado, calculado en céntimos y sin conectarlo aún
+a las pantallas ni a producción. El caso real de referencia devuelve 33,22 € a
+favor de Alberto.
+
 ## Estado
 
 ✅ Sprint finalizado.

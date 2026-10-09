@@ -204,6 +204,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 ## Gestión financiera
 
+- [x] Motor aislado y probado del cálculo diario 50/50 de Alberto.
 - [ ] Resumen mensual.
 - [ ] Liquidación mensual.
 - [ ] Liquidación diaria.

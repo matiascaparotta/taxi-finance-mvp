@@ -32,6 +32,15 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 
 # Próxima versión — Base multiusuario
 
+## En desarrollo — Liquidación diaria de Alberto
+
+- Motor de cálculo diario aislado y cubierto por pruebas.
+- Gasolina introducida manualmente, descontada antes del reparto y reintegrada
+  íntegramente a Alberto.
+- Reparto 50/50 posterior a Seguridad Social y gasolina, con indicación de quién
+  debe pagar a quién según el efectivo conservado.
+- Todavía no conectado al cierre ni publicado en producción.
+
 ## Publicado el 03/08/2026
 
 - Perfil independiente de Alberto Caparotta publicado mediante `64632da`:
