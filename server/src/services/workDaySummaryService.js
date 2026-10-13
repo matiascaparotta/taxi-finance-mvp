@@ -15,11 +15,33 @@ const roundToTwoDecimals = (value) => {
 
 const buildDailySettlement = ({
   auth,
+  dailySettlementSnapshot,
   endKm,
   fuelOwn,
   realCash,
   totalRevenue,
 }) => {
+  if (dailySettlementSnapshot) {
+    return {
+      ...dailySettlementSnapshot,
+      netRevenue: Number(dailySettlementSnapshot.netRevenue),
+      cashRetained: Number(dailySettlementSnapshot.cashRetained),
+      fuelCost: Number(dailySettlementSnapshot.fuelCost),
+      socialSecurity: Number(dailySettlementSnapshot.socialSecurity),
+      driverShareBasisPoints: Number(
+        dailySettlementSnapshot.driverShareBasisPoints
+      ),
+      driverSharePercentage:
+        Number(dailySettlementSnapshot.driverShareBasisPoints) / 100,
+      distributableBase: Number(dailySettlementSnapshot.distributableBase),
+      driverShare: Number(dailySettlementSnapshot.driverShare),
+      ownerShare: Number(dailySettlementSnapshot.ownerShare),
+      reimbursableFuel: Number(dailySettlementSnapshot.reimbursableFuel),
+      driverEntitlement: Number(dailySettlementSnapshot.driverEntitlement),
+      balance: Number(dailySettlementSnapshot.balance),
+    };
+  }
+
   if (
     auth?.accessMode !== "user" ||
     auth?.settlementMode !== "DAILY_50_50" ||
@@ -58,7 +80,12 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     throw new Error("Jornada no encontrada");
   }
 
-  const { workDay, trips, importedSummary } = result;
+  const {
+    workDay,
+    trips,
+    importedSummary,
+    dailySettlementSnapshot,
+  } = result;
 
   const startKm = Number(workDay.startKm || 0);
   const endKm = Number(workDay.endKm || 0);
@@ -127,6 +154,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
   const dailySettlement = buildDailySettlement({
     auth,
+    dailySettlementSnapshot,
     endKm: workDay.endKm,
     fuelOwn,
     realCash,

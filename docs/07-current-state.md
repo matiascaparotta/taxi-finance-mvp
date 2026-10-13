@@ -134,6 +134,12 @@ mantiene una única tarjeta: resumen operativo arriba, liquidación compacta
 debajo y resultado destacado en azul o ámbar. La gasolina no se duplica fuera
 de la sección diaria. Los formatos de Lic249 permanecen sin cambios.
 
+Localmente, el cierre diario guarda además una instantánea económica inmutable
+en la misma transacción que cierra la jornada. El resumen histórico prioriza
+esa instantánea y ya no depende de la configuración laboral vigente al momento
+de consultarlo. La migración `025` y esta persistencia todavía no están
+publicadas en producción.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

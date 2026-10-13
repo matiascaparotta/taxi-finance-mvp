@@ -15,6 +15,7 @@ const BACKUP_TABLES = [
   "commission_companies",
   "vehicles",
   "work_days",
+  "daily_settlement_snapshots",
   "trips",
   "correction_audit_logs",
   "monthly_work_day_imports",

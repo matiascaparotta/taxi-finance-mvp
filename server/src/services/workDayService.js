@@ -44,6 +44,9 @@ const {
   getCancellationActor,
   validateCancellationConfirmation,
 } = require("./activeWorkDayCancellation");
+const {
+  closeWorkDayWithDailySettlement,
+} = require("../repositories/dailySettlementRepository");
 
 const serializeWorkDay = (workDay, auth, workedKm) => ({
   ...workDay,
@@ -209,15 +212,27 @@ const closeWorkDayService = async (workDayId, closeData, auth = null) => {
     effectiveFuelAllocation
   );
 
-  const closedWorkDay = await closeWorkDayById(
-    workDayId,
-    {
-      date: validatedDate,
-      endKm: Number(endKm),
-      ...fuelSplit,
-    },
-    writeScope
-  );
+  const closeValues = {
+    date: validatedDate,
+    endKm: Number(endKm),
+    ...fuelSplit,
+  };
+  const closedWorkDay = dailySettlementMode
+    ? await closeWorkDayWithDailySettlement({
+        workDayId: Number(workDayId),
+        ...closeValues,
+        organizationId: Number(writeScope.organizationId),
+        driverUserId: Number(writeScope.userId),
+        socialSecurity: Number(auth.dailySocialSecurity || 0),
+        driverShareBasisPoints: Number(
+          auth.driverShareBasisPoints || 0
+        ),
+      })
+    : await closeWorkDayById(
+        workDayId,
+        closeValues,
+        writeScope
+      );
 
   return serializeWorkDay(
     closedWorkDay,

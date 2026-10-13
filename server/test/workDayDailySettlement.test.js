@@ -60,3 +60,35 @@ test("no altera los resúmenes con liquidación mensual o sin perfil", () => {
   );
   assert.equal(buildDailySettlement({ ...summary, auth: null }), null);
 });
+
+test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
+  const result = buildDailySettlement({
+    auth: {
+      ...albertoAuth,
+      dailySocialSecurity: 99,
+      driverShareBasisPoints: 4000,
+    },
+    dailySettlementSnapshot: {
+      netRevenue: "283.03",
+      cashRetained: "105.30",
+      fuelCost: "29.01",
+      socialSecurity: "35.00",
+      driverShareBasisPoints: 5000,
+      distributableBase: "219.02",
+      driverShare: "109.51",
+      ownerShare: "109.51",
+      reimbursableFuel: "29.01",
+      driverEntitlement: "138.52",
+      balance: "33.22",
+      balanceDirection: "OWNER_PAYS_DRIVER",
+    },
+    endKm: 70100,
+    fuelOwn: 29.01,
+    realCash: 105.3,
+    totalRevenue: 283.03,
+  });
+
+  assert.equal(result.socialSecurity, 35);
+  assert.equal(result.driverSharePercentage, 50);
+  assert.equal(result.balance, 33.22);
+});

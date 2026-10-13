@@ -215,6 +215,13 @@ texto y la imagen usan un mismo conjunto de filas para evitar diferencias. La
 imagen continúa siendo una sola, aumenta su altura únicamente para perfiles
 diarios y destaca quién paga y cuánto sin duplicar la gasolina.
 
+El 13/10/2026 se completó la persistencia histórica del cálculo. El cierre de
+un perfil `DAILY_50_50` guarda la jornada y una instantánea económica dentro de
+la misma transacción. Los resúmenes cerrados priorizan esa instantánea, por lo
+que un cambio posterior de Seguridad Social o porcentaje no altera cuentas ya
+confirmadas. La nueva tabla forma parte del respaldo de producción y se elimina
+en cascada únicamente cuando se borra de forma autorizada la jornada asociada.
+
 ## Estado
 
 ✅ Sprint finalizado.

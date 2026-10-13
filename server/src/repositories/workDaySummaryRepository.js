@@ -51,10 +51,30 @@ const getWorkDayWithTrips = async (workDayId) => {
     [workDayRows[0].date]
   );
 
+  const [settlementRows] = await pool.query(
+    `SELECT
+       net_revenue AS netRevenue,
+       cash_retained AS cashRetained,
+       fuel_cost AS fuelCost,
+       social_security AS socialSecurity,
+       driver_share_basis_points AS driverShareBasisPoints,
+       distributable_base AS distributableBase,
+       driver_share AS driverShare,
+       owner_share AS ownerShare,
+       reimbursable_fuel AS reimbursableFuel,
+       driver_entitlement AS driverEntitlement,
+       balance,
+       balance_direction AS balanceDirection
+     FROM daily_settlement_snapshots
+     WHERE work_day_id = ?`,
+    [workDayId]
+  );
+
   return {
     workDay: workDayRows[0],
     trips: tripRows,
     importedSummary: importRows[0] || null,
+    dailySettlementSnapshot: settlementRows[0] || null,
   };
 };
 

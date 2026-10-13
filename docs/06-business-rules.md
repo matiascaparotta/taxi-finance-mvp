@@ -673,6 +673,13 @@ significa que Alberto debe entregar al jefe el valor absoluto. Cero significa
 que la jornada está saldada. El céntimo indivisible del reparto queda en la
 parte de Alberto y el resto se asigna al jefe.
 
+Al confirmar el cierre se guarda una instantánea de todos los valores de la
+liquidación diaria: facturación neta, efectivo conservado, gasolina, Seguridad
+Social, porcentaje, base repartible, partes, reintegro y saldo. Cambiar después
+la configuración laboral no recalcula jornadas ya cerradas. El cierre de la
+jornada y esta instantánea forman una única operación: se guardan ambos o no se
+guarda ninguno.
+
 Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
 Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa
 la desactiva para viajes nuevos, pero no borra su historial.

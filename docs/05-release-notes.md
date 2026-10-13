@@ -53,6 +53,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   API garantiza que la gasolina queda íntegramente a cargo del conductor.
 - Imagen y texto compartibles con el desglose completo de la liquidación diaria
   y el resultado de quién debe pagar, sin generar imágenes adicionales.
+- Instantánea económica inmutable creada atómicamente con el cierre: conserva
+  las reglas aplicadas a cada jornada aunque la configuración cambie después.
 - Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026

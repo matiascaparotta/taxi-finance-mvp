@@ -1106,6 +1106,14 @@ simultáneamente sesión personal, jornada cerrada y modo `DAILY_50_50`. El moto
 recibe los totales netos ya calculados por el resumen; no vuelve a aplicar
 comisiones ni propinas.
 
+La integración definitiva persiste una única instantánea en
+`daily_settlement_snapshots` durante la misma transacción que cierra la jornada.
+La instantánea conserva entradas, resultados y dirección del saldo, y pasa a
+ser la fuente del resumen histórico. Así, una modificación posterior de la
+Seguridad Social o del porcentaje solo afecta cierres futuros. La eliminación
+autorizada de una jornada de prueba elimina también su instantánea mediante la
+relación con borrado en cascada.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.
