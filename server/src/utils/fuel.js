@@ -46,8 +46,8 @@ const calculateFuelSplit = (fuelAmount, fuelAllocation) => {
 
 const resolveFuelAllocation = (
   requestedAllocation,
-  { isOwner = false } = {}
-) => (isOwner ? "OWN" : requestedAllocation);
+  { forceOwn = false, isOwner = false } = {}
+) => (isOwner || forceOwn ? "OWN" : requestedAllocation);
 
 module.exports = {
   calculateFuelSplit,

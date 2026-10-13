@@ -97,3 +97,13 @@ test("un conductor conserva la opción de compartir combustible", () => {
     "SHARED"
   );
 });
+
+test("un cierre diario asigna toda la gasolina al conductor", () => {
+  assert.equal(
+    resolveFuelAllocation("SHARED", {
+      forceOwn: true,
+      isOwner: false,
+    }),
+    "OWN"
+  );
+});

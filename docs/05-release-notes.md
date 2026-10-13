@@ -47,6 +47,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   jornadas abiertas y los perfiles mensuales quedan excluidos.
 - Nueva sección visual de liquidación diaria en la jornada finalizada, con
   desglose verificable y resultado destacado según quién debe pagar.
+- Cierre diario con gasolina manual obligatoria, cero explícito y sin reparto
+  de combustible ni estimación por kilómetros.
+- Configuración del perfil diario limitada a Seguridad Social y empresas; la
+  API garantiza que la gasolina queda íntegramente a cargo del conductor.
 - Todavía no conectado al cierre ni publicado en producción.
 
 ## Publicado el 03/08/2026

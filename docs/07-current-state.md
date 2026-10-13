@@ -122,6 +122,13 @@ cuando no existe diferencia. La tarjeta es compartida por el cierre inmediato
 y el detalle del historial; aún no se añadió la liquidación a la imagen ni al
 texto para compartir.
 
+El flujo de cierre del perfil diario solicita explícitamente el importe manual
+de gasolina y comienza vacío; si no hubo gasto se debe escribir `0`. No ofrece
+reparto de combustible ni cálculo por distancia. La API fuerza toda esa
+gasolina como propia incluso si un cliente alterado intenta enviarla como
+compartida. La configuración laboral dejó de editar tarifas por kilómetro y se
+autoriza por `DAILY_50_50`, no por el nombre de Alberto o de Lic1315.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

@@ -203,6 +203,13 @@ historial y destaca por separado si el jefe paga, si Alberto entrega o si quedó
 saldada. El diseño evita saturar de verde la tarjeta y mantiene el detalle
 económico en una sección neutra.
 
+El cierre de Alberto se adaptó después para pedir gasolina manual con un campo
+inicialmente vacío. Cero requiere una entrada explícita y la opción 50/50 de
+combustible desaparece para este perfil. El servidor fuerza la asignación
+completa al conductor. También se retiró la tarifa por kilómetro de su pantalla
+de configuración y se reemplazó la autorización rígida por el modo de
+liquidación diaria.
+
 ## Estado
 
 ✅ Sprint finalizado.
