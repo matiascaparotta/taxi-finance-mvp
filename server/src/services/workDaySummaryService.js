@@ -16,6 +16,7 @@ const roundToTwoDecimals = (value) => {
 const buildDailySettlement = ({
   auth,
   dailySettlementSnapshot,
+  dailySettlementPayments = [],
   endKm,
   fuelOwn,
   realCash,
@@ -40,6 +41,10 @@ const buildDailySettlement = ({
       driverEntitlement: Number(dailySettlementSnapshot.driverEntitlement),
       balance: Number(dailySettlementSnapshot.balance),
       pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
+      payments: dailySettlementPayments.map((payment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     };
   }
 
@@ -86,6 +91,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     trips,
     importedSummary,
     dailySettlementSnapshot,
+    dailySettlementPayments,
   } = result;
 
   const startKm = Number(workDay.startKm || 0);
@@ -156,6 +162,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
   const dailySettlement = buildDailySettlement({
     auth,
     dailySettlementSnapshot,
+    dailySettlementPayments,
     endKm: workDay.endKm,
     fuelOwn,
     realCash,

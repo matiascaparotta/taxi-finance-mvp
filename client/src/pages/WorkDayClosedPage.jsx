@@ -67,13 +67,8 @@ function WorkDayClosedPage() {
 
   const handleRegisterSettlementPayment = async (paymentData) => {
     const result = await registerDailySettlementPayment(paymentData);
-    setSummary((current) => ({
-      ...current,
-      dailySettlement: {
-        ...current.dailySettlement,
-        pendingBalance: result.pendingBalance,
-      },
-    }));
+    const refreshedSummary = await getWorkDaySummary(id);
+    setSummary(refreshedSummary);
     return result;
   };
 

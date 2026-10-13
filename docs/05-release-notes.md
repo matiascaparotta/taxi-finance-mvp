@@ -61,6 +61,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   automática, límite contra el saldo real e idempotencia frente a duplicados.
 - Migración aditiva `026` para conservar los pagos como movimientos separados
   e incluirlos en el respaldo de producción.
+- Historial completo de pagos, ordenado desde el más reciente y resumido en
+  tres filas ampliables para no alargar la jornada finalizada.
 - Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026

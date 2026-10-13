@@ -236,6 +236,11 @@ importe dentro de una transacción, bloquea pagos superiores al pendiente y
 evita duplicados mediante una clave idempotente. La migración `026` conserva
 cada movimiento sin modificar los cierres diarios.
 
+El siguiente paso hizo visible el historial completo dentro de la tarjeta de
+liquidación. Cada movimiento muestra fecha, hora, importe y si fue recibido del
+jefe o entregado al jefe. Para conservar una vista corta se presentan primero
+los tres más recientes y se ofrece `Ver los pagos` cuando existen más.
+
 ## Estado
 
 ✅ Sprint finalizado.

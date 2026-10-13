@@ -83,6 +83,14 @@ test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
       balanceDirection: "OWNER_PAYS_DRIVER",
       pendingBalance: "23.22",
     },
+    dailySettlementPayments: [
+      {
+        id: 9,
+        direction: "OWNER_TO_DRIVER",
+        amount: "10.00",
+        createdAt: "2026-10-13 10:30:00",
+      },
+    ],
     endKm: 70100,
     fuelOwn: 29.01,
     realCash: 105.3,
@@ -93,4 +101,6 @@ test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
   assert.equal(result.driverSharePercentage, 50);
   assert.equal(result.balance, 33.22);
   assert.equal(result.pendingBalance, 23.22);
+  assert.equal(result.payments.length, 1);
+  assert.equal(result.payments[0].amount, 10);
 });

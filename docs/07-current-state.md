@@ -149,7 +149,9 @@ Localmente también se pueden registrar pagos totales o parciales desde esa
 tarjeta. El servidor deduce la dirección, impide superar el pendiente, serializa
 operaciones concurrentes sobre la misma relación laboral y evita duplicados.
 La migración `026` guarda el movimiento separado del cierre y lo incorpora al
-saldo acumulado. El historial visible de esos pagos queda pendiente.
+saldo acumulado. La tarjeta muestra fecha, hora, importe y dirección de los
+tres movimientos más recientes, con acceso al historial completo mediante
+`Ver los pagos`. Todo este bloque continúa únicamente local.
 
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y

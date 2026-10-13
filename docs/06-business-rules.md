@@ -692,6 +692,9 @@ se suma. Se admiten pagos parciales, pero nunca un importe superior al pendiente
 absoluto. Cada confirmación se protege con una clave idempotente para que una
 doble pulsación o repetición de red no duplique el movimiento. El saldo queda
 definido como la suma firmada de cierres más los ajustes firmados de pagos.
+El historial se ordena desde el pago más reciente y conserva dirección, fecha,
+hora e importe. En la jornada cerrada se muestran primero tres movimientos y
+el resto queda disponible mediante `Ver los pagos`, sin recortar el historial.
 
 Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
 Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa

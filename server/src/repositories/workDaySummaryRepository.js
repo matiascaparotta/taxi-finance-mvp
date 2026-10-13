@@ -9,7 +9,9 @@ const getWorkDayWithTrips = async (workDayId) => {
       start_km AS startKm,
       end_km AS endKm,
       fuel_own AS fuelOwn,
-      fuel_jose AS fuelJose
+      fuel_jose AS fuelJose,
+      organization_id AS organizationId,
+      driver_user_id AS driverUserId
     FROM work_days
     WHERE id = ?
     `,
@@ -86,11 +88,31 @@ const getWorkDayWithTrips = async (workDayId) => {
     [workDayId]
   );
 
+  let dailySettlementPayments = [];
+  if (settlementRows.length === 1) {
+    const [paymentRows] = await pool.query(
+      `SELECT
+         id,
+         direction,
+         amount,
+         created_at AS createdAt
+       FROM daily_settlement_payments
+       WHERE organization_id = ? AND driver_user_id = ?
+       ORDER BY created_at DESC, id DESC`,
+      [
+        workDayRows[0].organizationId,
+        workDayRows[0].driverUserId,
+      ]
+    );
+    dailySettlementPayments = paymentRows;
+  }
+
   return {
     workDay: workDayRows[0],
     trips: tripRows,
     importedSummary: importRows[0] || null,
     dailySettlementSnapshot: settlementRows[0] || null,
+    dailySettlementPayments,
   };
 };
 

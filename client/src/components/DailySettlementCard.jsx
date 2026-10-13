@@ -31,6 +31,7 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentError, setPaymentError] = useState("");
   const [isSavingPayment, setIsSavingPayment] = useState(false);
+  const [showAllPayments, setShowAllPayments] = useState(false);
   const paymentLockRef = useRef(false);
   const idempotencyKeyRef = useRef("");
 
@@ -42,6 +43,10 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
   const percentage = Number(settlement.driverSharePercentage || 0);
   const pendingBalance = Number(settlement.pendingBalance || 0);
   const pending = getPendingBalancePresentation(pendingBalance);
+  const payments = Array.isArray(settlement.payments)
+    ? settlement.payments
+    : [];
+  const visiblePayments = showAllPayments ? payments : payments.slice(0, 3);
   const paymentAction = pendingBalance > 0
     ? "Recibido del jefe"
     : "Entregado al jefe";
@@ -165,6 +170,61 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
           </button>
         )}
       </div>
+
+      {payments.length > 0 && (
+        <div className="mt-3 rounded-2xl border border-slate-700 bg-slate-900/80 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-black tracking-[0.14em] text-slate-400">
+                HISTORIAL DE PAGOS
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {payments.length} {payments.length === 1 ? "movimiento" : "movimientos"}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-3 divide-y divide-slate-800">
+            {visiblePayments.map((payment) => {
+              const received = payment.direction === "OWNER_TO_DRIVER";
+              const createdAt = new Date(payment.createdAt);
+              const formattedDate = Number.isNaN(createdAt.getTime())
+                ? "Fecha no disponible"
+                : createdAt.toLocaleString("es-ES", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+
+              return (
+                <div key={payment.id} className="flex items-center justify-between gap-3 py-3">
+                  <div>
+                    <p className="text-sm font-bold text-white">
+                      {received ? "Recibido del jefe" : "Entregado al jefe"}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">{formattedDate}</p>
+                  </div>
+                  <p className="font-black text-white">
+                    {formatCurrency(payment.amount)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {payments.length > 3 && (
+            <button
+              type="button"
+              onClick={() => setShowAllPayments((current) => !current)}
+              className="mt-2 w-full rounded-xl border border-slate-700 px-3 py-2 text-sm font-bold text-slate-300"
+            >
+              {showAllPayments ? "Mostrar menos" : `Ver los ${payments.length} pagos`}
+            </button>
+          )}
+        </div>
+      )}
 
       {showPayment && (
         <div className="mt-3 rounded-2xl border border-slate-700 bg-slate-900/90 p-4">

@@ -213,7 +213,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Guardar una instantánea inmutable de la liquidación al cerrar la jornada.
 - [x] Mostrar el saldo pendiente acumulado de los cierres diarios.
 - [x] Registrar pagos parciales o totales contra el saldo pendiente.
-- [ ] Mostrar el historial completo de pagos de la liquidación diaria.
+- [x] Mostrar el historial completo de pagos de la liquidación diaria.
 - [ ] Resumen mensual.
 - [ ] Liquidación mensual.
 - [ ] Liquidación diaria.

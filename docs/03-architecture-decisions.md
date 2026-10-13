@@ -1125,7 +1125,9 @@ organización–conductor. La dirección se deduce en el servidor desde el saldo
 bajo bloqueo de la relación laboral, y no se acepta como dato confiable del
 cliente. El importe no puede cruzar el cero. La clave idempotente es única y la
 tabla forma parte del respaldo. Esta primera interfaz permite registrar y
-aplicar pagos; la consulta detallada de su historial queda como paso separado.
+aplicar pagos. El resumen cerrado devuelve también el historial completo de la
+misma relación laboral, ordenado desde el movimiento más reciente. La interfaz
+limita únicamente la presentación inicial, no la consulta ni la persistencia.
 
 # Conclusión
 
