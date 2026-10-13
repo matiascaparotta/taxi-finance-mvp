@@ -209,6 +209,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Conectar la liquidación diaria al resumen cerrado según el perfil.
 - [x] Mostrar la liquidación diaria en la jornada finalizada y su detalle.
 - [x] Solicitar gasolina manual en el cierre del perfil diario.
+- [x] Incluir la liquidación diaria en la imagen y el texto compartibles.
 - [ ] Resumen mensual.
 - [ ] Liquidación mensual.
 - [ ] Liquidación diaria.

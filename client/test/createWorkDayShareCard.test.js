@@ -6,6 +6,7 @@ import {
   paginateTrips,
   sanitizeTripForSharing,
 } from "../src/utils/createWorkDayShareCard.js";
+import { getDailySettlementShareData } from "../src/utils/getDailySettlementShareData.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -60,4 +61,29 @@ test("la interfaz comparte solo el resumen sin páginas de viajes", () => {
   assert.match(shareComponent, /createWorkDayShareCard/);
   assert.match(shareComponent, /Una imagen de resumen/);
   assert.doesNotMatch(shareComponent, /previewUrls|página de viajes|Compartir.*imágenes/);
+});
+
+test("prepara el desglose y el resultado para la imagen diaria", () => {
+  const data = getDailySettlementShareData({
+    netRevenue: 283.03,
+    socialSecurity: 35,
+    fuelCost: 29.01,
+    distributableBase: 219.02,
+    driverShare: 109.51,
+    ownerShare: 109.51,
+    driverSharePercentage: 50,
+    reimbursableFuel: 29.01,
+    driverEntitlement: 138.52,
+    cashRetained: 105.3,
+    balance: 33.22,
+    balanceDirection: "OWNER_PAYS_DRIVER",
+  });
+
+  assert.equal(data.rows.length, 9);
+  assert.deepEqual(data.rows[3], {
+    label: "Base para repartir",
+    value: 219.02,
+  });
+  assert.equal(data.result.title, "El jefe debe pagarte");
+  assert.equal(data.result.amount, 33.22);
 });

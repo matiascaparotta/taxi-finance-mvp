@@ -1,6 +1,7 @@
 import { formatCurrency } from "./formatCurrency.js";
 import { getDisplayedCash } from "./getDisplayedCash.js";
 import { normalizeWorkDayDate } from "./workDayDate.js";
+import { getDailySettlementShareData } from "./getDailySettlementShareData.js";
 
 const WEEK_DAYS = [
   "DOMINGO",
@@ -40,6 +41,9 @@ export function buildWorkDaySummaryText(workDay, summary) {
   );
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
+  const dailySettlement = getDailySettlementShareData(
+    summary.dailySettlement
+  );
   const lines = [
     formatWorkDayHeader(workDay),
     "",
@@ -50,16 +54,27 @@ export function buildWorkDaySummaryText(workDay, summary) {
     `FACTURACIÓN: ${formatCurrency(summary.totalRevenue)}`,
   ];
 
-  if (fuelOwn > 0 || fuelJose > 0) {
+  if (!dailySettlement && (fuelOwn > 0 || fuelJose > 0)) {
     lines.push("");
   }
 
-  if (fuelOwn > 0) {
+  if (!dailySettlement && fuelOwn > 0) {
     lines.push(`GASOLINA: ${formatCurrency(fuelOwn)}`);
   }
 
-  if (fuelJose > 0) {
+  if (!dailySettlement && fuelJose > 0) {
     lines.push(`GASOLINA JOSÉ: ${formatCurrency(fuelJose)}`);
+  }
+
+  if (dailySettlement) {
+    lines.push("", "LIQUIDACIÓN DEL DÍA");
+    dailySettlement.rows.forEach((row) => {
+      lines.push(`${row.label.toUpperCase()}: ${formatCurrency(row.value)}`);
+    });
+    lines.push(
+      "",
+      `${dailySettlement.result.title.toUpperCase()}: ${formatCurrency(dailySettlement.result.amount)}`
+    );
   }
 
   return lines.join("\n");

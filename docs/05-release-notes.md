@@ -51,7 +51,9 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   de combustible ni estimación por kilómetros.
 - Configuración del perfil diario limitada a Seguridad Social y empresas; la
   API garantiza que la gasolina queda íntegramente a cargo del conductor.
-- Todavía no conectado al cierre ni publicado en producción.
+- Imagen y texto compartibles con el desglose completo de la liquidación diaria
+  y el resultado de quién debe pagar, sin generar imágenes adicionales.
+- Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026
 

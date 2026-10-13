@@ -2,6 +2,7 @@ import { formatCurrency } from "./formatCurrency.js";
 import { formatDate } from "./formatDate.js";
 import { getDisplayedCash } from "./getDisplayedCash.js";
 import { getWorkDayOrganizationName } from "../config/branding.js";
+import { getDailySettlementShareData } from "./getDailySettlementShareData.js";
 
 const CARD_WIDTH = 1080;
 const TRIPS_PER_PAGE = 15;
@@ -14,6 +15,10 @@ const COLORS = {
   emeraldDark: "#064e3b",
   text: "#f8fafc",
   muted: "#94a3b8",
+  sky: "#38bdf8",
+  skyDark: "#0c4a6e",
+  amber: "#fbbf24",
+  amberDark: "#78350f",
 };
 
 function drawRoundedRect(context, x, y, width, height, radius) {
@@ -150,6 +155,9 @@ export function paginateTrips(
 async function createSummaryCard(workDay, summary) {
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
+  const dailySettlement = getDailySettlementShareData(
+    summary.dailySettlement
+  );
   const summaryRows = [
     {
       label: "Viajes",
@@ -161,10 +169,10 @@ async function createSummaryCard(workDay, summary) {
     },
     { label: "Datáfono", value: formatCurrency(summary.card) },
     { label: "Facturación", value: formatCurrency(summary.totalRevenue) },
-    ...(fuelOwn > 0
+    ...(!dailySettlement && fuelOwn > 0
       ? [{ label: "Gasolina", value: formatCurrency(fuelOwn) }]
       : []),
-    ...(fuelJose > 0
+    ...(!dailySettlement && fuelJose > 0
       ? [{ label: "Gasolina José", value: formatCurrency(fuelJose) }]
       : []),
   ];
@@ -172,7 +180,15 @@ async function createSummaryCard(workDay, summary) {
   const summaryTitleTop = 455;
   const summaryTop = summaryTitleTop + 50;
   const summaryHeight = summaryRows.length * 76 + 28;
-  const cardHeight = summaryTop + summaryHeight + 60;
+  const settlementTitleTop = summaryTop + summaryHeight + 65;
+  const settlementTop = settlementTitleTop + 50;
+  const settlementHeight = dailySettlement
+    ? dailySettlement.rows.length * 66 + 28
+    : 0;
+  const resultTop = settlementTop + settlementHeight + 24;
+  const cardHeight = dailySettlement
+    ? resultTop + 185 + 60
+    : summaryTop + summaryHeight + 60;
   const { canvas, context } = createCanvas(cardHeight);
 
   drawBrandHeader(
@@ -286,6 +302,90 @@ async function createSummaryCard(workDay, summary) {
       context.stroke();
     }
   });
+
+  if (dailySettlement) {
+    drawText(
+      context,
+      "LIQUIDACIÓN DEL DÍA",
+      70,
+      settlementTitleTop,
+      "700 27px Arial",
+      COLORS.sky
+    );
+    drawPanel(context, 70, settlementTop, 940, settlementHeight);
+
+    dailySettlement.rows.forEach((row, index) => {
+      const rowTop = settlementTop + 20 + index * 66;
+      const emphasized = ["Base para repartir", "Total que te corresponde"].includes(row.label);
+
+      drawText(
+        context,
+        row.label,
+        110,
+        rowTop,
+        emphasized ? "700 26px Arial" : "400 25px Arial",
+        emphasized ? COLORS.text : COLORS.muted
+      );
+      drawText(
+        context,
+        formatCurrency(row.value),
+        970,
+        rowTop,
+        emphasized ? "700 30px Arial" : "700 27px Arial",
+        COLORS.text,
+        "right"
+      );
+    });
+
+    const isOwnerPayment =
+      summary.dailySettlement.balanceDirection === "OWNER_PAYS_DRIVER";
+    const isDriverPayment =
+      summary.dailySettlement.balanceDirection === "DRIVER_PAYS_OWNER";
+    drawRoundedRect(context, 70, resultTop, 940, 185, 28);
+    context.fillStyle = isOwnerPayment
+      ? COLORS.skyDark
+      : isDriverPayment
+        ? COLORS.amberDark
+        : COLORS.panel;
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = isOwnerPayment
+      ? COLORS.sky
+      : isDriverPayment
+        ? COLORS.amber
+        : COLORS.border;
+    context.stroke();
+
+    drawText(
+      context,
+      dailySettlement.result.eyebrow,
+      110,
+      resultTop + 28,
+      "700 22px Arial",
+      isOwnerPayment
+        ? COLORS.sky
+        : isDriverPayment
+          ? COLORS.amber
+          : COLORS.muted
+    );
+    drawText(
+      context,
+      dailySettlement.result.title,
+      110,
+      resultTop + 78,
+      "700 33px Arial",
+      COLORS.text
+    );
+    drawText(
+      context,
+      formatCurrency(dailySettlement.result.amount),
+      970,
+      resultTop + 72,
+      "700 46px Arial",
+      COLORS.text,
+      "right"
+    );
+  }
 
   return await canvasToBlob(canvas);
 }

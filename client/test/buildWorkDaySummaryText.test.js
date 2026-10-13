@@ -89,3 +89,34 @@ test("no muestra nombres ni totales financieros prohibidos", () => {
     assert.equal(text.includes(forbiddenText), false);
   }
 });
+
+test("incorpora la liquidación diaria completa al texto", () => {
+  const text = buildWorkDaySummaryText(workDay, {
+    workedKm: 186,
+    realCash: 105.3,
+    card: 177.73,
+    totalRevenue: 283.03,
+    fuelOwn: 29.01,
+    fuelJose: 0,
+    dailySettlement: {
+      netRevenue: 283.03,
+      socialSecurity: 35,
+      fuelCost: 29.01,
+      distributableBase: 219.02,
+      driverShare: 109.51,
+      ownerShare: 109.51,
+      driverSharePercentage: 50,
+      reimbursableFuel: 29.01,
+      driverEntitlement: 138.52,
+      cashRetained: 105.3,
+      balance: 33.22,
+      balanceDirection: "OWNER_PAYS_DRIVER",
+    },
+  });
+
+  assert.match(text, /LIQUIDACIÓN DEL DÍA/);
+  assert.match(text, /BASE PARA REPARTIR: 219,02 €/);
+  assert.match(text, /TOTAL QUE TE CORRESPONDE: 138,52 €/);
+  assert.match(text, /EL JEFE DEBE PAGARTE: 33,22 €/);
+  assert.equal((text.match(/^GASOLINA:/gm) || []).length, 1);
+});

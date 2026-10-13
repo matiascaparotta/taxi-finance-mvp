@@ -210,6 +210,11 @@ completa al conductor. También se retiró la tarifa por kilómetro de su pantal
 de configuración y se reemplazó la autorización rígida por el modo de
 liquidación diaria.
 
+La liquidación se añadió después a las dos opciones de compartir. La copia de
+texto y la imagen usan un mismo conjunto de filas para evitar diferencias. La
+imagen continúa siendo una sola, aumenta su altura únicamente para perfiles
+diarios y destaca quién paga y cuánto sin duplicar la gasolina.
+
 ## Estado
 
 ✅ Sprint finalizado.

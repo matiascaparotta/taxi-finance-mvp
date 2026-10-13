@@ -119,8 +119,7 @@ Presenta facturación neta, Seguridad Social, gasolina, base, ambas partes,
 reintegro, derecho total y efectivo conservado. El resultado usa azul cuando
 el jefe debe pagar, ámbar cuando el conductor debe entregar y un estado neutro
 cuando no existe diferencia. La tarjeta es compartida por el cierre inmediato
-y el detalle del historial; aún no se añadió la liquidación a la imagen ni al
-texto para compartir.
+y el detalle del historial.
 
 El flujo de cierre del perfil diario solicita explícitamente el importe manual
 de gasolina y comienza vacío; si no hubo gasto se debe escribir `0`. No ofrece
@@ -128,6 +127,12 @@ reparto de combustible ni cálculo por distancia. La API fuerza toda esa
 gasolina como propia incluso si un cliente alterado intenta enviarla como
 compartida. La configuración laboral dejó de editar tarifas por kilómetro y se
 autoriza por `DAILY_50_50`, no por el nombre de Alberto o de Lic1315.
+
+El resumen compartible del perfil diario incorpora la misma liquidación en sus
+dos formatos. El texto incluye el desglose y la dirección del saldo. La imagen
+mantiene una única tarjeta: resumen operativo arriba, liquidación compacta
+debajo y resultado destacado en azul o ámbar. La gasolina no se duplica fuera
+de la sección diaria. Los formatos de Lic249 permanecen sin cambios.
 
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
