@@ -217,12 +217,13 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Resumen mensual del perfil de liquidación diaria.
 - [x] Compartir diariamente la liquidación y el saldo pendiente acumulado.
 - [x] Compartir el resumen mensual del perfil de liquidación diaria.
-- [ ] Liquidación mensual.
+- [x] Liquidación mensual.
 - [x] Liquidación diaria.
 - [x] Histórico mensual navegable entre años.
 - [x] Comparación entre meses para el perfil de liquidación diaria.
-- [ ] Combustible por carga real.
-- [ ] Combustible por kilómetros y tarifa configurable.
+- [x] Combustible por carga real.
+- [ ] Combustible por kilómetros y tarifa configurable para futuros perfiles;
+  no aplica al cierre manual de Alberto.
 
 ---
 

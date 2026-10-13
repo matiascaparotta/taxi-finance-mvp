@@ -270,6 +270,12 @@ Se añadió una consulta liviana de meses disponibles que permite navegar entre
 años sin recalcular todo el historial cada vez que se abre la pantalla. El
 detalle continúa cargándose bajo demanda para el mes elegido.
 
+Antes de publicar el bloque completo se auditó su integración con Railway. Las
+migraciones nuevas son aditivas, se aplican mediante el paso previo al despliegue
+y el servicio conserva su control de salud. El push se reservó hasta disponer de
+una copia recuperable de la base de producción, ya que las nuevas tablas y el
+perfil laboral de Alberto modifican datos reales aunque no borren información.
+
 ## Estado
 
 ✅ Sprint finalizado.

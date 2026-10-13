@@ -173,6 +173,13 @@ la cuenta, incluidos años anteriores. Utiliza una ruta específica que devuelve
 solo las claves `AAAA-MM`; cada resumen completo se calcula al abrirlo y no de
 forma masiva al preparar el selector.
 
+La revisión previa a publicación confirmó que las migraciones `023` a `026` son
+aditivas y que Railway las ejecutará antes del arranque, seguido de la
+comprobación `/api/health`. La liquidación mensual existente y el combustible
+por carga real se consideran completados. El combustible calculado por
+kilómetros permanece como opción futura para otros perfiles y no se activa para
+Alberto, cuyo cierre exige un importe manual.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una
