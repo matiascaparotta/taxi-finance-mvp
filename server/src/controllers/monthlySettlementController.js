@@ -29,6 +29,18 @@ const listMonthlySettlements = async (req, res) => {
   }
 };
 
+const listAvailableMonths = async (req, res) => {
+  try {
+    const data = await service.listAvailableMonths(
+      req.auth,
+      req.query.driverUserId
+    );
+    res.json({ success: true, data });
+  } catch (error) {
+    sendError(res, error);
+  }
+};
+
 const updateMonthlySettings = async (req, res) => {
   try {
     const data = await service.updateMonthlySettings(
@@ -63,6 +75,7 @@ const closeMonthlySettlement = async (req, res) => {
 module.exports = {
   closeMonthlySettlement,
   getMonthlySettlement,
+  listAvailableMonths,
   listMonthlySettlements,
   updateMonthlySettings,
 };

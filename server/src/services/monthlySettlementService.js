@@ -150,17 +150,26 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
 };
 
 const listMonthlySettlements = async (year, auth, driverUserId) => {
-  if (!/^\d{4}$/.test(String(year || ""))) {
+  if (year && !/^\d{4}$/.test(String(year))) {
     throw new Error("El año no es válido");
   }
   const driver = await resolveDriver(auth, driverUserId);
   const months = await repository.getAvailableMonths(
     Number(auth.organizationId),
     driver.id,
-    Number(year)
+    year ? Number(year) : null
   );
   return Promise.all(
     months.map((month) => buildMonthlySettlement(month, auth, driver.id))
+  );
+};
+
+const listAvailableMonths = async (auth, driverUserId) => {
+  const driver = await resolveDriver(auth, driverUserId);
+  return repository.getAvailableMonths(
+    Number(auth.organizationId),
+    driver.id,
+    null
   );
 };
 
@@ -223,6 +232,7 @@ const closeMonthlySettlement = async (month, input, auth) => {
 module.exports = {
   buildMonthlySettlement,
   closeMonthlySettlement,
+  listAvailableMonths,
   listMonthlySettlements,
   monthIsCurrent,
   updateMonthlySettings,

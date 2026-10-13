@@ -71,6 +71,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   mes y personalizada con la licencia de la organización.
 - Comparación con el mes calendario anterior para jornadas, facturación neta y
   ganancia del conductor, visible únicamente cuando existe una base real.
+- Histórico mensual sin límite al año actual, mediante un selector liviano que
+  carga el cálculo completo únicamente para el mes consultado.
 - Interfaz de conductor asalariado seleccionada por `DAILY_50_50` y no por el
   nombre de la organización.
 - Funcionalidad completa localmente y todavía no publicada en producción.

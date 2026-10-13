@@ -168,6 +168,11 @@ y, cuando contiene jornadas, muestra diferencias de jornadas, facturación neta
 y ganancia del conductor. El bloque es informativo y no altera cierres ni
 saldos.
 
+El selector de la pantalla mensual obtiene ahora todos los meses disponibles de
+la cuenta, incluidos años anteriores. Utiliza una ruta específica que devuelve
+solo las claves `AAAA-MM`; cada resumen completo se calcula al abrirlo y no de
+forma masiva al preparar el selector.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

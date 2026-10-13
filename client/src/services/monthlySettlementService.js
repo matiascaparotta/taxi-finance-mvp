@@ -14,10 +14,10 @@ export const getMonthlySettlement = async (month, driverUserId) =>
     await apiFetch(`/monthly-settlements/${month}${driverQuery(driverUserId)}`)
   );
 
-export const getMonthlySettlementHistory = async (year, driverUserId) => {
-  const query = new URLSearchParams({ year: String(year) });
+export const getMonthlySettlementHistory = async (driverUserId) => {
+  const query = new URLSearchParams();
   if (driverUserId) query.set("driverUserId", driverUserId);
-  return parseResponse(await apiFetch(`/monthly-settlements?${query}`));
+  return parseResponse(await apiFetch(`/monthly-settlements/available?${query}`));
 };
 
 export const updateMonthlySettings = async (month, settings, driverUserId) =>

@@ -90,10 +90,9 @@ function MonthlySettlementPage({ currentUser = null }) {
     try {
       setIsLoading(true);
       setError("");
-      const year = selectedMonth.slice(0, 4);
       const [detail, monthHistory, previousDetail] = await Promise.all([
         getMonthlySettlement(selectedMonth, driverId),
-        getMonthlySettlementHistory(year, driverId),
+        getMonthlySettlementHistory(driverId),
         getMonthlySettlement(getPreviousCalendarMonth(selectedMonth), driverId),
       ]);
       setSettlement(detail);
@@ -117,7 +116,7 @@ function MonthlySettlementPage({ currentUser = null }) {
 
   const availableMonths = useMemo(() => {
     const months = new Set([currentMonth(), selectedMonth]);
-    history.forEach((item) => months.add(item.month));
+    history.forEach((month) => months.add(month));
     return [...months].sort().reverse();
   }, [history, selectedMonth]);
 

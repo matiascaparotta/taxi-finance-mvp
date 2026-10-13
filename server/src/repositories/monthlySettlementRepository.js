@@ -42,6 +42,11 @@ const getClosedWorkDays = async (
 };
 
 const getAvailableMonths = async (organizationId, driverUserId, year) => {
+  const workDayYearFilter = year ? "AND YEAR(date) = ?" : "";
+  const settlementYearFilter = year ? "AND YEAR(settlement_month) = ?" : "";
+  const params = year
+    ? [organizationId, driverUserId, year, organizationId, driverUserId, year]
+    : [organizationId, driverUserId, organizationId, driverUserId];
   const [rows] = await pool.query(
     `
     SELECT DISTINCT DATE_FORMAT(date, '%Y-%m') AS month
@@ -49,16 +54,16 @@ const getAvailableMonths = async (organizationId, driverUserId, year) => {
     WHERE organization_id = ?
       AND driver_user_id = ?
       AND status = 'CLOSED'
-      AND YEAR(date) = ?
+      ${workDayYearFilter}
     UNION
     SELECT DISTINCT DATE_FORMAT(settlement_month, '%Y-%m') AS month
     FROM monthly_settlements
     WHERE organization_id = ?
       AND driver_user_id = ?
-      AND YEAR(settlement_month) = ?
+      ${settlementYearFilter}
     ORDER BY month DESC
     `,
-    [organizationId, driverUserId, year, organizationId, driverUserId, year]
+    params
   );
   return rows.map((row) => row.month);
 };

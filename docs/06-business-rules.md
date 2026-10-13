@@ -734,6 +734,11 @@ con el mes seleccionado. La comparación solo resta resultados ya calculados y
 no modifica ni vuelve a calcular ninguna instantánea. Si el mes anterior está
 vacío, el bloque no se muestra para evitar una referencia engañosa.
 
+El selector mensual debe ofrecer todos los meses con jornadas cerradas o una
+liquidación registrada, aunque pertenezcan a años anteriores. Para construir el
+selector se consultan únicamente las claves de mes disponibles; el detalle y
+sus cálculos se cargan solo al seleccionar un mes.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.

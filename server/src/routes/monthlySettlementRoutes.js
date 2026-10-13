@@ -4,6 +4,7 @@ const controller = require("../controllers/monthlySettlementController");
 const router = express.Router();
 
 router.get("/", controller.listMonthlySettlements);
+router.get("/available", controller.listAvailableMonths);
 router.get("/:month", controller.getMonthlySettlement);
 router.put("/:month/settings", controller.updateMonthlySettings);
 router.post("/:month/close", controller.closeMonthlySettlement);

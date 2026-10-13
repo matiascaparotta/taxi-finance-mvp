@@ -265,6 +265,11 @@ muestra la diferencia de jornadas, facturación neta y ganancia personal. Si el
 mes anterior no tiene actividad, se omite la comparación en lugar de presentar
 ceros sin contexto.
 
+El histórico mensual se amplió después para eliminar el límite del año en curso.
+Se añadió una consulta liviana de meses disponibles que permite navegar entre
+años sin recalcular todo el historial cada vez que se abre la pantalla. El
+detalle continúa cargándose bajo demanda para el mes elegido.
+
 ## Estado
 
 ✅ Sprint finalizado.
