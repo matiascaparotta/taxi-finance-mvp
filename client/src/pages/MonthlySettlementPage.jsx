@@ -159,6 +159,7 @@ function MonthlySettlementPage({ currentUser = null }) {
     ? previewDailySocialSecurity * Math.min(calculation.workedDays, previewExpectedDays)
     : previewMonthlySocialSecurity;
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
+  const dailyMonth = settlement.dailySettlementMonth;
 
   if (salariedDriver) {
     return (
@@ -200,13 +201,77 @@ function MonthlySettlementPage({ currentUser = null }) {
           {settlement.salariedMetrics?.commissionByCompany?.length > 0 && <div className="mt-4 rounded-2xl border border-sky-500/20 p-4"><p className="text-sm font-bold text-sky-300">Comisiones por empresa</p><div className="mt-3 space-y-2">{settlement.salariedMetrics.commissionByCompany.map((item) => <div key={item.name} className="flex justify-between gap-4 text-sm"><span>{item.name} · {item.tripCount} viajes</span><strong>{formatCurrency(item.amount)}</strong></div>)}</div></div>}
         </Card>
 
+        {dailyMonth && (
+          <Card className="border-sky-500/25">
+            <p className="text-xs font-bold tracking-[0.16em] text-sky-300">
+              LIQUIDACIÓN DIARIA DEL MES
+            </p>
+            <p className="mt-2 text-sm text-slate-400">
+              Suma exacta de {dailyMonth.workedDays} cierres diarios. No se recalculan importes.
+            </p>
+
+            <div className="mt-4 divide-y divide-slate-800 rounded-2xl border border-slate-800 bg-slate-950/60 px-4">
+              <MoneyRow label="Facturación neta" value={dailyMonth.netRevenue} />
+              <MoneyRow label="Seguridad Social" value={-dailyMonth.socialSecurity} />
+              <MoneyRow label="Gasolina" value={-dailyMonth.fuelCost} />
+              <MoneyRow label="Base repartida" value={dailyMonth.distributableBase} emphasis />
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl bg-emerald-500/10 p-4">
+                <p className="text-xs text-emerald-300">Ganancia de Alberto</p>
+                <p className="mt-1 text-xl font-black">{formatCurrency(dailyMonth.driverShare)}</p>
+              </div>
+              <div className="rounded-2xl bg-sky-500/10 p-4">
+                <p className="text-xs text-sky-300">Ganancia del jefe</p>
+                <p className="mt-1 text-xl font-black">{formatCurrency(dailyMonth.ownerShare)}</p>
+              </div>
+            </div>
+
+            <div className="mt-3 divide-y divide-slate-800 rounded-2xl border border-slate-800 px-4">
+              <MoneyRow label="Reintegro de gasolina" value={dailyMonth.reimbursableFuel} />
+              <MoneyRow label="Total correspondiente a Alberto" value={dailyMonth.driverEntitlement} emphasis />
+              <MoneyRow label="Saldos generados este mes" value={dailyMonth.dailyBalance} />
+              <MoneyRow label="Recibido del jefe este mes" value={-dailyMonth.paymentsReceived} />
+              <MoneyRow label="Entregado al jefe este mes" value={dailyMonth.paymentsDelivered} />
+            </div>
+
+            <div className={`mt-3 rounded-2xl border p-5 ${
+              dailyMonth.pendingBalance > 0
+                ? "border-sky-400/30 bg-sky-400/10"
+                : dailyMonth.pendingBalance < 0
+                  ? "border-amber-400/30 bg-amber-400/10"
+                  : "border-slate-700 bg-slate-900"
+            }`}>
+              <p className="text-xs font-black tracking-[0.14em] text-slate-300">
+                SALDO PENDIENTE ACTUAL
+              </p>
+              <div className="mt-2 flex items-end justify-between gap-4">
+                <p className="font-bold text-white">
+                  {dailyMonth.pendingBalance > 0
+                    ? "El jefe te debe"
+                    : dailyMonth.pendingBalance < 0
+                      ? "Debes entregar al jefe"
+                      : "Todo saldado"}
+                </p>
+                <p className="text-2xl font-black text-white">
+                  {formatCurrency(Math.abs(dailyMonth.pendingBalance))}
+                </p>
+              </div>
+              <p className="mt-2 text-xs text-slate-400">
+                Puede incluir pendientes de meses anteriores.
+              </p>
+            </div>
+          </Card>
+        )}
+
         <Card>
           <h3 className="text-lg font-bold">Mis jornadas del mes</h3>
           {settlement.days.length === 0 ? <p className="mt-3 text-sm text-slate-400">Todavía no hay jornadas cerradas en este mes.</p> : (
             <div className="mt-4 divide-y divide-slate-800">
               {settlement.days.map((day) => {
                 const normalizedDate = normalizeWorkDayDate(day.date);
-                return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · combustible {formatCurrency(day.fuelOwn)}</p></div><p className="font-black">{formatCurrency(day.netRevenue)}</p></div>;
+                return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · combustible {formatCurrency(day.fuelOwn)}</p>{day.dailySettlement && <p className="mt-1 text-xs text-sky-300">Saldo del día: {formatCurrency(day.dailySettlement.balance)}</p>}</div><div className="text-right"><p className="text-xs text-slate-500">{day.dailySettlement ? "Tu ganancia" : "Neto"}</p><p className="font-black">{formatCurrency(day.dailySettlement?.driverShare ?? day.netRevenue)}</p></div></div>;
               })}
             </div>
           )}

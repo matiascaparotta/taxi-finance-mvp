@@ -46,6 +46,7 @@ test("simplifica la navegación del conductor asalariado", () => {
   const user = {
     displayName: "Alberto Caparotta",
     organizationName: "Lic1315",
+    settlementMode: "DAILY_50_50",
     roles: { isOwner: false, isDriver: true },
   };
 

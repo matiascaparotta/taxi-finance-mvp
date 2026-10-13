@@ -2,7 +2,7 @@ export const isOwnerUser = (user) =>
   Boolean(user?.roles?.isOwner ?? user?.isOwner);
 
 export const isSalariedDriverUser = (user) =>
-  user?.organizationName === "Lic1315" &&
+  user?.settlementMode === "DAILY_50_50" &&
   !isOwnerUser(user) &&
   Boolean(user?.roles?.isDriver ?? user?.isDriver);
 

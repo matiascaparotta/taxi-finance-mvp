@@ -63,6 +63,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   e incluirlos en el respaldo de producción.
 - Historial completo de pagos, ordenado desde el más reciente y resumido en
   tres filas ampliables para no alargar la jornada finalizada.
+- Resumen mensual diario derivado de instantáneas, con ganancias de ambas partes,
+  pagos del mes y saldo pendiente global claramente diferenciados.
+- Interfaz de conductor asalariado seleccionada por `DAILY_50_50` y no por el
+  nombre de la organización.
 - Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026

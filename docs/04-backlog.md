@@ -214,9 +214,9 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Mostrar el saldo pendiente acumulado de los cierres diarios.
 - [x] Registrar pagos parciales o totales contra el saldo pendiente.
 - [x] Mostrar el historial completo de pagos de la liquidación diaria.
-- [ ] Resumen mensual.
+- [x] Resumen mensual del perfil de liquidación diaria.
 - [ ] Liquidación mensual.
-- [ ] Liquidación diaria.
+- [x] Liquidación diaria.
 - [ ] Histórico mensual.
 - [ ] Comparación entre meses.
 - [ ] Combustible por carga real.

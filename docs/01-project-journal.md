@@ -241,6 +241,13 @@ liquidación. Cada movimiento muestra fecha, hora, importe y si fue recibido del
 jefe o entregado al jefe. Para conservar una vista corta se presentan primero
 los tres más recientes y se ofrece `Ver los pagos` cuando existen más.
 
+Después se completó el resumen mensual del perfil diario. La pantalla existente
+`Mensual` suma las instantáneas confirmadas y presenta Seguridad Social,
+gasolina, base, ganancias de ambas partes, reintegro, saldos y pagos del mes.
+El pendiente se etiqueta como actual porque puede arrastrarse desde meses
+anteriores. La detección del perfil dejó de depender de `Lic1315` y utiliza
+`DAILY_50_50`, conservando intacta la liquidación mensual de Lic249.
+
 ## Estado
 
 ✅ Sprint finalizado.

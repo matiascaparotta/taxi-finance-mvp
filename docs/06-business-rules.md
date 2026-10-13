@@ -709,6 +709,13 @@ La jornada activa, el detalle cerrado y el resumen mensual muestran la comisión
 total, la propina total y el desglose por empresa con cantidad de viajes e
 importe acumulado.
 
+El resumen mensual de un perfil `DAILY_50_50` suma las instantáneas cerradas
+del mes; no vuelve a calcular ni prorratear Seguridad Social, gasolina o reparto.
+Debe mostrar por separado facturación neta, descuentos aplicados, base,
+ganancias del conductor y del jefe, reintegro, saldos diarios y pagos realizados
+durante ese mes. El saldo pendiente actual es global y puede incluir meses
+anteriores, por lo que no se presenta como resultado exclusivo del mes.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.

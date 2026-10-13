@@ -153,6 +153,12 @@ saldo acumulado. La tarjeta muestra fecha, hora, importe y dirección de los
 tres movimientos más recientes, con acceso al historial completo mediante
 `Ver los pagos`. Todo este bloque continúa únicamente local.
 
+El resumen mensual local de perfiles `DAILY_50_50` agrega las instantáneas del
+mes sin recalcular descuentos ni reparto. Muestra ganancias de conductor y jefe,
+reintegros, saldos diarios, pagos recibidos o entregados durante el mes y el
+pendiente actual global. La interfaz ya se selecciona por modalidad laboral y
+no por el nombre `Lic1315`.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

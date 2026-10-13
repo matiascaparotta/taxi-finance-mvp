@@ -7,7 +7,8 @@ const getDriver = async (organizationId, driverUserId) => {
       users.id,
       users.display_name AS displayName,
       organization_memberships.is_owner AS isOwner,
-      organization_memberships.is_driver AS isDriver
+      organization_memberships.is_driver AS isDriver,
+      organization_memberships.settlement_mode AS settlementMode
     FROM organization_memberships
     INNER JOIN users ON users.id = organization_memberships.user_id
     WHERE organization_memberships.organization_id = ?

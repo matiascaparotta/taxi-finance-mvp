@@ -95,6 +95,7 @@ const getWorkDayWithTrips = async (workDayId) => {
          id,
          direction,
          amount,
+         DATE_FORMAT(created_at, '%Y-%m-%d') AS paymentDate,
          created_at AS createdAt
        FROM daily_settlement_payments
        WHERE organization_id = ? AND driver_user_id = ?

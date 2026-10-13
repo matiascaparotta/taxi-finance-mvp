@@ -3,6 +3,9 @@ const { getWorkDaySummaryService } = require("./workDaySummaryService");
 const {
   calculateMonthlySettlement,
 } = require("../utils/monthlySettlement");
+const {
+  calculateDailyMonthlySettlement,
+} = require("../utils/dailyMonthlySettlement");
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 const DEFAULTS = {
@@ -90,6 +93,9 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
     ...settings,
     useProratedSocialSecurity: current,
   });
+  const dailySettlementMonth = driver.settlementMode === "DAILY_50_50"
+    ? calculateDailyMonthlySettlement({ summaries, month })
+    : null;
   const commissionByCompany = Object.values(summaries.reduce((groups, summary) => {
     for (const item of summary.commissionByCompany || []) {
       groups[item.name] ||= { name: item.name, amount: 0, tripCount: 0 };
@@ -108,6 +114,7 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
     driver: { id: driver.id, displayName: driver.displayName },
     settings,
     calculation,
+    dailySettlementMonth,
     salariedMetrics,
     days: summaries.map((summary) => ({
       workDayId: summary.workDayId,
@@ -119,6 +126,17 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
       cash: summary.realCash,
       card: summary.card,
       tripCount: summary.tripCount,
+      dailySettlement: summary.dailySettlement
+        ? {
+            socialSecurity: summary.dailySettlement.socialSecurity,
+            distributableBase: summary.dailySettlement.distributableBase,
+            driverShare: summary.dailySettlement.driverShare,
+            ownerShare: summary.dailySettlement.ownerShare,
+            driverEntitlement: summary.dailySettlement.driverEntitlement,
+            balance: summary.dailySettlement.balance,
+            balanceDirection: summary.dailySettlement.balanceDirection,
+          }
+        : null,
     })),
     status: current ? "IN_PROGRESS" : workDays.length ? "PENDING_REVIEW" : "EMPTY",
     canEditSettings: true,

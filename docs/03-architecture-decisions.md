@@ -1129,6 +1129,12 @@ aplicar pagos. El resumen cerrado devuelve también el historial completo de la
 misma relación laboral, ordenado desde el movimiento más reciente. La interfaz
 limita únicamente la presentación inicial, no la consulta ni la persistencia.
 
+El resumen mensual diario se deriva sumando las instantáneas, no aplicando otra
+vez el motor mensual de Lic249. Los pagos se filtran por su fecha para informar
+la actividad del mes, mientras que el pendiente procede del libro completo de
+la relación laboral. La selección de interfaz y cálculo usa
+`settlement_mode = DAILY_50_50`; se elimina la dependencia del nombre Lic1315.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.
