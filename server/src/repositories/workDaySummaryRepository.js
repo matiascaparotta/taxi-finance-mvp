@@ -65,12 +65,22 @@ const getWorkDayWithTrips = async (workDayId) => {
        driver_entitlement AS driverEntitlement,
        balance,
        balance_direction AS balanceDirection,
-       (
-         SELECT COALESCE(SUM(all_snapshots.balance), 0)
+       COALESCE((
+         SELECT SUM(all_snapshots.balance)
          FROM daily_settlement_snapshots AS all_snapshots
          WHERE all_snapshots.organization_id = current_snapshot.organization_id
            AND all_snapshots.driver_user_id = current_snapshot.driver_user_id
-       ) AS pendingBalance
+       ), 0) + COALESCE((
+         SELECT SUM(
+           CASE
+             WHEN payments.direction = 'OWNER_TO_DRIVER' THEN -payments.amount
+             ELSE payments.amount
+           END
+         )
+         FROM daily_settlement_payments AS payments
+         WHERE payments.organization_id = current_snapshot.organization_id
+           AND payments.driver_user_id = current_snapshot.driver_user_id
+       ), 0) AS pendingBalance
      FROM daily_settlement_snapshots AS current_snapshot
      WHERE current_snapshot.work_day_id = ?`,
     [workDayId]

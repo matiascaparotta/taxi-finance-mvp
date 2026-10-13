@@ -57,6 +57,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   las reglas aplicadas a cada jornada aunque la configuración cambie después.
 - Saldo pendiente acumulado por conductor y organización, separado visualmente
   de la liquidación correspondiente al día consultado.
+- Registro de pagos completos o parciales con teclado monetario, dirección
+  automática, límite contra el saldo real e idempotencia frente a duplicados.
+- Migración aditiva `026` para conservar los pagos como movimientos separados
+  e incluirlos en el respaldo de producción.
 - Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026

@@ -143,8 +143,13 @@ publicadas en producción.
 También está implementado localmente el saldo pendiente acumulado de las
 liquidaciones diarias cerradas. Se suma con signo y se aísla por organización y
 conductor. La tarjeta distingue el resultado de la jornada del acumulado. Aún
-no existe registro de pagos, por lo que esta cifra contiene solo saldos diarios
-y será ajustada por movimientos independientes en la siguiente funcionalidad.
+no está publicado en producción.
+
+Localmente también se pueden registrar pagos totales o parciales desde esa
+tarjeta. El servidor deduce la dirección, impide superar el pendiente, serializa
+operaciones concurrentes sobre la misma relación laboral y evita duplicados.
+La migración `026` guarda el movimiento separado del cierre y lo incorpora al
+saldo acumulado. El historial visible de esos pagos queda pendiente.
 
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y

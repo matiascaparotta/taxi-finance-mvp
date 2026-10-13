@@ -684,8 +684,14 @@ El saldo pendiente acumulado suma con su signo las instantáneas cerradas de la
 misma organización y del mismo conductor. Un resultado positivo significa que
 el jefe debe pagar al conductor; uno negativo, que el conductor debe entregar
 al jefe. El resultado diario y el acumulado se muestran en bloques separados.
-Hasta incorporar el registro de pagos, este acumulado refleja exclusivamente
-las jornadas cerradas y no afirma que un pago externo ya esté contabilizado.
+
+Un pago es un movimiento independiente y nunca modifica ni elimina una
+instantánea diaria. Si el saldo es positivo se registra como dinero recibido
+del jefe y se resta; si es negativo se registra como dinero entregado al jefe y
+se suma. Se admiten pagos parciales, pero nunca un importe superior al pendiente
+absoluto. Cada confirmación se protege con una clave idempotente para que una
+doble pulsación o repetición de red no duplique el movimiento. El saldo queda
+definido como la suma firmada de cierres más los ajustes firmados de pagos.
 
 Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
 Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa

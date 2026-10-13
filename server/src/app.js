@@ -22,6 +22,9 @@ const monthlySettlementRoutes = require(
   "./routes/monthlySettlementRoutes"
 );
 const driverSettingsRoutes = require("./routes/driverSettingsRoutes");
+const dailySettlementPaymentRoutes = require(
+  "./routes/dailySettlementPaymentRoutes"
+);
 
 getAuthConfig();
 
@@ -74,6 +77,13 @@ app.use(
   requireActiveUserSession,
   requireCompletedPasswordChange,
   monthlySettlementRoutes
+);
+app.use(
+  "/api/daily-settlements",
+  requireAuthentication,
+  requireActiveUserSession,
+  requireCompletedPasswordChange,
+  dailySettlementPaymentRoutes
 );
 
 app.use("/api", (req, res) => {

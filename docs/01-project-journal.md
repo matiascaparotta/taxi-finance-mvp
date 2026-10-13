@@ -228,6 +228,14 @@ misma organización y la tarjeta cerrada separa claramente el saldo de hoy del
 saldo total. Esta etapa aún no registra pagos: ese movimiento independiente se
 implementará a continuación para no mezclarlo con el cálculo de las jornadas.
 
+Después se incorporó el registro de pagos parciales o totales desde la tarjeta
+cerrada. La acción utiliza el teclado monetario grande, etiqueta automáticamente
+si el dinero fue recibido del jefe o entregado al jefe y actualiza el acumulado
+sin recargar la jornada. El servidor vuelve a comprobar saldo, dirección e
+importe dentro de una transacción, bloquea pagos superiores al pendiente y
+evita duplicados mediante una clave idempotente. La migración `026` conserva
+cada movimiento sin modificar los cierres diarios.
+
 ## Estado
 
 ✅ Sprint finalizado.

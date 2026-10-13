@@ -1120,6 +1120,13 @@ organizaciones. Se entrega junto al resumen cerrado y se presenta aparte del
 saldo de esa jornada. Los pagos se modelarán como movimientos independientes
 en el siguiente paso y no alterarán las instantáneas históricas.
 
+Los pagos se almacenan en `daily_settlement_payments`, aislados por relación
+organización–conductor. La dirección se deduce en el servidor desde el saldo
+bajo bloqueo de la relación laboral, y no se acepta como dato confiable del
+cliente. El importe no puede cruzar el cero. La clave idempotente es única y la
+tabla forma parte del respaldo. Esta primera interfaz permite registrar y
+aplicar pagos; la consulta detallada de su historial queda como paso separado.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

@@ -27,6 +27,7 @@ function WorkDayTicket({
   summary,
   trips = [],
   onEditTrip = null,
+  onRegisterSettlementPayment = null,
 }) {
   const [showAllTrips, setShowAllTrips] = useState(false);
 
@@ -216,7 +217,10 @@ function WorkDayTicket({
         </div>
       </section>
 
-      <DailySettlementCard settlement={summary.dailySettlement} />
+      <DailySettlementCard
+        settlement={summary.dailySettlement}
+        onRegisterPayment={onRegisterSettlementPayment}
+      />
     </Card>
   );
 }

@@ -8,6 +8,7 @@ import WorkDayShareCard from "../components/WorkDayShareCard";
 import WorkDayTicket from "../components/WorkDayTicket";
 
 import { getWorkDayById } from "../services/workDayService";
+import { registerDailySettlementPayment } from "../services/dailySettlementService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
@@ -62,6 +63,18 @@ function WorkDayClosedPage() {
     } catch (error) {
       setCopyMessage(error.message);
     }
+  };
+
+  const handleRegisterSettlementPayment = async (paymentData) => {
+    const result = await registerDailySettlementPayment(paymentData);
+    setSummary((current) => ({
+      ...current,
+      dailySettlement: {
+        ...current.dailySettlement,
+        pendingBalance: result.pendingBalance,
+      },
+    }));
+    return result;
   };
 
   if (loading) {
@@ -129,6 +142,11 @@ function WorkDayClosedPage() {
         onEditTrip={
           workDay.canCorrect
             ? (trip) => navigate(`/trips/${trip.id}/edit`)
+            : null
+        }
+        onRegisterSettlementPayment={
+          summary.dailySettlement
+            ? handleRegisterSettlementPayment
             : null
         }
       />

@@ -1,12 +1,17 @@
+import { useRef, useState } from "react";
+
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDailySettlementPresentation } from "../utils/getDailySettlementPresentation";
 import { getPendingBalancePresentation } from "../utils/getPendingBalancePresentation";
+import { applyMoneyKey, parseMoneyInput } from "../utils/moneyKeypad";
 
 const RESULT_STYLES = {
   sky: "border-sky-400/30 bg-sky-400/10 text-sky-200",
   amber: "border-amber-400/30 bg-amber-400/10 text-amber-200",
   slate: "border-slate-600 bg-slate-800/70 text-slate-200",
 };
+
+const PAYMENT_KEYS = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ",", "⌫"];
 
 function SettlementRow({ label, value, strong = false }) {
   return (
@@ -21,7 +26,14 @@ function SettlementRow({ label, value, strong = false }) {
   );
 }
 
-function DailySettlementCard({ settlement }) {
+function DailySettlementCard({ settlement, onRegisterPayment = null }) {
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [paymentError, setPaymentError] = useState("");
+  const [isSavingPayment, setIsSavingPayment] = useState(false);
+  const paymentLockRef = useRef(false);
+  const idempotencyKeyRef = useRef("");
+
   if (!settlement) {
     return null;
   }
@@ -30,6 +42,54 @@ function DailySettlementCard({ settlement }) {
   const percentage = Number(settlement.driverSharePercentage || 0);
   const pendingBalance = Number(settlement.pendingBalance || 0);
   const pending = getPendingBalancePresentation(pendingBalance);
+  const paymentAction = pendingBalance > 0
+    ? "Recibido del jefe"
+    : "Entregado al jefe";
+
+  const openPayment = () => {
+    setPaymentAmount(Math.abs(pendingBalance).toFixed(2).replace(".", ","));
+    setPaymentError("");
+    idempotencyKeyRef.current = crypto.randomUUID();
+    setShowPayment(true);
+  };
+
+  const closePayment = () => {
+    setShowPayment(false);
+    setPaymentAmount("");
+    setPaymentError("");
+    idempotencyKeyRef.current = "";
+  };
+
+  const confirmPayment = async () => {
+    if (paymentLockRef.current) return;
+
+    const amount = parseMoneyInput(paymentAmount);
+    if (!(amount > 0)) {
+      setPaymentError("Ingresá un importe mayor que cero.");
+      return;
+    }
+    if (amount > Math.abs(pendingBalance)) {
+      setPaymentError("El importe no puede superar el saldo pendiente.");
+      return;
+    }
+
+    paymentLockRef.current = true;
+    setIsSavingPayment(true);
+    setPaymentError("");
+
+    try {
+      await onRegisterPayment({
+        amount,
+        idempotencyKey: idempotencyKeyRef.current,
+      });
+      closePayment();
+    } catch (error) {
+      setPaymentError(error.message || "No se pudo registrar el pago.");
+    } finally {
+      paymentLockRef.current = false;
+      setIsSavingPayment(false);
+    }
+  };
 
   return (
     <section className="mt-7" aria-labelledby="daily-settlement-title">
@@ -92,9 +152,72 @@ function DailySettlementCard({ settlement }) {
           </p>
         </div>
         <p className="mt-2 text-sm opacity-80">
-          Incluye todas tus jornadas diarias cerradas.
+          Incluye tus jornadas cerradas y los pagos registrados.
         </p>
+
+        {onRegisterPayment && pendingBalance !== 0 && !showPayment && (
+          <button
+            type="button"
+            onClick={openPayment}
+            className="mt-4 w-full rounded-xl border border-current/30 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/5 active:scale-[0.99]"
+          >
+            Registrar pago
+          </button>
+        )}
       </div>
+
+      {showPayment && (
+        <div className="mt-3 rounded-2xl border border-slate-700 bg-slate-900/90 p-4">
+          <p className="text-xs font-black tracking-[0.14em] text-slate-400">
+            {paymentAction.toUpperCase()}
+          </p>
+          <p className="mt-2 text-right text-4xl font-black text-white">
+            {paymentAmount || "0,00"} <span className="text-xl text-slate-400">€</span>
+          </p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {PAYMENT_KEYS.map((key) => (
+              <button
+                key={key}
+                type="button"
+                disabled={isSavingPayment}
+                onClick={() => {
+                  setPaymentError("");
+                  setPaymentAmount((current) => applyMoneyKey(current, key));
+                }}
+                className="rounded-xl border border-slate-700 bg-slate-950 py-3 text-lg font-bold text-white active:scale-[0.98] disabled:opacity-50"
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+
+          {paymentError && (
+            <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+              {paymentError}
+            </p>
+          )}
+
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              disabled={isSavingPayment}
+              onClick={closePayment}
+              className="rounded-xl border border-slate-700 px-3 py-3 text-sm font-bold text-slate-300 disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              disabled={isSavingPayment}
+              onClick={confirmPayment}
+              className="rounded-xl bg-emerald-400 px-3 py-3 text-sm font-black text-slate-950 disabled:cursor-wait disabled:opacity-60"
+            >
+              {isSavingPayment ? "Guardando..." : `Confirmar · ${paymentAction}`}
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
