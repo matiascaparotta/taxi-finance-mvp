@@ -1101,6 +1101,11 @@ licencias u organizaciones en tiempo de ejecución.
 - la interfaz y la persistencia del cierre diario se implementarán en pasos
   posteriores sobre este cálculo único.
 
+La primera integración se realiza en la respuesta del resumen cerrado y exige
+simultáneamente sesión personal, jornada cerrada y modo `DAILY_50_50`. El motor
+recibe los totales netos ya calculados por el resumen; no vuelve a aplicar
+comisiones ni propinas.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

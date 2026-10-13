@@ -191,6 +191,12 @@ configuran con cierre diario 50/50. Matías conserva su modalidad mensual y
 José no recibe reglas de asalariado. Los parámetros viajan en la sesión y se
 refrescan desde la base; todavía no se conectó el cálculo al resumen cerrado.
 
+El 13/10/2026 el cálculo se conectó al resumen cerrado mediante el perfil, sin
+condiciones por usuario u organización. La respuesta solo incorpora la
+liquidación diaria para sesiones personales configuradas con `DAILY_50_50`.
+El ejemplo de referencia continúa dando 33,22 € a favor de Alberto; las
+jornadas abiertas y la liquidación mensual de Lic249 no cambian.
+
 ## Estado
 
 ✅ Sprint finalizado.

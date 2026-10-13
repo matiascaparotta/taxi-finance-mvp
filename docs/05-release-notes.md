@@ -43,6 +43,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   íntegramente a Alberto.
 - Reparto 50/50 posterior a Seguridad Social y gasolina, con indicación de quién
   debe pagar a quién según el efectivo conservado.
+- Integración del cálculo en el resumen cerrado para perfiles diarios; las
+  jornadas abiertas y los perfiles mensuales quedan excluidos.
 - Todavía no conectado al cierre ni publicado en producción.
 
 ## Publicado el 03/08/2026

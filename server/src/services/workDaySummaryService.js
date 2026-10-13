@@ -5,9 +5,37 @@ const {
   getWorkDayById,
 } = require("../repositories/workDayRepository");
 const { getReadScope } = require("./workDayAccess");
+const {
+  calculateDailySettlement,
+} = require("../utils/dailySettlement");
 
 const roundToTwoDecimals = (value) => {
   return Number(Number(value || 0).toFixed(2));
+};
+
+const buildDailySettlement = ({
+  auth,
+  endKm,
+  fuelOwn,
+  realCash,
+  totalRevenue,
+}) => {
+  if (
+    auth?.accessMode !== "user" ||
+    auth?.settlementMode !== "DAILY_50_50" ||
+    endKm === null ||
+    endKm === undefined
+  ) {
+    return null;
+  }
+
+  return calculateDailySettlement({
+    netRevenue: totalRevenue,
+    cashRetained: realCash,
+    fuelCost: fuelOwn,
+    socialSecurity: auth.dailySocialSecurity,
+    driverShareBasisPoints: auth.driverShareBasisPoints,
+  });
 };
 
 const getWorkDaySummaryService = async (workDayId, auth = null) => {
@@ -97,6 +125,14 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
   const cashToDeliver =
     realCash - fuelOwn - fuelJose;
 
+  const dailySettlement = buildDailySettlement({
+    auth,
+    endKm: workDay.endKm,
+    fuelOwn,
+    realCash,
+    totalRevenue,
+  });
+
   return {
     workDayId: workDay.id,
     date: workDay.date,
@@ -124,9 +160,11 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
     cashToDeliver: roundToTwoDecimals(cashToDeliver),
     averageTrip: roundToTwoDecimals(averageTrip),
+    dailySettlement,
   };
 };
 
 module.exports = {
+  buildDailySettlement,
   getWorkDaySummaryService,
 };

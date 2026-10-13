@@ -206,6 +206,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 
 - [x] Motor aislado y probado del cálculo diario 50/50 de Alberto.
 - [x] Perfil general de liquidación y reparto por relación laboral.
+- [x] Conectar la liquidación diaria al resumen cerrado según el perfil.
 - [ ] Resumen mensual.
 - [ ] Liquidación mensual.
 - [ ] Liquidación diaria.

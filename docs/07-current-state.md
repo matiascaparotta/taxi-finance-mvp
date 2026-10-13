@@ -107,6 +107,13 @@ Alberto con `DAILY_50_50`, 50 % y combustible manual; conserva a Matías con
 personales exponen y refrescan estos parámetros, pero las migraciones `023` y
 `024` aún no están publicadas.
 
+El resumen del servidor también está conectado localmente al motor económico.
+Solo devuelve `dailySettlement` cuando la jornada está cerrada, la sesión es
+personal y el perfil utiliza `DAILY_50_50`. Usa facturación y efectivo ya netos
+de comisión y propina, por lo que esos conceptos no se descuentan dos veces.
+Los perfiles mensuales, el acceso legacy y las jornadas abiertas reciben
+`dailySettlement: null` y conservan su comportamiento anterior.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una
