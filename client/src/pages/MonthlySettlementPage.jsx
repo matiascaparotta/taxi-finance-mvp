@@ -13,6 +13,10 @@ import {
 import { formatCurrency } from "../utils/formatCurrency";
 import { isOwnerUser, isSalariedDriverUser } from "../utils/userNavigation";
 import { normalizeWorkDayDate } from "../utils/workDayDate";
+import {
+  buildDailyMonthlyComparison,
+  getPreviousCalendarMonth,
+} from "../utils/monthlyComparison";
 
 const currentMonth = () => {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -58,6 +62,7 @@ function MonthlySettlementPage({ currentUser = null }) {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth());
   const [settlement, setSettlement] = useState(null);
   const [history, setHistory] = useState([]);
+  const [previousSettlement, setPreviousSettlement] = useState(null);
   const [form, setForm] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -86,12 +91,14 @@ function MonthlySettlementPage({ currentUser = null }) {
       setIsLoading(true);
       setError("");
       const year = selectedMonth.slice(0, 4);
-      const [detail, monthHistory] = await Promise.all([
+      const [detail, monthHistory, previousDetail] = await Promise.all([
         getMonthlySettlement(selectedMonth, driverId),
         getMonthlySettlementHistory(year, driverId),
+        getMonthlySettlement(getPreviousCalendarMonth(selectedMonth), driverId),
       ]);
       setSettlement(detail);
       setHistory(monthHistory);
+      setPreviousSettlement(previousDetail);
       setForm({
         socialSecurity: detail.settings.socialSecurity,
         payrollTransfer: detail.settings.payrollTransfer,
@@ -160,6 +167,10 @@ function MonthlySettlementPage({ currentUser = null }) {
     : previewMonthlySocialSecurity;
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
   const dailyMonth = settlement.dailySettlementMonth;
+  const monthlyComparison = buildDailyMonthlyComparison(
+    settlement,
+    previousSettlement
+  );
 
   if (salariedDriver) {
     return (
@@ -261,6 +272,41 @@ function MonthlySettlementPage({ currentUser = null }) {
               <p className="mt-2 text-xs text-slate-400">
                 Puede incluir pendientes de meses anteriores.
               </p>
+            </div>
+          </Card>
+        )}
+
+        {monthlyComparison && (
+          <Card>
+            <p className="text-xs font-bold tracking-[0.16em] text-violet-300">
+              COMPARACIÓN CON {monthLabel(monthlyComparison.previousMonth).toUpperCase()}
+            </p>
+            <p className="mt-2 text-sm text-slate-400">
+              Diferencia respecto del mes calendario anterior.
+            </p>
+            <div className="mt-4 divide-y divide-slate-800">
+              {monthlyComparison.rows.map((row) => {
+                const positive = row.difference > 0;
+                const neutral = row.difference === 0;
+                const formatValue = (value) => row.format === "currency"
+                  ? formatCurrency(value)
+                  : String(value);
+                return (
+                  <div key={row.label} className="grid grid-cols-[1fr_auto] gap-4 py-3">
+                    <div>
+                      <p className="font-bold text-white">{row.label}</p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Antes: {formatValue(row.previous)} · Ahora: {formatValue(row.current)}
+                      </p>
+                    </div>
+                    <p className={`self-center font-black ${
+                      neutral ? "text-slate-400" : positive ? "text-emerald-300" : "text-amber-300"
+                    }`}>
+                      {positive ? "+" : ""}{formatValue(row.difference)}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </Card>
         )}

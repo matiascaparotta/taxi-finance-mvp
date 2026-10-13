@@ -728,6 +728,12 @@ jornadas ya cerradas. Debe incluir las ganancias de ambas partes, movimientos
 del mes, comisiones, propinas y el saldo pendiente global, indicando expresamente
 que este último puede contener importes de meses anteriores.
 
+Cuando el mes calendario inmediatamente anterior contiene jornadas cerradas,
+el perfil diario compara sus jornadas, facturación neta y ganancia del conductor
+con el mes seleccionado. La comparación solo resta resultados ya calculados y
+no modifica ni vuelve a calcular ninguna instantánea. Si el mes anterior está
+vacío, el bloque no se muestra para evitar una referencia engañosa.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.

@@ -259,6 +259,12 @@ jornadas ya cerradas; incluye reparto, movimientos, comisiones, propinas y el
 saldo pendiente global, identificado como posible arrastre de meses anteriores.
 La licencia del encabezado proviene de la organización activa.
 
+Como siguiente mejora se añadió una comparación mensual breve para el perfil
+diario. La pantalla enfrenta el mes seleccionado con el calendario anterior y
+muestra la diferencia de jornadas, facturación neta y ganancia personal. Si el
+mes anterior no tiene actividad, se omite la comparación en lugar de presentar
+ceros sin contexto.
+
 ## Estado
 
 ✅ Sprint finalizado.

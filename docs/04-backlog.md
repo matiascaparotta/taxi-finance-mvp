@@ -220,7 +220,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [ ] Liquidación mensual.
 - [x] Liquidación diaria.
 - [ ] Histórico mensual.
-- [ ] Comparación entre meses.
+- [x] Comparación entre meses para el perfil de liquidación diaria.
 - [ ] Combustible por carga real.
 - [ ] Combustible por kilómetros y tarifa configurable.
 

@@ -163,6 +163,11 @@ mes, ya que solo agrega jornadas cerradas, y utiliza la licencia de la
 organización en lugar de una marca fija. La interfaz ya se selecciona por
 modalidad laboral y no por el nombre `Lic1315`.
 
+La vista mensual del perfil diario también consulta el mes calendario anterior
+y, cuando contiene jornadas, muestra diferencias de jornadas, facturación neta
+y ganancia del conductor. El bloque es informativo y no altera cierres ni
+saldos.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

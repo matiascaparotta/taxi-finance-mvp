@@ -69,6 +69,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   pagos del mes y saldo pendiente global claramente diferenciados.
 - Tarjeta mensual compartible del perfil diario, disponible también durante el
   mes y personalizada con la licencia de la organización.
+- Comparación con el mes calendario anterior para jornadas, facturación neta y
+  ganancia del conductor, visible únicamente cuando existe una base real.
 - Interfaz de conductor asalariado seleccionada por `DAILY_50_50` y no por el
   nombre de la organización.
 - Funcionalidad completa localmente y todavía no publicada en producción.
