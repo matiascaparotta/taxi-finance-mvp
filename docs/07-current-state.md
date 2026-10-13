@@ -114,6 +114,14 @@ de comisión y propina, por lo que esos conceptos no se descuentan dos veces.
 Los perfiles mensuales, el acceso legacy y las jornadas abiertas reciben
 `dailySettlement: null` y conservan su comportamiento anterior.
 
+La tarjeta de jornada finalizada consume ese bloque cuando está disponible.
+Presenta facturación neta, Seguridad Social, gasolina, base, ambas partes,
+reintegro, derecho total y efectivo conservado. El resultado usa azul cuando
+el jefe debe pagar, ámbar cuando el conductor debe entregar y un estado neutro
+cuando no existe diferencia. La tarjeta es compartida por el cierre inmediato
+y el detalle del historial; aún no se añadió la liquidación a la imagen ni al
+texto para compartir.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

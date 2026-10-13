@@ -197,6 +197,12 @@ liquidación diaria para sesiones personales configuradas con `DAILY_50_50`.
 El ejemplo de referencia continúa dando 33,22 € a favor de Alberto; las
 jornadas abiertas y la liquidación mensual de Lic249 no cambian.
 
+Después se incorporó la presentación de la liquidación al comprobante de
+jornada finalizada. La cuenta aparece tanto al terminar como al consultar el
+historial y destaca por separado si el jefe paga, si Alberto entrega o si quedó
+saldada. El diseño evita saturar de verde la tarjeta y mantiene el detalle
+económico en una sección neutra.
+
 ## Estado
 
 ✅ Sprint finalizado.

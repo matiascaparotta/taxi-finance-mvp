@@ -5,6 +5,7 @@ import { formatDate } from "../utils/formatDate";
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDisplayedCash } from "../utils/getDisplayedCash";
 import { getWorkDayOrganizationName } from "../config/branding";
+import DailySettlementCard from "./DailySettlementCard";
 
 const INITIAL_VISIBLE_TRIPS = 8;
 
@@ -214,6 +215,8 @@ function WorkDayTicket({
           )}
         </div>
       </section>
+
+      <DailySettlementCard settlement={summary.dailySettlement} />
     </Card>
   );
 }

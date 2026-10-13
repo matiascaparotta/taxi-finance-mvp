@@ -43,8 +43,10 @@ const calculateDailySettlement = ({
   );
   const ownerShareCents = distributableBaseCents - driverShareCents;
   const reimbursableFuelCents = fuelCostCents;
+  const driverEntitlementCents =
+    driverShareCents + reimbursableFuelCents;
   const balanceCents =
-    driverShareCents + reimbursableFuelCents - cashRetainedCents;
+    driverEntitlementCents - cashRetainedCents;
 
   return {
     netRevenue: fromCents(netRevenueCents),
@@ -56,6 +58,7 @@ const calculateDailySettlement = ({
     driverSharePercentage: driverShareBasisPoints / 100,
     cashRetained: fromCents(cashRetainedCents),
     reimbursableFuel: fromCents(reimbursableFuelCents),
+    driverEntitlement: fromCents(driverEntitlementCents),
     balance: fromCents(balanceCents),
     balanceDirection:
       balanceCents > 0

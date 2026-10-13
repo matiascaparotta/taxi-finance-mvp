@@ -17,6 +17,7 @@ test("reproduce el cierre diario de referencia del 1 de octubre", () => {
   assert.equal(result.driverShare, 109.51);
   assert.equal(result.ownerShare, 109.51);
   assert.equal(result.reimbursableFuel, 29.01);
+  assert.equal(result.driverEntitlement, 138.52);
   assert.equal(result.balance, 33.22);
   assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
 });
