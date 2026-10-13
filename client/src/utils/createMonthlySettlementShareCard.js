@@ -48,7 +48,82 @@ const canvasToBlob = (canvas) => new Promise((resolve, reject) => {
   canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("No se pudo generar la tarjeta")), "image/png");
 });
 
+async function createDailyMonthlyShareCard(settlement) {
+  const daily = settlement.dailySettlementMonth;
+  const calculation = settlement.calculation;
+  const metrics = settlement.salariedMetrics || {};
+  const height = 1700;
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  canvas.width = WIDTH;
+  canvas.height = height;
+
+  const background = context.createLinearGradient(0, 0, 0, height);
+  background.addColorStop(0, "#07111f");
+  background.addColorStop(1, COLORS.background);
+  context.fillStyle = background;
+  context.fillRect(0, 0, WIDTH, height);
+
+  drawText(context, settlement.organizationName || "TaxFin", WIDTH / 2, 55, "700 30px Arial", COLORS.emerald, "center");
+  drawText(context, "RESUMEN MENSUAL", WIDTH / 2, 104, "700 52px Arial", COLORS.text, "center");
+  drawText(context, monthName(settlement.month).toUpperCase(), WIDTH / 2, 178, "700 29px Arial", COLORS.muted, "center");
+
+  drawPanel(context, 70, 250, 940, 145, true);
+  drawText(context, "FACTURACIÓN NETA", 110, 282, "700 23px Arial", COLORS.emerald);
+  drawText(context, formatCurrency(daily.netRevenue), 110, 323, "700 47px Arial", COLORS.text);
+  drawText(context, `${daily.workedDays} jornadas · ${calculation.tripCount} viajes`, 970, 334, "700 23px Arial", COLORS.muted, "right");
+
+  const settlementRows = [
+    ["Seguridad Social", -daily.socialSecurity],
+    ["Gasolina", -daily.fuelCost],
+    ["Base repartida", daily.distributableBase],
+    ["Ganancia del conductor", daily.driverShare],
+    ["Ganancia del jefe", daily.ownerShare],
+    ["Reintegro de gasolina", daily.reimbursableFuel],
+    ["Total del conductor", daily.driverEntitlement],
+  ];
+  drawText(context, "LIQUIDACIÓN DE LAS JORNADAS", 70, 438, "700 25px Arial", COLORS.sky);
+  drawPanel(context, 70, 485, 940, 535);
+  settlementRows.forEach(([label, value], index) => {
+    const top = 513 + index * 69;
+    const highlighted = label.includes("Ganancia") || label.includes("Total");
+    drawText(context, label, 110, top, highlighted ? "700 27px Arial" : "400 26px Arial", highlighted ? COLORS.text : COLORS.muted);
+    drawText(context, formatCurrency(value), 970, top, "700 29px Arial", highlighted ? COLORS.sky : COLORS.text, "right");
+  });
+
+  const movementRows = [
+    ["Saldos generados en el mes", daily.dailyBalance],
+    ["Recibido del jefe", -daily.paymentsReceived],
+    ["Entregado al jefe", daily.paymentsDelivered],
+    ["Comisiones", metrics.commission || 0],
+    ["Propinas", metrics.tip || 0],
+  ];
+  drawText(context, "MOVIMIENTOS DEL MES", 70, 1065, "700 25px Arial", COLORS.emerald);
+  drawPanel(context, 70, 1112, 940, 380);
+  movementRows.forEach(([label, value], index) => {
+    const top = 1140 + index * 68;
+    drawText(context, label, 110, top, "400 26px Arial", COLORS.muted);
+    drawText(context, formatCurrency(value), 970, top, "700 29px Arial", COLORS.text, "right");
+  });
+
+  drawPanel(context, 70, 1530, 940, 115, true);
+  const pendingLabel = daily.pendingBalance > 0
+    ? "EL JEFE DEBE AL CONDUCTOR"
+    : daily.pendingBalance < 0
+      ? "EL CONDUCTOR DEBE AL JEFE"
+      : "SALDO PENDIENTE SALDADO";
+  drawText(context, pendingLabel, 110, 1564, "700 23px Arial", COLORS.emerald);
+  drawText(context, formatCurrency(Math.abs(daily.pendingBalance)), 970, 1554, "700 42px Arial", COLORS.text, "right");
+  drawText(context, "El saldo pendiente puede incluir meses anteriores", WIDTH / 2, 1665, "400 20px Arial", COLORS.muted, "center");
+
+  return canvasToBlob(canvas);
+}
+
 export async function createMonthlySettlementShareCard(settlement) {
+  if (settlement?.dailySettlementMonth) {
+    return createDailyMonthlyShareCard(settlement);
+  }
+
   if (settlement?.status !== "CLOSED") {
     throw new Error("Solo se comparten liquidaciones cerradas");
   }

@@ -253,6 +253,12 @@ El pendiente se etiqueta como actual porque puede arrastrarse desde meses
 anteriores. La detección del perfil dejó de depender de `Lic1315` y utiliza
 `DAILY_50_50`, conservando intacta la liquidación mensual de Lic249.
 
+Ese resumen mensual se hizo compartible a continuación mediante una tarjeta
+propia del perfil diario. Puede generarse durante el mes porque solo agrega
+jornadas ya cerradas; incluye reparto, movimientos, comisiones, propinas y el
+saldo pendiente global, identificado como posible arrastre de meses anteriores.
+La licencia del encabezado proviene de la organización activa.
+
 ## Estado
 
 ✅ Sprint finalizado.

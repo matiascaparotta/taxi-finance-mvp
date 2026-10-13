@@ -111,6 +111,7 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
   };
   return {
     month,
+    organizationName: auth.organizationName,
     driver: { id: driver.id, displayName: driver.displayName },
     settings,
     calculation,

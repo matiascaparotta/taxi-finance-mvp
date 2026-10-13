@@ -265,6 +265,10 @@ function MonthlySettlementPage({ currentUser = null }) {
           </Card>
         )}
 
+        {dailyMonth && calculation.workedDays > 0 && (
+          <MonthlySettlementShareButton settlement={settlement} />
+        )}
+
         <Card>
           <h3 className="text-lg font-bold">Mis jornadas del mes</h3>
           {settlement.days.length === 0 ? <p className="mt-3 text-sm text-slate-400">Todavía no hay jornadas cerradas en este mes.</p> : (

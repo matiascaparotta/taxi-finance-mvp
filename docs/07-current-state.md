@@ -158,8 +158,10 @@ tres movimientos más recientes, con acceso al historial completo mediante
 El resumen mensual local de perfiles `DAILY_50_50` agrega las instantáneas del
 mes sin recalcular descuentos ni reparto. Muestra ganancias de conductor y jefe,
 reintegros, saldos diarios, pagos recibidos o entregados durante el mes y el
-pendiente actual global. La interfaz ya se selecciona por modalidad laboral y
-no por el nombre `Lic1315`.
+pendiente actual global. Puede compartirse como una única imagen aun durante el
+mes, ya que solo agrega jornadas cerradas, y utiliza la licencia de la
+organización en lugar de una marca fija. La interfaz ya se selecciona por
+modalidad laboral y no por el nombre `Lic1315`.
 
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y

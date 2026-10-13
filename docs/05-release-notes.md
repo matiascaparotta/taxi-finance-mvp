@@ -67,6 +67,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   tres filas ampliables para no alargar la jornada finalizada.
 - Resumen mensual diario derivado de instantáneas, con ganancias de ambas partes,
   pagos del mes y saldo pendiente global claramente diferenciados.
+- Tarjeta mensual compartible del perfil diario, disponible también durante el
+  mes y personalizada con la licencia de la organización.
 - Interfaz de conductor asalariado seleccionada por `DAILY_50_50` y no por el
   nombre de la organización.
 - Funcionalidad completa localmente y todavía no publicada en producción.

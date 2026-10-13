@@ -722,6 +722,12 @@ ganancias del conductor y del jefe, reintegro, saldos diarios y pagos realizados
 durante ese mes. El saldo pendiente actual es global y puede incluir meses
 anteriores, por lo que no se presenta como resultado exclusivo del mes.
 
+Este resumen mensual puede compartirse como una única imagen aunque el mes siga
+en curso, porque no constituye un nuevo cierre económico: solo representa las
+jornadas ya cerradas. Debe incluir las ganancias de ambas partes, movimientos
+del mes, comisiones, propinas y el saldo pendiente global, indicando expresamente
+que este último puede contener importes de meses anteriores.
+
 ## Consistencia de los datos
 
 Toda operación deberá mantener la consistencia de la información almacenada.

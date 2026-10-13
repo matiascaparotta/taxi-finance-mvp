@@ -12,7 +12,7 @@ function MonthlySettlementShareButton({ settlement }) {
     let cancelled = false;
     createMonthlySettlementShareCard(settlement)
       .then((blob) => {
-        if (!cancelled) setFile(new File([blob], `taxfin-liquidacion-${settlement.month}.png`, { type: "image/png" }));
+        if (!cancelled) setFile(new File([blob], `taxfin-resumen-mensual-${settlement.month}.png`, { type: "image/png" }));
       })
       .catch((error) => { if (!cancelled) setMessage(error.message); });
     return () => { cancelled = true; };
@@ -48,7 +48,7 @@ function MonthlySettlementShareButton({ settlement }) {
     }
   };
 
-  return <div className="space-y-2"><button type="button" onClick={share} disabled={!file || isSharing} className="w-full rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-4 font-bold text-emerald-200 disabled:opacity-50">{isSharing ? "Abriendo opciones..." : file ? "Compartir liquidación" : "Preparando tarjeta..."}</button>{message && <p className="text-center text-xs font-semibold text-emerald-300">{message}</p>}</div>;
+  return <div className="space-y-2"><button type="button" onClick={share} disabled={!file || isSharing} className="w-full rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-4 font-bold text-emerald-200 disabled:opacity-50">{isSharing ? "Abriendo opciones..." : file ? "Compartir resumen mensual" : "Preparando tarjeta..."}</button>{message && <p className="text-center text-xs font-semibold text-emerald-300">{message}</p>}</div>;
 }
 
 export default MonthlySettlementShareButton;

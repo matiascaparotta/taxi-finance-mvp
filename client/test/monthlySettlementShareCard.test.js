@@ -31,3 +31,11 @@ test("comparte la imagen y conserva una descarga alternativa", () => {
   assert.match(component, /navigator\.canShare/);
   assert.match(component, /link\.download/);
 });
+
+test("el perfil diario puede compartir su resumen mensual sin un cierre adicional", () => {
+  assert.match(page, /dailyMonth && calculation\.workedDays > 0/);
+  assert.match(generator, /settlement\?\.dailySettlementMonth/);
+  assert.match(generator, /RESUMEN MENSUAL/);
+  assert.match(generator, /Saldos generados en el mes/);
+  assert.match(generator, /El saldo pendiente puede incluir meses anteriores/);
+});
