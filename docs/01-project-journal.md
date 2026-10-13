@@ -241,6 +241,11 @@ liquidación. Cada movimiento muestra fecha, hora, importe y si fue recibido del
 jefe o entregado al jefe. Para conservar una vista corta se presentan primero
 los tres más recientes y se ofrece `Ver los pagos` cuando existen más.
 
+La opción de compartir diariamente se completó después con el saldo pendiente
+acumulado. La imagen y el texto separan ahora el resultado de la jornada del
+saldo total actualizado. El historial de pagos continúa disponible únicamente
+dentro de TaxFin para que la tarjeta compartida conserve una lectura breve.
+
 Después se completó el resumen mensual del perfil diario. La pantalla existente
 `Mensual` suma las instantáneas confirmadas y presenta Seguridad Social,
 gasolina, base, ganancias de ambas partes, reintegro, saldos y pagos del mes.

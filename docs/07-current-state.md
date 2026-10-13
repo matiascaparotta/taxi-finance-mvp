@@ -131,8 +131,10 @@ autoriza por `DAILY_50_50`, no por el nombre de Alberto o de Lic1315.
 El resumen compartible del perfil diario incorpora la misma liquidación en sus
 dos formatos. El texto incluye el desglose y la dirección del saldo. La imagen
 mantiene una única tarjeta: resumen operativo arriba, liquidación compacta
-debajo y resultado destacado en azul o ámbar. La gasolina no se duplica fuera
-de la sección diaria. Los formatos de Lic249 permanecen sin cambios.
+debajo y resultado destacado en azul o ámbar. Tanto la imagen como el texto
+distinguen el resultado de la jornada del saldo pendiente acumulado después de
+los pagos; no incorporan el historial de movimientos. La gasolina no se duplica
+fuera de la sección diaria. Los formatos de Lic249 permanecen sin cambios.
 
 Localmente, el cierre diario guarda además una instantánea económica inmutable
 en la misma transacción que cierra la jornada. El resumen histórico prioriza

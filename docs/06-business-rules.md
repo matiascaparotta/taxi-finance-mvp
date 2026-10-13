@@ -696,6 +696,12 @@ El historial se ordena desde el pago más reciente y conserva dirección, fecha,
 hora e importe. En la jornada cerrada se muestran primero tres movimientos y
 el resto queda disponible mediante `Ver los pagos`, sin recortar el historial.
 
+La liquidación puede compartirse diariamente como imagen o texto. Ambos
+formatos incluyen el desglose del día, el resultado exclusivo de esa jornada y
+el saldo pendiente acumulado después de los pagos registrados. El historial de
+pagos permanece dentro de TaxFin y no se añade al resumen diario para mantener
+una lectura compacta.
+
 Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
 Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa
 la desactiva para viajes nuevos, pero no borra su historial.

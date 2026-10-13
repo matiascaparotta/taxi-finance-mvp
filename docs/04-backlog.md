@@ -215,6 +215,7 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Registrar pagos parciales o totales contra el saldo pendiente.
 - [x] Mostrar el historial completo de pagos de la liquidación diaria.
 - [x] Resumen mensual del perfil de liquidación diaria.
+- [x] Compartir diariamente la liquidación y el saldo pendiente acumulado.
 - [ ] Liquidación mensual.
 - [x] Liquidación diaria.
 - [ ] Histórico mensual.

@@ -1,4 +1,5 @@
 import { getDailySettlementPresentation } from "./getDailySettlementPresentation.js";
+import { getPendingBalancePresentation } from "./getPendingBalancePresentation.js";
 
 export function getDailySettlementShareData(settlement) {
   if (!settlement) {
@@ -6,6 +7,8 @@ export function getDailySettlementShareData(settlement) {
   }
 
   const percentage = Number(settlement.driverSharePercentage || 0);
+
+  const pendingBalance = Number(settlement.pendingBalance || 0);
 
   return {
     rows: [
@@ -20,5 +23,9 @@ export function getDailySettlementShareData(settlement) {
       { label: "Efectivo conservado", value: settlement.cashRetained },
     ],
     result: getDailySettlementPresentation(settlement),
+    pending: {
+      amount: Math.abs(pendingBalance),
+      ...getPendingBalancePresentation(pendingBalance),
+    },
   };
 }

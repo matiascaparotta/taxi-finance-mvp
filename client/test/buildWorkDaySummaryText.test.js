@@ -111,12 +111,14 @@ test("incorpora la liquidación diaria completa al texto", () => {
       cashRetained: 105.3,
       balance: 33.22,
       balanceDirection: "OWNER_PAYS_DRIVER",
+      pendingBalance: 23.22,
     },
   });
 
   assert.match(text, /LIQUIDACIÓN DEL DÍA/);
   assert.match(text, /BASE PARA REPARTIR: 219,02 €/);
   assert.match(text, /TOTAL QUE TE CORRESPONDE: 138,52 €/);
-  assert.match(text, /EL JEFE DEBE PAGARTE: 33,22 €/);
+  assert.match(text, /RESULTADO DE ESTA JORNADA\nEL JEFE DEBE PAGARTE: 33,22 €/);
+  assert.match(text, /SALDO PENDIENTE ACUMULADO\nEL JEFE TE DEBE: 23,22 €/);
   assert.equal((text.match(/^GASOLINA:/gm) || []).length, 1);
 });

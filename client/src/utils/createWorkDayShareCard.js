@@ -186,8 +186,9 @@ async function createSummaryCard(workDay, summary) {
     ? dailySettlement.rows.length * 66 + 28
     : 0;
   const resultTop = settlementTop + settlementHeight + 24;
+  const resultHeight = 300;
   const cardHeight = dailySettlement
-    ? resultTop + 185 + 60
+    ? resultTop + resultHeight + 60
     : summaryTop + summaryHeight + 60;
   const { canvas, context } = createCanvas(cardHeight);
 
@@ -341,7 +342,7 @@ async function createSummaryCard(workDay, summary) {
       summary.dailySettlement.balanceDirection === "OWNER_PAYS_DRIVER";
     const isDriverPayment =
       summary.dailySettlement.balanceDirection === "DRIVER_PAYS_OWNER";
-    drawRoundedRect(context, 70, resultTop, 940, 185, 28);
+    drawRoundedRect(context, 70, resultTop, 940, resultHeight, 28);
     context.fillStyle = isOwnerPayment
       ? COLORS.skyDark
       : isDriverPayment
@@ -382,6 +383,45 @@ async function createSummaryCard(workDay, summary) {
       970,
       resultTop + 72,
       "700 46px Arial",
+      COLORS.text,
+      "right"
+    );
+
+    context.beginPath();
+    context.moveTo(110, resultTop + 158);
+    context.lineTo(970, resultTop + 158);
+    context.strokeStyle = isOwnerPayment
+      ? COLORS.sky
+      : isDriverPayment
+        ? COLORS.amber
+        : COLORS.border;
+    context.globalAlpha = 0.35;
+    context.lineWidth = 2;
+    context.stroke();
+    context.globalAlpha = 1;
+
+    drawText(
+      context,
+      "SALDO PENDIENTE ACUMULADO",
+      110,
+      resultTop + 188,
+      "700 22px Arial",
+      COLORS.muted
+    );
+    drawText(
+      context,
+      dailySettlement.pending.label,
+      110,
+      resultTop + 231,
+      "700 28px Arial",
+      COLORS.text
+    );
+    drawText(
+      context,
+      formatCurrency(dailySettlement.pending.amount),
+      970,
+      resultTop + 222,
+      "700 40px Arial",
       COLORS.text,
       "right"
     );

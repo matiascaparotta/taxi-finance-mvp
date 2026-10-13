@@ -77,6 +77,7 @@ test("prepara el desglose y el resultado para la imagen diaria", () => {
     cashRetained: 105.3,
     balance: 33.22,
     balanceDirection: "OWNER_PAYS_DRIVER",
+    pendingBalance: 23.22,
   });
 
   assert.equal(data.rows.length, 9);
@@ -86,4 +87,6 @@ test("prepara el desglose y el resultado para la imagen diaria", () => {
   });
   assert.equal(data.result.title, "El jefe debe pagarte");
   assert.equal(data.result.amount, 33.22);
+  assert.equal(data.pending.label, "El jefe te debe");
+  assert.equal(data.pending.amount, 23.22);
 });

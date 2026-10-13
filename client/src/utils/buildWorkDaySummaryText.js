@@ -73,7 +73,11 @@ export function buildWorkDaySummaryText(workDay, summary) {
     });
     lines.push(
       "",
-      `${dailySettlement.result.title.toUpperCase()}: ${formatCurrency(dailySettlement.result.amount)}`
+      "RESULTADO DE ESTA JORNADA",
+      `${dailySettlement.result.title.toUpperCase()}: ${formatCurrency(dailySettlement.result.amount)}`,
+      "",
+      "SALDO PENDIENTE ACUMULADO",
+      `${dailySettlement.pending.label.toUpperCase()}: ${formatCurrency(dailySettlement.pending.amount)}`
     );
   }
 

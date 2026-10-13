@@ -53,6 +53,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   API garantiza que la gasolina queda íntegramente a cargo del conductor.
 - Imagen y texto compartibles con el desglose completo de la liquidación diaria
   y el resultado de quién debe pagar, sin generar imágenes adicionales.
+- El resumen diario compartido diferencia el resultado de esa jornada del saldo
+  pendiente acumulado actualizado, sin incluir el historial completo de pagos.
 - Instantánea económica inmutable creada atómicamente con el cierre: conserva
   las reglas aplicadas a cada jornada aunque la configuración cambie después.
 - Saldo pendiente acumulado por conductor y organización, separado visualmente
