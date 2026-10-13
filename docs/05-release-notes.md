@@ -55,6 +55,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   y el resultado de quién debe pagar, sin generar imágenes adicionales.
 - Instantánea económica inmutable creada atómicamente con el cierre: conserva
   las reglas aplicadas a cada jornada aunque la configuración cambie después.
+- Saldo pendiente acumulado por conductor y organización, separado visualmente
+  de la liquidación correspondiente al día consultado.
 - Funcionalidad completa localmente y todavía no publicada en producción.
 
 ## Publicado el 03/08/2026

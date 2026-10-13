@@ -140,6 +140,12 @@ esa instantánea y ya no depende de la configuración laboral vigente al momento
 de consultarlo. La migración `025` y esta persistencia todavía no están
 publicadas en producción.
 
+También está implementado localmente el saldo pendiente acumulado de las
+liquidaciones diarias cerradas. Se suma con signo y se aísla por organización y
+conductor. La tarjeta distingue el resultado de la jornada del acumulado. Aún
+no existe registro de pagos, por lo que esta cifra contiene solo saldos diarios
+y será ajustada por movimientos independientes en la siguiente funcionalidad.
+
 La versión publicada mediante `58cc1c9` incorpora una pantalla `Configuración` exclusiva de
 Alberto. Permite modificar tarifa por kilómetro y Seguridad Social diaria, y
 agregar, retirar o reactivar empresas con un importe fijo por viaje. Los viajes guardan una

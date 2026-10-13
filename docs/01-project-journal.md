@@ -222,6 +222,12 @@ que un cambio posterior de Seguridad Social o porcentaje no altera cuentas ya
 confirmadas. La nueva tabla forma parte del respaldo de producción y se elimina
 en cascada únicamente cuando se borra de forma autorizada la jornada asociada.
 
+En el paso siguiente se añadió la lectura del saldo pendiente acumulado. La
+consulta suma con signo todas las instantáneas del mismo conductor dentro de la
+misma organización y la tarjeta cerrada separa claramente el saldo de hoy del
+saldo total. Esta etapa aún no registra pagos: ese movimiento independiente se
+implementará a continuación para no mezclarlo con el cálculo de las jornadas.
+
 ## Estado
 
 ✅ Sprint finalizado.

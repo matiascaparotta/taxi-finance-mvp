@@ -1114,6 +1114,12 @@ Seguridad Social o del porcentaje solo afecta cierres futuros. La eliminación
 autorizada de una jornada de prueba elimina también su instantánea mediante la
 relación con borrado en cascada.
 
+El primer saldo acumulado se obtiene agregando `balance` por
+`organization_id` y `driver_user_id`; nunca mezcla conductores ni
+organizaciones. Se entrega junto al resumen cerrado y se presenta aparte del
+saldo de esa jornada. Los pagos se modelarán como movimientos independientes
+en el siguiente paso y no alterarán las instantáneas históricas.
+
 # Conclusión
 
 Los Architecture Decision Records recogen las decisiones técnicas más importantes tomadas durante el desarrollo de Lic249.

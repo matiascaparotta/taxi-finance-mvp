@@ -81,6 +81,7 @@ test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
       driverEntitlement: "138.52",
       balance: "33.22",
       balanceDirection: "OWNER_PAYS_DRIVER",
+      pendingBalance: "23.22",
     },
     endKm: 70100,
     fuelOwn: 29.01,
@@ -91,4 +92,5 @@ test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
   assert.equal(result.socialSecurity, 35);
   assert.equal(result.driverSharePercentage, 50);
   assert.equal(result.balance, 33.22);
+  assert.equal(result.pendingBalance, 23.22);
 });

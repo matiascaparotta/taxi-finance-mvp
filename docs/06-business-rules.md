@@ -680,6 +680,13 @@ la configuración laboral no recalcula jornadas ya cerradas. El cierre de la
 jornada y esta instantánea forman una única operación: se guardan ambos o no se
 guarda ninguno.
 
+El saldo pendiente acumulado suma con su signo las instantáneas cerradas de la
+misma organización y del mismo conductor. Un resultado positivo significa que
+el jefe debe pagar al conductor; uno negativo, que el conductor debe entregar
+al jefe. El resultado diario y el acumulado se muestran en bloques separados.
+Hasta incorporar el registro de pagos, este acumulado refleja exclusivamente
+las jornadas cerradas y no afirma que un pago externo ya esté contabilizado.
+
 Alberto puede gestionar desde su propia cuenta el importe diario de Seguridad
 Social y su catálogo de empresas u hoteles con comisión. Retirar una empresa
 la desactiva para viajes nuevos, pero no borra su historial.

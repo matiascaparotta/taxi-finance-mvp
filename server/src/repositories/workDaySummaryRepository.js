@@ -64,9 +64,15 @@ const getWorkDayWithTrips = async (workDayId) => {
        reimbursable_fuel AS reimbursableFuel,
        driver_entitlement AS driverEntitlement,
        balance,
-       balance_direction AS balanceDirection
-     FROM daily_settlement_snapshots
-     WHERE work_day_id = ?`,
+       balance_direction AS balanceDirection,
+       (
+         SELECT COALESCE(SUM(all_snapshots.balance), 0)
+         FROM daily_settlement_snapshots AS all_snapshots
+         WHERE all_snapshots.organization_id = current_snapshot.organization_id
+           AND all_snapshots.driver_user_id = current_snapshot.driver_user_id
+       ) AS pendingBalance
+     FROM daily_settlement_snapshots AS current_snapshot
+     WHERE current_snapshot.work_day_id = ?`,
     [workDayId]
   );
 

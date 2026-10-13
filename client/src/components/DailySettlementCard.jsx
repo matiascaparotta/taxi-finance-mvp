@@ -1,5 +1,6 @@
 import { formatCurrency } from "../utils/formatCurrency";
 import { getDailySettlementPresentation } from "../utils/getDailySettlementPresentation";
+import { getPendingBalancePresentation } from "../utils/getPendingBalancePresentation";
 
 const RESULT_STYLES = {
   sky: "border-sky-400/30 bg-sky-400/10 text-sky-200",
@@ -27,6 +28,8 @@ function DailySettlementCard({ settlement }) {
 
   const result = getDailySettlementPresentation(settlement);
   const percentage = Number(settlement.driverSharePercentage || 0);
+  const pendingBalance = Number(settlement.pendingBalance || 0);
+  const pending = getPendingBalancePresentation(pendingBalance);
 
   return (
     <section className="mt-7" aria-labelledby="daily-settlement-title">
@@ -76,6 +79,21 @@ function DailySettlementCard({ settlement }) {
           </p>
         </div>
         <p className="mt-2 text-sm opacity-80">{result.description}</p>
+      </div>
+
+      <div className={`mt-3 rounded-2xl border p-5 ${pending.tone}`}>
+        <p className="text-xs font-black tracking-[0.16em]">
+          SALDO PENDIENTE ACUMULADO
+        </p>
+        <div className="mt-2 flex items-end justify-between gap-4">
+          <p className="text-base font-black text-white">{pending.label}</p>
+          <p className="text-2xl font-black text-white">
+            {formatCurrency(Math.abs(pendingBalance))}
+          </p>
+        </div>
+        <p className="mt-2 text-sm opacity-80">
+          Incluye todas tus jornadas diarias cerradas.
+        </p>
       </div>
     </section>
   );

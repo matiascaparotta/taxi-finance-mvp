@@ -39,6 +39,7 @@ const buildDailySettlement = ({
       reimbursableFuel: Number(dailySettlementSnapshot.reimbursableFuel),
       driverEntitlement: Number(dailySettlementSnapshot.driverEntitlement),
       balance: Number(dailySettlementSnapshot.balance),
+      pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
     };
   }
 
