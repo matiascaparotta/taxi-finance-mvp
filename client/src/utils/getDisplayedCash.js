@@ -1,3 +1,3 @@
 export function getDisplayedCash(summary) {
-  return Number(summary?.realCash ?? summary?.cash ?? 0);
+  return Number(summary?.cashRevenue ?? summary?.realCash ?? summary?.cash ?? 0);
 }

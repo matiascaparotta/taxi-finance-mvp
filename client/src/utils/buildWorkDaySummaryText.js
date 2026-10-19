@@ -42,7 +42,8 @@ export function buildWorkDaySummaryText(workDay, summary) {
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
   const dailySettlement = getDailySettlementShareData(
-    summary.dailySettlement
+    summary.dailySettlement,
+    summary
   );
   const lines = [
     formatWorkDayHeader(workDay),

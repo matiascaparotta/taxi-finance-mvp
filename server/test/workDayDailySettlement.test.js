@@ -3,6 +3,7 @@ const test = require("node:test");
 
 const {
   buildDailySettlement,
+  calculatePaymentTotals,
 } = require("../src/services/workDaySummaryService");
 
 const albertoAuth = {
@@ -11,6 +12,38 @@ const albertoAuth = {
   driverShareBasisPoints: 5000,
   dailySocialSecurity: 35,
 };
+
+test("descuenta la comisión de la facturación pero conserva el efectivo cobrado", () => {
+  const result = calculatePaymentTotals([
+    { amount: 28, paymentType: "cash", commission: 5, tip: 0 },
+    { amount: 40, paymentType: "card", commission: 4, tip: 0 },
+  ], true);
+
+  assert.equal(result.cashRevenue, 23);
+  assert.equal(result.cardRevenue, 36);
+  assert.equal(result.cashRetained, 28);
+  assert.equal(result.cashCommission, 5);
+  assert.equal(result.cardCommission, 4);
+});
+
+test("la comisión en efectivo cambia quién entrega dinero sin descontarse dos veces", () => {
+  const totals = calculatePaymentTotals([
+    { amount: 28, paymentType: "cash", commission: 5, tip: 0 },
+  ], true);
+  const result = buildDailySettlement({
+    auth: { ...albertoAuth, dailySocialSecurity: 0 },
+    endKm: 70100,
+    fuelOwn: 0,
+    realCash: totals.cashRetained,
+    totalRevenue: totals.cashRevenue + totals.cardRevenue,
+  });
+
+  assert.equal(result.netRevenue, 23);
+  assert.equal(result.driverShare, 11.5);
+  assert.equal(result.cashRetained, 28);
+  assert.equal(result.balance, -16.5);
+  assert.equal(result.balanceDirection, "DRIVER_PAYS_OWNER");
+});
 
 test("conecta el cierre diario configurado con el motor económico", () => {
   const result = buildDailySettlement({

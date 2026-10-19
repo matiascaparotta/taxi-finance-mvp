@@ -228,6 +228,12 @@ function WorkDayTicket({
 
       <DailySettlementCard
         settlement={summary.dailySettlement}
+        commissionSummary={{
+          total: summary.commission,
+          cash: summary.cashCommission,
+          card: summary.cardCommission,
+          byCompany: summary.commissionByCompany,
+        }}
         onRegisterPayment={onRegisterSettlementPayment}
       />
     </Card>

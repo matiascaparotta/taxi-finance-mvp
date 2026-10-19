@@ -38,7 +38,10 @@ const closeWorkDayWithDailySettlement = async ({
            AS cashAmount,
          COALESCE(SUM(CASE WHEN payment_type = 'card' THEN amount ELSE 0 END), 0)
            AS cardAmount,
-         COALESCE(SUM(commission), 0) AS commission,
+         COALESCE(SUM(CASE WHEN payment_type = 'cash' THEN commission ELSE 0 END), 0)
+           AS cashCommission,
+         COALESCE(SUM(CASE WHEN payment_type = 'card' THEN commission ELSE 0 END), 0)
+           AS cardCommission,
          COALESCE(SUM(tip), 0) AS tip
        FROM trips
        WHERE work_day_id = ?`,
@@ -46,9 +49,12 @@ const closeWorkDayWithDailySettlement = async ({
     );
     const financials = financialRows[0];
     const cashRetained = Number(financials.cashAmount)
-      - Number(financials.commission)
       - Number(financials.tip);
-    const netRevenue = cashRetained + Number(financials.cardAmount);
+    const netRevenue = Number(financials.cashAmount)
+      - Number(financials.cashCommission)
+      - Number(financials.tip)
+      + Number(financials.cardAmount)
+      - Number(financials.cardCommission);
     const snapshot = calculateDailySettlement({
       netRevenue,
       cashRetained,

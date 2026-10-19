@@ -1,7 +1,7 @@
 import { getDailySettlementPresentation } from "./getDailySettlementPresentation.js";
 import { getPendingBalancePresentation } from "./getPendingBalancePresentation.js";
 
-export function getDailySettlementShareData(settlement) {
+export function getDailySettlementShareData(settlement, summary = null) {
   if (!settlement) {
     return null;
   }
@@ -9,10 +9,27 @@ export function getDailySettlementShareData(settlement) {
   const percentage = Number(settlement.driverSharePercentage || 0);
 
   const pendingBalance = Number(settlement.pendingBalance || 0);
+  const totalCommission = Number(summary?.commission || 0);
+  const commissionRows = totalCommission > 0
+    ? [
+        { label: "Comisiones descontadas", value: -totalCommission },
+        ...(Number(summary?.cashCommission || 0) > 0
+          ? [{ label: "Comisión en efectivo", value: -Number(summary.cashCommission) }]
+          : []),
+        ...(Number(summary?.cardCommission || 0) > 0
+          ? [{ label: "Comisión en datáfono", value: -Number(summary.cardCommission) }]
+          : []),
+        ...(summary?.commissionByCompany || []).map((company) => ({
+          label: `${company.name} (${company.tripCount})`,
+          value: -Number(company.amount),
+        })),
+      ]
+    : [];
 
   return {
     rows: [
       { label: "Facturación neta", value: settlement.netRevenue },
+      ...commissionRows,
       { label: "Seguridad Social", value: -settlement.socialSecurity },
       { label: "Gasolina", value: -settlement.fuelCost },
       { label: "Base para repartir", value: settlement.distributableBase },

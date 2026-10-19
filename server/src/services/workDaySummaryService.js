@@ -13,6 +13,35 @@ const roundToTwoDecimals = (value) => {
   return Number(Number(value || 0).toFixed(2));
 };
 
+const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
+  const grossCash = trips
+    .filter((trip) => trip.paymentType === "cash")
+    .reduce((total, trip) => total + Number(trip.amount || 0), 0);
+  const grossCard = trips
+    .filter((trip) => trip.paymentType === "card")
+    .reduce((total, trip) => total + Number(trip.amount || 0), 0);
+  const cashCommission = trips
+    .filter((trip) => trip.paymentType === "cash")
+    .reduce((total, trip) => total + Number(trip.commission || 0), 0);
+  const cardCommission = trips
+    .filter((trip) => trip.paymentType === "card")
+    .reduce((total, trip) => total + Number(trip.commission || 0), 0);
+  const commission = cashCommission + cardCommission;
+  const tip = trips.reduce((total, trip) => total + Number(trip.tip || 0), 0);
+
+  return {
+    grossCash,
+    grossCard,
+    cashCommission,
+    cardCommission,
+    commission,
+    tip,
+    cashRevenue: grossCash - (usesPaymentScopedCommission ? cashCommission : commission) - tip,
+    cardRevenue: grossCard - (usesPaymentScopedCommission ? cardCommission : 0),
+    cashRetained: usesPaymentScopedCommission ? grossCash - tip : grossCash - commission - tip,
+  };
+};
+
 const buildDailySettlement = ({
   auth,
   dailySettlementSnapshot,
@@ -100,25 +129,19 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
   const workedKm = endKm - startKm;
 
-  const cash = trips
-    .filter((trip) => trip.paymentType === "cash")
-    .reduce((total, trip) => {
-      return total + Number(trip.amount || 0);
-    }, 0);
-
-  const card = trips
-    .filter((trip) => trip.paymentType === "card")
-    .reduce((total, trip) => {
-      return total + Number(trip.amount || 0);
-    }, 0);
-
-  const commission = trips.reduce((total, trip) => {
-    return total + Number(trip.commission || 0);
-  }, 0);
-
-  const tip = trips.reduce((total, trip) => {
-    return total + Number(trip.tip || 0);
-  }, 0);
+  const usesPaymentScopedCommission =
+    Boolean(dailySettlementSnapshot) ||
+    auth?.settlementMode === "DAILY_50_50";
+  const paymentTotals = calculatePaymentTotals(
+    trips,
+    usesPaymentScopedCommission
+  );
+  const cash = paymentTotals.grossCash;
+  const card = paymentTotals.grossCard;
+  const commission = paymentTotals.commission;
+  const cashCommission = paymentTotals.cashCommission;
+  const cardCommission = paymentTotals.cardCommission;
+  const tip = paymentTotals.tip;
 
   const commissionByCompany = Object.values(
     trips.reduce((groups, trip) => {
@@ -133,13 +156,15 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
   const displayedCash = importedSummary
     ? Number(importedSummary.cash || 0)
-    : cash - commission - tip;
+    : paymentTotals.cashRevenue;
   const displayedCard = importedSummary
     ? Number(importedSummary.card || 0)
-    : card;
+    : paymentTotals.cardRevenue;
   const totalRevenue = displayedCash + displayedCard;
 
-  const realCash = displayedCash;
+  const realCash = usesPaymentScopedCommission && !importedSummary
+    ? paymentTotals.cashRetained
+    : displayedCash;
 
   const tripCount = trips.length;
 
@@ -184,10 +209,13 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     cash: roundToTwoDecimals(
       importedSummary ? displayedCash : cash
     ),
+    cashRevenue: roundToTwoDecimals(displayedCash),
     card: roundToTwoDecimals(displayedCard),
     totalRevenue: roundToTwoDecimals(totalRevenue),
 
     commission: roundToTwoDecimals(commission),
+    cashCommission: roundToTwoDecimals(cashCommission),
+    cardCommission: roundToTwoDecimals(cardCommission),
     commissionByCompany,
     tip: roundToTwoDecimals(tip),
     realCash: roundToTwoDecimals(realCash),
@@ -203,5 +231,6 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
 module.exports = {
   buildDailySettlement,
+  calculatePaymentTotals,
   getWorkDaySummaryService,
 };

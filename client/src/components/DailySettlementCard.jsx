@@ -26,7 +26,7 @@ function SettlementRow({ label, value, strong = false }) {
   );
 }
 
-function DailySettlementCard({ settlement, onRegisterPayment = null }) {
+function DailySettlementCard({ settlement, commissionSummary = null, onRegisterPayment = null }) {
   const [showPayment, setShowPayment] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentError, setPaymentError] = useState("");
@@ -50,6 +50,10 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
   const paymentAction = pendingBalance > 0
     ? "Recibido del jefe"
     : "Entregado al jefe";
+  const totalCommission = Number(commissionSummary?.total || 0);
+  const commissionCompanies = Array.isArray(commissionSummary?.byCompany)
+    ? commissionSummary.byCompany
+    : [];
 
   const openPayment = () => {
     setPaymentAmount(Math.abs(pendingBalance).toFixed(2).replace(".", ","));
@@ -137,6 +141,38 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
           )}
         </div>
       </div>
+
+      {totalCommission > 0 && (
+        <div className="mt-3 rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-black tracking-[0.14em] text-sky-300">COMISIONES DESCONTADAS</p>
+              <p className="mt-1 text-xs text-slate-400">Descontadas de la facturación real; el efectivo cobrado se conserva para calcular la entrega</p>
+            </div>
+            <p className="text-xl font-black text-white">−{formatCurrency(totalCommission)}</p>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">En viajes de efectivo</p>
+              <p className="mt-1 font-black text-white">−{formatCurrency(commissionSummary.cash)}</p>
+            </div>
+            <div className="rounded-xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">En viajes de datáfono</p>
+              <p className="mt-1 font-black text-white">−{formatCurrency(commissionSummary.card)}</p>
+            </div>
+          </div>
+          {commissionCompanies.length > 0 && (
+            <div className="mt-3 divide-y divide-slate-800 border-t border-slate-800">
+              {commissionCompanies.map((company) => (
+                <div key={company.name} className="flex items-center justify-between gap-3 py-2.5 text-sm">
+                  <span className="text-slate-300">{company.name} · {company.tripCount} {company.tripCount === 1 ? "viaje" : "viajes"}</span>
+                  <strong className="text-white">−{formatCurrency(company.amount)}</strong>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className={`mt-3 rounded-2xl border p-5 ${RESULT_STYLES[result.tone]}`}>
         <p className="text-xs font-black tracking-[0.16em]">{result.eyebrow}</p>

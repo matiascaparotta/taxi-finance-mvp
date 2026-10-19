@@ -122,3 +122,40 @@ test("incorpora la liquidación diaria completa al texto", () => {
   assert.match(text, /SALDO AL FINALIZAR ESTA JORNADA\nEL JEFE TE DEBE: 23,22 €/);
   assert.equal((text.match(/^GASOLINA:/gm) || []).length, 1);
 });
+
+test("explica las comisiones de Alberto por medio de pago y empresa", () => {
+  const text = buildWorkDaySummaryText(workDay, {
+    workedKm: 10,
+    cashRevenue: 23,
+    realCash: 28,
+    card: 36,
+    totalRevenue: 59,
+    commission: 9,
+    cashCommission: 5,
+    cardCommission: 4,
+    commissionByCompany: [
+      { name: "Petit", tripCount: 1, amount: 5 },
+      { name: "Aviación General", tripCount: 1, amount: 4 },
+    ],
+    dailySettlement: {
+      netRevenue: 59,
+      socialSecurity: 0,
+      fuelCost: 0,
+      distributableBase: 59,
+      driverShare: 29.5,
+      ownerShare: 29.5,
+      driverSharePercentage: 50,
+      reimbursableFuel: 0,
+      driverEntitlement: 29.5,
+      cashRetained: 28,
+      balance: 1.5,
+      balanceDirection: "OWNER_PAYS_DRIVER",
+      pendingBalance: 1.5,
+    },
+  });
+
+  assert.match(text, /EFECTIVO: 23,00 €/);
+  assert.match(text, /COMISIONES DESCONTADAS: -9,00 €/);
+  assert.match(text, /COMISIÓN EN EFECTIVO: -5,00 €/);
+  assert.match(text, /PETIT \(1\): -5,00 €/);
+});

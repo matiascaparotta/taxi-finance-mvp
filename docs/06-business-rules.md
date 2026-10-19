@@ -668,6 +668,22 @@ El cierre diario se calcula en céntimos y en este orden:
 3. `derecho total de Alberto = parte de Alberto + gasolina`;
 4. `saldo diario = derecho total de Alberto - efectivo conservado`.
 
+En el perfil `DAILY_50_50`, cada comisión se descuenta de la facturación del
+mismo medio de pago del viaje. Por ejemplo, un viaje de 28 € en efectivo con
+5 € de comisión aporta 23 € a la facturación real, aunque Alberto haya recibido
+físicamente los 28 €. El reparto se calcula sobre los 23 € y la conciliación de
+la entrega compara el derecho de Alberto contra los 28 € que conserva en mano.
+De esta manera la comisión en efectivo queda reflejada al determinar quién debe
+entregar dinero a quién, sin descontarla dos veces. Una comisión de datáfono
+reduce el datáfono y la facturación neta repartible; no altera el efectivo en
+mano porque ese cobro ya está en poder del jefe.
+
+La liquidación diaria y sus formatos compartibles muestran la comisión total,
+su separación entre efectivo y datáfono y el desglose por empresa. Estas líneas
+son informativas: los importes ya están descontados de la facturación neta y no
+se vuelven a restar. Esta excepción del perfil diario no modifica la regla de
+comisiones de Lic249.
+
 Una cuenta ajena a los viajes que Alberto deba al jefe se registra como
 `ajuste externo a favor del jefe`. No es comisión, no modifica la facturación,
 la gasolina ni el reparto: se resta después del efectivo conservado para obtener
