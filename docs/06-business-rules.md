@@ -668,6 +668,12 @@ El cierre diario se calcula en céntimos y en este orden:
 3. `derecho total de Alberto = parte de Alberto + gasolina`;
 4. `saldo diario = derecho total de Alberto - efectivo conservado`.
 
+Una cuenta ajena a los viajes que Alberto deba al jefe se registra como
+`ajuste externo a favor del jefe`. No es comisión, no modifica la facturación,
+la gasolina ni el reparto: se resta después del efectivo conservado para obtener
+el saldo diario neto. Debe mostrarse como una línea independiente en pantalla y
+en los resúmenes compartidos.
+
 Un saldo positivo significa que el jefe debe pagar a Alberto. Un saldo negativo
 significa que Alberto debe entregar al jefe el valor absoluto. Cero significa
 que la jornada está saldada. Si el reparto produce una fracción de céntimo, la

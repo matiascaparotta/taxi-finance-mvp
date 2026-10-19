@@ -205,6 +205,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 ## Gestión financiera
 
 - [x] Motor aislado y probado del cálculo diario 50/50 de Alberto.
+- [ ] Permitir que Alberto registre al cerrar una cuenta externa a favor del
+  jefe, con importe y concepto, sin convertirla en comisión de viaje.
 - [x] Perfil general de liquidación y reparto por relación laboral.
 - [x] Conectar la liquidación diaria al resumen cerrado según el perfil.
 - [x] Mostrar la liquidación diaria en la jornada finalizada y su detalle.

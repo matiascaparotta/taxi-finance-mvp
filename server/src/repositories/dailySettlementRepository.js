@@ -80,8 +80,8 @@ const closeWorkDayWithDailySettlement = async ({
          net_revenue, cash_retained, fuel_cost, social_security,
          driver_share_basis_points, distributable_base, driver_share,
          owner_share, reimbursable_fuel, driver_entitlement,
-         balance, balance_direction
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         owner_adjustment, balance, balance_direction
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         workDayId,
         organizationId,
@@ -96,6 +96,7 @@ const closeWorkDayWithDailySettlement = async ({
         snapshot.ownerShare,
         snapshot.reimbursableFuel,
         snapshot.driverEntitlement,
+        snapshot.ownerAdjustment,
         snapshot.balance,
         snapshot.balanceDirection,
       ]

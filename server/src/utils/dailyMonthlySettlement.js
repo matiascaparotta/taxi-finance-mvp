@@ -34,6 +34,7 @@ const calculateDailyMonthlySettlement = ({ summaries, month }) => {
     ownerShare: sum(settlements, "ownerShare"),
     reimbursableFuel: sum(settlements, "reimbursableFuel"),
     driverEntitlement: sum(settlements, "driverEntitlement"),
+    ownerAdjustment: sum(settlements, "ownerAdjustment"),
     dailyBalance: sum(settlements, "balance"),
     paymentsReceived,
     paymentsDelivered,

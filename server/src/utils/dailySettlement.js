@@ -15,6 +15,7 @@ const calculateDailySettlement = ({
   cashRetained,
   fuelCost,
   socialSecurity,
+  ownerAdjustment = 0,
   driverShareBasisPoints = 5000,
 }) => {
   const netRevenueCents = toCents(netRevenue, "La recaudación neta");
@@ -26,6 +27,10 @@ const calculateDailySettlement = ({
   const socialSecurityCents = toCents(
     socialSecurity,
     "La Seguridad Social"
+  );
+  const ownerAdjustmentCents = toCents(
+    ownerAdjustment,
+    "El ajuste a favor del jefe"
   );
 
   if (
@@ -48,7 +53,7 @@ const calculateDailySettlement = ({
   const driverEntitlementCents =
     driverShareCents + reimbursableFuelCents;
   const balanceCents =
-    driverEntitlementCents - cashRetainedCents;
+    driverEntitlementCents - cashRetainedCents - ownerAdjustmentCents;
 
   return {
     netRevenue: fromCents(netRevenueCents),
@@ -61,6 +66,7 @@ const calculateDailySettlement = ({
     cashRetained: fromCents(cashRetainedCents),
     reimbursableFuel: fromCents(reimbursableFuelCents),
     driverEntitlement: fromCents(driverEntitlementCents),
+    ownerAdjustment: fromCents(ownerAdjustmentCents),
     balance: fromCents(balanceCents),
     balanceDirection:
       balanceCents > 0

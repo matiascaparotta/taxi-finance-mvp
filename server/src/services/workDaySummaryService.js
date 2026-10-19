@@ -39,6 +39,7 @@ const buildDailySettlement = ({
       ownerShare: Number(dailySettlementSnapshot.ownerShare),
       reimbursableFuel: Number(dailySettlementSnapshot.reimbursableFuel),
       driverEntitlement: Number(dailySettlementSnapshot.driverEntitlement),
+      ownerAdjustment: Number(dailySettlementSnapshot.ownerAdjustment || 0),
       balance: Number(dailySettlementSnapshot.balance),
       pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
       payments: dailySettlementPayments.map((payment) => ({

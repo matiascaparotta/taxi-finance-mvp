@@ -80,6 +80,10 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Rediseño compartido del detalle de jornada para Matías y Alberto: facturación
   total prioritaria, viajes en lista cronológica compacta, ajustes secundarios
   y corrección mediante una acción discreta integrada en cada fila.
+- Ajuste externo a favor del jefe separado de las comisiones y de la
+  facturación, incorporado al saldo diario, mensual y compartible.
+- Importación preparada para la jornada real de Alberto del 18/10/2026: 383 km,
+  18 viajes, 350,95 € facturados y 96,15 € netos a pagar por el jefe.
 - Comparación con el mes calendario anterior para jornadas, facturación neta y
   ganancia del conductor, visible únicamente cuando existe una base real.
 - Histórico mensual sin límite al año actual, mediante un selector liviano que

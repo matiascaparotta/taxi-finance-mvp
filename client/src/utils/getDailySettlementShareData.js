@@ -21,6 +21,9 @@ export function getDailySettlementShareData(settlement) {
       { label: "Reintegro gasolina", value: settlement.reimbursableFuel },
       { label: "Total que te corresponde", value: settlement.driverEntitlement },
       { label: "Efectivo conservado", value: settlement.cashRetained },
+      ...(Number(settlement.ownerAdjustment || 0) > 0
+        ? [{ label: "Cuenta externa a favor del jefe", value: -settlement.ownerAdjustment }]
+        : []),
     ],
     result: getDailySettlementPresentation(settlement),
     pending: {

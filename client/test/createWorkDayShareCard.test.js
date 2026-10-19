@@ -95,3 +95,28 @@ test("prepara el desglose y el resultado para la imagen diaria", () => {
   assert.equal(data.pending.label, "El jefe te debe");
   assert.equal(data.pending.amount, 23.22);
 });
+
+test("incluye una cuenta externa del jefe sin tratarla como comisión", () => {
+  const data = getDailySettlementShareData({
+    netRevenue: 350.95,
+    socialSecurity: 35,
+    fuelCost: 38.01,
+    distributableBase: 277.94,
+    driverShare: 138.97,
+    ownerShare: 138.97,
+    driverSharePercentage: 50,
+    reimbursableFuel: 38.01,
+    driverEntitlement: 176.98,
+    cashRetained: 75.83,
+    ownerAdjustment: 5,
+    balance: 96.15,
+    balanceDirection: "OWNER_PAYS_DRIVER",
+    pendingBalance: 96.15,
+  });
+
+  assert.deepEqual(data.rows.at(-1), {
+    label: "Cuenta externa a favor del jefe",
+    value: -5,
+  });
+  assert.equal(data.result.amount, 96.15);
+});

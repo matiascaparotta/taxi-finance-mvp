@@ -7,22 +7,28 @@ const {
   validateDays,
 } = require("../src/scripts/importAlbertoRealDays");
 
-test("las dos jornadas reproducen exactamente los totales de la libreta", () => {
+const amount = (value) => typeof value === "object" ? value.amount : value;
+const total = (values) => values.reduce((sum, value) => sum + amount(value), 0);
+
+test("las tres jornadas reproducen exactamente los totales de las libretas", () => {
   assert.doesNotThrow(validateDays);
-  assert.equal(REAL_DAYS[0].cash.reduce((a, b) => a + b, 0).toFixed(2), "105.30");
-  assert.equal(REAL_DAYS[0].card.reduce((a, b) => a + b, 0).toFixed(2), "177.73");
-  assert.equal(REAL_DAYS[1].cash.reduce((a, b) => a + b, 0).toFixed(2), "6.13");
-  assert.equal(REAL_DAYS[1].card.reduce((a, b) => a + b, 0).toFixed(2), "613.28");
+  assert.equal(total(REAL_DAYS[0].cash).toFixed(2), "105.30");
+  assert.equal(total(REAL_DAYS[0].card).toFixed(2), "177.73");
+  assert.equal(total(REAL_DAYS[1].cash).toFixed(2), "6.13");
+  assert.equal(total(REAL_DAYS[1].card).toFixed(2), "613.28");
+  assert.equal(total(REAL_DAYS[2].cash).toFixed(2), "75.83");
+  assert.equal(total(REAL_DAYS[2].card).toFixed(2), "275.12");
+  assert.equal(REAL_DAYS[2].ownerAdjustment, 5);
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {
   const trips = interleaveTrips({ cash: [1, 2], card: [10, 20, 30] });
   assert.deepEqual(trips, [
-    { amount: 1, paymentType: "cash" },
-    { amount: 10, paymentType: "card" },
-    { amount: 2, paymentType: "cash" },
-    { amount: 20, paymentType: "card" },
-    { amount: 30, paymentType: "card" },
+    { amount: 1, paymentType: "cash", note: null },
+    { amount: 10, paymentType: "card", note: null },
+    { amount: 2, paymentType: "cash", note: null },
+    { amount: 20, paymentType: "card", note: null },
+    { amount: 30, paymentType: "card", note: null },
   ]);
 });
 

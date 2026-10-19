@@ -18,19 +18,49 @@ const REAL_DAYS = [
     cash: [6.13],
     card: [4.61, 50, 10.83, 513, 19.12, 15.72],
   },
+  {
+    date: "2026-10-18",
+    startKm: 520382,
+    endKm: 520765,
+    fuel: 38.01,
+    ownerAdjustment: 5,
+    cash: [5.61, 9.72, 6.52, 18.24, 8.49, 8.39, 11.02, 7.84],
+    card: [
+      { amount: 109, note: "María - Estepona" },
+      { amount: 35, note: "Av. Gral." },
+      { amount: 23, note: "Well - AGP" },
+      5.67,
+      { amount: 23, note: "Well - AGP" },
+      { amount: 22, note: "Av. Gral." },
+      12.25,
+      11.4,
+      { amount: 25, note: "Pago - asistencia" },
+      8.8,
+    ],
+  },
 ];
 
+const amountOf = (value) => Number(
+  typeof value === "object" && value !== null ? value.amount : value
+);
+
 const cents = (values) => values.reduce(
-  (total, value) => total + Math.round(Number(value) * 100),
+  (total, value) => total + Math.round(amountOf(value) * 100),
   0
 );
+
+const normalizeTrip = (value, paymentType) => ({
+  amount: amountOf(value),
+  paymentType,
+  note: typeof value === "object" && value !== null ? value.note || null : null,
+});
 
 const interleaveTrips = ({ cash, card }) => {
   const trips = [];
   const maxLength = Math.max(cash.length, card.length);
   for (let index = 0; index < maxLength; index += 1) {
-    if (index < cash.length) trips.push({ amount: cash[index], paymentType: "cash" });
-    if (index < card.length) trips.push({ amount: card[index], paymentType: "card" });
+    if (index < cash.length) trips.push(normalizeTrip(cash[index], "cash"));
+    if (index < card.length) trips.push(normalizeTrip(card[index], "card"));
   }
   return trips;
 };
@@ -50,6 +80,7 @@ const validateDays = () => {
   const expected = {
     "2026-10-01": { cash: 10530, card: 17773, total: 28303 },
     "2026-10-02": { cash: 613, card: 61328, total: 61941 },
+    "2026-10-18": { cash: 7583, card: 27512, total: 35095 },
   };
   for (const day of REAL_DAYS) {
     const cash = cents(day.cash);
@@ -76,6 +107,7 @@ const importDay = async (connection, scope, day) => {
       cashRetained: cashAmount,
       fuelCost: day.fuel,
       socialSecurity: scope.socialSecurity,
+      ownerAdjustment: day.ownerAdjustment || 0,
       driverShareBasisPoints: scope.driverShareBasisPoints,
     });
     const [updateResult] = await connection.query(
@@ -83,13 +115,14 @@ const importDay = async (connection, scope, day) => {
        SET net_revenue = ?, cash_retained = ?, fuel_cost = ?, social_security = ?,
            driver_share_basis_points = ?, distributable_base = ?, driver_share = ?,
            owner_share = ?, reimbursable_fuel = ?, driver_entitlement = ?,
-           balance = ?, balance_direction = ?
+           owner_adjustment = ?, balance = ?, balance_direction = ?
        WHERE work_day_id = ? AND organization_id = ? AND driver_user_id = ?`,
       [
         snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
         snapshot.socialSecurity, scope.driverShareBasisPoints,
         snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
         snapshot.reimbursableFuel, snapshot.driverEntitlement,
+        snapshot.ownerAdjustment,
         snapshot.balance, snapshot.balanceDirection,
         workDayId, scope.organizationId, scope.userId,
       ]
@@ -128,7 +161,9 @@ const importDay = async (connection, scope, day) => {
         workDayId,
         trip.amount,
         trip.paymentType,
-        "Hora aproximada distribuida desde libreta",
+        trip.note
+          ? `${trip.note} · Hora aproximada distribuida desde libreta`
+          : "Hora aproximada distribuida desde libreta",
         times[index],
         times[index],
       ]
@@ -142,6 +177,7 @@ const importDay = async (connection, scope, day) => {
     cashRetained: cashAmount,
     fuelCost: day.fuel,
     socialSecurity: scope.socialSecurity,
+    ownerAdjustment: day.ownerAdjustment || 0,
     driverShareBasisPoints: scope.driverShareBasisPoints,
   });
   await connection.query(
@@ -150,14 +186,15 @@ const importDay = async (connection, scope, day) => {
        net_revenue, cash_retained, fuel_cost, social_security,
        driver_share_basis_points, distributable_base, driver_share,
        owner_share, reimbursable_fuel, driver_entitlement,
-       balance, balance_direction
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       owner_adjustment, balance, balance_direction
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       workDayId, scope.organizationId, scope.userId,
       snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
       snapshot.socialSecurity, scope.driverShareBasisPoints,
       snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
       snapshot.reimbursableFuel, snapshot.driverEntitlement,
+      snapshot.ownerAdjustment,
       snapshot.balance, snapshot.balanceDirection,
     ]
   );

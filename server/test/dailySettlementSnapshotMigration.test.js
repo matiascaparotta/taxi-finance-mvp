@@ -13,6 +13,13 @@ const migration = fs.readFileSync(
   ),
   "utf8"
 );
+const ownerAdjustmentMigration = fs.readFileSync(
+  path.resolve(
+    __dirname,
+    "../database/migrations/027_add_daily_owner_adjustment.sql"
+  ),
+  "utf8"
+);
 
 test("guarda una sola instantánea económica por jornada", () => {
   assert.match(migration, /CREATE TABLE IF NOT EXISTS daily_settlement_snapshots/);
@@ -20,6 +27,11 @@ test("guarda una sola instantánea económica por jornada", () => {
   assert.match(migration, /driver_share_basis_points/);
   assert.match(migration, /driver_entitlement/);
   assert.match(migration, /balance_direction ENUM/);
+});
+
+test("conserva por separado las cuentas externas a favor del jefe", () => {
+  assert.match(ownerAdjustmentMigration, /ADD COLUMN owner_adjustment/);
+  assert.match(ownerAdjustmentMigration, /NOT NULL DEFAULT 0/);
 });
 
 test("el borrado autorizado de una jornada de prueba retira su instantánea", () => {

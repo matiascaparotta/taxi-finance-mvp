@@ -244,6 +244,7 @@ function MonthlySettlementPage({ currentUser = null }) {
             <div className="mt-3 divide-y divide-slate-800 rounded-2xl border border-slate-800 px-4">
               <MoneyRow label="Reintegro de gasolina" value={dailyMonth.reimbursableFuel} />
               <MoneyRow label="Total correspondiente a Alberto" value={dailyMonth.driverEntitlement} emphasis />
+              {Number(dailyMonth.ownerAdjustment || 0) > 0 && <MoneyRow label="Cuentas externas a favor del jefe" value={-dailyMonth.ownerAdjustment} />}
               <MoneyRow label="Saldos generados este mes" value={dailyMonth.dailyBalance} />
               <MoneyRow label="Recibido del jefe este mes" value={-dailyMonth.paymentsReceived} />
               <MoneyRow label="Entregado al jefe este mes" value={dailyMonth.paymentsDelivered} />

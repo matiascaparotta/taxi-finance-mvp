@@ -51,6 +51,23 @@ test("reproduce el cierre real del 2 de octubre y deja el céntimo al jefe", () 
   assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
 });
 
+test("separa una cuenta externa a favor del jefe sin alterar la facturación", () => {
+  const result = calculateDailySettlement({
+    netRevenue: 350.95,
+    cashRetained: 75.83,
+    fuelCost: 38.01,
+    socialSecurity: 35,
+    ownerAdjustment: 5,
+  });
+
+  assert.equal(result.distributableBase, 277.94);
+  assert.equal(result.driverShare, 138.97);
+  assert.equal(result.driverEntitlement, 176.98);
+  assert.equal(result.ownerAdjustment, 5);
+  assert.equal(result.balance, 96.15);
+  assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
+});
+
 test("mantiene una base negativa y expresa correctamente la deuda", () => {
   const result = calculateDailySettlement({
     netRevenue: 20,

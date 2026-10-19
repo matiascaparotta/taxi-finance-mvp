@@ -14,6 +14,7 @@ const settlement = (overrides = {}) => ({
   ownerShare: 109.51,
   reimbursableFuel: 29.01,
   driverEntitlement: 138.52,
+  ownerAdjustment: 0,
   balance: 33.22,
   pendingBalance: 23.22,
   payments: [],
@@ -33,6 +34,7 @@ test("suma las instantáneas diarias sin recalcular descuentos", () => {
   assert.equal(result.netRevenue, 566.06);
   assert.equal(result.socialSecurity, 70);
   assert.equal(result.driverShare, 219.02);
+  assert.equal(result.ownerAdjustment, 0);
   assert.equal(result.dailyBalance, 23.22);
   assert.equal(result.pendingBalance, 23.22);
 });

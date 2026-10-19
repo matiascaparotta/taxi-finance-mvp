@@ -1436,6 +1436,13 @@ facturación total, presenta cada viaje como una fila cronológica compacta y
 convierte `Corregir` en una acción secundaria. El resumen queda separado y la
 liquidación diaria conserva su propio resultado destacado cuando corresponde.
 
+La libreta real del 18/10/2026 introdujo una cuenta externa de 5 € que Alberto
+debe a su jefe. Se modeló de forma aditiva como ajuste independiente: no se
+falsea una comisión de viaje ni se reduce la facturación. La jornada conserva
+350,95 € de facturación, genera 101,15 € antes del ajuste y deja 96,15 € netos
+a pagar por el jefe. La migración `027` mantiene cero como valor para todas las
+jornadas anteriores.
+
 🚧 Sprint en desarrollo.
 
 ---
