@@ -7,7 +7,9 @@ const {
   validateDays,
 } = require("../src/scripts/importAlbertoRealDays");
 
-const amount = (value) => typeof value === "object" ? value.amount : value;
+const amount = (value) => typeof value === "object"
+  ? value.amount - Number(value.commission || 0)
+  : value;
 const total = (values) => values.reduce((sum, value) => sum + amount(value), 0);
 
 test("las trece jornadas reproducen exactamente los totales de las libretas", () => {
@@ -15,7 +17,7 @@ test("las trece jornadas reproducen exactamente los totales de las libretas", ()
   const expected = {
     "2026-10-01": ["105.30", "177.73", 0],
     "2026-10-02": ["6.13", "613.28", 0],
-    "2026-10-04": ["97.30", "268.09", 10],
+    "2026-10-04": ["97.30", "268.09", 5],
     "2026-10-07": ["45.74", "286.93", 0],
     "2026-10-08": ["75.71", "230.90", 5],
     "2026-10-09": ["112.29", "205.91", 0],
@@ -23,7 +25,7 @@ test("las trece jornadas reproducen exactamente los totales de las libretas", ()
     "2026-10-11": ["84.59", "246.43", 0],
     "2026-10-14": ["133.85", "173.28", 10],
     "2026-10-15": ["169.77", "163.75", 0],
-    "2026-10-16": ["101.94", "244.70", 5],
+    "2026-10-16": ["101.94", "244.70", 0],
     "2026-10-17": ["35.25", "313.64", 0],
     "2026-10-18": ["75.83", "275.12", 5],
   };
@@ -45,19 +47,25 @@ test("las trece jornadas reproducen exactamente los totales de las libretas", ()
 test("conserva el desglose legible de las comisiones y ajustes de la libreta", () => {
   const october4 = REAL_DAYS.find((day) => day.date === "2026-10-04");
   assert.deepEqual(october4.ownerAdjustmentBreakdown, [
-    { company: "Petit - AGP", amount: 5, paymentType: "cash" },
     { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
   ]);
+  const petitTrip = october4.cash.find((trip) => trip?.commissionCompanyName === "Petit - AGP");
+  assert.deepEqual(petitTrip, {
+    amount: 28,
+    commission: 5,
+    commissionCompanyName: "Petit - AGP",
+    note: "Petit - AGP",
+  });
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {
   const trips = interleaveTrips({ cash: [1, 2], card: [10, 20, 30] });
   assert.deepEqual(trips, [
-    { amount: 1, paymentType: "cash", note: null },
-    { amount: 10, paymentType: "card", note: null },
-    { amount: 2, paymentType: "cash", note: null },
-    { amount: 20, paymentType: "card", note: null },
-    { amount: 30, paymentType: "card", note: null },
+    { amount: 1, paymentType: "cash", commission: 0, commissionCompanyName: null, note: null },
+    { amount: 10, paymentType: "card", commission: 0, commissionCompanyName: null, note: null },
+    { amount: 2, paymentType: "cash", commission: 0, commissionCompanyName: null, note: null },
+    { amount: 20, paymentType: "card", commission: 0, commissionCompanyName: null, note: null },
+    { amount: 30, paymentType: "card", commission: 0, commissionCompanyName: null, note: null },
   ]);
 });
 
