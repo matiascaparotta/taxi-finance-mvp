@@ -6,6 +6,7 @@ import {
   paginateTrips,
   sanitizeTripForSharing,
 } from "../src/utils/createWorkDayShareCard.js";
+import { getPngDimensions } from "../src/utils/createWorkDaySharePdf.js";
 import { getDailySettlementShareData } from "../src/utils/getDailySettlementShareData.js";
 import fs from "node:fs";
 import path from "node:path";
@@ -60,12 +61,21 @@ test("conserva comisión, empresa y propina para el control del jefe", () => {
   );
 });
 
-test("el perfil diario comparte resumen y páginas de viajes", () => {
+test("el perfil diario comparte resumen y páginas de viajes en un único PDF", () => {
   assert.equal(typeof createWorkDayShareCard, "function");
   assert.match(shareComponent, /createWorkDayShareCard/);
   assert.match(shareComponent, /createWorkDayShareCards/);
-  assert.match(shareComponent, /Compartir resumen y viajes/);
-  assert.match(shareComponent, /Resumen primero y control detallado después/);
+  assert.match(shareComponent, /createWorkDaySharePdf/);
+  assert.match(shareComponent, /Compartir jornada en PDF/);
+  assert.match(shareComponent, /La portada muestra el resumen y después aparecen todos los viajes/);
+});
+
+test("lee las dimensiones de cada página PNG antes de incorporarla al PDF", () => {
+  const png = new Uint8Array(24);
+  png.set([137, 80, 78, 71, 13, 10, 26, 10]);
+  new DataView(png.buffer).setUint32(16, 1080);
+  new DataView(png.buffer).setUint32(20, 1920);
+  assert.deepEqual(getPngDimensions(png), { width: 1080, height: 1920 });
 });
 
 test("prepara el desglose y el resultado para la imagen diaria", () => {

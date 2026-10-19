@@ -5,6 +5,7 @@ import {
   createWorkDayShareCard,
   createWorkDayShareCards,
 } from "../utils/createWorkDayShareCard";
+import { createWorkDaySharePdf } from "../utils/createWorkDaySharePdf";
 import {
   getOrganizationFileSlug,
   getWorkDayOrganizationName,
@@ -17,7 +18,7 @@ function WorkDayShareCard({
   onCopySummary,
   copyMessage = "",
 }) {
-  const [shareFiles, setShareFiles] = useState([]);
+  const [shareFile, setShareFile] = useState(null);
   const [message, setMessage] = useState("");
   const [isPreparing, setIsPreparing] = useState(true);
   const [isSharing, setIsSharing] = useState(false);
@@ -33,26 +34,35 @@ function WorkDayShareCard({
     const prepareShareCard = async () => {
       try {
         setIsPreparing(true);
-        setShareFiles([]);
+        setShareFile(null);
         setMessage("");
 
-        const blobs = summary.dailySettlement
-          ? await createWorkDayShareCards(workDay, summary, trips)
-          : [await createWorkDayShareCard(workDay, summary)];
+        const dateKey = String(workDay.date).split("T")[0];
+        const organizationSlug = getOrganizationFileSlug(workDay);
+        if (summary.dailySettlement) {
+          const pages = await createWorkDayShareCards(workDay, summary, trips);
+          const pdf = await createWorkDaySharePdf(pages);
+          if (!isCancelled) {
+            setShareFile(new File(
+              [pdf],
+              `${organizationSlug}-${dateKey}-jornada-completa.pdf`,
+              { type: "application/pdf" }
+            ));
+          }
+          return;
+        }
+
+        const blob = await createWorkDayShareCard(workDay, summary);
 
         if (isCancelled) {
           return;
         }
 
-        const dateKey = String(workDay.date).split("T")[0];
-        const organizationSlug = getOrganizationFileSlug(workDay);
-        setShareFiles(blobs.map((blob, index) => new File(
+        setShareFile(new File(
           [blob],
-          index === 0
-            ? `${organizationSlug}-${dateKey}-resumen.png`
-            : `${organizationSlug}-${dateKey}-viajes-${index}.png`,
+          `${organizationSlug}-${dateKey}-resumen.png`,
           { type: "image/png" }
-        )));
+        ));
       } catch (error) {
         if (!isCancelled) {
           setMessage(error.message);
@@ -72,22 +82,20 @@ function WorkDayShareCard({
     };
   }, [workDay, summary, trips]);
 
-  const downloadShareFiles = () => {
-    shareFiles.forEach((file) => {
-      const downloadUrl = URL.createObjectURL(file);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = file.name;
-      link.click();
-      URL.revokeObjectURL(downloadUrl);
-    });
+  const downloadShareFile = () => {
+    const downloadUrl = URL.createObjectURL(shareFile);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = shareFile.name;
+    link.click();
+    URL.revokeObjectURL(downloadUrl);
   };
 
   const handleShare = async () => {
     if (
       sharingLockRef.current ||
       isPreparing ||
-      shareFiles.length === 0
+      !shareFile
     ) {
       return;
     }
@@ -99,25 +107,21 @@ function WorkDayShareCard({
     try {
       if (
         navigator.share &&
-        navigator.canShare?.({ files: shareFiles })
+        navigator.canShare?.({ files: [shareFile] })
       ) {
         await navigator.share({
-          files: shareFiles,
+          files: [shareFile],
           title: `Resumen de jornada — ${getWorkDayOrganizationName(
             workDay
           )}`,
         });
-        setMessage(
-          `${shareFiles.length} ${
-            shareFiles.length === 1 ? "imagen compartida" : "imágenes compartidas"
-          }`
-        );
+        setMessage(summary.dailySettlement ? "PDF compartido" : "Imagen compartida");
         return;
       }
 
-      downloadShareFiles();
+      downloadShareFile();
       setMessage(
-        "Tu dispositivo no permite compartir archivos directamente. Las imágenes se descargaron."
+        `Tu dispositivo no permite compartir archivos directamente. El ${summary.dailySettlement ? "PDF" : "resumen"} se descargó.`
       );
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -129,11 +133,11 @@ function WorkDayShareCard({
     }
   };
 
-  const handleSaveImages = () => {
+  const handleSaveFile = () => {
     if (
       sharingLockRef.current ||
       isPreparing ||
-      shareFiles.length === 0
+      !shareFile
     ) {
       return;
     }
@@ -143,14 +147,10 @@ function WorkDayShareCard({
     setMessage("");
 
     try {
-      downloadShareFiles();
-      setMessage(
-        `${shareFiles.length} ${
-          shareFiles.length === 1 ? "imagen guardada" : "imágenes guardadas"
-        }`
-      );
+      downloadShareFile();
+      setMessage(summary.dailySettlement ? "PDF guardado" : "Imagen guardada");
     } catch {
-      setMessage("No se pudieron guardar las imágenes");
+      setMessage("No se pudo guardar el archivo");
     } finally {
       sharingLockRef.current = false;
       setIsSavingImages(false);
@@ -164,7 +164,7 @@ function WorkDayShareCard({
           Compartir jornada
         </p>
         <h3 className="mt-1 text-lg font-bold text-white">
-          Imagen o texto, como prefieras
+          Archivo completo o texto, como prefieras
         </h3>
         <p className="mt-1 text-sm text-slate-400">
           {summary.dailySettlement
@@ -173,32 +173,32 @@ function WorkDayShareCard({
         </p>
       </div>
 
-      <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl">↗</div><div><p className="text-sm font-bold text-white">{summary.dailySettlement ? `${shareFiles.length || 2} imágenes organizadas` : "Una imagen de resumen"}</p><p className="text-xs text-slate-400">{summary.dailySettlement ? "Resumen primero y control detallado después" : "Lista para enviar o guardar en el móvil"}</p></div></div>
+      <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl">↗</div><div><p className="text-sm font-bold text-white">{summary.dailySettlement ? "Un único PDF ordenado" : "Una imagen de resumen"}</p><p className="text-xs text-slate-400">{summary.dailySettlement ? "La portada muestra el resumen y después aparecen todos los viajes" : "Lista para enviar o guardar en el móvil"}</p></div></div>
 
       <Button
         onClick={handleShare}
         disabled={isPreparing || isSharing || isSavingImages}
       >
         {isPreparing
-          ? "Preparando imágenes..."
+          ? summary.dailySettlement ? "Preparando PDF..." : "Preparando imagen..."
           : isSharing
             ? "Abriendo opciones..."
             : summary.dailySettlement
-              ? "Compartir resumen y viajes"
+              ? "Compartir jornada en PDF"
               : "Compartir resumen"}
       </Button>
 
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={handleSaveImages}
+          onClick={handleSaveFile}
           disabled={isPreparing || isSharing || isSavingImages}
           className="rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99] disabled:cursor-wait disabled:opacity-50"
         >
           {isSavingImages
             ? "Guardando..."
             : summary.dailySettlement
-              ? "Guardar imágenes"
+              ? "Guardar PDF"
               : "Guardar imagen"}
         </button>
 
