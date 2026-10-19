@@ -12,6 +12,7 @@ import {
   deleteWorkDay,
   getWorkDayById,
 } from "../services/workDayService";
+import { registerDailySettlementAdjustment } from "../services/dailySettlementService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 
@@ -102,6 +103,16 @@ function WorkDayDetailPage() {
     setTimeout(() => {
       setCopyMessage("");
     }, 2500);
+  };
+
+  const handleRegisterSettlementAdjustment = async (adjustmentData) => {
+    const result = await registerDailySettlementAdjustment({
+      ...adjustmentData,
+      workDayId: Number(id),
+    });
+    const refreshedSummary = await getWorkDaySummary(id);
+    setSummary(refreshedSummary);
+    return result;
   };
 
   const handleDeleteWorkDay = async () => {
@@ -359,6 +370,11 @@ function WorkDayDetailPage() {
           onEditTrip={
             workDay.canCorrect
               ? (trip) => navigate(`/trips/${trip.id}/edit`)
+              : null
+          }
+          onRegisterSettlementAdjustment={
+            summary.dailySettlement && (workDay.canAdjust ?? workDay.canManage)
+              ? handleRegisterSettlementAdjustment
               : null
           }
         />
