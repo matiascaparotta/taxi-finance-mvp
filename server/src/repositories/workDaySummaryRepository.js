@@ -71,8 +71,11 @@ const getWorkDayWithTrips = async (workDayId) => {
        COALESCE((
          SELECT SUM(all_snapshots.balance)
          FROM daily_settlement_snapshots AS all_snapshots
+         JOIN work_days AS all_work_days
+           ON all_work_days.id = all_snapshots.work_day_id
          WHERE all_snapshots.organization_id = current_snapshot.organization_id
            AND all_snapshots.driver_user_id = current_snapshot.driver_user_id
+           AND all_work_days.date <= current_work_day.date
        ), 0) + COALESCE((
          SELECT SUM(
            CASE
@@ -83,8 +86,11 @@ const getWorkDayWithTrips = async (workDayId) => {
          FROM daily_settlement_payments AS payments
          WHERE payments.organization_id = current_snapshot.organization_id
            AND payments.driver_user_id = current_snapshot.driver_user_id
+           AND DATE(payments.created_at) <= current_work_day.date
        ), 0) AS pendingBalance
      FROM daily_settlement_snapshots AS current_snapshot
+     JOIN work_days AS current_work_day
+       ON current_work_day.id = current_snapshot.work_day_id
      WHERE current_snapshot.work_day_id = ?`,
     [workDayId]
   );
@@ -100,10 +106,12 @@ const getWorkDayWithTrips = async (workDayId) => {
          created_at AS createdAt
        FROM daily_settlement_payments
        WHERE organization_id = ? AND driver_user_id = ?
+         AND DATE(created_at) <= ?
        ORDER BY created_at DESC, id DESC`,
       [
         workDayRows[0].organizationId,
         workDayRows[0].driverUserId,
+        workDayRows[0].date,
       ]
     );
     dailySettlementPayments = paymentRows;

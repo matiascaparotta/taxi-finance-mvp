@@ -402,7 +402,7 @@ async function createSummaryCard(workDay, summary) {
 
     drawText(
       context,
-      "SALDO PENDIENTE ACUMULADO",
+      "SALDO AL FINALIZAR ESTA JORNADA",
       110,
       resultTop + 188,
       "700 22px Arial",

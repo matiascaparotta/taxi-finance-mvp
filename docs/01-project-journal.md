@@ -1443,6 +1443,11 @@ falsea una comisión de viaje ni se reduce la facturación. La jornada conserva
 a pagar por el jefe. La migración `027` mantiene cero como valor para todas las
 jornadas anteriores.
 
+Se precisó además la lectura histórica del saldo acumulado: cada detalle diario
+queda referido al cierre de esa fecha. Una jornada anterior ya no incorpora
+jornadas ni pagos posteriores, aunque la jornada más reciente continúe mostrando
+el estado acumulado alcanzado hasta ese día.
+
 🚧 Sprint en desarrollo.
 
 ---

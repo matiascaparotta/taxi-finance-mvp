@@ -119,6 +119,6 @@ test("incorpora la liquidación diaria completa al texto", () => {
   assert.match(text, /BASE PARA REPARTIR: 219,02 €/);
   assert.match(text, /TOTAL QUE TE CORRESPONDE: 138,52 €/);
   assert.match(text, /RESULTADO DE ESTA JORNADA\nEL JEFE DEBE PAGARTE: 33,22 €/);
-  assert.match(text, /SALDO PENDIENTE ACUMULADO\nEL JEFE TE DEBE: 23,22 €/);
+  assert.match(text, /SALDO AL FINALIZAR ESTA JORNADA\nEL JEFE TE DEBE: 23,22 €/);
   assert.equal((text.match(/^GASOLINA:/gm) || []).length, 1);
 });

@@ -65,6 +65,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   las reglas aplicadas a cada jornada aunque la configuración cambie después.
 - Saldo pendiente acumulado por conductor y organización, separado visualmente
   de la liquidación correspondiente al día consultado.
+- El detalle histórico congela ese saldo al finalizar la jornada consultada;
+  las jornadas y pagos posteriores no alteran lo que se veía en esa fecha.
 - Registro de pagos completos o parciales con teclado monetario, dirección
   automática, límite contra el saldo real e idempotencia frente a duplicados.
 - Migración aditiva `026` para conservar los pagos como movimientos separados

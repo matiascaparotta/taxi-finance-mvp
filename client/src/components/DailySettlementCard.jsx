@@ -151,7 +151,7 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
 
       <div className={`mt-3 rounded-2xl border p-5 ${pending.tone}`}>
         <p className="text-xs font-black tracking-[0.16em]">
-          SALDO PENDIENTE ACUMULADO
+          SALDO AL FINALIZAR ESTA JORNADA
         </p>
         <div className="mt-2 flex items-end justify-between gap-4">
           <p className="text-base font-black text-white">{pending.label}</p>
@@ -160,7 +160,7 @@ function DailySettlementCard({ settlement, onRegisterPayment = null }) {
           </p>
         </div>
         <p className="mt-2 text-sm opacity-80">
-          Incluye tus jornadas cerradas y los pagos registrados.
+          Incluye únicamente jornadas y pagos registrados hasta esta fecha.
         </p>
 
         {onRegisterPayment && pendingBalance !== 0 && !showPayment && (

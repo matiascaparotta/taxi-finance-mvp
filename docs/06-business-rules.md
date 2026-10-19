@@ -691,6 +691,9 @@ El saldo pendiente acumulado suma con su signo las instantáneas cerradas de la
 misma organización y del mismo conductor. Un resultado positivo significa que
 el jefe debe pagar al conductor; uno negativo, que el conductor debe entregar
 al jefe. El resultado diario y el acumulado se muestran en bloques separados.
+En el detalle de una jornada histórica, el acumulado se calcula únicamente con
+jornadas y pagos cuya fecha sea igual o anterior a esa jornada. Nunca debe
+actualizar una jornada pasada con actividad registrada después.
 
 Un pago es un movimiento independiente y nunca modifica ni elimina una
 instantánea diaria. Si el saldo es positivo se registra como dinero recibido
