@@ -77,6 +77,9 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   mes y personalizada con la licencia de la organización.
 - El promedio diario del perfil de Alberto muestra su ganancia media real por
   jornada y excluye tanto la facturación total como el reintegro de gasolina.
+- Rediseño compartido del detalle de jornada para Matías y Alberto: facturación
+  total prioritaria, viajes en lista cronológica compacta, ajustes secundarios
+  y corrección mediante una acción discreta integrada en cada fila.
 - Comparación con el mes calendario anterior para jornadas, facturación neta y
   ganancia del conductor, visible únicamente cuando existe una base real.
 - Histórico mensual sin límite al año actual, mediante un selector liviano que

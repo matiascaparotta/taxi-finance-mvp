@@ -57,45 +57,49 @@ function WorkDayTicket({
     ? sortedTrips
     : sortedTrips.slice(0, INITIAL_VISIBLE_TRIPS);
 
-  const renderTripContent = (trip) => (
-    <>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold text-white">
-            {formatTripTime(trip)}
-          </p>
-          <p className="mt-1 text-xs text-slate-400">
+  const renderTripContent = (trip) => {
+    const commission = Number(trip.commission || 0);
+    const tip = Number(trip.tip || 0);
+    const hasAdjustments = commission > 0 || tip > 0;
+
+    return (
+      <div className="grid grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-3 py-3.5 sm:grid-cols-[4rem_minmax(0,1fr)_auto_auto]">
+        <p className="text-base font-black tabular-nums text-white">
+          {formatTripTime(trip)}
+        </p>
+
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-slate-200">
             {trip.paymentType === "cash" ? "Efectivo" : "Datáfono"}
           </p>
+          {hasAdjustments && (
+            <p className="mt-1 truncate text-xs text-sky-300">
+              {commission > 0 && `Comisión ${formatCurrency(commission)}${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""}`}
+              {commission > 0 && tip > 0 && " · "}
+              {tip > 0 && `Propina ${formatCurrency(tip)}`}
+            </p>
+          )}
         </div>
-        <p className="text-lg font-bold text-white">
+
+        <p className="whitespace-nowrap text-right text-base font-black tabular-nums text-white sm:text-lg">
           {formatCurrency(trip.amount)}
         </p>
+
+        {onEditTrip && (
+          <button
+            type="button"
+            onClick={() => onEditTrip(trip)}
+            aria-label={`Corregir viaje de ${formatCurrency(trip.amount)}`}
+            title="Corregir viaje"
+            className="col-start-3 row-start-2 justify-self-end rounded-lg border border-slate-700 bg-slate-950/50 p-2 text-slate-400 transition hover:border-emerald-500/40 hover:text-emerald-300 sm:col-start-4 sm:row-start-1 sm:px-3"
+          >
+            <span aria-hidden="true">✎</span>
+            <span className="sr-only sm:not-sr-only sm:ml-1.5 sm:text-xs sm:font-bold">Corregir</span>
+          </button>
+        )}
       </div>
-
-      {(Number(trip.commission || 0) > 0 ||
-        Number(trip.tip || 0) > 0) && (
-        <div className="mt-3 space-y-1 border-t border-slate-800 pt-3 text-xs text-slate-400">
-          {Number(trip.commission || 0) > 0 && (
-            <p>Comisión{trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""}: {formatCurrency(trip.commission)}</p>
-          )}
-          {Number(trip.tip || 0) > 0 && (
-            <p>Propina: {formatCurrency(trip.tip)}</p>
-          )}
-        </div>
-      )}
-
-      {onEditTrip && (
-        <button
-          type="button"
-          onClick={() => onEditTrip(trip)}
-          className="mt-3 w-full rounded-xl border border-slate-700 px-3 py-2 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
-        >
-          Corregir viaje
-        </button>
-      )}
-    </>
-  );
+    );
+  };
 
   return (
     <Card className="border-emerald-500/30 bg-slate-950">
@@ -133,31 +137,45 @@ function WorkDayTicket({
         </div>
       </section>
 
+      <section className="mt-4 grid grid-cols-[0.8fr_1.2fr] gap-3">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+          <p className="text-xs text-slate-400">Viajes</p>
+          <p className="mt-1 text-2xl font-black text-white">{summary.tripCount}</p>
+        </div>
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-emerald-300">Facturación total</p>
+          <p className="mt-1 text-2xl font-black tabular-nums text-white sm:text-3xl">
+            {formatCurrency(summary.totalRevenue)}
+          </p>
+        </div>
+      </section>
+
       <section className="mt-7">
-        <h3 className="text-xs font-bold tracking-[0.18em] text-emerald-300">
-          VIAJES
-        </h3>
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h3 className="text-xs font-bold tracking-[0.18em] text-emerald-300">VIAJES</h3>
+            <p className="mt-1 text-sm text-slate-400">Ordenados por horario</p>
+          </div>
+          <p className="text-xs font-bold text-slate-500">{summary.cashTripCount} efectivo · {summary.cardTripCount} datáfono</p>
+        </div>
 
         {sortedTrips.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-sm text-slate-400">
             No se registraron viajes en esta jornada.
           </p>
         ) : (
-          <div className="mt-3 space-y-3">
-            {visibleTrips.map((trip) => (
-              <div
-                key={trip.id}
-                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
-              >
-                {renderTripContent(trip)}
-              </div>
-            ))}
+          <div className="mt-3">
+            <div className="divide-y divide-slate-800 rounded-2xl border border-slate-800 bg-slate-900/70 px-3 sm:px-4">
+              {visibleTrips.map((trip) => (
+                <div key={trip.id}>{renderTripContent(trip)}</div>
+              ))}
+            </div>
 
             {hasHiddenTrips && (
               <button
                 type="button"
                 onClick={() => setShowAllTrips((current) => !current)}
-                className="w-full rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
+                className="mt-3 w-full rounded-2xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:border-emerald-500/40 hover:text-emerald-300 active:scale-[0.99]"
               >
                 {showAllTrips
                   ? "Mostrar menos"
@@ -172,32 +190,22 @@ function WorkDayTicket({
         <h3 className="text-xs font-bold tracking-[0.18em] text-emerald-300">
           RESUMEN
         </h3>
-        <div className="mt-3 divide-y divide-slate-800 rounded-2xl border border-slate-800 bg-slate-900/70 px-4">
-          <div className="flex items-center justify-between py-3">
-            <p className="text-sm text-slate-400">Viajes</p>
-            <p className="font-semibold text-white">
-              {summary.tripCount} ({summary.cashTripCount} E |{" "}
-              {summary.cardTripCount} D)
-            </p>
+        <div className="mt-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Efectivo</p>
+              <p className="mt-1 font-bold tabular-nums text-white">{formatCurrency(displayedCash)}</p>
+            </div>
+            <div className="rounded-xl bg-slate-950/60 p-3">
+              <p className="text-xs text-slate-400">Datáfono</p>
+              <p className="mt-1 font-bold tabular-nums text-white">{formatCurrency(summary.card)}</p>
+            </div>
           </div>
-          <div className="flex items-center justify-between py-3">
-            <p className="text-sm text-slate-400">Efectivo</p>
-            <p className="font-semibold text-white">
-              {formatCurrency(displayedCash)}
-            </p>
+          <div className="mt-3 flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+            <p className="text-sm font-bold text-emerald-200">Facturación total</p>
+            <p className="text-xl font-black tabular-nums text-white">{formatCurrency(summary.totalRevenue)}</p>
           </div>
-          <div className="flex items-center justify-between py-3">
-            <p className="text-sm text-slate-400">Datáfono</p>
-            <p className="font-semibold text-white">
-              {formatCurrency(summary.card)}
-            </p>
-          </div>
-          <div className="flex items-center justify-between py-3">
-            <p className="text-sm text-slate-400">Facturación</p>
-            <p className="text-lg font-bold text-white">
-              {formatCurrency(summary.totalRevenue)}
-            </p>
-          </div>
+          <div className="mt-3 divide-y divide-slate-800">
           {fuelOwn > 0 && (
             <div className="flex items-center justify-between py-3">
               <p className="text-sm text-slate-400">Gasolina</p>
@@ -214,6 +222,7 @@ function WorkDayTicket({
               </p>
             </div>
           )}
+          </div>
         </div>
       </section>
 

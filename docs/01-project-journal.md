@@ -1430,6 +1430,12 @@ El promedio destacado del resumen mensual de Alberto se corrigió para mostrar
 su ganancia acumulada dividida entre las jornadas cerradas. Ya no utiliza la
 facturación del taxi y tampoco considera el reintegro de gasolina como ingreso.
 
+El detalle cerrado de jornada se reorganizó después de validar un boceto visual.
+La misma tarjeta sirve a Matías y Alberto: destaca primero cantidad de viajes y
+facturación total, presenta cada viaje como una fila cronológica compacta y
+convierte `Corregir` en una acción secundaria. El resumen queda separado y la
+liquidación diaria conserva su propio resultado destacado cuando corresponde.
+
 🚧 Sprint en desarrollo.
 
 ---

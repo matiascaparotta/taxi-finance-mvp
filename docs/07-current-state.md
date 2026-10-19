@@ -121,6 +121,13 @@ el jefe debe pagar, ámbar cuando el conductor debe entregar y un estado neutro
 cuando no existe diferencia. La tarjeta es compartida por el cierre inmediato
 y el detalle del historial.
 
+El detalle operativo compartido por Matías y Alberto prioriza visualmente la
+facturación total y la cantidad de viajes. Los viajes aparecen como una lista
+cronológica compacta con hora, medio e importe; comisión, empresa y propina son
+secundarios, y la corrección queda integrada como una acción discreta por fila.
+El resumen económico comienza en una tarjeta separada para evitar confundirlo
+con el último viaje.
+
 El flujo de cierre del perfil diario solicita explícitamente el importe manual
 de gasolina y comienza vacío; si no hubo gasto se debe escribir `0`. No ofrece
 reparto de combustible ni cálculo por distancia. La API fuerza toda esa
