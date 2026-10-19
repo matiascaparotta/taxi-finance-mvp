@@ -6,6 +6,7 @@ import {
   createWorkDayShareCards,
 } from "../utils/createWorkDayShareCard";
 import { createWorkDaySharePdf } from "../utils/createWorkDaySharePdf";
+import { getWorkDaySharePdfFileName } from "../utils/getWorkDayShareFileName";
 import {
   getOrganizationFileSlug,
   getWorkDayOrganizationName,
@@ -45,7 +46,7 @@ function WorkDayShareCard({
           if (!isCancelled) {
             setShareFile(new File(
               [pdf],
-              `${organizationSlug}-${dateKey}-jornada-completa.pdf`,
+              getWorkDaySharePdfFileName(workDay),
               { type: "application/pdf" }
             ));
           }

@@ -8,6 +8,7 @@ import {
 } from "../src/utils/createWorkDayShareCard.js";
 import { getPngDimensions } from "../src/utils/createWorkDaySharePdf.js";
 import { getDailySettlementShareData } from "../src/utils/getDailySettlementShareData.js";
+import { getWorkDaySharePdfFileName } from "../src/utils/getWorkDayShareFileName.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -68,6 +69,16 @@ test("el perfil diario comparte resumen y páginas de viajes en un único PDF", 
   assert.match(shareComponent, /createWorkDaySharePdf/);
   assert.match(shareComponent, /Compartir jornada en PDF/);
   assert.match(shareComponent, /La portada muestra el resumen y después aparecen todos los viajes/);
+});
+
+test("nombra el PDF con la jornada, la fecha y la licencia", () => {
+  assert.equal(
+    getWorkDaySharePdfFileName({
+      date: "2026-10-18T00:00:00.000Z",
+      organizationName: "Lic1315",
+    }),
+    "Jornada 18-10-2026 - Lic1315.pdf"
+  );
 });
 
 test("lee las dimensiones de cada página PNG antes de incorporarla al PDF", () => {
