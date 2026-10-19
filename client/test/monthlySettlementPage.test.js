@@ -53,6 +53,8 @@ test("normaliza las fechas SQL antes de presentar cada jornada", () => {
 test("Alberto recibe un resumen mensual propio sin el reparto de Lic249", () => {
   assert.match(page, /isSalariedDriverUser/);
   assert.match(page, /Tus jornadas y tu facturación del mes/);
+  assert.match(page, /Ganancia promedio diaria/);
+  assert.match(page, /dailyMonth\.driverShare/);
   assert.match(page, /Facturación menos combustible/);
   assert.match(page, /LIQUIDACIÓN DIARIA DEL MES/);
   assert.match(page, /Saldo pendiente actual/i);

@@ -166,6 +166,9 @@ function MonthlySettlementPage({ currentUser = null }) {
     : previewMonthlySocialSecurity;
   const [statusText, statusClass] = statusInfo[settlement.status] || statusInfo.EMPTY;
   const dailyMonth = settlement.dailySettlementMonth;
+  const dailyDriverEarningAverage = dailyMonth?.workedDays
+    ? Number(dailyMonth.driverShare || 0) / Number(dailyMonth.workedDays)
+    : 0;
   const monthlyComparison = buildDailyMonthlyComparison(
     settlement,
     previousSettlement
@@ -198,7 +201,7 @@ function MonthlySettlementPage({ currentUser = null }) {
             <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
             <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
             <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
-            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Promedio diario</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.averageDailyRevenue)}</p></div>
+            <div className="rounded-2xl bg-emerald-500/10 p-4"><p className="text-xs text-emerald-300">Ganancia promedio diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(dailyDriverEarningAverage)}</p></div>
           </div>
           <div className="mt-4 rounded-2xl bg-emerald-500/10 p-4">
             <div className="flex items-center justify-between gap-4"><p className="text-sm text-emerald-200">Combustible registrado</p><p className="font-black">{formatCurrency(calculation.fuelOwn)}</p></div>

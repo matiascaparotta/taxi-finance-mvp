@@ -723,6 +723,11 @@ ganancias del conductor y del jefe, reintegro, saldos diarios y pagos realizados
 durante ese mes. El saldo pendiente actual es global y puede incluir meses
 anteriores, por lo que no se presenta como resultado exclusivo del mes.
 
+El promedio diario del conductor representa su ganancia, no la facturación del
+taxi: se obtiene dividiendo la suma de `driver_share` de las instantáneas del mes
+entre sus jornadas cerradas. El reintegro de gasolina no se incluye porque
+recupera un gasto adelantado y no constituye ganancia.
+
 Este resumen mensual puede compartirse como una única imagen aunque el mes siga
 en curso, porque no constituye un nuevo cierre económico: solo representa las
 jornadas ya cerradas. Debe incluir las ganancias de ambas partes, movimientos

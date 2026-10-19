@@ -75,6 +75,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   pagos del mes y saldo pendiente global claramente diferenciados.
 - Tarjeta mensual compartible del perfil diario, disponible también durante el
   mes y personalizada con la licencia de la organización.
+- El promedio diario del perfil de Alberto muestra su ganancia media real por
+  jornada y excluye tanto la facturación total como el reintegro de gasolina.
 - Comparación con el mes calendario anterior para jornadas, facturación neta y
   ganancia del conductor, visible únicamente cuando existe una base real.
 - Histórico mensual sin límite al año actual, mediante un selector liviano que

@@ -1426,6 +1426,10 @@ la parte del jefe. El motor se alineó con esa regla y el importador quedó
 preparado para sincronizar las instantáneas de esas dos jornadas sin duplicar
 viajes ni jornadas.
 
+El promedio destacado del resumen mensual de Alberto se corrigió para mostrar
+su ganancia acumulada dividida entre las jornadas cerradas. Ya no utiliza la
+facturación del taxi y tampoco considera el reintegro de gasolina como ingreso.
+
 🚧 Sprint en desarrollo.
 
 ---
