@@ -52,7 +52,11 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
 - Configuración del perfil diario limitada a Seguridad Social y empresas; la
   API garantiza que la gasolina queda íntegramente a cargo del conductor.
 - Imagen y texto compartibles con el desglose completo de la liquidación diaria
-  y el resultado de quién debe pagar, sin generar imágenes adicionales.
+  y el resultado de quién debe pagar.
+- El perfil diario añade páginas de control con los viajes ordenados por hora.
+  Cada fila identifica método de pago e importe y muestra comisión, empresa y
+  propina solo cuando existen. La última página concilia efectivo, datáfono,
+  ajustes y facturación total con el resumen.
 - El resumen diario compartido diferencia el resultado de esa jornada del saldo
   pendiente acumulado actualizado, sin incluir el historial completo de pagos.
 - Instantánea económica inmutable creada atómicamente con el cierre: conserva

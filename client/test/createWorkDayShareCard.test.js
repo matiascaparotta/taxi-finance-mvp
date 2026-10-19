@@ -18,10 +18,10 @@ const trips = Array.from({ length: 17 }, (_, index) => ({
   id: index + 1,
 }));
 
-test("divide el detalle en páginas de hasta quince viajes", () => {
+test("divide el detalle legible en páginas de hasta once viajes", () => {
   assert.deepEqual(
     paginateTrips(trips).map((page) => page.length),
-    [15, 2]
+    [11, 6]
   );
 });
 
@@ -31,18 +31,19 @@ test("no crea páginas de viajes cuando la jornada está vacía", () => {
 
 test("respeta una página completa sin crear páginas extra", () => {
   assert.deepEqual(
-    paginateTrips(trips.slice(0, 15)).map((page) => page.length),
-    [15]
+    paginateTrips(trips.slice(0, 11)).map((page) => page.length),
+    [11]
   );
 });
 
-test("elimina comisión y propina antes de generar imágenes", () => {
+test("conserva comisión, empresa y propina para el control del jefe", () => {
   assert.deepEqual(
     sanitizeTripForSharing({
       id: 7,
       amount: 20,
       paymentType: "cash",
       commission: 3,
+      commissionCompanyName: "Hotel Centro",
       tip: 2,
       createdAt: "2026-08-03T10:30:00.000Z",
     }),
@@ -50,17 +51,21 @@ test("elimina comisión y propina antes de generar imágenes", () => {
       id: 7,
       amount: 20,
       paymentType: "cash",
+      commission: 3,
+      commissionCompanyName: "Hotel Centro",
+      tip: 2,
       createdAt: "2026-08-03T10:30:00.000Z",
       created_at: undefined,
     }
   );
 });
 
-test("la interfaz comparte solo el resumen sin páginas de viajes", () => {
+test("el perfil diario comparte resumen y páginas de viajes", () => {
   assert.equal(typeof createWorkDayShareCard, "function");
   assert.match(shareComponent, /createWorkDayShareCard/);
-  assert.match(shareComponent, /Una imagen de resumen/);
-  assert.doesNotMatch(shareComponent, /previewUrls|página de viajes|Compartir.*imágenes/);
+  assert.match(shareComponent, /createWorkDayShareCards/);
+  assert.match(shareComponent, /Compartir resumen y viajes/);
+  assert.match(shareComponent, /Resumen primero y control detallado después/);
 });
 
 test("prepara el desglose y el resultado para la imagen diaria", () => {

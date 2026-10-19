@@ -217,6 +217,8 @@ Su prioridad se encuentra definida por el Roadmap oficial del proyecto.
 - [x] Resumen mensual del perfil de liquidación diaria.
 - [x] Compartir diariamente la liquidación y el saldo pendiente acumulado.
 - [x] Compartir el resumen mensual del perfil de liquidación diaria.
+- [x] Compartir junto al cierre diario el detalle cronológico de viajes, con
+  método de pago, comisión, empresa, propina y control final de totales.
 - [x] Liquidación mensual.
 - [x] Liquidación diaria.
 - [x] Histórico mensual navegable entre años.

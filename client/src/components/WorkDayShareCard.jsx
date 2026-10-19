@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 import Button from "./ui/Button";
-import { createWorkDayShareCard } from "../utils/createWorkDayShareCard";
+import {
+  createWorkDayShareCard,
+  createWorkDayShareCards,
+} from "../utils/createWorkDayShareCard";
 import {
   getOrganizationFileSlug,
   getWorkDayOrganizationName,
@@ -10,6 +13,7 @@ import {
 function WorkDayShareCard({
   workDay,
   summary,
+  trips = [],
   onCopySummary,
   copyMessage = "",
 }) {
@@ -32,10 +36,9 @@ function WorkDayShareCard({
         setShareFiles([]);
         setMessage("");
 
-        const blob = await createWorkDayShareCard(
-          workDay,
-          summary
-        );
+        const blobs = summary.dailySettlement
+          ? await createWorkDayShareCards(workDay, summary, trips)
+          : [await createWorkDayShareCard(workDay, summary)];
 
         if (isCancelled) {
           return;
@@ -43,11 +46,13 @@ function WorkDayShareCard({
 
         const dateKey = String(workDay.date).split("T")[0];
         const organizationSlug = getOrganizationFileSlug(workDay);
-        setShareFiles([new File(
+        setShareFiles(blobs.map((blob, index) => new File(
           [blob],
-          `${organizationSlug}-${dateKey}-resumen.png`,
+          index === 0
+            ? `${organizationSlug}-${dateKey}-resumen.png`
+            : `${organizationSlug}-${dateKey}-viajes-${index}.png`,
           { type: "image/png" }
-        )]);
+        )));
       } catch (error) {
         if (!isCancelled) {
           setMessage(error.message);
@@ -65,7 +70,7 @@ function WorkDayShareCard({
       isCancelled = true;
 
     };
-  }, [workDay, summary]);
+  }, [workDay, summary, trips]);
 
   const downloadShareFiles = () => {
     shareFiles.forEach((file) => {
@@ -162,11 +167,13 @@ function WorkDayShareCard({
           Imagen o texto, como prefieras
         </h3>
         <p className="mt-1 text-sm text-slate-400">
-          Un resumen compacto. El detalle completo permanece en TaxFin.
+          {summary.dailySettlement
+            ? "Liquidación y viajes ordenados por hora para controlar cada importe."
+            : "Un resumen compacto. El detalle completo permanece en TaxFin."}
         </p>
       </div>
 
-      <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl">↗</div><div><p className="text-sm font-bold text-white">Una imagen de resumen</p><p className="text-xs text-slate-400">Lista para enviar o guardar en el móvil</p></div></div>
+      <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-xl">↗</div><div><p className="text-sm font-bold text-white">{summary.dailySettlement ? `${shareFiles.length || 2} imágenes organizadas` : "Una imagen de resumen"}</p><p className="text-xs text-slate-400">{summary.dailySettlement ? "Resumen primero y control detallado después" : "Lista para enviar o guardar en el móvil"}</p></div></div>
 
       <Button
         onClick={handleShare}
@@ -176,7 +183,9 @@ function WorkDayShareCard({
           ? "Preparando imágenes..."
           : isSharing
             ? "Abriendo opciones..."
-            : "Compartir resumen"}
+            : summary.dailySettlement
+              ? "Compartir resumen y viajes"
+              : "Compartir resumen"}
       </Button>
 
       <div className="grid grid-cols-2 gap-3">
@@ -188,7 +197,9 @@ function WorkDayShareCard({
         >
           {isSavingImages
             ? "Guardando..."
-            : "Guardar imagen"}
+            : summary.dailySettlement
+              ? "Guardar imágenes"
+              : "Guardar imagen"}
         </button>
 
         <button

@@ -129,9 +129,13 @@ compartida. La configuración laboral dejó de editar tarifas por kilómetro y s
 autoriza por `DAILY_50_50`, no por el nombre de Alberto o de Lic1315.
 
 El resumen compartible del perfil diario incorpora la misma liquidación en sus
-dos formatos. El texto incluye el desglose y la dirección del saldo. La imagen
-mantiene una única tarjeta: resumen operativo arriba, liquidación compacta
-debajo y resultado destacado en azul o ámbar. Tanto la imagen como el texto
+dos formatos. El texto incluye el desglose y la dirección del saldo. La primera
+imagen mantiene una única tarjeta: resumen operativo arriba, liquidación compacta
+debajo y resultado destacado en azul o ámbar. Se añaden después páginas de
+control con hasta once viajes ordenados cronológicamente. Cada fila prioriza
+hora, método e importe y muestra comisión con empresa y propina únicamente
+cuando existen. La última página concilia cantidad y total por método,
+comisiones, propinas y facturación comprobada. Tanto las imágenes como el texto
 distinguen el resultado de la jornada del saldo pendiente acumulado después de
 los pagos; no incorporan el historial de movimientos. La gasolina no se duplica
 fuera de la sección diaria. Los formatos de Lic249 permanecen sin cambios.

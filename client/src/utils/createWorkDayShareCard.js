@@ -5,7 +5,7 @@ import { getWorkDayOrganizationName } from "../config/branding.js";
 import { getDailySettlementShareData } from "./getDailySettlementShareData.js";
 
 const CARD_WIDTH = 1080;
-const TRIPS_PER_PAGE = 15;
+const TRIPS_PER_PAGE = 11;
 const TRIPS_PAGE_HEIGHT = 1920;
 const COLORS = {
   background: "#020617",
@@ -434,7 +434,9 @@ async function createTripsCard(
   workDay,
   trips,
   pageIndex,
-  totalPages
+  totalPages,
+  allTrips,
+  summary
 ) {
   const { canvas, context } = createCanvas(TRIPS_PAGE_HEIGHT);
 
@@ -464,6 +466,7 @@ async function createTripsCard(
   let tripTop = 275;
 
   trips.forEach((trip) => {
+    const hasAdjustments = Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0;
     drawPanel(context, 70, tripTop, 940, 92);
     drawText(
       context,
@@ -491,8 +494,42 @@ async function createTripsCard(
       "right"
     );
 
+    if (hasAdjustments) {
+      const adjustments = [
+        Number(trip.commission || 0) > 0
+          ? `Comisión${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""} −${formatCurrency(trip.commission)}`
+          : null,
+        Number(trip.tip || 0) > 0
+          ? `Propina +${formatCurrency(trip.tip)}`
+          : null,
+      ].filter(Boolean).join("   ·   ");
+      drawText(context, adjustments, 245, tripTop + 61, "400 19px Arial", COLORS.sky);
+    }
+
     tripTop += 102;
   });
+
+  if (pageIndex === totalPages - 1) {
+    const cashTrips = allTrips.filter((trip) => trip.paymentType === "cash");
+    const cardTrips = allTrips.filter((trip) => trip.paymentType !== "cash");
+    const totalCommission = allTrips.reduce((total, trip) => total + Number(trip.commission || 0), 0);
+    const totalTip = allTrips.reduce((total, trip) => total + Number(trip.tip || 0), 0);
+    const totalsTop = Math.max(tripTop + 28, 1450);
+    drawText(context, "CONTROL FINAL", 70, totalsTop, "700 27px Arial", COLORS.emerald);
+    drawPanel(context, 70, totalsTop + 48, 940, 330, true);
+    const rows = [
+      [`Efectivo · ${cashTrips.length} viajes`, summary.cash],
+      [`Datáfono · ${cardTrips.length} viajes`, summary.card],
+      ["Comisiones", totalCommission],
+      ["Propinas", totalTip],
+      ["FACTURACIÓN COMPROBADA", summary.totalRevenue],
+    ];
+    rows.forEach(([label, value], index) => {
+      const rowTop = totalsTop + 72 + index * 52;
+      drawText(context, label, 110, rowTop, index === 4 ? "700 25px Arial" : "400 23px Arial", index === 4 ? COLORS.text : COLORS.muted);
+      drawText(context, formatCurrency(value), 970, rowTop, index === 4 ? "700 30px Arial" : "700 25px Arial", COLORS.text, "right");
+    });
+  }
 
   return await canvasToBlob(canvas);
 }
@@ -513,7 +550,9 @@ export async function createWorkDayShareCards(
         workDay,
         pageTrips,
         pageIndex,
-        tripPages.length
+        tripPages.length,
+        sortedTrips,
+        summary
       )
     )
   );
@@ -526,6 +565,9 @@ export function sanitizeTripForSharing(trip = {}) {
     id: trip.id,
     amount: trip.amount,
     paymentType: trip.paymentType,
+    commission: trip.commission,
+    commissionCompanyName: trip.commissionCompanyName,
+    tip: trip.tip,
     createdAt: trip.createdAt,
     created_at: trip.created_at,
   };
