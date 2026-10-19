@@ -1,9 +1,9 @@
 const repository = require("../repositories/driverSettingsRepository");
 
-const requireAlbertoScope = (auth) => {
+const requireDailySettlementScope = (auth) => {
   const isDriver = Boolean(auth?.roles?.isDriver ?? auth?.isDriver);
   const isOwner = Boolean(auth?.roles?.isOwner ?? auth?.isOwner);
-  if (auth?.accessMode !== "user" || auth?.organizationName !== "Lic1315" || !isDriver || isOwner) {
+  if (auth?.accessMode !== "user" || auth?.settlementMode !== "DAILY_50_50" || !isDriver || isOwner) {
     throw new Error("Esta configuración pertenece al perfil asalariado");
   }
   return { organizationId: Number(auth.organizationId), userId: Number(auth.userId) };
@@ -32,7 +32,7 @@ const companyInput = (input) => {
 };
 
 const getDriverSettings = async (auth) => {
-  const scope = requireAlbertoScope(auth);
+  const scope = requireDailySettlementScope(auth);
   const [settings, companies] = await Promise.all([
     repository.getSettings(scope.organizationId, scope.userId),
     repository.listCompanies(scope.organizationId, scope.userId),
@@ -46,7 +46,7 @@ const getDriverSettings = async (auth) => {
 };
 
 const updateDriverSettings = async (input, auth) => {
-  const scope = requireAlbertoScope(auth);
+  const scope = requireDailySettlementScope(auth);
   const fuelCalculationMode = input?.fuelCalculationMode || "ACTUAL_LOAD";
   if (!FUEL_MODES.has(fuelCalculationMode)) {
     throw new Error("El modo de combustible no es válido");
@@ -62,12 +62,12 @@ const updateDriverSettings = async (input, auth) => {
 };
 
 const createCompany = async (input, auth) => {
-  const scope = requireAlbertoScope(auth);
+  const scope = requireDailySettlementScope(auth);
   return repository.createCompany(scope.organizationId, scope.userId, companyInput(input));
 };
 
 const updateCompany = async (companyId, input, auth) => {
-  const scope = requireAlbertoScope(auth);
+  const scope = requireDailySettlementScope(auth);
   const status = input?.status || "ACTIVE";
   if (!['ACTIVE', 'INACTIVE'].includes(status)) throw new Error("El estado de la empresa no es válido");
   const updated = await repository.updateCompany(scope.organizationId, scope.userId, companyId, { ...companyInput(input), status });
@@ -75,4 +75,4 @@ const updateCompany = async (companyId, input, auth) => {
   return updated;
 };
 
-module.exports = { createCompany, getDriverSettings, requireAlbertoScope, updateCompany, updateDriverSettings };
+module.exports = { createCompany, getDriverSettings, requireDailySettlementScope, updateCompany, updateDriverSettings };
