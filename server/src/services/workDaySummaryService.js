@@ -57,6 +57,7 @@ const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
 
 const buildDailySettlement = ({
   auth,
+  workDayId,
   dailySettlementSnapshot,
   dailySettlementPayments = [],
   dailySettlementAdjustments = [],
@@ -66,6 +67,22 @@ const buildDailySettlement = ({
   totalRevenue,
 }) => {
   if (dailySettlementSnapshot) {
+    const currentDayAdjustments = dailySettlementAdjustments.filter(
+      (adjustment) => Number(adjustment.workDayId) === Number(workDayId)
+    );
+    const postCloseAdjustment = roundToTwoDecimals(
+      currentDayAdjustments.reduce(
+        (total, adjustment) => total + (
+          adjustment.direction === "OWNER_TO_DRIVER"
+            ? Number(adjustment.amount || 0)
+            : -Number(adjustment.amount || 0)
+        ),
+        0
+      )
+    );
+    const originalBalance = Number(dailySettlementSnapshot.balance);
+    const balance = roundToTwoDecimals(originalBalance + postCloseAdjustment);
+
     return {
       ...dailySettlementSnapshot,
       netRevenue: Number(dailySettlementSnapshot.netRevenue),
@@ -90,13 +107,21 @@ const buildDailySettlement = ({
         amount: Number(item.amount || 0),
         paymentType: item.paymentType || null,
       })),
-      balance: Number(dailySettlementSnapshot.balance),
+      originalBalance,
+      postCloseAdjustment,
+      balance,
+      balanceDirection:
+        balance > 0
+          ? "OWNER_PAYS_DRIVER"
+          : balance < 0
+            ? "DRIVER_PAYS_OWNER"
+            : "SETTLED",
       pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
       payments: dailySettlementPayments.map((payment) => ({
         ...payment,
         amount: Number(payment.amount),
       })),
-      adjustments: dailySettlementAdjustments.map((adjustment) => ({
+      adjustments: currentDayAdjustments.map((adjustment) => ({
         ...adjustment,
         amount: Number(adjustment.amount),
       })),
@@ -213,6 +238,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
 
   const dailySettlement = buildDailySettlement({
     auth,
+    workDayId: workDay.id,
     dailySettlementSnapshot,
     dailySettlementPayments,
     dailySettlementAdjustments,

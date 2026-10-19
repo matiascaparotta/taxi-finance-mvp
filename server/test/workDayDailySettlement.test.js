@@ -96,6 +96,7 @@ test("no altera los resúmenes con liquidación mensual o sin perfil", () => {
 
 test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
   const result = buildDailySettlement({
+    workDayId: 170,
     auth: {
       ...albertoAuth,
       dailySocialSecurity: 99,
@@ -136,4 +137,41 @@ test("prioriza la instantánea cerrada aunque cambie la configuración", () => {
   assert.equal(result.pendingBalance, 23.22);
   assert.equal(result.payments.length, 1);
   assert.equal(result.payments[0].amount, 10);
+});
+
+test("un ajuste en efectivo posterior al cierre cambia el resultado de ese día", () => {
+  const result = buildDailySettlement({
+    auth: albertoAuth,
+    workDayId: 183,
+    dailySettlementSnapshot: {
+      netRevenue: "350.95",
+      cashRetained: "75.83",
+      fuelCost: "38.01",
+      socialSecurity: "35.00",
+      driverShareBasisPoints: 5000,
+      distributableBase: "277.94",
+      driverShare: "138.97",
+      ownerShare: "138.97",
+      reimbursableFuel: "38.01",
+      driverEntitlement: "176.98",
+      ownerAdjustment: "0.00",
+      balance: "101.15",
+      balanceDirection: "OWNER_PAYS_DRIVER",
+      pendingBalance: "96.15",
+    },
+    dailySettlementAdjustments: [
+      { id: 1, workDayId: 183, direction: "DRIVER_TO_OWNER", amount: "5.00", reason: "Mati · Aviación General" },
+      { id: 2, workDayId: 182, direction: "DRIVER_TO_OWNER", amount: "7.00", reason: "Otro día" },
+    ],
+    endKm: 520765,
+    fuelOwn: 38.01,
+    realCash: 75.83,
+    totalRevenue: 350.95,
+  });
+
+  assert.equal(result.originalBalance, 101.15);
+  assert.equal(result.postCloseAdjustment, -5);
+  assert.equal(result.balance, 96.15);
+  assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
+  assert.equal(result.adjustments.length, 1);
 });

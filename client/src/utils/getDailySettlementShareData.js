@@ -47,7 +47,7 @@ export function getDailySettlementShareData(settlement, summary = null) {
       { label: "Total que te corresponde", value: settlement.driverEntitlement },
       { label: "Efectivo conservado", value: settlement.cashRetained },
       ...(Number(settlement.ownerAdjustment || 0) > 0
-        ? [{ label: "Cuenta externa a favor del jefe", value: -settlement.ownerAdjustment }]
+        ? [{ label: "Efectivo externo para entregar al jefe", value: -settlement.ownerAdjustment }]
         : []),
       ...adjustmentRows,
     ],

@@ -115,7 +115,7 @@ test("incluye una cuenta externa del jefe sin tratarla como comisión", () => {
   });
 
   assert.deepEqual(data.rows.at(-1), {
-    label: "Cuenta externa a favor del jefe",
+    label: "Efectivo externo para entregar al jefe",
     value: -5,
   });
   assert.equal(data.result.amount, 96.15);

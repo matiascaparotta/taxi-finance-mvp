@@ -195,7 +195,7 @@ function DailySettlementCard({
           <SettlementRow label="Total que te corresponde" value={settlement.driverEntitlement} strong />
           <SettlementRow label="Efectivo que conservaste" value={settlement.cashRetained} />
           {Number(settlement.ownerAdjustment || 0) > 0 && (
-            <SettlementRow label="Cuenta externa a favor del jefe" value={-settlement.ownerAdjustment} />
+            <SettlementRow label="Efectivo externo para entregar al jefe" value={-settlement.ownerAdjustment} />
           )}
         </div>
       </div>
@@ -254,6 +254,17 @@ function DailySettlementCard({
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {Number(settlement.postCloseAdjustment || 0) !== 0 && (
+        <div className="mt-3 rounded-2xl border border-sky-500/25 bg-sky-500/5 p-4">
+          <p className="text-xs font-black tracking-[0.14em] text-sky-300">CÁLCULO DEL AJUSTE FINAL</p>
+          <div className="mt-3 divide-y divide-slate-800 border-y border-slate-800">
+            <SettlementRow label="Resultado antes del ajuste" value={settlement.originalBalance} />
+            <SettlementRow label="Ajuste de efectivo" value={settlement.postCloseAdjustment} />
+          </div>
+          <p className="mt-3 text-xs text-slate-400">Este ajuste ya está incluido en el resultado final de la jornada.</p>
         </div>
       )}
 
