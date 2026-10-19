@@ -63,6 +63,22 @@ test("conserva el desglose legible de las comisiones y ajustes de la libreta", (
     note: "Petit - AGP",
   });
   assert.equal(retainedCashCents(october4.cash), 10230);
+
+  const wellTrips = REAL_DAYS.flatMap(interleaveTrips).filter(
+    (trip) => trip.commissionCompanyName === "Well - AGP"
+  );
+  assert.equal(wellTrips.length, 5);
+  for (const trip of wellTrips) {
+    assert.equal(trip.amount, 30);
+    assert.equal(trip.commission, 7);
+  }
+
+  const october18 = REAL_DAYS.find((day) => day.date === "2026-10-18");
+  const vialiaTrip = interleaveTrips(october18).find(
+    (trip) => trip.commissionCompanyName === "Vialia - Estepona"
+  );
+  assert.equal(vialiaTrip.amount, 121);
+  assert.equal(vialiaTrip.commission, 12);
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {

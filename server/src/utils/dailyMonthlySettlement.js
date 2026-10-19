@@ -8,6 +8,7 @@ const calculateDailyMonthlySettlement = ({ summaries, month }) => {
   const settlements = summaries
     .map((summary) => summary.dailySettlement)
     .filter(Boolean);
+  const latestSettlement = settlements.at(-1);
   const allPayments = settlements[0]?.payments || [];
   const payments = allPayments.filter((payment) =>
     String(payment.paymentDate || "").startsWith(month)
@@ -38,7 +39,7 @@ const calculateDailyMonthlySettlement = ({ summaries, month }) => {
     dailyBalance: sum(settlements, "balance"),
     paymentsReceived,
     paymentsDelivered,
-    pendingBalance: roundMoney(settlements[0]?.pendingBalance || 0),
+    pendingBalance: roundMoney(latestSettlement?.pendingBalance || 0),
     paymentCount: payments.length,
   };
 };

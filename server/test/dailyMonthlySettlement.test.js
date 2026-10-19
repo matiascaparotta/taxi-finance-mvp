@@ -26,7 +26,7 @@ test("suma las instantáneas diarias sin recalcular descuentos", () => {
     month: "2026-10",
     summaries: [
       { dailySettlement: settlement() },
-      { dailySettlement: settlement({ balance: -10 }) },
+      { dailySettlement: settlement({ balance: -10, pendingBalance: 46.44 }) },
     ],
   });
 
@@ -36,7 +36,7 @@ test("suma las instantáneas diarias sin recalcular descuentos", () => {
   assert.equal(result.driverShare, 219.02);
   assert.equal(result.ownerAdjustment, 0);
   assert.equal(result.dailyBalance, 23.22);
-  assert.equal(result.pendingBalance, 23.22);
+  assert.equal(result.pendingBalance, 46.44);
 });
 
 test("separa pagos del mes y conserva el pendiente global", () => {

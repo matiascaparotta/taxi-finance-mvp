@@ -52,7 +52,7 @@ const REAL_DAYS = [
       4.61, 8.77,
       { amount: 40, note: "Av. Gral." },
       14.15, 15.6, 8.5, 27.92,
-      { amount: 23, note: "Well - AGP" },
+      { amount: 23, note: "Well - AGP", commission: 7 },
     ],
   },
   {
@@ -160,8 +160,8 @@ const REAL_DAYS = [
     cash: [8.22, 7.12, 9.77, 10.14],
     card: [
       7.17,
-      { amount: 23, note: "Well - AGP" },
-      { amount: 23, note: "Well - AGP" },
+      { amount: 23, note: "Well - AGP", commission: 7 },
+      { amount: 23, note: "Well - AGP", commission: 7 },
       11.97, 7.67, 5.61,
       { amount: 22, note: "Av. Gral." },
       8.84, 9.02, 21.97, 19.02, 13.92, 11.32, 9.12, 53.17, 8.63, 29.07, 29.14,
@@ -178,11 +178,11 @@ const REAL_DAYS = [
     ],
     cash: [5.61, 9.72, 6.52, 18.24, 8.49, 8.39, 11.02, 7.84],
     card: [
-      { amount: 109, note: "María - Estepona" },
+      { amount: 109, note: "Vialia - Estepona", legacyNote: "María - Estepona", commission: 12 },
       { amount: 35, note: "Av. Gral." },
-      { amount: 23, note: "Well - AGP" },
+      { amount: 23, note: "Well - AGP", commission: 7 },
       5.67,
-      { amount: 23, note: "Well - AGP" },
+      { amount: 23, note: "Well - AGP", commission: 7 },
       { amount: 22, note: "Av. Gral." },
       12.25,
       11.4,
@@ -217,12 +217,14 @@ const retainedCashCents = (values) => values.reduce(
 const normalizeTrip = (value, paymentType) => {
   const commission = commissionOf(value);
   const note = typeof value === "object" && value !== null ? value.note || null : null;
+  const legacyNote = typeof value === "object" && value !== null ? value.legacyNote || null : null;
   return {
     amount: amountOf(value) + commission,
     paymentType,
     commission,
     commissionCompanyName: commission > 0 ? note : null,
     note,
+    ...(legacyNote ? { legacyNote } : {}),
   };
 };
 
@@ -233,10 +235,11 @@ const syncTripCommissions = async (connection, workDayId, day) => {
     const [rows] = await connection.query(
       `SELECT id FROM trips
        WHERE work_day_id = ? AND payment_type = ?
-         AND (amount = ? OR amount = ?)
-         AND note LIKE ?
+         AND (amount = ? OR amount = ? OR amount - commission = ?)
+         AND (note LIKE ? OR note LIKE ?)
        ORDER BY CASE
-         WHEN amount = ? OR commission <> ? OR commission_company_name IS NULL THEN 0
+         WHEN amount - commission = ? AND
+              (amount <> ? OR commission <> ? OR commission_company_name <> ?) THEN 0
          ELSE 1
        END, id
        LIMIT 1
@@ -246,9 +249,13 @@ const syncTripCommissions = async (connection, workDayId, day) => {
         trip.paymentType,
         netAmount,
         trip.amount,
-        `${trip.note}%`,
         netAmount,
+        `${trip.note}%`,
+        `${trip.legacyNote || trip.note}%`,
+        netAmount,
+        trip.amount,
         trip.commission,
+        trip.commissionCompanyName,
       ]
     );
     if (rows.length !== 1) {
@@ -256,10 +263,10 @@ const syncTripCommissions = async (connection, workDayId, day) => {
     }
     await connection.query(
       `UPDATE trips
-       SET amount = ?, commission = ?, commission_company_name = ?,
+       SET amount = ?, commission = ?, commission_company_name = ?, note = ?,
            commission_company_amount = ?, updated_at = updated_at
        WHERE id = ?`,
-      [trip.amount, trip.commission, trip.commissionCompanyName, trip.commission, rows[0].id]
+      [trip.amount, trip.commission, trip.commissionCompanyName, trip.note, trip.commission, rows[0].id]
     );
   }
 };
