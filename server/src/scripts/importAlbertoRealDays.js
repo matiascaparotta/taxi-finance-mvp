@@ -27,7 +27,7 @@ const REAL_DAYS = [
     ownerAdjustmentBreakdown: [
       { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
     ],
-    cash: [11.72, 5.61, 9.24, 14.1, 9.7, 7.84, 7.84, 8.25, { amount: 28, commission: 5, commissionCompanyName: "Petit - AGP", note: "Petit - AGP" }],
+    cash: [11.72, 5.61, 9.24, 14.1, 9.7, 7.84, 7.84, 8.25, { amount: 23, note: "Petit - AGP" }],
     card: [
       23.07, 6.17, 6.62, 7.12, 5.72,
       { amount: 22, note: "Av. Gral." },
@@ -122,12 +122,8 @@ const REAL_DAYS = [
     startKm: 518303,
     endKm: 518621,
     fuel: 36,
-    ownerAdjustment: 10,
-    ownerAdjustmentBreakdown: [
-      { company: "Aviación General", amount: 10, paymentType: "cash" },
-    ],
     cash: [
-      { amount: 90, note: "Av. Gral." },
+      { amount: 90, note: "Av. Gral.", commission: 10 },
       16.4, 10, 17.45,
     ],
     card: [12.28, 7.18, { amount: 10, note: "Abonado" }, 13.33, 18.83, 9.37, 37.94, 16.77, 14.2, 7.84, 17.7, 7.84],
@@ -145,7 +141,7 @@ const REAL_DAYS = [
     startKm: 519372,
     endKm: 519658,
     fuel: 33,
-    cash: [8.13, 8.23, 28.38, 4.63, 17.94, 8.63, { amount: 31, commission: 5, commissionCompanyName: "Petit - AGP", note: "Petit - AGP" }],
+    cash: [8.13, 8.23, 28.38, 4.63, 17.94, 8.63, { amount: 26, note: "Petit - AGP" }],
     card: [
       { amount: 22, note: "Av. Gral." },
       { amount: 35, note: "Av. Gral." },
@@ -201,23 +197,27 @@ const amountOf = (value) => Number(
 );
 
 const commissionOf = (value) => Number(
-  typeof value === "object" && value !== null ? value.commission || 0 : 0
+  typeof value === "object" && value !== null
+    ? value.commission ?? (value.note ? 5 : 0)
+    : 0
 );
 
 const cents = (values) => values.reduce(
-  (total, value) => total + Math.round((amountOf(value) - commissionOf(value)) * 100),
+  (total, value) => total + Math.round(amountOf(value) * 100),
   0
 );
 
-const normalizeTrip = (value, paymentType) => ({
-  amount: amountOf(value),
-  paymentType,
-  commission: commissionOf(value),
-  commissionCompanyName: typeof value === "object" && value !== null
-    ? value.commissionCompanyName || null
-    : null,
-  note: typeof value === "object" && value !== null ? value.note || null : null,
-});
+const normalizeTrip = (value, paymentType) => {
+  const commission = commissionOf(value);
+  const note = typeof value === "object" && value !== null ? value.note || null : null;
+  return {
+    amount: amountOf(value) + commission,
+    paymentType,
+    commission,
+    commissionCompanyName: commission > 0 ? note : null,
+    note,
+  };
+};
 
 const syncTripCommissions = async (connection, workDayId, day) => {
   const commissionedTrips = interleaveTrips(day).filter((trip) => trip.commission > 0);
@@ -228,10 +228,21 @@ const syncTripCommissions = async (connection, workDayId, day) => {
        WHERE work_day_id = ? AND payment_type = ?
          AND (amount = ? OR amount = ?)
          AND note LIKE ?
-       ORDER BY id
+       ORDER BY CASE
+         WHEN amount = ? OR commission <> ? OR commission_company_name IS NULL THEN 0
+         ELSE 1
+       END, id
        LIMIT 1
        FOR UPDATE`,
-      [workDayId, trip.paymentType, netAmount, trip.amount, `${trip.note}%`]
+      [
+        workDayId,
+        trip.paymentType,
+        netAmount,
+        trip.amount,
+        `${trip.note}%`,
+        netAmount,
+        trip.commission,
+      ]
     );
     if (rows.length !== 1) {
       throw new Error(`No se encontró el viaje con comisión del ${day.date}`);

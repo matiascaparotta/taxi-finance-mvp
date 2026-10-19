@@ -8,7 +8,7 @@ const {
 } = require("../src/scripts/importAlbertoRealDays");
 
 const amount = (value) => typeof value === "object"
-  ? value.amount - Number(value.commission || 0)
+  ? value.amount
   : value;
 const total = (values) => values.reduce((sum, value) => sum + amount(value), 0);
 
@@ -23,7 +23,7 @@ test("las trece jornadas reproducen exactamente los totales de las libretas", ()
     "2026-10-09": ["112.29", "205.91", 0],
     "2026-10-10": ["192.55", "164.31", 0],
     "2026-10-11": ["84.59", "246.43", 0],
-    "2026-10-14": ["133.85", "173.28", 10],
+    "2026-10-14": ["133.85", "173.28", 0],
     "2026-10-15": ["169.77", "163.75", 0],
     "2026-10-16": ["101.94", "244.70", 0],
     "2026-10-17": ["35.25", "313.64", 0],
@@ -50,8 +50,13 @@ test("conserva el desglose legible de las comisiones y ajustes de la libreta", (
     { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
   ]);
   const petitTrip = october4.cash.find((trip) => trip?.commissionCompanyName === "Petit - AGP");
-  assert.deepEqual(petitTrip, {
+  assert.equal(petitTrip, undefined);
+  const normalizedPetit = interleaveTrips(october4).find(
+    (trip) => trip.commissionCompanyName === "Petit - AGP"
+  );
+  assert.deepEqual(normalizedPetit, {
     amount: 28,
+    paymentType: "cash",
     commission: 5,
     commissionCompanyName: "Petit - AGP",
     note: "Petit - AGP",
