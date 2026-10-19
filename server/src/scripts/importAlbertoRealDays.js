@@ -1,0 +1,190 @@
+const pool = require("../config/database");
+const { calculateDailySettlement } = require("../utils/dailySettlement");
+
+const REAL_DAYS = [
+  {
+    date: "2026-10-01",
+    startKm: 511922,
+    endKm: 512167,
+    fuel: 29.01,
+    cash: [8.98, 6.38, 4.98, 5.61, 8.17, 6.57, 6.97, 9.55, 7.84, 10.2, 30.05],
+    card: [4.63, 10.63, 19.43, 10, 6.73, 7.83, 5.33, 8.28, 7.03, 7.58, 10.17, 11.55, 22, 9.05, 7.84, 10.6, 9.85, 9.2],
+  },
+  {
+    date: "2026-10-02",
+    startKm: 512167,
+    endKm: 512883,
+    fuel: 74,
+    cash: [6.13],
+    card: [4.61, 50, 10.83, 513, 19.12, 15.72],
+  },
+];
+
+const cents = (values) => values.reduce(
+  (total, value) => total + Math.round(Number(value) * 100),
+  0
+);
+
+const interleaveTrips = ({ cash, card }) => {
+  const trips = [];
+  const maxLength = Math.max(cash.length, card.length);
+  for (let index = 0; index < maxLength; index += 1) {
+    if (index < cash.length) trips.push({ amount: cash[index], paymentType: "cash" });
+    if (index < card.length) trips.push({ amount: card[index], paymentType: "card" });
+  }
+  return trips;
+};
+
+const pad = (value) => String(value).padStart(2, "0");
+
+const buildTripTimes = (date, count) => {
+  const start = new Date(`${date}T16:00:00Z`);
+  const intervalMinutes = 720 / (count + 1);
+  return Array.from({ length: count }, (_, index) => {
+    const moment = new Date(start.getTime() + intervalMinutes * (index + 1) * 60000);
+    return `${moment.getUTCFullYear()}-${pad(moment.getUTCMonth() + 1)}-${pad(moment.getUTCDate())} ${pad(moment.getUTCHours())}:${pad(moment.getUTCMinutes())}:00`;
+  });
+};
+
+const validateDays = () => {
+  const expected = {
+    "2026-10-01": { cash: 10530, card: 17773, total: 28303 },
+    "2026-10-02": { cash: 613, card: 61328, total: 61941 },
+  };
+  for (const day of REAL_DAYS) {
+    const cash = cents(day.cash);
+    const card = cents(day.card);
+    if (cash !== expected[day.date].cash || card !== expected[day.date].card || cash + card !== expected[day.date].total) {
+      throw new Error(`Los importes del ${day.date} no coinciden con la libreta`);
+    }
+  }
+};
+
+const importDay = async (connection, scope, day) => {
+  const [existing] = await connection.query(
+    `SELECT id FROM work_days
+     WHERE organization_id = ? AND driver_user_id = ? AND date = ?
+     FOR UPDATE`,
+    [scope.organizationId, scope.userId, day.date]
+  );
+  if (existing.length > 0) {
+    return { date: day.date, status: "existing", workDayId: Number(existing[0].id) };
+  }
+
+  const [workDayResult] = await connection.query(
+    `INSERT INTO work_days (
+       date, start_km, end_km, fuel_own, fuel_jose, status,
+       organization_id, driver_user_id, vehicle_id
+     ) VALUES (?, ?, ?, ?, 0, 'CLOSED', ?, ?, ?)`,
+    [day.date, day.startKm, day.endKm, day.fuel, scope.organizationId, scope.userId, scope.vehicleId]
+  );
+  const workDayId = Number(workDayResult.insertId);
+  const trips = interleaveTrips(day);
+  const times = buildTripTimes(day.date, trips.length);
+
+  for (let index = 0; index < trips.length; index += 1) {
+    const trip = trips[index];
+    await connection.query(
+      `INSERT INTO trips (
+         work_day_id, amount, payment_type, commission, tip, note, created_at, updated_at
+       ) VALUES (?, ?, ?, 0, 0, ?, ?, ?)`,
+      [
+        workDayId,
+        trip.amount,
+        trip.paymentType,
+        "Hora aproximada distribuida desde libreta",
+        times[index],
+        times[index],
+      ]
+    );
+  }
+
+  const cashAmount = cents(day.cash) / 100;
+  const cardAmount = cents(day.card) / 100;
+  const snapshot = calculateDailySettlement({
+    netRevenue: cashAmount + cardAmount,
+    cashRetained: cashAmount,
+    fuelCost: day.fuel,
+    socialSecurity: scope.socialSecurity,
+    driverShareBasisPoints: scope.driverShareBasisPoints,
+  });
+  await connection.query(
+    `INSERT INTO daily_settlement_snapshots (
+       work_day_id, organization_id, driver_user_id,
+       net_revenue, cash_retained, fuel_cost, social_security,
+       driver_share_basis_points, distributable_base, driver_share,
+       owner_share, reimbursable_fuel, driver_entitlement,
+       balance, balance_direction
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      workDayId, scope.organizationId, scope.userId,
+      snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
+      snapshot.socialSecurity, scope.driverShareBasisPoints,
+      snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
+      snapshot.reimbursableFuel, snapshot.driverEntitlement,
+      snapshot.balance, snapshot.balanceDirection,
+    ]
+  );
+
+  return {
+    date: day.date,
+    status: "created",
+    workDayId,
+    tripCount: trips.length,
+    cash: cashAmount,
+    card: cardAmount,
+    balance: snapshot.balance,
+  };
+};
+
+const run = async () => {
+  validateDays();
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const [rows] = await connection.query(
+      `SELECT o.id AS organizationId, u.id AS userId, v.id AS vehicleId,
+              om.daily_social_security AS socialSecurity,
+              om.driver_share_basis_points AS driverShareBasisPoints
+       FROM organizations o
+       JOIN organization_memberships om ON om.organization_id = o.id AND om.status = 'ACTIVE'
+       JOIN users u ON u.id = om.user_id AND u.username = 'alberto.caparotta'
+       JOIN vehicles v ON v.organization_id = o.id AND v.status = 'ACTIVE'
+       WHERE o.slug = 'lic1315'
+       ORDER BY v.id
+       LIMIT 1
+       FOR UPDATE`
+    );
+    if (rows.length !== 1) throw new Error("No se encontró el perfil activo de Alberto en Lic1315");
+    const scope = {
+      ...rows[0],
+      organizationId: Number(rows[0].organizationId),
+      userId: Number(rows[0].userId),
+      vehicleId: Number(rows[0].vehicleId),
+      socialSecurity: Number(rows[0].socialSecurity),
+      driverShareBasisPoints: Number(rows[0].driverShareBasisPoints),
+    };
+    if (scope.socialSecurity !== 35 || scope.driverShareBasisPoints !== 5000) {
+      throw new Error("El perfil de Alberto no tiene configurados 35 € y reparto 50/50");
+    }
+    const results = [];
+    for (const day of REAL_DAYS) results.push(await importDay(connection, scope, day));
+    await connection.commit();
+    results.forEach((result) => console.log(JSON.stringify(result)));
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+    await pool.end();
+  }
+};
+
+if (require.main === module) {
+  run().catch((error) => {
+    console.error(`No se pudieron importar las jornadas de Alberto: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = { REAL_DAYS, buildTripTimes, interleaveTrips, validateDays };

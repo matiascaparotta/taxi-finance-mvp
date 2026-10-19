@@ -14,6 +14,7 @@
     "db:provision:lic1315": "node src/scripts/provisionLic1315.js",
     "db:provision:lic249": "node src/scripts/provisionLic249.js",
     "db:assign:matias": "node src/scripts/assignWorkDaysToMatias.js",
+    "db:import:alberto-real-days": "node src/scripts/importAlbertoRealDays.js",
     "test": "node --test"
   },
   "keywords": [],
