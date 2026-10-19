@@ -75,4 +75,11 @@ const updateCompany = async (companyId, input, auth) => {
   return updated;
 };
 
-module.exports = { createCompany, getDriverSettings, requireDailySettlementScope, updateCompany, updateDriverSettings };
+const deleteCompany = async (companyId, auth) => {
+  const scope = requireDailySettlementScope(auth);
+  const deleted = await repository.deleteCompany(scope.organizationId, scope.userId, companyId);
+  if (!deleted) throw new Error("Empresa no encontrada");
+  return { id: Number(companyId) };
+};
+
+module.exports = { createCompany, deleteCompany, getDriverSettings, requireDailySettlementScope, updateCompany, updateDriverSettings };

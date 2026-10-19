@@ -11,5 +11,7 @@ test("Alberto configura combustible, seguridad social y empresas", () => {
   assert.match(page, /Empresas y hoteles/);
   assert.match(page, /Retirar/);
   assert.match(page, /Reactivar/);
+  assert.match(page, /Eliminar/);
+  assert.match(page, /Los viajes anteriores conservarán su información/);
   assert.match(page, /Empresa actualizada/);
 });

@@ -10,3 +10,4 @@ export const getDriverSettings = async () => parse(await apiFetch("/driver-setti
 export const saveDriverSettings = async (settings) => parse(await apiFetch("/driver-settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }));
 export const addCommissionCompany = async (company) => parse(await apiFetch("/driver-settings/companies", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(company) }));
 export const saveCommissionCompany = async (company) => parse(await apiFetch(`/driver-settings/companies/${company.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(company) }));
+export const deleteCommissionCompany = async (companyId) => parse(await apiFetch(`/driver-settings/companies/${companyId}`, { method: "DELETE" }));

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Card from "../components/ui/Card";
 import SectionTitle from "../components/ui/SectionTitle";
-import { addCommissionCompany, getDriverSettings, saveCommissionCompany, saveDriverSettings } from "../services/driverSettingsService";
+import { addCommissionCompany, deleteCommissionCompany, getDriverSettings, saveCommissionCompany, saveDriverSettings } from "../services/driverSettingsService";
 
 const emptyCompany = { name: "", commissionAmount: "" };
 
@@ -62,6 +62,18 @@ function DriverSettingsPage({ onSettingsSaved = async () => {} }) {
     } catch (saveError) { setError(saveError.message); }
   };
 
+  const deleteCompany = async (item) => {
+    const confirmed = globalThis.confirm(
+      `¿Eliminar “${item.name}” de empresas y hoteles? Los viajes anteriores conservarán su información.`
+    );
+    if (!confirmed) return;
+    try {
+      await deleteCommissionCompany(item.id);
+      setNotice("Empresa eliminada");
+      await load();
+    } catch (deleteError) { setError(deleteError.message); }
+  };
+
   if (!settings) return <Card><p className="text-center text-slate-300">Preparando configuración...</p>{error && <p className="mt-3 text-red-300">{error}</p>}</Card>;
 
   return <section className="space-y-6">
@@ -89,7 +101,7 @@ function DriverSettingsPage({ onSettingsSaved = async () => {} }) {
       </form>
       <div className="mt-5 space-y-3">
         {settings.companies.length === 0 && <p className="rounded-xl border border-dashed border-slate-700 p-4 text-sm text-slate-400">Todavía no agregaste empresas.</p>}
-        {settings.companies.map((item) => <div key={item.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"><div className="grid gap-3 sm:grid-cols-[1fr_9rem_auto_auto]"><input aria-label={`Nombre de ${item.name}`} value={item.name} onChange={(e) => updateCompanyDraft(item.id, "name", e.target.value)} className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 font-bold" /><label className="relative"><input aria-label={`Comisión de ${item.name}`} type="number" min="0" step="0.01" value={item.commissionAmount} onChange={(e) => updateCompanyDraft(item.id, "commissionAmount", e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 pr-7 text-emerald-300" /><span className="absolute right-3 top-2 text-slate-500">€</span></label><button type="button" onClick={() => saveCompany(item)} className="rounded-xl bg-emerald-400 px-3 py-2 text-sm font-bold text-slate-950">Guardar</button><button type="button" onClick={() => toggleCompany(item)} className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold">{item.status === "ACTIVE" ? "Retirar" : "Reactivar"}</button></div></div>)}
+        {settings.companies.map((item) => <div key={item.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"><div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_9rem]"><input aria-label={`Nombre de ${item.name}`} value={item.name} onChange={(e) => updateCompanyDraft(item.id, "name", e.target.value)} className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 font-bold" /><label className="relative"><input aria-label={`Comisión de ${item.name}`} type="number" min="0" step="0.01" value={item.commissionAmount} onChange={(e) => updateCompanyDraft(item.id, "commissionAmount", e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 pr-7 text-emerald-300" /><span className="absolute right-3 top-2 text-slate-500">€</span></label><div className="flex flex-wrap gap-2 sm:col-span-2"><button type="button" onClick={() => saveCompany(item)} className="min-w-24 flex-1 rounded-xl bg-emerald-400 px-3 py-2 text-sm font-bold text-slate-950">Guardar</button><button type="button" onClick={() => toggleCompany(item)} className="min-w-24 flex-1 rounded-xl border border-slate-700 px-3 py-2 text-sm font-semibold">{item.status === "ACTIVE" ? "Retirar" : "Reactivar"}</button><button type="button" onClick={() => deleteCompany(item)} className="min-w-24 flex-1 rounded-xl border border-red-500/50 px-3 py-2 text-sm font-semibold text-red-300">Eliminar</button></div></div></div>)}
       </div>
     </Card>
   </section>;

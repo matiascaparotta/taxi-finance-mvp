@@ -66,4 +66,13 @@ const updateCompany = async (organizationId, userId, companyId, company) => {
     : null;
 };
 
-module.exports = { createCompany, getActiveCompany, getSettings, listCompanies, updateCompany, updateSettings };
+const deleteCompany = async (organizationId, userId, companyId) => {
+  const [result] = await pool.query(
+    `DELETE FROM commission_companies
+     WHERE id = ? AND organization_id = ? AND driver_user_id = ?`,
+    [companyId, organizationId, userId]
+  );
+  return result.affectedRows === 1;
+};
+
+module.exports = { createCompany, deleteCompany, getActiveCompany, getSettings, listCompanies, updateCompany, updateSettings };

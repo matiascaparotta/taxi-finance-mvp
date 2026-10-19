@@ -5,4 +5,5 @@ router.get("/", controller.getSettings);
 router.put("/", controller.updateSettings);
 router.post("/companies", controller.createCompany);
 router.put("/companies/:id", controller.updateCompany);
+router.delete("/companies/:id", controller.deleteCompany);
 module.exports = router;

@@ -5,5 +5,6 @@ const getSettings = (req, res) => send(res, service.getDriverSettings(req.auth))
 const updateSettings = (req, res) => send(res, service.updateDriverSettings(req.body, req.auth));
 const createCompany = (req, res) => send(res, service.createCompany(req.body, req.auth));
 const updateCompany = (req, res) => send(res, service.updateCompany(req.params.id, req.body, req.auth));
+const deleteCompany = (req, res) => send(res, service.deleteCompany(req.params.id, req.auth));
 
-module.exports = { createCompany, getSettings, updateCompany, updateSettings };
+module.exports = { createCompany, deleteCompany, getSettings, updateCompany, updateSettings };
