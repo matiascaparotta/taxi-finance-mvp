@@ -11,7 +11,11 @@ const registerDailySettlementAdjustment = async (
   auth,
   adjustmentCreator = createAdjustment
 ) => {
-  if (auth?.accessMode !== "user" || auth?.settlementMode !== "DAILY_50_50") {
+  const isOwner = Boolean(auth?.roles?.isOwner ?? auth?.isOwner);
+  if (
+    auth?.accessMode !== "user" ||
+    (!isOwner && auth?.settlementMode !== "DAILY_50_50")
+  ) {
     throw new Error("Tu perfil no utiliza liquidación diaria");
   }
 
@@ -43,7 +47,8 @@ const registerDailySettlementAdjustment = async (
   return adjustmentCreator({
     workDayId,
     organizationId: Number(auth.organizationId),
-    driverUserId: Number(auth.userId),
+    driverUserId: isOwner ? null : Number(auth.userId),
+    actorUserId: Number(auth.userId),
     direction,
     amount: Number(rawAmount.replace(",", ".")),
     reason,

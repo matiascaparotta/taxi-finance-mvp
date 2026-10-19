@@ -1456,6 +1456,12 @@ los ajustes externos de 4, 8, 14, 16 y 18 de octubre. La carga continúa siendo
 idempotente: sincroniza instantáneas existentes y solo crea las jornadas que
 faltan.
 
+La validación en producción mostró que el propietario podía consultar las
+jornadas de Alberto, pero no veía la acción para añadir ajustes posteriores al
+cierre. Se corrigió el permiso para que tanto Alberto como el propietario de su
+organización puedan registrar el ajuste. El movimiento conserva como autor al
+usuario que lo cargó y siempre se aplica al saldo del conductor de la jornada.
+
 🚧 Sprint en desarrollo.
 
 ---

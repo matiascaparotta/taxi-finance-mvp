@@ -158,7 +158,7 @@ function WorkDayClosedPage() {
             : null
         }
         onRegisterSettlementAdjustment={
-          summary.dailySettlement && workDay.canManage
+          summary.dailySettlement && workDay.canAdjust
             ? handleRegisterSettlementAdjustment
             : null
         }

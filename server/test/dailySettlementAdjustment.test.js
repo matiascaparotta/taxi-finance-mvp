@@ -31,6 +31,30 @@ test("registra un ajuste motivado con dirección explícita", async () => {
   assert.equal(received.reason, "Comisión WellMati");
   assert.equal(received.direction, "DRIVER_TO_OWNER");
   assert.equal(received.workDayId, 162);
+  assert.equal(received.actorUserId, 3);
+});
+
+test("permite que el jefe registre un ajuste en la jornada de Alberto", async () => {
+  let received;
+  await registerDailySettlementAdjustment({
+    workDayId: 183,
+    direction: "OWNER_TO_DRIVER",
+    amount: "10,00",
+    reason: "Corrección del jefe",
+    idempotencyKey: "owner_adjustment_123",
+  }, {
+    accessMode: "user",
+    organizationId: 2,
+    userId: 1,
+    settlementMode: "LEGACY",
+    roles: { isOwner: true },
+  }, async (data) => {
+    received = data;
+    return data;
+  });
+
+  assert.equal(received.driverUserId, null);
+  assert.equal(received.actorUserId, 1);
 });
 
 test("rechaza un ajuste sin motivo o dirección", async () => {

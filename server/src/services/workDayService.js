@@ -52,6 +52,9 @@ const serializeWorkDay = (workDay, auth, workedKm) => ({
   ...workDay,
   isLocked: Boolean(workDay.isLocked),
   canManage: canManageWorkDay(workDay, auth),
+  canAdjust:
+    canManageWorkDay(workDay, auth) ||
+    Boolean(auth?.roles?.isOwner ?? auth?.isOwner),
   canCorrect:
     auth?.accessMode === "user" &&
     canManageWorkDay(workDay, auth) &&

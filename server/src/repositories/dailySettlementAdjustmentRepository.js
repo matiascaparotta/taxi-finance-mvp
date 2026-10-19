@@ -5,6 +5,7 @@ const createAdjustment = async ({
   workDayId,
   organizationId,
   driverUserId,
+  actorUserId,
   direction,
   amount,
   reason,
@@ -15,19 +16,23 @@ const createAdjustment = async ({
   try {
     await connection.beginTransaction();
     const [workDays] = await connection.query(
-      `SELECT id FROM work_days
-       WHERE id = ? AND organization_id = ? AND driver_user_id = ?
+      `SELECT id, driver_user_id AS driverUserId FROM work_days
+       WHERE id = ? AND organization_id = ?
          AND status = 'CLOSED'
        FOR UPDATE`,
-      [workDayId, organizationId, driverUserId]
+      [workDayId, organizationId]
     );
     if (workDays.length !== 1) throw new Error("La jornada cerrada no está disponible");
+    const targetDriverUserId = Number(workDays[0].driverUserId);
+    if (driverUserId && targetDriverUserId !== Number(driverUserId)) {
+      throw new Error("La jornada cerrada no está disponible");
+    }
 
     const [existing] = await connection.query(
       `SELECT id, direction, amount, reason, created_at AS createdAt
        FROM daily_settlement_adjustments
        WHERE idempotency_key = ? AND organization_id = ? AND driver_user_id = ?`,
-      [idempotencyKey, organizationId, driverUserId]
+      [idempotencyKey, organizationId, targetDriverUserId]
     );
     if (existing.length === 1) {
       const row = existing[0];
@@ -36,7 +41,7 @@ const createAdjustment = async ({
         Math.round(Number(row.amount) * 100) !== Math.round(Number(amount) * 100) ||
         row.reason !== reason
       ) throw new Error("La referencia del ajuste ya fue utilizada");
-      const pendingBalance = await getPendingBalance(organizationId, driverUserId, connection);
+      const pendingBalance = await getPendingBalance(organizationId, targetDriverUserId, connection);
       await connection.commit();
       return { adjustment: row, pendingBalance };
     }
@@ -46,9 +51,9 @@ const createAdjustment = async ({
          work_day_id, organization_id, driver_user_id, direction, amount,
          reason, idempotency_key, created_by_user_id
        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [workDayId, organizationId, driverUserId, direction, amount, reason, idempotencyKey, driverUserId]
+      [workDayId, organizationId, targetDriverUserId, direction, amount, reason, idempotencyKey, actorUserId]
     );
-    const pendingBalance = await getPendingBalance(organizationId, driverUserId, connection);
+    const pendingBalance = await getPendingBalance(organizationId, targetDriverUserId, connection);
     await connection.commit();
     return {
       adjustment: { id: result.insertId, direction, amount: Number(amount), reason },
