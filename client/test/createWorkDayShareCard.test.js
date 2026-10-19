@@ -120,3 +120,36 @@ test("incluye una cuenta externa del jefe sin tratarla como comisión", () => {
   });
   assert.equal(data.result.amount, 96.15);
 });
+
+test("incluye en la imagen la evolución completa del saldo acumulado", () => {
+  const data = getDailySettlementShareData({
+    netRevenue: 421.64,
+    socialSecurity: 35,
+    fuelCost: 35,
+    distributableBase: 351.64,
+    driverShare: 175.82,
+    ownerShare: 175.82,
+    driverSharePercentage: 50,
+    reimbursableFuel: 35,
+    driverEntitlement: 210.82,
+    cashRetained: 116.05,
+    balance: 89.77,
+    balanceDirection: "OWNER_PAYS_DRIVER",
+    previousPendingBalance: 356.29,
+    originalBalance: 94.77,
+    pendingBeforeAdjustments: 451.06,
+    postCloseAdjustment: -5,
+    pendingBalance: 446.06,
+    adjustments: [
+      { workDayId: 171, direction: "DRIVER_TO_OWNER", amount: 5, reason: "Mati · Aviación General" },
+    ],
+  }, { workDayId: 171 });
+
+  assert.deepEqual(data.rows.slice(-5), [
+    { label: "Saldo pendiente anterior", value: 356.29 },
+    { label: "Resultado de esta jornada", value: 94.77 },
+    { label: "Pendiente antes de ajustes", value: 451.06 },
+    { label: "Ajuste · Mati · Aviación General", value: -5 },
+    { label: "Saldo pendiente final", value: 446.06 },
+  ]);
+});

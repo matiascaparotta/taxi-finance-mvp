@@ -33,6 +33,18 @@ export function getDailySettlementShareData(settlement, summary = null) {
         ? Number(adjustment.amount)
         : -Number(adjustment.amount),
     }));
+  const balanceEvolutionRows = Number.isFinite(Number(settlement.previousPendingBalance))
+    ? [
+        { label: "Saldo pendiente anterior", value: settlement.previousPendingBalance },
+        { label: "Resultado de esta jornada", value: settlement.originalBalance },
+        ...(Number(settlement.currentDayPaymentEffect || 0) !== 0
+          ? [{ label: "Pagos registrados este día", value: settlement.currentDayPaymentEffect }]
+          : []),
+        { label: "Pendiente antes de ajustes", value: settlement.pendingBeforeAdjustments },
+        ...adjustmentRows,
+        { label: "Saldo pendiente final", value: settlement.pendingBalance },
+      ]
+    : adjustmentRows;
 
   return {
     rows: [
@@ -49,7 +61,7 @@ export function getDailySettlementShareData(settlement, summary = null) {
       ...(Number(settlement.ownerAdjustment || 0) > 0
         ? [{ label: "Efectivo externo para entregar al jefe", value: -settlement.ownerAdjustment }]
         : []),
-      ...adjustmentRows,
+      ...balanceEvolutionRows,
     ],
     result: getDailySettlementPresentation(settlement),
     pending: {

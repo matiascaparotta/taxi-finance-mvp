@@ -175,3 +175,35 @@ test("un ajuste en efectivo posterior al cierre cambia el resultado de ese día"
   assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
   assert.equal(result.adjustments.length, 1);
 });
+
+test("explica el acumulado antes y después del ajuste de la jornada", () => {
+  const result = buildDailySettlement({
+    auth: albertoAuth,
+    workDayId: 171,
+    workDayDate: "2026-10-03",
+    dailySettlementSnapshot: {
+      netRevenue: "421.64",
+      cashRetained: "116.05",
+      fuelCost: "35.00",
+      socialSecurity: "35.00",
+      driverShareBasisPoints: 5000,
+      distributableBase: "351.64",
+      driverShare: "175.82",
+      ownerShare: "175.82",
+      reimbursableFuel: "35.00",
+      driverEntitlement: "210.82",
+      balance: "94.77",
+      balanceDirection: "OWNER_PAYS_DRIVER",
+      pendingBalance: "446.06",
+    },
+    dailySettlementAdjustments: [
+      { id: 1, workDayId: 171, direction: "DRIVER_TO_OWNER", amount: "5.00", reason: "Mati · Aviación General" },
+    ],
+  });
+
+  assert.equal(result.previousPendingBalance, 356.29);
+  assert.equal(result.originalBalance, 94.77);
+  assert.equal(result.pendingBeforeAdjustments, 451.06);
+  assert.equal(result.postCloseAdjustment, -5);
+  assert.equal(result.pendingBalance, 446.06);
+});

@@ -58,6 +58,7 @@ const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
 const buildDailySettlement = ({
   auth,
   workDayId,
+  workDayDate,
   dailySettlementSnapshot,
   dailySettlementPayments = [],
   dailySettlementAdjustments = [],
@@ -82,6 +83,26 @@ const buildDailySettlement = ({
     );
     const originalBalance = Number(dailySettlementSnapshot.balance);
     const balance = roundToTwoDecimals(originalBalance + postCloseAdjustment);
+    const normalizedWorkDayDate = String(workDayDate || "").slice(0, 10);
+    const currentDayPaymentEffect = roundToTwoDecimals(
+      dailySettlementPayments
+        .filter((payment) => normalizedWorkDayDate && String(payment.paymentDate || "").slice(0, 10) === normalizedWorkDayDate)
+        .reduce(
+          (total, payment) => total + (
+            payment.direction === "OWNER_TO_DRIVER"
+              ? -Number(payment.amount || 0)
+              : Number(payment.amount || 0)
+          ),
+          0
+        )
+    );
+    const pendingBalance = Number(dailySettlementSnapshot.pendingBalance);
+    const pendingBeforeAdjustments = roundToTwoDecimals(
+      pendingBalance - postCloseAdjustment
+    );
+    const previousPendingBalance = roundToTwoDecimals(
+      pendingBeforeAdjustments - originalBalance - currentDayPaymentEffect
+    );
 
     return {
       ...dailySettlementSnapshot,
@@ -109,6 +130,9 @@ const buildDailySettlement = ({
       })),
       originalBalance,
       postCloseAdjustment,
+      previousPendingBalance,
+      currentDayPaymentEffect,
+      pendingBeforeAdjustments,
       balance,
       balanceDirection:
         balance > 0
@@ -116,7 +140,7 @@ const buildDailySettlement = ({
           : balance < 0
             ? "DRIVER_PAYS_OWNER"
             : "SETTLED",
-      pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
+      pendingBalance,
       payments: dailySettlementPayments.map((payment) => ({
         ...payment,
         amount: Number(payment.amount),
@@ -239,6 +263,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
   const dailySettlement = buildDailySettlement({
     auth,
     workDayId: workDay.id,
+    workDayDate: workDay.date,
     dailySettlementSnapshot,
     dailySettlementPayments,
     dailySettlementAdjustments,
