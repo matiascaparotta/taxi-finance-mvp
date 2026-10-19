@@ -13,6 +13,17 @@ const roundToTwoDecimals = (value) => {
   return Number(Number(value || 0).toFixed(2));
 };
 
+const parseAdjustmentBreakdown = (value) => {
+  if (Array.isArray(value)) return value;
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
   const grossCash = trips
     .filter((trip) => trip.paymentType === "cash")
@@ -72,6 +83,13 @@ const buildDailySettlement = ({
       reimbursableFuel: Number(dailySettlementSnapshot.reimbursableFuel),
       driverEntitlement: Number(dailySettlementSnapshot.driverEntitlement),
       ownerAdjustment: Number(dailySettlementSnapshot.ownerAdjustment || 0),
+      ownerAdjustmentBreakdown: parseAdjustmentBreakdown(
+        dailySettlementSnapshot.ownerAdjustmentBreakdown
+      ).map((item) => ({
+        company: String(item.company || "Ajuste externo"),
+        amount: Number(item.amount || 0),
+        paymentType: item.paymentType || null,
+      })),
       balance: Number(dailySettlementSnapshot.balance),
       pendingBalance: Number(dailySettlementSnapshot.pendingBalance),
       payments: dailySettlementPayments.map((payment) => ({

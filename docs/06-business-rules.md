@@ -687,6 +687,13 @@ la gasolina ni el reparto: se resta después del efectivo conservado para obtene
 el saldo diario neto. Debe mostrarse como una línea independiente en pantalla y
 en los resúmenes compartidos.
 
+Las jornadas históricas conservan además el desglose manuscrito de estas
+cuentas por empresa o concepto. El desglose es informativo y su suma debe
+coincidir exactamente con el ajuste externo agregado de la libreta. Una línea
+como `Mati - Aviación General` representa dinero de un servicio externo que
+Alberto cobró en efectivo y debe entregar al jefe al final. Se presenta después
+del reparto y nunca como comisión de un viaje ni como facturación del taxi.
+
 Un saldo positivo significa que el jefe debe pagar a Alberto. Un saldo negativo
 significa que Alberto debe entregar al jefe el valor absoluto. Cero significa
 que la jornada está saldada. Si el reparto produce una fracción de céntimo, la

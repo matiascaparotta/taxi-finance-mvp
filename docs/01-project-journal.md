@@ -1462,6 +1462,12 @@ cierre. Se corrigió el permiso para que tanto Alberto como el propietario de su
 organización puedan registrar el ajuste. El movimiento conserva como autor al
 usuario que lo cargó y siempre se aplica al saldo del conductor de la jornada.
 
+Las anotaciones externas de las libretas se hicieron visibles sin recalcular
+ninguna jornada. `Mati - Aviación General`, por ejemplo, representa efectivo de
+un servicio externo que Alberto debe entregar al jefe al final de la
+liquidación; no es comisión de un viaje ni facturación del taxi. El desglose
+histórico debe sumar exactamente el ajuste ya incluido en cada libreta.
+
 🚧 Sprint en desarrollo.
 
 ---

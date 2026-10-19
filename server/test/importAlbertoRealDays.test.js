@@ -34,7 +34,20 @@ test("las trece jornadas reproducen exactamente los totales de las libretas", ()
     assert.equal(total(day.cash).toFixed(2), cash, `${day.date} efectivo`);
     assert.equal(total(day.card).toFixed(2), card, `${day.date} datáfono`);
     assert.equal(day.ownerAdjustment || 0, ownerAdjustment, `${day.date} ajuste`);
+    assert.equal(
+      (day.ownerAdjustmentBreakdown || []).reduce((sum, item) => sum + item.amount, 0),
+      ownerAdjustment,
+      `${day.date} desglose del ajuste`
+    );
   }
+});
+
+test("conserva el desglose legible de las comisiones y ajustes de la libreta", () => {
+  const october4 = REAL_DAYS.find((day) => day.date === "2026-10-04");
+  assert.deepEqual(october4.ownerAdjustmentBreakdown, [
+    { company: "Petit - AGP", amount: 5, paymentType: "cash" },
+    { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
+  ]);
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {

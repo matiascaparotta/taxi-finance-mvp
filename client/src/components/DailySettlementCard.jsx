@@ -69,6 +69,9 @@ function DailySettlementCard({
   const adjustments = Array.isArray(settlement.adjustments)
     ? settlement.adjustments
     : [];
+  const historicalAdjustmentBreakdown = Array.isArray(settlement.ownerAdjustmentBreakdown)
+    ? settlement.ownerAdjustmentBreakdown
+    : [];
 
   const openAdjustment = () => {
     setAdjustmentDirection("DRIVER_TO_OWNER");
@@ -196,6 +199,31 @@ function DailySettlementCard({
           )}
         </div>
       </div>
+
+      {historicalAdjustmentBreakdown.length > 0 && (
+        <div className="mt-3 rounded-2xl border border-amber-500/25 bg-amber-500/5 p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-black tracking-[0.14em] text-amber-300">AJUSTES FINALES EN EFECTIVO</p>
+              <p className="mt-1 text-xs text-slate-400">Dinero externo que Alberto debe entregar al jefe</p>
+            </div>
+            <p className="text-xl font-black text-white">−{formatCurrency(settlement.ownerAdjustment)}</p>
+          </div>
+          <div className="mt-3 divide-y divide-slate-800 border-t border-slate-800">
+            {historicalAdjustmentBreakdown.map((item, index) => (
+              <div key={`${item.company}-${index}`} className="flex items-center justify-between gap-3 py-2.5 text-sm">
+                <div>
+                  <p className="font-bold text-slate-200">{item.company}</p>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    {item.paymentType === "cash" ? "Se suma a la entrega de efectivo" : "Ajuste externo de liquidación"}
+                  </p>
+                </div>
+                <strong className="text-white">−{formatCurrency(item.amount)}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {totalCommission > 0 && (
         <div className="mt-3 rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">

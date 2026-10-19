@@ -66,6 +66,7 @@ const getWorkDayWithTrips = async (workDayId) => {
        reimbursable_fuel AS reimbursableFuel,
        driver_entitlement AS driverEntitlement,
        owner_adjustment AS ownerAdjustment,
+       owner_adjustment_breakdown AS ownerAdjustmentBreakdown,
        balance,
        balance_direction AS balanceDirection,
        COALESCE((

@@ -24,6 +24,10 @@ const REAL_DAYS = [
     endKm: 513947,
     fuel: 34.01,
     ownerAdjustment: 10,
+    ownerAdjustmentBreakdown: [
+      { company: "Petit - AGP", amount: 5, paymentType: "cash" },
+      { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
+    ],
     cash: [11.72, 5.61, 9.24, 14.1, 9.7, 7.84, 7.84, 8.25, { amount: 23, note: "Petit - AGP" }],
     card: [
       23.07, 6.17, 6.62, 7.12, 5.72,
@@ -58,6 +62,9 @@ const REAL_DAYS = [
     endKm: 515866,
     fuel: 28.01,
     ownerAdjustment: 5,
+    ownerAdjustmentBreakdown: [
+      { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
+    ],
     cash: [5.18, 5.33, 15.8, 10.55, 13.2, 25.65],
     card: [
       7.33,
@@ -117,6 +124,9 @@ const REAL_DAYS = [
     endKm: 518621,
     fuel: 36,
     ownerAdjustment: 10,
+    ownerAdjustmentBreakdown: [
+      { company: "Aviación General", amount: 10, paymentType: "cash" },
+    ],
     cash: [
       { amount: 90, note: "Av. Gral." },
       16.4, 10, 17.45,
@@ -137,6 +147,9 @@ const REAL_DAYS = [
     endKm: 519658,
     fuel: 33,
     ownerAdjustment: 5,
+    ownerAdjustmentBreakdown: [
+      { company: "Petit - AGP", amount: 5, paymentType: "cash" },
+    ],
     cash: [8.13, 8.23, 28.38, 4.63, 17.94, 8.63, { amount: 26, note: "Petit - AGP" }],
     card: [
       { amount: 22, note: "Av. Gral." },
@@ -169,6 +182,9 @@ const REAL_DAYS = [
     endKm: 520765,
     fuel: 38.01,
     ownerAdjustment: 5,
+    ownerAdjustmentBreakdown: [
+      { company: "Mati - Aviación General", amount: 5, paymentType: "cash" },
+    ],
     cash: [5.61, 9.72, 6.52, 18.24, 8.49, 8.39, 11.02, 7.84],
     card: [
       { amount: 109, note: "María - Estepona" },
@@ -243,6 +259,13 @@ const validateDays = () => {
     if (cash !== expected[day.date].cash || card !== expected[day.date].card || cash + card !== expected[day.date].total) {
       throw new Error(`Los importes del ${day.date} no coinciden con la libreta`);
     }
+    const breakdownTotal = (day.ownerAdjustmentBreakdown || []).reduce(
+      (total, item) => total + Math.round(Number(item.amount) * 100),
+      0
+    );
+    if (breakdownTotal !== Math.round(Number(day.ownerAdjustment || 0) * 100)) {
+      throw new Error(`El desglose externo del ${day.date} no coincide con la libreta`);
+    }
   }
 };
 
@@ -270,7 +293,8 @@ const importDay = async (connection, scope, day) => {
        SET net_revenue = ?, cash_retained = ?, fuel_cost = ?, social_security = ?,
            driver_share_basis_points = ?, distributable_base = ?, driver_share = ?,
            owner_share = ?, reimbursable_fuel = ?, driver_entitlement = ?,
-           owner_adjustment = ?, balance = ?, balance_direction = ?
+           owner_adjustment = ?, owner_adjustment_breakdown = ?,
+           balance = ?, balance_direction = ?
        WHERE work_day_id = ? AND organization_id = ? AND driver_user_id = ?`,
       [
         snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
@@ -278,6 +302,7 @@ const importDay = async (connection, scope, day) => {
         snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
         snapshot.reimbursableFuel, snapshot.driverEntitlement,
         snapshot.ownerAdjustment,
+        JSON.stringify(day.ownerAdjustmentBreakdown || []),
         snapshot.balance, snapshot.balanceDirection,
         workDayId, scope.organizationId, scope.userId,
       ]
@@ -341,8 +366,8 @@ const importDay = async (connection, scope, day) => {
        net_revenue, cash_retained, fuel_cost, social_security,
        driver_share_basis_points, distributable_base, driver_share,
        owner_share, reimbursable_fuel, driver_entitlement,
-       owner_adjustment, balance, balance_direction
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       owner_adjustment, owner_adjustment_breakdown, balance, balance_direction
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       workDayId, scope.organizationId, scope.userId,
       snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
@@ -350,6 +375,7 @@ const importDay = async (connection, scope, day) => {
       snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
       snapshot.reimbursableFuel, snapshot.driverEntitlement,
       snapshot.ownerAdjustment,
+      JSON.stringify(day.ownerAdjustmentBreakdown || []),
       snapshot.balance, snapshot.balanceDirection,
     ]
   );
