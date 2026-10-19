@@ -30,9 +30,25 @@ test("deja el céntimo de diferencia en la parte del jefe", () => {
     socialSecurity: 0,
   });
 
-  assert.equal(result.driverShare, 50.01);
-  assert.equal(result.ownerShare, 50);
+  assert.equal(result.driverShare, 50);
+  assert.equal(result.ownerShare, 50.01);
   assert.equal(result.distributableBase, 100.01);
+});
+
+test("reproduce el cierre real del 2 de octubre y deja el céntimo al jefe", () => {
+  const result = calculateDailySettlement({
+    netRevenue: 619.41,
+    cashRetained: 6.13,
+    fuelCost: 74,
+    socialSecurity: 35,
+  });
+
+  assert.equal(result.distributableBase, 510.41);
+  assert.equal(result.driverShare, 255.2);
+  assert.equal(result.ownerShare, 255.21);
+  assert.equal(result.driverEntitlement, 329.2);
+  assert.equal(result.balance, 323.07);
+  assert.equal(result.balanceDirection, "OWNER_PAYS_DRIVER");
 });
 
 test("mantiene una base negativa y expresa correctamente la deuda", () => {

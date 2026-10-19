@@ -68,7 +68,43 @@ const importDay = async (connection, scope, day) => {
     [scope.organizationId, scope.userId, day.date]
   );
   if (existing.length > 0) {
-    return { date: day.date, status: "existing", workDayId: Number(existing[0].id) };
+    const workDayId = Number(existing[0].id);
+    const cashAmount = cents(day.cash) / 100;
+    const cardAmount = cents(day.card) / 100;
+    const snapshot = calculateDailySettlement({
+      netRevenue: cashAmount + cardAmount,
+      cashRetained: cashAmount,
+      fuelCost: day.fuel,
+      socialSecurity: scope.socialSecurity,
+      driverShareBasisPoints: scope.driverShareBasisPoints,
+    });
+    const [updateResult] = await connection.query(
+      `UPDATE daily_settlement_snapshots
+       SET net_revenue = ?, cash_retained = ?, fuel_cost = ?, social_security = ?,
+           driver_share_basis_points = ?, distributable_base = ?, driver_share = ?,
+           owner_share = ?, reimbursable_fuel = ?, driver_entitlement = ?,
+           balance = ?, balance_direction = ?
+       WHERE work_day_id = ? AND organization_id = ? AND driver_user_id = ?`,
+      [
+        snapshot.netRevenue, snapshot.cashRetained, snapshot.fuelCost,
+        snapshot.socialSecurity, scope.driverShareBasisPoints,
+        snapshot.distributableBase, snapshot.driverShare, snapshot.ownerShare,
+        snapshot.reimbursableFuel, snapshot.driverEntitlement,
+        snapshot.balance, snapshot.balanceDirection,
+        workDayId, scope.organizationId, scope.userId,
+      ]
+    );
+    if (updateResult.affectedRows !== 1) {
+      throw new Error(`No se encontró la liquidación importada del ${day.date}`);
+    }
+    return {
+      date: day.date,
+      status: "synchronized",
+      workDayId,
+      cash: cashAmount,
+      card: cardAmount,
+      balance: snapshot.balance,
+    };
   }
 
   const [workDayResult] = await connection.query(

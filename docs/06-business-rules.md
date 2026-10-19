@@ -670,8 +670,9 @@ El cierre diario se calcula en céntimos y en este orden:
 
 Un saldo positivo significa que el jefe debe pagar a Alberto. Un saldo negativo
 significa que Alberto debe entregar al jefe el valor absoluto. Cero significa
-que la jornada está saldada. El céntimo indivisible del reparto queda en la
-parte de Alberto y el resto se asigna al jefe.
+que la jornada está saldada. Si el reparto produce una fracción de céntimo, la
+parte de Alberto se trunca a céntimos y el resto se asigna al jefe. Así, una
+base de 510,41 € se reparte en 255,20 € para Alberto y 255,21 € para el jefe.
 
 Al confirmar el cierre se guarda una instantánea de todos los valores de la
 liquidación diaria: facturación neta, efectivo conservado, gasolina, Seguridad

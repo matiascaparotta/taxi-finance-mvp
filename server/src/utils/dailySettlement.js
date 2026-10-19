@@ -38,7 +38,9 @@ const calculateDailySettlement = ({
 
   const distributableBaseCents =
     netRevenueCents - socialSecurityCents - fuelCostCents;
-  const driverShareCents = Math.round(
+  // La parte fraccionaria de un céntimo queda del lado del propietario.
+  // Math.trunc también conserva esa regla si la base repartible es negativa.
+  const driverShareCents = Math.trunc(
     (distributableBaseCents * driverShareBasisPoints) / 10000
   );
   const ownerShareCents = distributableBaseCents - driverShareCents;

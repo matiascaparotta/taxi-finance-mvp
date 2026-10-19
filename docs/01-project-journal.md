@@ -1418,6 +1418,14 @@ permaneció activo.
 
 ## Estado
 
+El 19/10/2026 se importaron de forma transaccional las jornadas reales de
+Alberto del 1 y 2 de octubre, con 29 y 7 viajes respectivamente y horarios
+aproximados distribuidos dentro de su turno de 16:00 a 04:00. La comparación
+con la libreta detectó que el céntimo indivisible del 50/50 debe permanecer en
+la parte del jefe. El motor se alineó con esa regla y el importador quedó
+preparado para sincronizar las instantáneas de esas dos jornadas sin duplicar
+viajes ni jornadas.
+
 🚧 Sprint en desarrollo.
 
 ---

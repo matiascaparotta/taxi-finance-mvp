@@ -43,6 +43,8 @@ Las versiones siguen un orden cronológico y muestran la evolución del producto
   íntegramente a Alberto.
 - Reparto 50/50 posterior a Seguridad Social y gasolina, con indicación de quién
   debe pagar a quién según el efectivo conservado.
+- El céntimo indivisible del reparto diario queda del lado del jefe, de acuerdo
+  con la libreta real utilizada para controlar la liquidación.
 - Integración del cálculo en el resumen cerrado para perfiles diarios; las
   jornadas abiertas y los perfiles mensuales quedan excluidos.
 - Nueva sección visual de liquidación diaria en la jornada finalizada, con
