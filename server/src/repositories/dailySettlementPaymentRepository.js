@@ -24,8 +24,21 @@ const getPendingBalance = async (
          )
          FROM daily_settlement_payments
          WHERE organization_id = ? AND driver_user_id = ?
+       ), 0) + COALESCE((
+         SELECT SUM(
+           CASE
+             WHEN direction = 'OWNER_TO_DRIVER' THEN amount
+             ELSE -amount
+           END
+         )
+         FROM daily_settlement_adjustments
+         WHERE organization_id = ? AND driver_user_id = ?
        ), 0) AS pendingBalance`,
-    [organizationId, driverUserId, organizationId, driverUserId]
+    [
+      organizationId, driverUserId,
+      organizationId, driverUserId,
+      organizationId, driverUserId,
+    ]
   );
 
   return Number(rows[0].pendingBalance || 0);

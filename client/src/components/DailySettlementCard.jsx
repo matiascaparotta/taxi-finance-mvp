@@ -26,14 +26,26 @@ function SettlementRow({ label, value, strong = false }) {
   );
 }
 
-function DailySettlementCard({ settlement, commissionSummary = null, onRegisterPayment = null }) {
+function DailySettlementCard({
+  settlement,
+  commissionSummary = null,
+  onRegisterPayment = null,
+  onRegisterAdjustment = null,
+}) {
   const [showPayment, setShowPayment] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentError, setPaymentError] = useState("");
   const [isSavingPayment, setIsSavingPayment] = useState(false);
   const [showAllPayments, setShowAllPayments] = useState(false);
+  const [showAdjustment, setShowAdjustment] = useState(false);
+  const [adjustmentDirection, setAdjustmentDirection] = useState("DRIVER_TO_OWNER");
+  const [adjustmentAmount, setAdjustmentAmount] = useState("");
+  const [adjustmentReason, setAdjustmentReason] = useState("");
+  const [adjustmentError, setAdjustmentError] = useState("");
+  const [isSavingAdjustment, setIsSavingAdjustment] = useState(false);
   const paymentLockRef = useRef(false);
   const idempotencyKeyRef = useRef("");
+  const adjustmentKeyRef = useRef("");
 
   if (!settlement) {
     return null;
@@ -54,6 +66,49 @@ function DailySettlementCard({ settlement, commissionSummary = null, onRegisterP
   const commissionCompanies = Array.isArray(commissionSummary?.byCompany)
     ? commissionSummary.byCompany
     : [];
+  const adjustments = Array.isArray(settlement.adjustments)
+    ? settlement.adjustments
+    : [];
+
+  const openAdjustment = () => {
+    setAdjustmentDirection("DRIVER_TO_OWNER");
+    setAdjustmentAmount("");
+    setAdjustmentReason("");
+    setAdjustmentError("");
+    adjustmentKeyRef.current = crypto.randomUUID();
+    setShowAdjustment(true);
+  };
+
+  const closeAdjustment = () => {
+    setShowAdjustment(false);
+    setAdjustmentAmount("");
+    setAdjustmentReason("");
+    setAdjustmentError("");
+    adjustmentKeyRef.current = "";
+  };
+
+  const confirmAdjustment = async () => {
+    const amount = parseMoneyInput(adjustmentAmount);
+    const reason = adjustmentReason.trim();
+    if (!(amount > 0)) return setAdjustmentError("Ingresá un importe mayor que cero.");
+    if (reason.length < 3) return setAdjustmentError("Escribí un motivo claro para el ajuste.");
+
+    setIsSavingAdjustment(true);
+    setAdjustmentError("");
+    try {
+      await onRegisterAdjustment({
+        direction: adjustmentDirection,
+        amount,
+        reason,
+        idempotencyKey: adjustmentKeyRef.current,
+      });
+      closeAdjustment();
+    } catch (error) {
+      setAdjustmentError(error.message || "No se pudo registrar el ajuste.");
+    } finally {
+      setIsSavingAdjustment(false);
+    }
+  };
 
   const openPayment = () => {
     setPaymentAmount(Math.abs(pendingBalance).toFixed(2).replace(".", ","));
@@ -147,7 +202,7 @@ function DailySettlementCard({ settlement, commissionSummary = null, onRegisterP
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs font-black tracking-[0.14em] text-sky-300">COMISIONES DESCONTADAS</p>
-              <p className="mt-1 text-xs text-slate-400">Descontadas de la facturación real; el efectivo cobrado se conserva para calcular la entrega</p>
+              <p className="mt-1 text-xs text-slate-400">Cada comisión se descuenta del mismo medio de pago del viaje</p>
             </div>
             <p className="text-xl font-black text-white">−{formatCurrency(totalCommission)}</p>
           </div>
@@ -208,7 +263,81 @@ function DailySettlementCard({ settlement, commissionSummary = null, onRegisterP
             Registrar pago
           </button>
         )}
+        {onRegisterAdjustment && !showAdjustment && (
+          <button
+            type="button"
+            onClick={openAdjustment}
+            className="mt-2 w-full rounded-xl border border-current/30 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/5 active:scale-[0.99]"
+          >
+            Agregar ajuste
+          </button>
+        )}
       </div>
+
+      {showAdjustment && (
+        <div className="mt-3 rounded-2xl border border-sky-500/25 bg-slate-900/90 p-4">
+          <p className="text-xs font-black tracking-[0.14em] text-sky-300">NUEVO AJUSTE</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {[
+              ["DRIVER_TO_OWNER", "Alberto entrega al jefe"],
+              ["OWNER_TO_DRIVER", "El jefe entrega a Alberto"],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setAdjustmentDirection(value)}
+                className={`rounded-xl border px-3 py-3 text-sm font-bold ${adjustmentDirection === value ? "border-sky-400 bg-sky-400/10 text-white" : "border-slate-700 text-slate-400"}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <label className="mt-3 block text-sm font-semibold text-slate-300">
+            Motivo
+            <input
+              value={adjustmentReason}
+              maxLength={160}
+              onChange={(event) => setAdjustmentReason(event.target.value)}
+              placeholder="Ej.: Comisión WellMati"
+              className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+            />
+          </label>
+          <label className="mt-3 block text-sm font-semibold text-slate-300">
+            Importe
+            <input
+              inputMode="decimal"
+              value={adjustmentAmount}
+              onChange={(event) => setAdjustmentAmount(event.target.value)}
+              placeholder="0,00"
+              className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-right text-2xl font-black text-white"
+            />
+          </label>
+          {adjustmentError && <p className="mt-3 text-sm text-red-300">{adjustmentError}</p>}
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button type="button" onClick={closeAdjustment} disabled={isSavingAdjustment} className="rounded-xl border border-slate-700 px-3 py-3 text-sm font-bold text-slate-300">Cancelar</button>
+            <button type="button" onClick={confirmAdjustment} disabled={isSavingAdjustment} className="rounded-xl bg-sky-400 px-3 py-3 text-sm font-black text-slate-950 disabled:opacity-50">{isSavingAdjustment ? "Guardando..." : "Guardar ajuste"}</button>
+          </div>
+        </div>
+      )}
+
+      {adjustments.length > 0 && (
+        <div className="mt-3 rounded-2xl border border-slate-700 bg-slate-900/80 p-4">
+          <p className="text-xs font-black tracking-[0.14em] text-slate-400">HISTORIAL DE AJUSTES</p>
+          <div className="mt-3 divide-y divide-slate-800">
+            {adjustments.map((adjustment) => (
+              <div key={adjustment.id} className="flex items-start justify-between gap-3 py-3">
+                <div>
+                  <p className="text-sm font-bold text-white">{adjustment.reason}</p>
+                  <p className="mt-1 text-xs text-slate-500">{adjustment.direction === "DRIVER_TO_OWNER" ? "Alberto entrega al jefe" : "El jefe entrega a Alberto"}</p>
+                </div>
+                <p className={`font-black ${adjustment.direction === "DRIVER_TO_OWNER" ? "text-amber-300" : "text-sky-300"}`}>
+                  {adjustment.direction === "DRIVER_TO_OWNER" ? "−" : "+"}{formatCurrency(adjustment.amount)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {payments.length > 0 && (
         <div className="mt-3 rounded-2xl border border-slate-700 bg-slate-900/80 p-4">

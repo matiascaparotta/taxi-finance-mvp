@@ -38,7 +38,9 @@ const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
     tip,
     cashRevenue: grossCash - (usesPaymentScopedCommission ? cashCommission : commission) - tip,
     cardRevenue: grossCard - (usesPaymentScopedCommission ? cardCommission : 0),
-    cashRetained: usesPaymentScopedCommission ? grossCash - tip : grossCash - commission - tip,
+    cashRetained: usesPaymentScopedCommission
+      ? grossCash - cashCommission - tip
+      : grossCash - commission - tip,
   };
 };
 
@@ -46,6 +48,7 @@ const buildDailySettlement = ({
   auth,
   dailySettlementSnapshot,
   dailySettlementPayments = [],
+  dailySettlementAdjustments = [],
   endKm,
   fuelOwn,
   realCash,
@@ -74,6 +77,10 @@ const buildDailySettlement = ({
       payments: dailySettlementPayments.map((payment) => ({
         ...payment,
         amount: Number(payment.amount),
+      })),
+      adjustments: dailySettlementAdjustments.map((adjustment) => ({
+        ...adjustment,
+        amount: Number(adjustment.amount),
       })),
     };
   }
@@ -122,6 +129,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     importedSummary,
     dailySettlementSnapshot,
     dailySettlementPayments,
+    dailySettlementAdjustments,
   } = result;
 
   const startKm = Number(workDay.startKm || 0);
@@ -189,6 +197,7 @@ const getWorkDaySummaryService = async (workDayId, auth = null) => {
     auth,
     dailySettlementSnapshot,
     dailySettlementPayments,
+    dailySettlementAdjustments,
     endKm: workDay.endKm,
     fuelOwn,
     realCash,

@@ -206,6 +206,21 @@ directamente la jornada. El resumen mensual contiene únicamente jornadas,
 facturación, efectivo, datáfono y combustible propios; no reutiliza los textos
 ni el reparto de Matías y José.
 
+El 19/10/2026 quedó preparado el siguiente incremento de Alberto. Las
+comisiones se descuentan del mismo medio de pago del viaje y de la facturación
+real, sin alterar la lógica de Matías. La liquidación final presenta total,
+separación entre efectivo y datáfono y desglose por empresa. También permite
+registrar, con motivo y dirección explícita, ajustes posteriores al cierre sin
+reescribir la instantánea; estos ajustes modifican el saldo pendiente desde la
+fecha de la jornada y se muestran al jefe en modo lectura. La migración `028`
+crea el libro separado de ajustes y lo incorpora al respaldo.
+
+El importador real de Alberto contiene trece jornadas verificadas de octubre:
+1, 2, 4, 7, 8, 9, 10, 11, 14, 15, 16, 17 y 18. Las jornadas ya existentes se sincronizan sin duplicarse y
+las nuevas conservan viajes, kilómetros, gasolina, notas y ajustes finales de
+las libretas. Este incremento está probado y pendiente de envío a GitHub,
+despliegue de Railway y ejecución controlada del importador en producción.
+
 ## Sprint 18 — Base multiusuario
 
 **Estado:** Base técnica, aprovisionamiento y migración histórica desplegados

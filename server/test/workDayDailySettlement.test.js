@@ -13,7 +13,7 @@ const albertoAuth = {
   dailySocialSecurity: 35,
 };
 
-test("descuenta la comisión de la facturación pero conserva el efectivo cobrado", () => {
+test("descuenta cada comisión del medio de pago utilizado", () => {
   const result = calculatePaymentTotals([
     { amount: 28, paymentType: "cash", commission: 5, tip: 0 },
     { amount: 40, paymentType: "card", commission: 4, tip: 0 },
@@ -21,12 +21,12 @@ test("descuenta la comisión de la facturación pero conserva el efectivo cobrad
 
   assert.equal(result.cashRevenue, 23);
   assert.equal(result.cardRevenue, 36);
-  assert.equal(result.cashRetained, 28);
+  assert.equal(result.cashRetained, 23);
   assert.equal(result.cashCommission, 5);
   assert.equal(result.cardCommission, 4);
 });
 
-test("la comisión en efectivo cambia quién entrega dinero sin descontarse dos veces", () => {
+test("la comisión en efectivo reduce el efectivo usado para la entrega", () => {
   const totals = calculatePaymentTotals([
     { amount: 28, paymentType: "cash", commission: 5, tip: 0 },
   ], true);
@@ -40,8 +40,8 @@ test("la comisión en efectivo cambia quién entrega dinero sin descontarse dos 
 
   assert.equal(result.netRevenue, 23);
   assert.equal(result.driverShare, 11.5);
-  assert.equal(result.cashRetained, 28);
-  assert.equal(result.balance, -16.5);
+  assert.equal(result.cashRetained, 23);
+  assert.equal(result.balance, -11.5);
   assert.equal(result.balanceDirection, "DRIVER_PAYS_OWNER");
 });
 

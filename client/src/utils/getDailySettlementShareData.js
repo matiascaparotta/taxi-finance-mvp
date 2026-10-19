@@ -25,6 +25,14 @@ export function getDailySettlementShareData(settlement, summary = null) {
         })),
       ]
     : [];
+  const adjustmentRows = (settlement.adjustments || [])
+    .filter((adjustment) => Number(adjustment.workDayId) === Number(summary?.workDayId))
+    .map((adjustment) => ({
+      label: `Ajuste · ${adjustment.reason}`,
+      value: adjustment.direction === "OWNER_TO_DRIVER"
+        ? Number(adjustment.amount)
+        : -Number(adjustment.amount),
+    }));
 
   return {
     rows: [
@@ -41,6 +49,7 @@ export function getDailySettlementShareData(settlement, summary = null) {
       ...(Number(settlement.ownerAdjustment || 0) > 0
         ? [{ label: "Cuenta externa a favor del jefe", value: -settlement.ownerAdjustment }]
         : []),
+      ...adjustmentRows,
     ],
     result: getDailySettlementPresentation(settlement),
     pending: {

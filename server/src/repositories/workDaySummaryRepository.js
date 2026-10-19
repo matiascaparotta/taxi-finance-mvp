@@ -87,6 +87,19 @@ const getWorkDayWithTrips = async (workDayId) => {
          WHERE payments.organization_id = current_snapshot.organization_id
            AND payments.driver_user_id = current_snapshot.driver_user_id
            AND DATE(payments.created_at) <= current_work_day.date
+       ), 0) + COALESCE((
+         SELECT SUM(
+           CASE
+             WHEN adjustments.direction = 'OWNER_TO_DRIVER' THEN adjustments.amount
+             ELSE -adjustments.amount
+           END
+         )
+         FROM daily_settlement_adjustments AS adjustments
+         JOIN work_days AS adjustment_work_days
+           ON adjustment_work_days.id = adjustments.work_day_id
+         WHERE adjustments.organization_id = current_snapshot.organization_id
+           AND adjustments.driver_user_id = current_snapshot.driver_user_id
+           AND adjustment_work_days.date <= current_work_day.date
        ), 0) AS pendingBalance
      FROM daily_settlement_snapshots AS current_snapshot
      JOIN work_days AS current_work_day
@@ -96,6 +109,7 @@ const getWorkDayWithTrips = async (workDayId) => {
   );
 
   let dailySettlementPayments = [];
+  let dailySettlementAdjustments = [];
   if (settlementRows.length === 1) {
     const [paymentRows] = await pool.query(
       `SELECT
@@ -115,6 +129,28 @@ const getWorkDayWithTrips = async (workDayId) => {
       ]
     );
     dailySettlementPayments = paymentRows;
+    const [adjustmentRows] = await pool.query(
+      `SELECT
+         adjustments.id,
+         adjustments.work_day_id AS workDayId,
+         adjustments.direction,
+         adjustments.amount,
+         adjustments.reason,
+         adjustment_work_days.date AS adjustmentDate,
+         adjustments.created_at AS createdAt
+       FROM daily_settlement_adjustments AS adjustments
+       JOIN work_days AS adjustment_work_days
+         ON adjustment_work_days.id = adjustments.work_day_id
+       WHERE adjustments.organization_id = ? AND adjustments.driver_user_id = ?
+         AND adjustment_work_days.date <= ?
+       ORDER BY adjustment_work_days.date DESC, adjustments.created_at DESC, adjustments.id DESC`,
+      [
+        workDayRows[0].organizationId,
+        workDayRows[0].driverUserId,
+        workDayRows[0].date,
+      ]
+    );
+    dailySettlementAdjustments = adjustmentRows;
   }
 
   return {
@@ -123,6 +159,7 @@ const getWorkDayWithTrips = async (workDayId) => {
     importedSummary: importRows[0] || null,
     dailySettlementSnapshot: settlementRows[0] || null,
     dailySettlementPayments,
+    dailySettlementAdjustments,
   };
 };
 

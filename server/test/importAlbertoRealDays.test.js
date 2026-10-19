@@ -10,15 +10,31 @@ const {
 const amount = (value) => typeof value === "object" ? value.amount : value;
 const total = (values) => values.reduce((sum, value) => sum + amount(value), 0);
 
-test("las tres jornadas reproducen exactamente los totales de las libretas", () => {
+test("las trece jornadas reproducen exactamente los totales de las libretas", () => {
   assert.doesNotThrow(validateDays);
-  assert.equal(total(REAL_DAYS[0].cash).toFixed(2), "105.30");
-  assert.equal(total(REAL_DAYS[0].card).toFixed(2), "177.73");
-  assert.equal(total(REAL_DAYS[1].cash).toFixed(2), "6.13");
-  assert.equal(total(REAL_DAYS[1].card).toFixed(2), "613.28");
-  assert.equal(total(REAL_DAYS[2].cash).toFixed(2), "75.83");
-  assert.equal(total(REAL_DAYS[2].card).toFixed(2), "275.12");
-  assert.equal(REAL_DAYS[2].ownerAdjustment, 5);
+  const expected = {
+    "2026-10-01": ["105.30", "177.73", 0],
+    "2026-10-02": ["6.13", "613.28", 0],
+    "2026-10-04": ["97.30", "268.09", 10],
+    "2026-10-07": ["45.74", "286.93", 0],
+    "2026-10-08": ["75.71", "230.90", 5],
+    "2026-10-09": ["112.29", "205.91", 0],
+    "2026-10-10": ["192.55", "164.31", 0],
+    "2026-10-11": ["84.59", "246.43", 0],
+    "2026-10-14": ["133.85", "173.28", 10],
+    "2026-10-15": ["169.77", "163.75", 0],
+    "2026-10-16": ["101.94", "244.70", 5],
+    "2026-10-17": ["35.25", "313.64", 0],
+    "2026-10-18": ["75.83", "275.12", 5],
+  };
+
+  assert.equal(REAL_DAYS.length, 13);
+  for (const day of REAL_DAYS) {
+    const [cash, card, ownerAdjustment] = expected[day.date];
+    assert.equal(total(day.cash).toFixed(2), cash, `${day.date} efectivo`);
+    assert.equal(total(day.card).toFixed(2), card, `${day.date} datáfono`);
+    assert.equal(day.ownerAdjustment || 0, ownerAdjustment, `${day.date} ajuste`);
+  }
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {

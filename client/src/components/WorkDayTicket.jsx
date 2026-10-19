@@ -28,6 +28,7 @@ function WorkDayTicket({
   trips = [],
   onEditTrip = null,
   onRegisterSettlementPayment = null,
+  onRegisterSettlementAdjustment = null,
 }) {
   const [showAllTrips, setShowAllTrips] = useState(false);
 
@@ -235,6 +236,7 @@ function WorkDayTicket({
           byCompany: summary.commissionByCompany,
         }}
         onRegisterPayment={onRegisterSettlementPayment}
+        onRegisterAdjustment={onRegisterSettlementAdjustment}
       />
     </Card>
   );

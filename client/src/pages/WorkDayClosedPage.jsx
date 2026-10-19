@@ -8,7 +8,10 @@ import WorkDayShareCard from "../components/WorkDayShareCard";
 import WorkDayTicket from "../components/WorkDayTicket";
 
 import { getWorkDayById } from "../services/workDayService";
-import { registerDailySettlementPayment } from "../services/dailySettlementService";
+import {
+  registerDailySettlementAdjustment,
+  registerDailySettlementPayment,
+} from "../services/dailySettlementService";
 import { getWorkDaySummary } from "../services/summaryService";
 import { getTripsByWorkDay } from "../services/tripService";
 import { buildWorkDaySummaryText } from "../utils/buildWorkDaySummaryText";
@@ -67,6 +70,16 @@ function WorkDayClosedPage() {
 
   const handleRegisterSettlementPayment = async (paymentData) => {
     const result = await registerDailySettlementPayment(paymentData);
+    const refreshedSummary = await getWorkDaySummary(id);
+    setSummary(refreshedSummary);
+    return result;
+  };
+
+  const handleRegisterSettlementAdjustment = async (adjustmentData) => {
+    const result = await registerDailySettlementAdjustment({
+      ...adjustmentData,
+      workDayId: Number(id),
+    });
     const refreshedSummary = await getWorkDaySummary(id);
     setSummary(refreshedSummary);
     return result;
@@ -140,8 +153,13 @@ function WorkDayClosedPage() {
             : null
         }
         onRegisterSettlementPayment={
-          summary.dailySettlement
+          summary.dailySettlement && workDay.canManage
             ? handleRegisterSettlementPayment
+            : null
+        }
+        onRegisterSettlementAdjustment={
+          summary.dailySettlement && workDay.canManage
+            ? handleRegisterSettlementAdjustment
             : null
         }
       />

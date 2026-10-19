@@ -1129,6 +1129,12 @@ aplicar pagos. El resumen cerrado devuelve también el historial completo de la
 misma relación laboral, ordenado desde el movimiento más reciente. La interfaz
 limita únicamente la presentación inicial, no la consulta ni la persistencia.
 
+Los ajustes posteriores al cierre se almacenan por separado en
+`daily_settlement_adjustments` y se vinculan a la jornada que les da origen.
+Guardan dirección, importe, motivo, autor y clave idempotente. Se incorporan al
+saldo desde la fecha de la jornada sin reescribir la instantánea económica. Esta
+separación permite distinguir una cuenta adicional de un pago que cancela saldo.
+
 El resumen mensual diario se deriva sumando las instantáneas, no aplicando otra
 vez el motor mensual de Lic249. Los pagos se filtran por su fecha para informar
 la actividad del mes, mientras que el pendiente procede del libro completo de

@@ -668,15 +668,12 @@ El cierre diario se calcula en céntimos y en este orden:
 3. `derecho total de Alberto = parte de Alberto + gasolina`;
 4. `saldo diario = derecho total de Alberto - efectivo conservado`.
 
-En el perfil `DAILY_50_50`, cada comisión se descuenta de la facturación del
+En el perfil `DAILY_50_50`, cada comisión se descuenta de la facturación y del
 mismo medio de pago del viaje. Por ejemplo, un viaje de 28 € en efectivo con
-5 € de comisión aporta 23 € a la facturación real, aunque Alberto haya recibido
-físicamente los 28 €. El reparto se calcula sobre los 23 € y la conciliación de
-la entrega compara el derecho de Alberto contra los 28 € que conserva en mano.
-De esta manera la comisión en efectivo queda reflejada al determinar quién debe
-entregar dinero a quién, sin descontarla dos veces. Una comisión de datáfono
-reduce el datáfono y la facturación neta repartible; no altera el efectivo en
-mano porque ese cobro ya está en poder del jefe.
+5 € de comisión aporta 23 € a la facturación real y 23 € al efectivo de la
+liquidación. Si el viaje fue pagado con datáfono, los 5 € se descuentan del
+datáfono. El reparto y la conciliación de la entrega utilizan estos importes
+netos. Esta regla es distinta de la liquidación de Matías.
 
 La liquidación diaria y sus formatos compartibles muestran la comisión total,
 su separación entre efectivo y datáfono y el desglose por empresa. Estas líneas
@@ -721,6 +718,16 @@ definido como la suma firmada de cierres más los ajustes firmados de pagos.
 El historial se ordena desde el pago más reciente y conserva dirección, fecha,
 hora e importe. En la jornada cerrada se muestran primero tres movimientos y
 el resto queda disponible mediante `Ver los pagos`, sin recortar el historial.
+
+Después del cierre, Alberto puede registrar ajustes independientes asociados a
+una jornada cerrada. Cada ajuste exige importe, motivo y una dirección elegida
+explícitamente: `Alberto entrega al jefe` reduce el saldo a favor del conductor;
+`el jefe entrega a Alberto` lo aumenta. El ajuste modifica el saldo pendiente
+desde la fecha de esa jornada, pero nunca altera viajes, comisiones, facturación,
+gasolina, Seguridad Social, reparto ni la instantánea original. Los ajustes se
+muestran con su motivo en la jornada y en el resumen compartido correspondiente.
+No son pagos: un pago salda una deuda existente, mientras que un ajuste reconoce
+una cuenta adicional. Ambos conservan historial e idempotencia.
 
 La liquidación puede compartirse diariamente como imagen o texto. Ambos
 formatos incluyen el desglose del día, el resultado exclusivo de esa jornada y

@@ -49,6 +49,7 @@ const closeWorkDayWithDailySettlement = async ({
     );
     const financials = financialRows[0];
     const cashRetained = Number(financials.cashAmount)
+      - Number(financials.cashCommission)
       - Number(financials.tip);
     const netRevenue = Number(financials.cashAmount)
       - Number(financials.cashCommission)

@@ -1448,6 +1448,14 @@ queda referido al cierre de esa fecha. Una jornada anterior ya no incorpora
 jornadas ni pagos posteriores, aunque la jornada más reciente continúe mostrando
 el estado acumulado alcanzado hasta ese día.
 
+El importador se amplió después con las trece jornadas reales disponibles de
+octubre: 1, 2, 4, 7, 8, 9, 10, 11, 14, 15, 16, 17 y 18. Los subtotales escritos
+de efectivo y datáfono actúan como control de integridad para resolver cifras
+manuscritas dudosas. Se conservaron kilometraje, gasolina, notas reconocibles y
+los ajustes externos de 4, 8, 14, 16 y 18 de octubre. La carga continúa siendo
+idempotente: sincroniza instantáneas existentes y solo crea las jornadas que
+faltan.
+
 🚧 Sprint en desarrollo.
 
 ---
