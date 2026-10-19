@@ -25,7 +25,8 @@ const updateSettings = async (organizationId, userId, settings) => {
 
 const listCompanies = async (organizationId, userId) => {
   const [rows] = await pool.query(
-    `SELECT id, name, commission_amount AS commissionAmount, status
+    `SELECT id, name, commission_type AS commissionType,
+            commission_amount AS commissionAmount, status
      FROM commission_companies
      WHERE organization_id = ? AND driver_user_id = ?
      ORDER BY status = 'ACTIVE' DESC, name`,
@@ -36,7 +37,8 @@ const listCompanies = async (organizationId, userId) => {
 
 const getActiveCompany = async (organizationId, userId, companyId) => {
   const [rows] = await pool.query(
-    `SELECT id, name, commission_amount AS commissionAmount
+    `SELECT id, name, commission_type AS commissionType,
+            commission_amount AS commissionAmount
      FROM commission_companies
      WHERE id = ? AND organization_id = ? AND driver_user_id = ? AND status = 'ACTIVE'`,
     [companyId, organizationId, userId]
@@ -47,9 +49,9 @@ const getActiveCompany = async (organizationId, userId, companyId) => {
 const createCompany = async (organizationId, userId, company) => {
   const [result] = await pool.query(
     `INSERT INTO commission_companies
-       (organization_id, driver_user_id, name, commission_amount)
-     VALUES (?, ?, ?, ?)`,
-    [organizationId, userId, company.name, company.commissionAmount]
+       (organization_id, driver_user_id, name, commission_type, commission_amount)
+     VALUES (?, ?, ?, ?, ?)`,
+    [organizationId, userId, company.name, company.commissionType, company.commissionAmount]
   );
   return { id: result.insertId, ...company, status: "ACTIVE" };
 };
@@ -57,9 +59,9 @@ const createCompany = async (organizationId, userId, company) => {
 const updateCompany = async (organizationId, userId, companyId, company) => {
   const [result] = await pool.query(
     `UPDATE commission_companies
-     SET name = ?, commission_amount = ?, status = ?
+     SET name = ?, commission_type = ?, commission_amount = ?, status = ?
      WHERE id = ? AND organization_id = ? AND driver_user_id = ?`,
-    [company.name, company.commissionAmount, company.status, companyId, organizationId, userId]
+    [company.name, company.commissionType, company.commissionAmount, company.status, companyId, organizationId, userId]
   );
   return result.affectedRows === 1
     ? { id: Number(companyId), ...company }

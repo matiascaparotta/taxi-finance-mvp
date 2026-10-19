@@ -51,6 +51,40 @@ function drawPanel(context, x, y, width, height, accent = false) {
   context.stroke();
 }
 
+function drawDataPanel(context, { title, rows, x, y, width, accent = COLORS.sky }) {
+  const rowHeight = 52;
+  const height = 68 + rows.length * rowHeight;
+  drawPanel(context, x, y, width, height);
+  drawText(context, title, x + 30, y + 22, "700 21px Arial", accent);
+  rows.forEach((row, index) => {
+    const rowTop = y + 68 + index * rowHeight;
+    const emphasized = Boolean(row.emphasized);
+    context.font = emphasized ? "700 20px Arial" : "400 19px Arial";
+    let fittedLabel = row.label;
+    while (context.measureText(fittedLabel).width > width - 170 && fittedLabel.length > 4) {
+      fittedLabel = `${fittedLabel.slice(0, -2)}…`;
+    }
+    drawText(
+      context,
+      fittedLabel,
+      x + 30,
+      rowTop,
+      emphasized ? "700 20px Arial" : "400 19px Arial",
+      emphasized ? COLORS.text : COLORS.muted
+    );
+    drawText(
+      context,
+      formatCurrency(row.value),
+      x + width - 30,
+      rowTop,
+      emphasized ? "700 23px Arial" : "700 20px Arial",
+      COLORS.text,
+      "right"
+    );
+  });
+  return y + height;
+}
+
 function drawText(
   context,
   text,
@@ -177,16 +211,67 @@ async function createSummaryCard(workDay, summary) {
       ? [{ label: "Gasolina José", value: formatCurrency(fuelJose) }]
       : []),
   ];
+  const settlement = summary.dailySettlement;
+  const adjustmentRows = (settlement?.adjustments || [])
+    .filter((adjustment) => Number(adjustment.workDayId) === Number(summary.workDayId))
+    .map((adjustment) => ({
+      label: `Ajuste · ${adjustment.reason}`,
+      value: adjustment.direction === "OWNER_TO_DRIVER"
+        ? Number(adjustment.amount)
+        : -Number(adjustment.amount),
+    }));
+  const commissionRows = Number(summary.commission || 0) > 0
+    ? [
+        { label: "Total descontado", value: -Number(summary.commission), emphasized: true },
+        ...(Number(summary.cashCommission || 0) > 0
+          ? [{ label: "En efectivo", value: -Number(summary.cashCommission) }]
+          : []),
+        ...(Number(summary.cardCommission || 0) > 0
+          ? [{ label: "En datáfono", value: -Number(summary.cardCommission) }]
+          : []),
+        ...(summary.commissionByCompany || []).map((company) => ({
+          label: `${company.name} · ${company.tripCount}`,
+          value: -Number(company.amount),
+        })),
+      ]
+    : [{ label: "Sin comisiones", value: 0 }];
+  const repartoRows = settlement ? [
+    { label: "Facturación neta", value: settlement.netRevenue },
+    { label: "Seguridad Social", value: -settlement.socialSecurity },
+    { label: "Gasolina", value: -settlement.fuelCost },
+    { label: "Base para repartir", value: settlement.distributableBase, emphasized: true },
+    { label: `Tu parte · ${Number(settlement.driverSharePercentage || 0)} %`, value: settlement.driverShare },
+    { label: "Parte del jefe", value: settlement.ownerShare },
+    { label: "Reintegro gasolina", value: settlement.reimbursableFuel },
+    { label: "Total que te corresponde", value: settlement.driverEntitlement, emphasized: true },
+  ] : [];
+  const cashRows = settlement ? [
+    { label: "Efectivo conservado", value: settlement.cashRetained },
+    ...(Number(settlement.ownerAdjustment || 0) > 0
+      ? [{ label: "Externo para el jefe", value: -settlement.ownerAdjustment }]
+      : []),
+    { label: "Resultado del día", value: settlement.originalBalance ?? settlement.balance, emphasized: true },
+  ] : [];
+  const balanceRows = settlement && Number.isFinite(Number(settlement.previousPendingBalance))
+    ? [
+        { label: "Pendiente anterior", value: settlement.previousPendingBalance },
+        { label: "Resultado del día", value: settlement.originalBalance },
+        ...(Number(settlement.currentDayPaymentEffect || 0) !== 0
+          ? [{ label: "Pagos del día", value: settlement.currentDayPaymentEffect }]
+          : []),
+        ...adjustmentRows,
+        { label: "Pendiente final", value: settlement.pendingBalance, emphasized: true },
+      ]
+    : adjustmentRows;
   const journeyTop = 225;
   const summaryTitleTop = 455;
   const summaryTop = summaryTitleTop + 50;
   const summaryHeight = summaryRows.length * 76 + 28;
-  const settlementTitleTop = summaryTop + summaryHeight + 65;
-  const settlementTop = settlementTitleTop + 50;
-  const settlementHeight = dailySettlement
-    ? dailySettlement.rows.length * 66 + 28
-    : 0;
-  const resultTop = settlementTop + settlementHeight + 24;
+  const settlementTitleTop = summaryTop + summaryHeight + 55;
+  const settlementTop = settlementTitleTop + 48;
+  const leftColumnHeight = 68 + commissionRows.length * 52 + 24 + 68 + repartoRows.length * 52;
+  const rightColumnHeight = 68 + cashRows.length * 52 + 24 + 68 + balanceRows.length * 52;
+  const resultTop = settlementTop + Math.max(leftColumnHeight, rightColumnHeight) + 28;
   const resultHeight = 300;
   const cardHeight = dailySettlement
     ? resultTop + resultHeight + 60
@@ -314,29 +399,36 @@ async function createSummaryCard(workDay, summary) {
       "700 27px Arial",
       COLORS.sky
     );
-    drawPanel(context, 70, settlementTop, 940, settlementHeight);
-
-    dailySettlement.rows.forEach((row, index) => {
-      const rowTop = settlementTop + 20 + index * 66;
-      const emphasized = ["Base para repartir", "Total que te corresponde"].includes(row.label);
-
-      drawText(
-        context,
-        row.label,
-        110,
-        rowTop,
-        emphasized ? "700 26px Arial" : "400 25px Arial",
-        emphasized ? COLORS.text : COLORS.muted
-      );
-      drawText(
-        context,
-        formatCurrency(row.value),
-        970,
-        rowTop,
-        emphasized ? "700 30px Arial" : "700 27px Arial",
-        COLORS.text,
-        "right"
-      );
+    const leftAfterCommissions = drawDataPanel(context, {
+      title: "1 · COMISIONES",
+      rows: commissionRows,
+      x: 70,
+      y: settlementTop,
+      width: 455,
+      accent: COLORS.amber,
+    });
+    drawDataPanel(context, {
+      title: "2 · CÁLCULO DEL REPARTO",
+      rows: repartoRows,
+      x: 70,
+      y: leftAfterCommissions + 24,
+      width: 455,
+    });
+    const rightAfterCash = drawDataPanel(context, {
+      title: "3 · CIERRE DE CAJA",
+      rows: cashRows,
+      x: 555,
+      y: settlementTop,
+      width: 455,
+      accent: COLORS.emerald,
+    });
+    drawDataPanel(context, {
+      title: "4 · SALDO ACUMULADO",
+      rows: balanceRows,
+      x: 555,
+      y: rightAfterCash + 24,
+      width: 455,
+      accent: COLORS.sky,
     });
 
     const isOwnerPayment =

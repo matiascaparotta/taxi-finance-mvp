@@ -60,6 +60,13 @@ const parseNonNegativeAmount = (value, fieldName) => {
   return Number(numericValue.toFixed(2));
 };
 
+const calculateCompanyCommission = (amount, company) => {
+  if (company?.commissionType !== "PERCENTAGE") return null;
+  return Math.round(
+    (Number(amount) * Number(company.commissionAmount) / 100 + Number.EPSILON) * 100
+  ) / 100;
+};
+
 const normalizeTripData = (tripData) => {
   const amount = parsePositiveAmount(tripData.amount);
 
@@ -120,6 +127,10 @@ const createTripService = async (tripData, auth = null) => {
       Number(tripData.commissionCompanyId)
     );
     if (!company) throw new Error("La empresa de comisión no está disponible");
+    const automaticCommission = calculateCompanyCommission(normalizedTrip.amount, company);
+    if (automaticCommission !== null) {
+      normalizedTrip.commission = automaticCommission;
+    }
     normalizedTrip.commissionCompanyName = company.name;
     normalizedTrip.commissionCompanyAmount = normalizedTrip.commission;
   } else {
@@ -273,6 +284,7 @@ const deleteTripService = async (
 };
 
 module.exports = {
+  calculateCompanyCommission,
   createTripService,
   getTripsByWorkDayService,
   getTripByIdService,

@@ -5,6 +5,7 @@ import {
   applyMoneyKey,
   parseMoneyInput,
 } from "../utils/moneyKeypad";
+import { calculateCompanyCommission, formatCompanyCommission } from "../utils/companyCommission";
 
 const KEYS = [
   "7",
@@ -57,6 +58,10 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
     },
   };
   const activeMoneyField = moneyFields[activeField];
+  const selectedCommissionCompany = commissionCompanies.find(
+    (item) => String(item.id) === String(commissionCompanyId)
+  );
+  const hasAutomaticCommission = selectedCommissionCompany?.commissionType === "PERCENTAGE";
 
   const clearMessages = () => {
     setError("");
@@ -65,9 +70,13 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
 
   const handleKeyPress = (key) => {
     clearMessages();
-    activeMoneyField.setValue((currentValue) =>
-      applyMoneyKey(currentValue, key)
-    );
+    activeMoneyField.setValue((currentValue) => {
+      const nextValue = applyMoneyKey(currentValue, key);
+      if (activeField === "amount" && hasAutomaticCommission) {
+        setCommission(calculateCompanyCommission(parseMoneyInput(nextValue), selectedCommissionCompany).toFixed(2));
+      }
+      return nextValue;
+    });
   };
 
   const resetForm = () => {
@@ -89,7 +98,9 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
     clearMessages();
     setCommissionCompanyId(companyId);
     setCommission(
-      selectedCompany ? Number(selectedCompany.commissionAmount).toFixed(2) : ""
+      selectedCompany
+        ? calculateCompanyCommission(parseMoneyInput(amount), selectedCompany).toFixed(2)
+        : ""
     );
   };
 
@@ -214,9 +225,9 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
             Empresa con comisión
             <select value={commissionCompanyId} onChange={handleCompanyChange} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white">
               <option value="">Sin comisión de empresa</option>
-              {commissionCompanies.map((item) => <option key={item.id} value={item.id}>{item.name} · {Number(item.commissionAmount).toFixed(2)} €</option>)}
+              {commissionCompanies.map((item) => <option key={item.id} value={item.id}>{item.name} · {formatCompanyCommission(item)}</option>)}
             </select>
-            {commissionCompanyId && <span className="mt-2 block text-xs text-emerald-300">Se completa con la comisión habitual, pero puedes cambiarla para este viaje.</span>}
+            {commissionCompanyId && <span className="mt-2 block text-xs text-emerald-300">{hasAutomaticCommission ? `Se calcula automáticamente el ${formatCompanyCommission(selectedCommissionCompany)} sobre el importe.` : "Se completa con la comisión habitual, pero puedes cambiarla para este viaje."}</span>}
           </label>
         )}
 
@@ -230,9 +241,11 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
                 key={field}
                 type="button"
                 onClick={() => {
+                  if (field === "commission" && hasAutomaticCommission) return;
                   clearMessages();
                   setActiveField(field);
                 }}
+                disabled={field === "commission" && hasAutomaticCommission}
                 aria-pressed={isActive}
                 className={`rounded-xl border px-3 py-2 text-center text-sm transition active:scale-[0.98] ${
                   isActive
@@ -242,7 +255,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
               >
                 <span className="font-semibold">
                   {config.value
-                    ? `${config.label}: ${config.value} €`
+                    ? `${config.label}: ${config.value} €${field === "commission" && hasAutomaticCommission ? " · automática" : ""}`
                     : `+ ${config.label}`}
                 </span>
               </button>

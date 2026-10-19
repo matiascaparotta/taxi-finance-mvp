@@ -25,10 +25,13 @@ const FUEL_MODES = new Set(["ACTUAL_LOAD", "DISTANCE_RATE"]);
 
 const companyInput = (input) => {
   const name = input?.name?.trim();
+  const commissionType = input?.commissionType || "FIXED";
   const commissionAmount = Number(input?.commissionAmount);
   if (!name || name.length > 120) throw new Error("El nombre de la empresa es obligatorio");
-  if (!Number.isFinite(commissionAmount) || commissionAmount < 0 || commissionAmount > 10000) throw new Error("El importe de comisión no es válido");
-  return { name, commissionAmount: Number(commissionAmount.toFixed(2)) };
+  if (!["FIXED", "PERCENTAGE"].includes(commissionType)) throw new Error("El tipo de comisión no es válido");
+  const maximum = commissionType === "PERCENTAGE" ? 100 : 10000;
+  if (!Number.isFinite(commissionAmount) || commissionAmount < 0 || commissionAmount > maximum) throw new Error("El importe de comisión no es válido");
+  return { name, commissionType, commissionAmount: Number(commissionAmount.toFixed(2)) };
 };
 
 const getDriverSettings = async (auth) => {
@@ -41,7 +44,7 @@ const getDriverSettings = async (auth) => {
     fuelCalculationMode: settings?.fuelCalculationMode || "ACTUAL_LOAD",
     fuelRatePerKm: Number(settings?.fuelRatePerKm || 0),
     dailySocialSecurity: Number(settings?.dailySocialSecurity || 0),
-    companies: companies.map((company) => ({ ...company, id: Number(company.id), commissionAmount: Number(company.commissionAmount) })),
+    companies: companies.map((company) => ({ ...company, id: Number(company.id), commissionType: company.commissionType || "FIXED", commissionAmount: Number(company.commissionAmount) })),
   };
 };
 
