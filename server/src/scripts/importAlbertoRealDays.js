@@ -207,6 +207,13 @@ const cents = (values) => values.reduce(
   0
 );
 
+const retainedCashCents = (values) => values.reduce(
+  (total, value) => total + Math.round(
+    (amountOf(value) + commissionOf(value)) * 100
+  ),
+  0
+);
+
 const normalizeTrip = (value, paymentType) => {
   const commission = commissionOf(value);
   const note = typeof value === "object" && value !== null ? value.note || null : null;
@@ -321,10 +328,11 @@ const importDay = async (connection, scope, day) => {
     const workDayId = Number(existing[0].id);
     await syncTripCommissions(connection, workDayId, day);
     const cashAmount = cents(day.cash) / 100;
+    const cashRetained = retainedCashCents(day.cash) / 100;
     const cardAmount = cents(day.card) / 100;
     const snapshot = calculateDailySettlement({
       netRevenue: cashAmount + cardAmount,
-      cashRetained: cashAmount,
+      cashRetained,
       fuelCost: day.fuel,
       socialSecurity: scope.socialSecurity,
       ownerAdjustment: day.ownerAdjustment || 0,
@@ -398,10 +406,11 @@ const importDay = async (connection, scope, day) => {
   }
 
   const cashAmount = cents(day.cash) / 100;
+  const cashRetained = retainedCashCents(day.cash) / 100;
   const cardAmount = cents(day.card) / 100;
   const snapshot = calculateDailySettlement({
     netRevenue: cashAmount + cardAmount,
-    cashRetained: cashAmount,
+    cashRetained,
     fuelCost: day.fuel,
     socialSecurity: scope.socialSecurity,
     ownerAdjustment: day.ownerAdjustment || 0,
@@ -488,4 +497,10 @@ if (require.main === module) {
   });
 }
 
-module.exports = { REAL_DAYS, buildTripTimes, interleaveTrips, validateDays };
+module.exports = {
+  REAL_DAYS,
+  buildTripTimes,
+  interleaveTrips,
+  retainedCashCents,
+  validateDays,
+};

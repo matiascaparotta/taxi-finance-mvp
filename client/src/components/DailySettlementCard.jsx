@@ -193,7 +193,7 @@ function DailySettlementCard({
         <div className="divide-y divide-slate-800 border-t border-slate-700">
           <SettlementRow label="Reintegro de gasolina" value={settlement.reimbursableFuel} />
           <SettlementRow label="Total que te corresponde" value={settlement.driverEntitlement} strong />
-          <SettlementRow label="Efectivo que conservaste" value={settlement.cashRetained} />
+          <SettlementRow label="Efectivo cobrado que conservaste" value={settlement.cashRetained} />
           {Number(settlement.ownerAdjustment || 0) > 0 && (
             <SettlementRow label="Efectivo externo para entregar al jefe" value={-settlement.ownerAdjustment} />
           )}

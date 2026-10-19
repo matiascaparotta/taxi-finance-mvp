@@ -49,8 +49,10 @@ const calculatePaymentTotals = (trips, usesPaymentScopedCommission = false) => {
     tip,
     cashRevenue: grossCash - (usesPaymentScopedCommission ? cashCommission : commission) - tip,
     cardRevenue: grossCard - (usesPaymentScopedCommission ? cardCommission : 0),
+    // Una comisión cobrada en efectivo deja de ser facturación, pero el
+    // conductor sí conserva físicamente ese dinero hasta la liquidación.
     cashRetained: usesPaymentScopedCommission
-      ? grossCash - cashCommission - tip
+      ? grossCash - tip
       : grossCash - commission - tip,
   };
 };

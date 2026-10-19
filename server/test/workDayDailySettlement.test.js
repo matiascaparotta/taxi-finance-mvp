@@ -21,12 +21,12 @@ test("descuenta cada comisión del medio de pago utilizado", () => {
 
   assert.equal(result.cashRevenue, 23);
   assert.equal(result.cardRevenue, 36);
-  assert.equal(result.cashRetained, 23);
+  assert.equal(result.cashRetained, 28);
   assert.equal(result.cashCommission, 5);
   assert.equal(result.cardCommission, 4);
 });
 
-test("la comisión en efectivo reduce el efectivo usado para la entrega", () => {
+test("la comisión en efectivo sale de facturación pero permanece en la entrega", () => {
   const totals = calculatePaymentTotals([
     { amount: 28, paymentType: "cash", commission: 5, tip: 0 },
   ], true);
@@ -40,8 +40,8 @@ test("la comisión en efectivo reduce el efectivo usado para la entrega", () => 
 
   assert.equal(result.netRevenue, 23);
   assert.equal(result.driverShare, 11.5);
-  assert.equal(result.cashRetained, 23);
-  assert.equal(result.balance, -11.5);
+  assert.equal(result.cashRetained, 28);
+  assert.equal(result.balance, -16.5);
   assert.equal(result.balanceDirection, "DRIVER_PAYS_OWNER");
 });
 

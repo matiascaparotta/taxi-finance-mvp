@@ -4,6 +4,7 @@ const {
   REAL_DAYS,
   buildTripTimes,
   interleaveTrips,
+  retainedCashCents,
   validateDays,
 } = require("../src/scripts/importAlbertoRealDays");
 
@@ -61,6 +62,7 @@ test("conserva el desglose legible de las comisiones y ajustes de la libreta", (
     commissionCompanyName: "Petit - AGP",
     note: "Petit - AGP",
   });
+  assert.equal(retainedCashCents(october4.cash), 10230);
 });
 
 test("conserva el orden interno al intercalar efectivo y datáfono", () => {

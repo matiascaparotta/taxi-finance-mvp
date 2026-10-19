@@ -57,7 +57,7 @@ export function getDailySettlementShareData(settlement, summary = null) {
       { label: "Parte del jefe", value: settlement.ownerShare },
       { label: "Reintegro gasolina", value: settlement.reimbursableFuel },
       { label: "Total que te corresponde", value: settlement.driverEntitlement },
-      { label: "Efectivo conservado", value: settlement.cashRetained },
+      { label: "Efectivo cobrado conservado", value: settlement.cashRetained },
       ...(Number(settlement.ownerAdjustment || 0) > 0
         ? [{ label: "Efectivo externo para entregar al jefe", value: -settlement.ownerAdjustment }]
         : []),
