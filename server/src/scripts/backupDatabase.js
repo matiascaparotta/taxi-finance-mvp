@@ -24,6 +24,8 @@ const BACKUP_TABLES = [
   "monthly_settlements",
   "monthly_settlement_audit_logs",
 ];
+const DEFAULT_RETENTION_DAYS = 30;
+const BACKUP_FILE_PATTERN = /^taxfin-\d{4}-\d{2}-\d{2}T.*\.sql(?:\.sha256)?$/;
 
 const formatTimestamp = (date) =>
   date.toISOString().replace(/[:.]/g, "-");
@@ -65,6 +67,36 @@ const calculateChecksum = async (filePath) => {
   }
 
   return hash.digest("hex");
+};
+
+const removeExpiredBackups = async (
+  backupDirectory,
+  retentionDays = DEFAULT_RETENTION_DAYS,
+  now = Date.now()
+) => {
+  const retentionMs = retentionDays * 24 * 60 * 60 * 1000;
+  const entries = await fsPromises.readdir(backupDirectory, {
+    withFileTypes: true,
+  });
+  const removed = [];
+
+  for (const entry of entries) {
+    if (!entry.isFile() || !BACKUP_FILE_PATTERN.test(entry.name)) {
+      continue;
+    }
+
+    const filePath = path.join(backupDirectory, entry.name);
+    const stats = await fsPromises.stat(filePath);
+
+    if (now - stats.mtimeMs <= retentionMs) {
+      continue;
+    }
+
+    await fsPromises.rm(filePath);
+    removed.push(filePath);
+  }
+
+  return removed;
 };
 
 const getExistingBackupTables = async () => {
@@ -155,11 +187,11 @@ const backupDatabase = async () => {
       path.join(__dirname, "../../backups")
   );
   const temporaryDirectory = await fsPromises.mkdtemp(
-    path.join(os.tmpdir(), "lic249-backup-")
+    path.join(os.tmpdir(), "taxfin-backup-")
   );
   const configPath = path.join(temporaryDirectory, "mysql-client.cnf");
   const timestamp = formatTimestamp(new Date());
-  const backupName = `lic249-${timestamp}.sql`;
+  const backupName = `taxfin-${timestamp}.sql`;
   const temporaryBackupPath = path.join(
     temporaryDirectory,
     backupName
@@ -196,9 +228,20 @@ const backupDatabase = async () => {
       `${checksum}  ${backupName}\n`,
       { mode: 0o600 }
     );
+    const retentionDays = Math.max(
+      1,
+      Number(process.env.BACKUP_RETENTION_DAYS || DEFAULT_RETENTION_DAYS)
+    );
+    const removedBackups = await removeExpiredBackups(
+      backupDirectory,
+      retentionDays
+    );
 
     console.log(`Backup created: ${finalBackupPath}`);
     console.log(`SHA-256: ${checksum}`);
+    console.log(
+      `Retention: ${retentionDays} days (${removedBackups.length} expired files removed)`
+    );
 
     return {
       backupPath: finalBackupPath,
@@ -221,6 +264,8 @@ if (require.main === module) {
 
 module.exports = {
   BACKUP_TABLES,
+  DEFAULT_RETENTION_DAYS,
   backupDatabase,
   calculateChecksum,
+  removeExpiredBackups,
 };
