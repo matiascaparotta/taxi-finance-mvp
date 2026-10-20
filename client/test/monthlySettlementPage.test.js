@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { buildOwnerMonthlyOverview } from "../src/utils/ownerMonthlyOverview.js";
 
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const page = fs.readFileSync(
@@ -60,4 +61,43 @@ test("Alberto recibe un resumen mensual propio sin el reparto de Lic249", () => 
   assert.match(page, /Saldo pendiente actual/i);
   assert.match(page, /Recibido del jefe este mes/);
   assert.match(page, /Mis jornadas del mes/);
+});
+
+test("el propietario recibe un resumen conjunto y puede entrar por conductor", () => {
+  const overview = buildOwnerMonthlyOverview([
+    {
+      driver: { id: 4, displayName: "David" },
+      calculation: {
+        workedDays: 2,
+        rawRevenue: 300,
+        cashGenerated: 100,
+        cardGenerated: 200,
+        fuelOwn: 30,
+      },
+      salariedMetrics: { commission: 5 },
+    },
+    {
+      driver: { id: 3, displayName: "Alberto" },
+      calculation: {
+        workedDays: 3,
+        rawRevenue: 450,
+        cashGenerated: 150,
+        cardGenerated: 300,
+        fuelOwn: 45,
+      },
+      salariedMetrics: { commission: 12 },
+    },
+  ]);
+
+  assert.deepEqual(overview.totals, {
+    workedDays: 5,
+    revenue: 750,
+    cash: 250,
+    card: 500,
+    fuel: 75,
+    commission: 17,
+  });
+  assert.match(page, /Resumen de la empresa/);
+  assert.match(page, /Facturación conjunta/);
+  assert.match(page, /Detalle por persona/);
 });

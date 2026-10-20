@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import Card from "../components/ui/Card";
 import MonthlySettlementShareButton from "../components/MonthlySettlementShareButton";
+import OwnerScopeSelector from "../components/OwnerScopeSelector";
 import SectionTitle from "../components/ui/SectionTitle";
 import { getDrivers } from "../services/driverService";
 import {
@@ -17,6 +18,7 @@ import {
   buildDailyMonthlyComparison,
   getPreviousCalendarMonth,
 } from "../utils/monthlyComparison";
+import { buildOwnerMonthlyOverview } from "../utils/ownerMonthlyOverview";
 
 const currentMonth = () => {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -55,10 +57,236 @@ function MoneyRow({ label, value, emphasis = false, detail = "" }) {
   );
 }
 
+function OwnerMonthlyOverview({
+  currentUser,
+  drivers,
+  overview,
+  selectedMonth,
+  availableMonths,
+  onMonthChange,
+  onDriverChange,
+}) {
+  return (
+    <section className="space-y-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <SectionTitle
+          title="Resumen de la empresa"
+          subtitle="Una vista simple de David y todos sus conductores"
+        />
+        <select
+          aria-label="Mes del resumen de empresa"
+          value={selectedMonth}
+          onChange={(event) => onMonthChange(event.target.value)}
+          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 font-bold capitalize text-white"
+        >
+          {availableMonths.map((month) => (
+            <option key={month} value={month}>{monthLabel(month)}</option>
+          ))}
+        </select>
+      </div>
+
+      <Card>
+        <OwnerScopeSelector
+          currentUser={currentUser}
+          drivers={drivers}
+          value="all"
+          onChange={onDriverChange}
+        />
+      </Card>
+
+      <Card className="overflow-hidden border-emerald-500/30">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-300">
+          TOTAL DE {monthLabel(selectedMonth).toUpperCase()}
+        </p>
+        <div className="mt-4 rounded-2xl bg-gradient-to-br from-emerald-500/25 to-slate-950 p-5">
+          <p className="text-sm font-bold text-emerald-200">Facturación conjunta</p>
+          <p className="mt-2 text-4xl font-black text-white">
+            {formatCurrency(overview.totals.revenue)}
+          </p>
+          <p className="mt-2 text-sm text-slate-400">
+            {overview.totals.workedDays} jornadas cerradas entre todo el equipo
+          </p>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(overview.totals.cash)}</p></div>
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(overview.totals.card)}</p></div>
+          <div className="rounded-2xl bg-sky-500/10 p-4"><p className="text-xs text-sky-300">Gasolina</p><p className="mt-1 text-lg font-black">{formatCurrency(overview.totals.fuel)}</p></div>
+          <div className="rounded-2xl bg-amber-500/10 p-4"><p className="text-xs text-amber-300">Comisiones</p><p className="mt-1 text-lg font-black">{formatCurrency(overview.totals.commission)}</p></div>
+        </div>
+      </Card>
+
+      <div>
+        <h2 className="text-xl font-black text-white">Detalle por persona</h2>
+        <p className="mt-1 text-sm text-slate-400">
+          Tocá una tarjeta para ver su mes completo.
+        </p>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {overview.rows.map((row) => {
+            const mine = String(row.driver.id) === String(currentUser?.id);
+            return (
+              <button
+                key={row.driver.id}
+                type="button"
+                onClick={() => onDriverChange(String(row.driver.id))}
+                className="rounded-3xl border border-slate-800 bg-slate-900/70 p-5 text-left transition hover:border-emerald-500/40 active:scale-[0.99]"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-300">
+                      {mine ? "MIS DATOS" : "CONDUCTOR"}
+                    </p>
+                    <h3 className="mt-1 text-xl font-black text-white">
+                      {mine ? "David" : row.driver.displayName}
+                    </h3>
+                  </div>
+                  <span className="text-xl text-slate-500">→</span>
+                </div>
+                <p className="mt-5 text-sm text-slate-400">Facturación</p>
+                <p className="mt-1 text-3xl font-black text-white">
+                  {formatCurrency(row.revenue)}
+                </p>
+                <div className="mt-4 flex items-center justify-between border-t border-slate-800 pt-4 text-sm">
+                  <span className="text-slate-400">{row.workedDays} jornadas</span>
+                  <span className="font-bold text-emerald-300">Ver detalle</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function OwnerDriverMonthlyDetail({
+  currentUser,
+  drivers,
+  settlement,
+  selectedMonth,
+  availableMonths,
+  selectedDriverId,
+  onDriverChange,
+  onMonthChange,
+}) {
+  const calculation = settlement.calculation;
+  const dailyMonth = settlement.dailySettlementMonth;
+  const mine = String(settlement.driver.id) === String(currentUser?.id);
+
+  return (
+    <section className="space-y-6">
+      <Card>
+        <OwnerScopeSelector
+          currentUser={currentUser}
+          drivers={drivers}
+          value={String(selectedDriverId)}
+          onChange={onDriverChange}
+        />
+      </Card>
+
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <SectionTitle
+          title={mine ? "Mi resumen mensual" : `Resumen de ${settlement.driver.displayName}`}
+          subtitle={mine ? "Tu actividad como conductor" : "Detalle individual del conductor"}
+        />
+        <select
+          aria-label="Mes del detalle"
+          value={selectedMonth}
+          onChange={(event) => onMonthChange(event.target.value)}
+          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 font-bold capitalize text-white"
+        >
+          {availableMonths.map((month) => (
+            <option key={month} value={month}>{monthLabel(month)}</option>
+          ))}
+        </select>
+      </div>
+
+      <Card className="border-emerald-500/25">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-300">
+          {monthLabel(selectedMonth)}
+        </p>
+        <p className="mt-2 text-sm text-slate-400">Facturación</p>
+        <p className="mt-1 text-4xl font-black text-white">
+          {formatCurrency(calculation.rawRevenue)}
+        </p>
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Jornadas</p><p className="mt-1 text-xl font-black">{calculation.workedDays}</p></div>
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-xl font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
+          <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-xl font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
+          <div className="rounded-2xl bg-sky-500/10 p-4"><p className="text-xs text-sky-300">Gasolina</p><p className="mt-1 text-xl font-black">{formatCurrency(calculation.fuelOwn)}</p></div>
+        </div>
+      </Card>
+
+      {dailyMonth ? (
+        <Card className="border-sky-500/25">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-sky-300">
+            REPARTO DEL MES
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-emerald-500/10 p-4">
+              <p className="text-xs text-emerald-300">Para {settlement.driver.displayName}</p>
+              <p className="mt-1 text-2xl font-black">{formatCurrency(dailyMonth.driverShare)}</p>
+            </div>
+            <div className="rounded-2xl bg-sky-500/10 p-4">
+              <p className="text-xs text-sky-300">Para David</p>
+              <p className="mt-1 text-2xl font-black">{formatCurrency(dailyMonth.ownerShare)}</p>
+            </div>
+          </div>
+          <div className="mt-4 rounded-2xl border border-slate-700 p-4">
+            <div className="flex items-center justify-between gap-4">
+              <p className="font-bold text-white">
+                {dailyMonth.pendingBalance > 0
+                  ? "David debe pagarle"
+                  : dailyMonth.pendingBalance < 0
+                    ? "Debe entregar a David"
+                    : "Todo saldado"}
+              </p>
+              <p className="text-2xl font-black text-white">
+                {formatCurrency(Math.abs(dailyMonth.pendingBalance))}
+              </p>
+            </div>
+          </div>
+        </Card>
+      ) : (
+        <Card>
+          <MoneyRow label="Facturación" value={calculation.rawRevenue} />
+          <MoneyRow label="Gasolina" value={-calculation.fuelOwn} />
+          <MoneyRow label="Resultado después de gasolina" value={calculation.netRevenueForSplit} emphasis />
+        </Card>
+      )}
+
+      <Card>
+        <h3 className="text-lg font-black text-white">Jornadas del mes</h3>
+        {settlement.days.length === 0 ? (
+          <p className="mt-3 text-sm text-slate-400">No hay jornadas cerradas este mes.</p>
+        ) : (
+          <div className="mt-4 divide-y divide-slate-800">
+            {settlement.days.map((day) => {
+              const normalizedDate = normalizeWorkDayDate(day.date);
+              return (
+                <div key={day.workDayId} className="flex items-center justify-between gap-4 py-4">
+                  <div>
+                    <p className="font-bold text-white">
+                      {new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">{day.tripCount} viajes</p>
+                  </div>
+                  <p className="text-lg font-black text-white">{formatCurrency(day.totalRevenue)}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Card>
+    </section>
+  );
+}
+
 function MonthlySettlementPage({ currentUser = null }) {
   const owner = isOwnerUser(currentUser);
   const salariedDriver = isSalariedDriverUser(currentUser);
-  const [driverId, setDriverId] = useState(null);
+  const [driverId, setDriverId] = useState(owner ? "all" : null);
+  const [drivers, setDrivers] = useState([]);
+  const [ownerOverview, setOwnerOverview] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth());
   const [settlement, setSettlement] = useState(null);
   const [history, setHistory] = useState([]);
@@ -76,26 +304,49 @@ function MonthlySettlementPage({ currentUser = null }) {
     if (!owner) return;
     getDrivers()
       .then((drivers) => {
-        const managed = drivers.find(
-          (driver) => driver.isDriver && !driver.isOwner && driver.status === "ACTIVE"
+        const activeDrivers = drivers.filter(
+          (driver) => driver.isDriver && driver.status === "ACTIVE"
         );
-        if (!managed) throw new Error("No hay un conductor activo para liquidar");
-        setDriverId(managed.id);
+        if (!activeDrivers.length) throw new Error("No hay conductores activos");
+        setDrivers(activeDrivers);
       })
-      .catch((loadError) => setError(loadError.message));
+      .catch((loadError) => {
+        setError(loadError.message);
+        setIsLoading(false);
+      });
   }, [owner]);
 
   const load = useCallback(async () => {
-    if (owner && !driverId) return;
+    if (owner && (!driverId || !drivers.length)) return;
     try {
       setIsLoading(true);
       setError("");
+
+      if (owner && driverId === "all") {
+        const [details, histories] = await Promise.all([
+          Promise.all(
+            drivers.map((driver) =>
+              getMonthlySettlement(selectedMonth, driver.id)
+            )
+          ),
+          Promise.all(
+            drivers.map((driver) => getMonthlySettlementHistory(driver.id))
+          ),
+        ]);
+        setOwnerOverview(buildOwnerMonthlyOverview(details));
+        setHistory([...new Set(histories.flat())]);
+        setSettlement(null);
+        setForm(null);
+        return;
+      }
+
       const [detail, monthHistory, previousDetail] = await Promise.all([
         getMonthlySettlement(selectedMonth, driverId),
         getMonthlySettlementHistory(driverId),
         getMonthlySettlement(getPreviousCalendarMonth(selectedMonth), driverId),
       ]);
       setSettlement(detail);
+      setOwnerOverview(null);
       setHistory(monthHistory);
       setPreviousSettlement(previousDetail);
       setForm({
@@ -108,7 +359,7 @@ function MonthlySettlementPage({ currentUser = null }) {
     } finally {
       setIsLoading(false);
     }
-  }, [driverId, owner, selectedMonth]);
+  }, [driverId, drivers, owner, selectedMonth]);
 
   useEffect(() => {
     load();
@@ -150,8 +401,29 @@ function MonthlySettlementPage({ currentUser = null }) {
     }
   };
 
-  if (isLoading || !settlement || !form) {
+  if (isLoading) {
     return <Card><p className="text-center text-slate-300">Preparando la liquidación mensual...</p>{error && <p className="mt-3 text-center text-red-300">{error}</p>}</Card>;
+  }
+
+  if (owner && driverId === "all" && ownerOverview) {
+    return (
+      <OwnerMonthlyOverview
+        currentUser={currentUser}
+        drivers={drivers}
+        overview={ownerOverview}
+        selectedMonth={selectedMonth}
+        availableMonths={availableMonths}
+        onMonthChange={setSelectedMonth}
+        onDriverChange={(nextDriverId) => {
+          setDriverId(nextDriverId);
+          setShowMonthSettings(false);
+        }}
+      />
+    );
+  }
+
+  if (!settlement || !form) {
+    return <Card><p className="text-center text-red-300">{error || "No se pudo preparar este resumen."}</p></Card>;
   }
 
   const calculation = settlement.calculation;
@@ -173,6 +445,24 @@ function MonthlySettlementPage({ currentUser = null }) {
     settlement,
     previousSettlement
   );
+
+  if (owner) {
+    return (
+      <OwnerDriverMonthlyDetail
+        currentUser={currentUser}
+        drivers={drivers}
+        settlement={settlement}
+        selectedMonth={selectedMonth}
+        availableMonths={availableMonths}
+        selectedDriverId={driverId}
+        onDriverChange={(nextDriverId) => {
+          setDriverId(nextDriverId);
+          setShowMonthSettings(false);
+        }}
+        onMonthChange={setSelectedMonth}
+      />
+    );
+  }
 
   if (salariedDriver) {
     return (
