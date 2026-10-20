@@ -14,7 +14,7 @@ const LIC1315_SETUP = {
       username: "david.jurado",
       displayName: "David Jurado Chicon",
       isOwner: true,
-      isDriver: false,
+      isDriver: true,
       fuelCalculationMode: "ACTUAL_LOAD",
       fuelRatePerKm: null,
       dailySocialSecurity: 0,

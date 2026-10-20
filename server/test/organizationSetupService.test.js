@@ -159,7 +159,7 @@ test("prepara Lic1315 con David como propietario y Alberto como conductor", asyn
   );
 
   assert.equal(davidMembership.isOwner, true);
-  assert.equal(davidMembership.isDriver, false);
+  assert.equal(davidMembership.isDriver, true);
   assert.equal(davidMembership.settlementMode, "NONE");
 
   assert.equal(membership.userId, alberto.id);
