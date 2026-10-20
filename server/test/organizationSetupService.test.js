@@ -128,28 +128,39 @@ test("prepara Lic249 con Matías, José y el vehículo compartido", async () => 
   assert.equal(joseMembership.settlementMode, "NONE");
 });
 
-test("prepara Lic1315 aislada con Alberto como conductor asalariado", async () => {
+test("prepara Lic1315 con David como propietario y Alberto como conductor", async () => {
   const repository = createFakeRepository();
+  const passwords = ["temporal-david", "temporal-alberto"];
   const result = await provisionOrganization(LIC1315_SETUP, {
     repository,
-    passwordGenerator: () => "temporal-alberto",
+    passwordGenerator: () => passwords.shift(),
     passwordHasher: (password) => `hash:${password}`,
   });
 
   assert.equal(result.organization.name, "Lic1315");
   assert.equal(result.organization.slug, "lic1315");
   assert.equal(result.vehicle.name, "Taxi Lic1315");
-  assert.deepEqual(result.users, [
-    {
-      username: "alberto.caparotta",
-      displayName: "Alberto Caparotta",
-      created: true,
-      temporaryPassword: "temporal-alberto",
-    },
-  ]);
+  assert.deepEqual(
+    result.users.map((user) => user.username),
+    ["david.jurado", "alberto.caparotta"]
+  );
 
-  const alberto = repository.state.users[0];
-  const membership = repository.state.memberships[0];
+  const david = repository.state.users.find(
+    (user) => user.username === "david.jurado"
+  );
+  const alberto = repository.state.users.find(
+    (user) => user.username === "alberto.caparotta"
+  );
+  const davidMembership = repository.state.memberships.find(
+    (membership) => membership.userId === david.id
+  );
+  const membership = repository.state.memberships.find(
+    (item) => item.userId === alberto.id
+  );
+
+  assert.equal(davidMembership.isOwner, true);
+  assert.equal(davidMembership.isDriver, false);
+  assert.equal(davidMembership.settlementMode, "NONE");
 
   assert.equal(membership.userId, alberto.id);
   assert.equal(membership.isOwner, false);
@@ -216,7 +227,10 @@ test("exige al menos un propietario en la organización", () => {
 
 test("exige un porcentaje válido para una liquidación configurada", () => {
   const setup = structuredClone(LIC1315_SETUP);
-  setup.users[0].driverShareBasisPoints = 0;
+  const alberto = setup.users.find(
+    (user) => user.username === "alberto.caparotta"
+  );
+  alberto.driverShareBasisPoints = 0;
 
   assert.throws(
     () => validateSetup(setup),
