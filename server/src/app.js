@@ -10,6 +10,10 @@ const {
   requireActiveUserSession,
   requireOwner,
 } = require("./middleware/authMiddleware");
+const {
+  applySecurityHeaders,
+  attachRequestId,
+} = require("./middleware/securityMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const healthRoutes = require("./routes/healthRoutes");
 const workDayRoutes = require("./routes/workDayRoutes");
@@ -30,8 +34,11 @@ getAuthConfig();
 
 const app = express();
 
+app.disable("x-powered-by");
+app.use(attachRequestId);
+app.use(applySecurityHeaders);
 app.use(cors(createCorsOptions()));
-app.use(express.json());
+app.use(express.json({ limit: "64kb" }));
 
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
@@ -117,7 +124,40 @@ app.use((error, req, res, next) => {
     return;
   }
 
-  next(error);
+  if (error.type === "entity.too.large") {
+    res.status(413).json({
+      message: "La solicitud es demasiado grande",
+      requestId: req.requestId,
+    });
+    return;
+  }
+
+  if (error instanceof SyntaxError && error.status === 400) {
+    res.status(400).json({
+      message: "La solicitud contiene datos inválidos",
+      requestId: req.requestId,
+    });
+    return;
+  }
+
+  console.error(JSON.stringify({
+    level: "error",
+    message: "Unhandled request error",
+    requestId: req.requestId,
+    method: req.method,
+    path: req.originalUrl,
+    error: error?.message || "Unknown error",
+  }));
+
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+
+  res.status(500).json({
+    message: "No pudimos completar la operación",
+    requestId: req.requestId,
+  });
 });
 
 module.exports = app;
