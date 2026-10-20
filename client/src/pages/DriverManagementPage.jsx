@@ -19,7 +19,7 @@ const EMPTY_FORM = {
   fuelRatePerKm: "",
 };
 
-function DriverManagementPage() {
+function DriverManagementPage({ currentUser = null }) {
   const [drivers, setDrivers] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [createdAccess, setCreatedAccess] = useState(null);
@@ -138,9 +138,44 @@ function DriverManagementPage() {
   return (
     <section className="space-y-8">
       <SectionTitle
-        title="Gestionar conductores"
-        subtitle="Crea accesos y controla quién puede ingresar"
+        title="Mi equipo"
+        subtitle="Tu perfil y los conductores que tienes a cargo"
       />
+
+      <Card className="border-emerald-500/30 bg-emerald-500/5">
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-300">
+          Perfil del propietario
+        </p>
+        <div className="mt-4 flex items-center gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-emerald-400 bg-emerald-500/10 text-lg font-black text-emerald-100">
+            DJ
+          </div>
+          <div className="min-w-0">
+            <h2 className="truncate text-xl font-black text-white">
+              {currentUser?.displayName || "David Jurado Chicon"}
+            </h2>
+            <p className="mt-1 text-sm font-semibold text-emerald-300">
+              Propietario y conductor · Lic1315
+            </p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+            <p className="text-xs text-slate-500">Usuario</p>
+            <p className="mt-1 font-bold text-white">
+              @{currentUser?.username || "david.jurado"}
+            </p>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+            <p className="text-xs text-slate-500">Acceso</p>
+            <p className="mt-1 font-bold text-white">Cuenta activa</p>
+          </div>
+          <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+            <p className="text-xs text-slate-500">Puede consultar</p>
+            <p className="mt-1 font-bold text-white">Todo su equipo</p>
+          </div>
+        </div>
+      </Card>
 
       <button
         type="button"
@@ -321,7 +356,24 @@ function DriverManagementPage() {
               </div>
 
               {!driver.isOwner && (
+                <>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/history?driver=${driver.id}`)}
+                    className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-slate-950"
+                  >
+                    Ver historial
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/monthly?driver=${driver.id}`)}
+                    className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-slate-950"
+                  >
+                    Ver mensual
+                  </button>
+                </div>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => handleResetPassword(driver)}
@@ -343,6 +395,7 @@ function DriverManagementPage() {
                         : "Reactivar acceso"}
                   </button>
                 </div>
+                </>
               )}
             </Card>
           ))

@@ -207,7 +207,7 @@ function PrivateApp() {
         {(currentUser?.roles?.isOwner ?? currentUser?.isOwner) && (
           <Route
             path="/drivers"
-            element={<DriverManagementPage />}
+            element={<DriverManagementPage currentUser={currentUser} />}
           />
         )}
       </Route>

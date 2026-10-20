@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import Card from "../components/ui/Card";
 import MonthlySettlementShareButton from "../components/MonthlySettlementShareButton";
@@ -284,7 +285,10 @@ function OwnerDriverMonthlyDetail({
 function MonthlySettlementPage({ currentUser = null }) {
   const owner = isOwnerUser(currentUser);
   const salariedDriver = isSalariedDriverUser(currentUser);
-  const [driverId, setDriverId] = useState(owner ? "all" : null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [driverId, setDriverId] = useState(
+    owner ? searchParams.get("driver") || "all" : null
+  );
   const [drivers, setDrivers] = useState([]);
   const [ownerOverview, setOwnerOverview] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth());
@@ -299,6 +303,11 @@ function MonthlySettlementPage({ currentUser = null }) {
   const [showClose, setShowClose] = useState(false);
   const [confirmation, setConfirmation] = useState("");
   const [showMonthSettings, setShowMonthSettings] = useState(false);
+
+  const selectDriver = (value) => {
+    setDriverId(value);
+    setSearchParams(value === "all" ? {} : { driver: value });
+  };
 
   useEffect(() => {
     if (!owner) return;
@@ -415,7 +424,7 @@ function MonthlySettlementPage({ currentUser = null }) {
         availableMonths={availableMonths}
         onMonthChange={setSelectedMonth}
         onDriverChange={(nextDriverId) => {
-          setDriverId(nextDriverId);
+          selectDriver(nextDriverId);
           setShowMonthSettings(false);
         }}
       />
@@ -456,7 +465,7 @@ function MonthlySettlementPage({ currentUser = null }) {
         availableMonths={availableMonths}
         selectedDriverId={driverId}
         onDriverChange={(nextDriverId) => {
-          setDriverId(nextDriverId);
+          selectDriver(nextDriverId);
           setShowMonthSettings(false);
         }}
         onMonthChange={setSelectedMonth}
