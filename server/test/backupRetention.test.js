@@ -6,8 +6,25 @@ const path = require("node:path");
 
 const {
   DEFAULT_RETENTION_DAYS,
+  buildDumpArgs,
   removeExpiredBackups,
 } = require("../src/scripts/backupDatabase");
+
+test("genera un respaldo autosuficiente con estructura y datos", () => {
+  const args = buildDumpArgs(
+    "/tmp/mysql-client.cnf",
+    "taxfin",
+    ["users", "work_days"]
+  );
+
+  assert.equal(args.includes("--no-create-info"), false);
+  assert.equal(args.includes("--add-drop-table"), true);
+  assert.deepEqual(args.slice(-3), [
+    "taxfin",
+    "users",
+    "work_days",
+  ]);
+});
 
 test("conserva treinta días de respaldos y no toca otros archivos", async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "taxfin-retention-"));

@@ -130,22 +130,28 @@ const getExistingBackupTables = async () => {
   }
 };
 
+const buildDumpArgs = (configPath, databaseName, tables) => [
+    `--defaults-extra-file=${configPath}`,
+    "--single-transaction",
+    "--skip-triggers",
+    "--order-by-primary",
+    "--skip-comments",
+    "--set-gtid-purged=OFF",
+    "--add-drop-table",
+    databaseName,
+    ...tables,
+  ];
+
 const runDump = async (configPath, outputPath, tables) => {
   const output = fs.createWriteStream(outputPath, {
     mode: 0o600,
   });
 
-  const args = [
-    `--defaults-extra-file=${configPath}`,
-    "--single-transaction",
-    "--no-create-info",
-    "--skip-triggers",
-    "--order-by-primary",
-    "--skip-comments",
-    "--set-gtid-purged=OFF",
+  const args = buildDumpArgs(
+    configPath,
     process.env.DB_NAME,
-    ...tables,
-  ];
+    tables
+  );
 
   const dump = spawn("mysqldump", args, {
     stdio: ["ignore", "pipe", "pipe"],
@@ -266,6 +272,7 @@ module.exports = {
   BACKUP_TABLES,
   DEFAULT_RETENTION_DAYS,
   backupDatabase,
+  buildDumpArgs,
   calculateChecksum,
   removeExpiredBackups,
 };
