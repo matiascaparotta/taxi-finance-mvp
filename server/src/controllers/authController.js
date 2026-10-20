@@ -12,25 +12,11 @@ const {
   authenticateUser,
   changeUserPassword,
 } = require("../services/userAuthService");
+const {
+  createLoginAttemptService,
+} = require("../services/loginAttemptService");
 
-const MAX_ATTEMPTS = 5;
-const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
-const attemptsByAddress = new Map();
-
-const getAttemptState = (address, now = Date.now()) => {
-  const current = attemptsByAddress.get(address);
-
-  if (!current || current.resetAt <= now) {
-    const next = {
-      count: 0,
-      resetAt: now + ATTEMPT_WINDOW_MS,
-    };
-    attemptsByAddress.set(address, next);
-    return next;
-  }
-
-  return current;
-};
+const loginAttempts = createLoginAttemptService();
 
 const getPublicUser = (session) => {
   if (!session?.userId) {
@@ -98,9 +84,11 @@ const login = async (req, res) => {
   }
 
   const address = req.ip || req.socket.remoteAddress || "unknown";
-  const attemptState = getAttemptState(address);
+  const principal = req.body?.username;
+  const block = loginAttempts.getBlock(address, principal);
 
-  if (attemptState.count >= MAX_ATTEMPTS) {
+  if (block) {
+    res.setHeader("Retry-After", block.retryAfterSeconds);
     res.status(429).json({
       message: "Demasiados intentos. Espera 15 minutos.",
     });
@@ -131,7 +119,7 @@ const login = async (req, res) => {
   }
 
   if (!sessionData) {
-    attemptState.count += 1;
+    loginAttempts.recordFailure(address, principal);
     res.status(401).json({
       message: hasUsername
         ? "Usuario o contraseña incorrectos"
@@ -140,7 +128,7 @@ const login = async (req, res) => {
     return;
   }
 
-  attemptsByAddress.delete(address);
+  loginAttempts.recordSuccess(address, principal);
 
   setSessionCookie(res, config, sessionData);
   res.json({

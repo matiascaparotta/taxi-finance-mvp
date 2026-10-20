@@ -108,6 +108,10 @@ test("protege la API y permite iniciar y cerrar sesión", async () => {
     );
 
     assert.equal(blockedResponse.status, 429);
+    assert.match(
+      blockedResponse.headers.get("retry-after"),
+      /^\d+$/
+    );
   } finally {
     server.close();
   }
