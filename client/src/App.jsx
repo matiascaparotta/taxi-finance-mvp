@@ -27,7 +27,53 @@ import {
   getSession,
   logout,
 } from "./services/authService";
+import { getOpenWorkDay } from "./services/workDayService";
 import { isSalariedDriverUser } from "./utils/userNavigation";
+
+function StartupPage({ currentUser }) {
+  const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const resolveStartupPage = async () => {
+      try {
+        const openWorkDay = await getOpenWorkDay();
+        if (isMounted) {
+          setStatus(openWorkDay ? "active" : "idle");
+        }
+      } catch {
+        if (isMounted) {
+          setStatus("idle");
+        }
+      }
+    };
+
+    resolveStartupPage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (status === "loading") {
+    return (
+      <Card>
+        <p className="text-center text-slate-300">
+          Preparando tu jornada...
+        </p>
+      </Card>
+    );
+  }
+
+  if (status === "active") {
+    return <Navigate to="/new-trip" replace />;
+  }
+
+  return isSalariedDriverUser(currentUser)
+    ? <Navigate to="/my-work-day" replace />
+    : <HomePage currentUser={currentUser} />;
+}
 
 function PrivateApp() {
   const [authStatus, setAuthStatus] = useState("loading");
@@ -170,11 +216,7 @@ function PrivateApp() {
       >
         <Route
           path="/"
-          element={
-            isSalariedDriverUser(currentUser)
-              ? <Navigate to="/my-work-day" replace />
-              : <HomePage currentUser={currentUser} />
-          }
+          element={<StartupPage currentUser={currentUser} />}
         />
         <Route
           path="/my-work-day"
