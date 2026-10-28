@@ -22,3 +22,9 @@ test("presenta los viajes como una lista horaria compacta", () => {
   assert.match(ticket, /divide-y divide-slate-800/);
   assert.match(ticket, /Comisión .*Propina/s);
 });
+
+test("muestra el total privado de propinas dentro de la jornada", () => {
+  assert.match(ticket, /const totalTip = Number\(summary\.tip \|\| 0\)/);
+  assert.match(ticket, /Propina personal/);
+  assert.match(ticket, /No se comparte en el resumen/);
+});

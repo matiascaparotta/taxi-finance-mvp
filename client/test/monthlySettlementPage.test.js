@@ -51,6 +51,13 @@ test("normaliza las fechas SQL antes de presentar cada jornada", () => {
   assert.match(page, /normalizeWorkDayDate\(day\.date\)/);
 });
 
+test("muestra la propina mensual privada y su desglose por jornada", () => {
+  assert.match(page, /Propina personal del mes/i);
+  assert.match(page, /settlement\.salariedMetrics\?\.tip/);
+  assert.match(page, /Propina personal: \{formatCurrency\(day\.tip\)\}/);
+  assert.match(page, /No se incluye en los archivos compartidos/);
+});
+
 test("Alberto recibe un resumen mensual propio sin el reparto de Lic249", () => {
   assert.match(page, /isSalariedDriverUser/);
   assert.match(page, /Tus jornadas y tu facturación del mes/);
