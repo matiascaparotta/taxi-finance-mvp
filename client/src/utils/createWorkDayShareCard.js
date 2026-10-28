@@ -559,7 +559,7 @@ async function createTripsCard(
   let tripTop = 275;
 
   trips.forEach((trip) => {
-    const hasAdjustments = Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0;
+    const hasAdjustments = Number(trip.commission || 0) > 0;
     drawPanel(context, 70, tripTop, 940, 92);
     drawText(
       context,
@@ -588,14 +588,7 @@ async function createTripsCard(
     );
 
     if (hasAdjustments) {
-      const adjustments = [
-        Number(trip.commission || 0) > 0
-          ? `Comisión${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""} −${formatCurrency(trip.commission)}`
-          : null,
-        Number(trip.tip || 0) > 0
-          ? `Propina +${formatCurrency(trip.tip)}`
-          : null,
-      ].filter(Boolean).join("   ·   ");
+      const adjustments = `Comisión${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""} −${formatCurrency(trip.commission)}`;
       drawText(context, adjustments, 245, tripTop + 61, "400 19px Arial", COLORS.sky);
     }
 
@@ -606,7 +599,6 @@ async function createTripsCard(
     const cashTrips = allTrips.filter((trip) => trip.paymentType === "cash");
     const cardTrips = allTrips.filter((trip) => trip.paymentType !== "cash");
     const totalCommission = allTrips.reduce((total, trip) => total + Number(trip.commission || 0), 0);
-    const totalTip = allTrips.reduce((total, trip) => total + Number(trip.tip || 0), 0);
     const totalsTop = Math.max(tripTop + 28, 1450);
     drawText(context, "CONTROL FINAL", 70, totalsTop, "700 27px Arial", COLORS.emerald);
     drawPanel(context, 70, totalsTop + 48, 940, 330, true);
@@ -614,13 +606,13 @@ async function createTripsCard(
       [`Efectivo · ${cashTrips.length} viajes`, summary.cash],
       [`Datáfono · ${cardTrips.length} viajes`, summary.card],
       ["Comisiones", totalCommission],
-      ["Propinas", totalTip],
       ["FACTURACIÓN COMPROBADA", summary.totalRevenue],
     ];
     rows.forEach(([label, value], index) => {
-      const rowTop = totalsTop + 72 + index * 52;
-      drawText(context, label, 110, rowTop, index === 4 ? "700 25px Arial" : "400 23px Arial", index === 4 ? COLORS.text : COLORS.muted);
-      drawText(context, formatCurrency(value), 970, rowTop, index === 4 ? "700 30px Arial" : "700 25px Arial", COLORS.text, "right");
+      const rowTop = totalsTop + 72 + index * 62;
+      const isTotal = label === "FACTURACIÓN COMPROBADA";
+      drawText(context, label, 110, rowTop, isTotal ? "700 25px Arial" : "400 23px Arial", isTotal ? COLORS.text : COLORS.muted);
+      drawText(context, formatCurrency(value), 970, rowTop, isTotal ? "700 30px Arial" : "700 25px Arial", COLORS.text, "right");
     });
   }
 
@@ -656,11 +648,12 @@ export async function createWorkDayShareCards(
 export function sanitizeTripForSharing(trip = {}) {
   return {
     id: trip.id,
-    amount: trip.amount,
+    // La propina es privada. El archivo muestra solamente el precio real del
+    // viaje, no el total cobrado al cliente cuando dejó propina.
+    amount: Math.max(0, Number(trip.amount || 0) - Number(trip.tip || 0)),
     paymentType: trip.paymentType,
     commission: trip.commission,
     commissionCompanyName: trip.commissionCompanyName,
-    tip: trip.tip,
     createdAt: trip.createdAt,
     created_at: trip.created_at,
   };

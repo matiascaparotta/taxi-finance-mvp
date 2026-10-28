@@ -96,7 +96,6 @@ async function createDailyMonthlyShareCard(settlement) {
     ["Recibido del jefe", -daily.paymentsReceived],
     ["Entregado al jefe", daily.paymentsDelivered],
     ["Comisiones", metrics.commission || 0],
-    ["Propinas", metrics.tip || 0],
   ];
   drawText(context, "MOVIMIENTOS DEL MES", 70, 1065, "700 25px Arial", COLORS.emerald);
   drawPanel(context, 70, 1112, 940, 380);
