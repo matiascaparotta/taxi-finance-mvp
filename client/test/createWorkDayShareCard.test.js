@@ -38,7 +38,7 @@ test("respeta una página completa sin crear páginas extra", () => {
   );
 });
 
-test("conserva comisión, empresa y propina para el control del jefe", () => {
+test("conserva la comisión pero mantiene la propina fuera del archivo compartido", () => {
   assert.deepEqual(
     sanitizeTripForSharing({
       id: 7,
@@ -51,11 +51,10 @@ test("conserva comisión, empresa y propina para el control del jefe", () => {
     }),
     {
       id: 7,
-      amount: 20,
+      amount: 18,
       paymentType: "cash",
       commission: 3,
       commissionCompanyName: "Hotel Centro",
-      tip: 2,
       createdAt: "2026-08-03T10:30:00.000Z",
       created_at: undefined,
     }
