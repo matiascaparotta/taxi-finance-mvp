@@ -3,6 +3,8 @@ import { formatCurrency } from "../utils/formatCurrency";
 function ActiveTripCard({ trip, time, onClick }) {
   const commission = Number(trip.commission || 0);
   const tip = Number(trip.tip || 0);
+  const chargedAmount = Number(trip.amount || 0);
+  const fareAmount = Math.max(0, chargedAmount - tip);
   const hasAdjustments = commission > 0 || tip > 0;
 
   return (
@@ -22,7 +24,7 @@ function ActiveTripCard({ trip, time, onClick }) {
           </p>
 
           <p className="mt-1 text-lg font-bold text-white">
-            {formatCurrency(trip.amount)}
+            {formatCurrency(fareAmount)}
           </p>
         </div>
 
@@ -45,6 +47,11 @@ function ActiveTripCard({ trip, time, onClick }) {
 
           {tip > 0 && (
             <p className="text-slate-300">
+              {trip.paymentType === "cash" ? "Pagó" : "Cobrado"}{" "}
+              <strong className="text-white">
+                {formatCurrency(chargedAmount)}
+              </strong>
+              <span className="mx-1 text-slate-500">·</span>
               Propina{" "}
               <strong className="text-white">
                 {formatCurrency(tip)}

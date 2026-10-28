@@ -61,6 +61,8 @@ function WorkDayTicket({
   const renderTripContent = (trip) => {
     const commission = Number(trip.commission || 0);
     const tip = Number(trip.tip || 0);
+    const chargedAmount = Number(trip.amount || 0);
+    const fareAmount = Math.max(0, chargedAmount - tip);
     const hasAdjustments = commission > 0 || tip > 0;
 
     return (
@@ -77,13 +79,13 @@ function WorkDayTicket({
             <p className="mt-1 truncate text-xs text-sky-300">
               {commission > 0 && `Comisión ${formatCurrency(commission)}${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""}`}
               {commission > 0 && tip > 0 && " · "}
-              {tip > 0 && `Propina ${formatCurrency(tip)}`}
+              {tip > 0 && `${trip.paymentType === "cash" ? "Pagó" : "Cobrado"} ${formatCurrency(chargedAmount)} · Propina ${formatCurrency(tip)}`}
             </p>
           )}
         </div>
 
         <p className="whitespace-nowrap text-right text-base font-black tabular-nums text-white sm:text-lg">
-          {formatCurrency(trip.amount)}
+          {formatCurrency(fareAmount)}
         </p>
 
         {onEditTrip && (

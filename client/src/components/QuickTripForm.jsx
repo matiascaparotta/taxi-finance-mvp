@@ -26,6 +26,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
   const [amount, setAmount] = useState("");
   const [commission, setCommission] = useState("");
   const [tip, setTip] = useState("");
+  const [cashPaid, setCashPaid] = useState("");
   const [note, setNote] = useState("");
   const [commissionCompanyId, setCommissionCompanyId] = useState("");
   const [activeField, setActiveField] = useState("amount");
@@ -56,6 +57,12 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
       value: tip,
       setValue: setTip,
     },
+    cashPaid: {
+      label: "Pagó",
+      displayLabel: "Total pagado en efectivo",
+      value: cashPaid,
+      setValue: setCashPaid,
+    },
   };
   const activeMoneyField = moneyFields[activeField];
   const selectedCommissionCompany = commissionCompanies.find(
@@ -75,6 +82,14 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
       if (activeField === "amount" && hasAutomaticCommission) {
         setCommission(calculateCompanyCommission(parseMoneyInput(nextValue), selectedCommissionCompany).toFixed(2));
       }
+      if (activeField === "amount" && cashPaid) {
+        const difference = parseMoneyInput(cashPaid) - parseMoneyInput(nextValue);
+        setTip(difference > 0 ? difference.toFixed(2) : "");
+      }
+      if (activeField === "cashPaid") {
+        const difference = parseMoneyInput(nextValue) - parseMoneyInput(amount);
+        setTip(difference > 0 ? difference.toFixed(2) : "");
+      }
       return nextValue;
     });
   };
@@ -83,6 +98,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
     setAmount("");
     setCommission("");
     setTip("");
+    setCashPaid("");
     setNote("");
     setCommissionCompanyId("");
     setActiveField("amount");
@@ -123,7 +139,11 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
 
       const numericAmount = parseMoneyInput(amount);
       const numericCommission = parseMoneyInput(commission);
-      const numericTip = parseMoneyInput(tip);
+      const numericCashPaid = parseMoneyInput(cashPaid);
+      const hasCashPaymentTotal = paymentType === "cash" && Boolean(cashPaid);
+      const numericTip = hasCashPaymentTotal
+        ? Number((numericCashPaid - numericAmount).toFixed(2))
+        : parseMoneyInput(tip);
 
       if (
         !amount ||
@@ -153,8 +173,19 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
         );
       }
 
+      if (paymentType === "card" && cashPaid) {
+        throw new Error("El campo Pagó se usa solo para viajes en efectivo. Para datáfono, cargá la propina directamente.");
+      }
+
+      if (hasCashPaymentTotal && numericCashPaid < numericAmount) {
+        throw new Error("El total pagado no puede ser menor que el importe del viaje.");
+      }
+
       await onSubmit({
-        amount: numericAmount,
+        // El servidor guarda el total cobrado y descuenta la propina para
+        // obtener la facturación real. Así, viaje 25 + pagó 27,50 conserva
+        // 25 de facturación y registra 2,50 de propina.
+        amount: hasCashPaymentTotal ? numericCashPaid : numericAmount,
         paymentType,
         commission: numericCommission,
         commissionCompanyId: commissionCompanyId || null,
@@ -170,7 +201,9 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
       vibrateOnSuccess();
 
       setSuccessMessage(
-        `✓ ${amount} € guardado en ${paymentLabel}`
+        hasCashPaymentTotal && numericTip > 0
+          ? `✓ Viaje ${amount} € · propina ${numericTip.toFixed(2)} €`
+          : `✓ ${amount} € guardado en ${paymentLabel}`
       );
 
       resetForm();
@@ -262,6 +295,35 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
             );
           })}
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            clearMessages();
+            setActiveField("cashPaid");
+          }}
+          aria-pressed={activeField === "cashPaid"}
+          className={`w-full rounded-xl border px-4 py-3 text-sm transition active:scale-[0.98] ${
+            activeField === "cashPaid"
+              ? "border-emerald-400 bg-emerald-400/10 text-white"
+              : "border-slate-700 text-slate-300"
+          }`}
+        >
+          <span className="font-semibold">
+            {cashPaid ? `Pagó en efectivo: ${cashPaid} €` : "+ Pagó más en efectivo"}
+          </span>
+          <span className="mt-1 block text-xs text-slate-400">
+            Calcula la propina automáticamente
+          </span>
+        </button>
+
+        {cashPaid && amount && parseMoneyInput(cashPaid) >= parseMoneyInput(amount) && (
+          <div className="rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+            Viaje <strong>{Number(parseMoneyInput(amount)).toFixed(2)} €</strong>
+            <span className="mx-2 text-amber-300">·</span>
+            Propina <strong>{Number(Math.max(0, parseMoneyInput(cashPaid) - parseMoneyInput(amount))).toFixed(2)} €</strong>
+          </div>
+        )}
 
         <div className="grid grid-cols-3 gap-3">
           {KEYS.map((key) => (
