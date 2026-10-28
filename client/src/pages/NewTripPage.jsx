@@ -47,7 +47,7 @@ function NewTripPage({ currentUser = null }) {
       throw new Error("No hay una jornada activa.");
     }
 
-    await createTrip({
+    const createdTrip = await createTrip({
       workDayId: openWorkDay.id,
       ...tripData,
     });
@@ -57,6 +57,8 @@ function NewTripPage({ currentUser = null }) {
     } catch (error) {
       console.error("El viaje se guardó, pero no se pudo actualizar el acumulado", error);
     }
+
+    return createdTrip;
   };
 
   return (
@@ -78,7 +80,15 @@ function NewTripPage({ currentUser = null }) {
 
       <ActivePaymentProgress summary={activeSummary} />
 
-      <QuickTripForm onSubmit={handleCreateTrip} commissionCompanies={commissionCompanies} />
+      <QuickTripForm
+        onSubmit={handleCreateTrip}
+        commissionCompanies={commissionCompanies}
+        allowWhatsAppShare={
+          currentUser?.organizationName === "Lic249" &&
+          (currentUser?.username?.toLocaleLowerCase("es-ES").includes("matias") ||
+            currentUser?.displayName?.toLocaleLowerCase("es-ES").includes("matías"))
+        }
+      />
 
       <div className="grid grid-cols-2 gap-3">
         <button

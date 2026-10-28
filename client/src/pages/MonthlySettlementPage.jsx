@@ -282,6 +282,7 @@ function OwnerDriverMonthlyDetail({
                       {new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">{day.tripCount} viajes</p>
+                    <p className="mt-1 text-xs font-bold text-amber-300">Propina personal: {formatCurrency(day.tip)}</p>
                   </div>
                   <p className="text-lg font-black text-white">{formatCurrency(day.totalRevenue)}</p>
                 </div>
@@ -635,7 +636,7 @@ function MonthlySettlementPage({ currentUser = null }) {
             <div className="mt-4 divide-y divide-slate-800">
               {settlement.days.map((day) => {
                 const normalizedDate = normalizeWorkDayDate(day.date);
-                return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · combustible {formatCurrency(day.fuelOwn)}</p>{day.dailySettlement && <p className="mt-1 text-xs text-sky-300">Saldo del día: {formatCurrency(day.dailySettlement.balance)}</p>}</div><div className="text-right"><p className="text-xs text-slate-500">{day.dailySettlement ? "Tu ganancia" : "Neto"}</p><p className="font-black">{formatCurrency(day.dailySettlement?.driverShare ?? day.netRevenue)}</p></div></div>;
+                return <div key={day.workDayId} className="flex items-center justify-between gap-4 py-3"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · combustible {formatCurrency(day.fuelOwn)}</p><p className="mt-1 text-xs font-bold text-amber-300">Propina personal: {formatCurrency(day.tip)}</p>{day.dailySettlement && <p className="mt-1 text-xs text-sky-300">Saldo del día: {formatCurrency(day.dailySettlement.balance)}</p>}</div><div className="text-right"><p className="text-xs text-slate-500">{day.dailySettlement ? "Tu ganancia" : "Neto"}</p><p className="font-black">{formatCurrency(day.dailySettlement?.driverShare ?? day.netRevenue)}</p></div></div>;
               })}
             </div>
           )}
@@ -685,6 +686,12 @@ function MonthlySettlementPage({ currentUser = null }) {
           <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
           <div className="rounded-2xl bg-emerald-500/10 p-4"><p className="text-xs text-emerald-300">Ganancia promedio neta diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(averageDailyDriverEarning)}</p></div>
         </div>
+      </Card>}
+
+      {!showMonthSettings && <Card className="border-amber-500/25 bg-amber-500/5">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-300">Propina personal del mes</p>
+        <p className="mt-2 text-3xl font-black text-white">{formatCurrency(settlement.salariedMetrics?.tip)}</p>
+        <p className="mt-2 text-sm text-slate-400">Suma privada de todas las jornadas. No se incluye en los archivos compartidos.</p>
       </Card>}
 
       {!showMonthSettings && <div className="grid gap-6 lg:grid-cols-2">
@@ -752,7 +759,7 @@ function MonthlySettlementPage({ currentUser = null }) {
               const dailyNetTotal = Number(day.totalRevenue) - Number(day.fuelOwn) - Number(calculation.dailySocialSecurity);
               const estimatedDailyEarning = dailyNetTotal / 2;
 
-              return <div key={day.workDayId} className="py-4"><div className="flex items-start justify-between gap-4"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p></div><div className="text-right"><p className="text-xs text-slate-500">Neto total del día</p><p className="font-black text-white">{formatCurrency(dailyNetTotal)}</p></div></div><div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-xl bg-emerald-500/10 px-3 py-2"><p className="text-[11px] text-emerald-300">Ganancia neta Matías</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div><div className="rounded-xl bg-sky-500/10 px-3 py-2"><p className="text-[11px] text-sky-300">Ganancia neta José</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div></div></div>;
+              return <div key={day.workDayId} className="py-4"><div className="flex items-start justify-between gap-4"><div><p className="font-bold">{new Date(`${normalizedDate}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })}</p><p className="text-xs text-slate-500">{day.tripCount} viajes · gasolina {formatCurrency(day.fuelOwn)}</p><p className="mt-1 text-xs font-bold text-amber-300">Propina personal: {formatCurrency(day.tip)}</p></div><div className="text-right"><p className="text-xs text-slate-500">Neto total del día</p><p className="font-black text-white">{formatCurrency(dailyNetTotal)}</p></div></div><div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-xl bg-emerald-500/10 px-3 py-2"><p className="text-[11px] text-emerald-300">Ganancia neta Matías</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div><div className="rounded-xl bg-sky-500/10 px-3 py-2"><p className="text-[11px] text-sky-300">Ganancia neta José</p><p className="font-black">{formatCurrency(estimatedDailyEarning)}</p></div></div></div>;
             })}
           </div>
         )}
