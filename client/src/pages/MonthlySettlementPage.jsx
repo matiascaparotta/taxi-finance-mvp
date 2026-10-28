@@ -217,6 +217,18 @@ function OwnerDriverMonthlyDetail({
         </div>
       </Card>
 
+      <Card className="border-amber-500/25 bg-amber-500/5">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-300">
+          PROPINA PERSONAL DEL MES
+        </p>
+        <p className="mt-2 text-3xl font-black text-white">
+          {formatCurrency(settlement.salariedMetrics?.tip)}
+        </p>
+        <p className="mt-2 text-sm text-slate-400">
+          Suma de las propinas registradas en las jornadas de {settlement.driver.displayName}. No se incluye en los archivos compartidos.
+        </p>
+      </Card>
+
       {dailyMonth ? (
         <Card className="border-sky-500/25">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-sky-300">

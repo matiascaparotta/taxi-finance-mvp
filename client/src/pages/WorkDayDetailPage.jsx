@@ -321,13 +321,13 @@ function WorkDayDetailPage() {
                         })}
                       </p>
                     </div>
-                    <p className="text-lg font-bold text-white">{formatCurrency(trip.amount)}</p>
+                    <p className="text-lg font-bold text-white">{formatCurrency(Math.max(0, Number(trip.amount || 0) - Number(trip.tip || 0)))}</p>
                   </div>
                   {(Number(trip.commission || 0) > 0 || Number(trip.tip || 0) > 0) && (
                     <p className="mt-2 text-xs text-slate-400">
                       {Number(trip.commission || 0) > 0 && `Comisión${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""} ${formatCurrency(trip.commission)}`}
                       {Number(trip.commission || 0) > 0 && Number(trip.tip || 0) > 0 && " · "}
-                      {Number(trip.tip || 0) > 0 && `Propina ${formatCurrency(trip.tip)}`}
+                      {Number(trip.tip || 0) > 0 && `${trip.paymentType === "cash" ? "Pagó" : "Cobrado"} ${formatCurrency(trip.amount)} · Propina ${formatCurrency(trip.tip)}`}
                     </p>
                   )}
                   {trip.note && <p className="mt-2 text-xs text-slate-500">{trip.note}</p>}
