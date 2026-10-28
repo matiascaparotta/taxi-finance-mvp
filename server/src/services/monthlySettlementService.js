@@ -126,6 +126,7 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
       netRevenue: Number((summary.totalRevenue - summary.fuelOwn).toFixed(2)),
       cash: summary.realCash,
       card: summary.card,
+      tip: Number(summary.tip || 0),
       tripCount: summary.tripCount,
       dailySettlement: summary.dailySettlement
         ? {
