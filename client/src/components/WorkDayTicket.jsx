@@ -46,6 +46,7 @@ function WorkDayTicket({
   const fuelOwn = Number(summary.fuelOwn ?? workDay.fuelOwn ?? 0);
   const fuelJose = Number(summary.fuelJose ?? workDay.fuelJose ?? 0);
   const displayedCash = getDisplayedCash(summary);
+  const totalTip = Number(summary.tip || 0);
   const sortedTrips = [...trips].sort((a, b) => {
     const dateA = new Date(a.createdAt || a.created_at || 0);
     const dateB = new Date(b.createdAt || b.created_at || 0);
@@ -153,6 +154,16 @@ function WorkDayTicket({
         </div>
       </section>
 
+      <section className="mt-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-amber-300">Propina personal</p>
+            <p className="mt-1 text-xs text-slate-400">Visible solo en tu cuenta</p>
+          </div>
+          <p className="text-2xl font-black tabular-nums text-white">{formatCurrency(totalTip)}</p>
+        </div>
+      </section>
+
       <section className="mt-7">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -207,6 +218,13 @@ function WorkDayTicket({
           <div className="mt-3 flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
             <p className="text-sm font-bold text-emerald-200">Facturación total</p>
             <p className="text-xl font-black tabular-nums text-white">{formatCurrency(summary.totalRevenue)}</p>
+          </div>
+          <div className="mt-3 flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
+            <div>
+              <p className="text-sm font-bold text-amber-200">Propina personal</p>
+              <p className="text-xs text-slate-400">No se comparte en el resumen</p>
+            </div>
+            <p className="text-xl font-black tabular-nums text-white">{formatCurrency(totalTip)}</p>
           </div>
           <div className="mt-3 divide-y divide-slate-800">
           {fuelOwn > 0 && (

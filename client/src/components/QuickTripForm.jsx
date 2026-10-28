@@ -6,6 +6,7 @@ import {
   parseMoneyInput,
 } from "../utils/moneyKeypad";
 import { calculateCompanyCommission, formatCompanyCommission } from "../utils/companyCommission";
+import { buildTripWhatsAppText, shareTripWithWhatsApp } from "../utils/buildTripWhatsAppText";
 
 const KEYS = [
   "7",
@@ -22,7 +23,7 @@ const KEYS = [
   "⌫",
 ];
 
-function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = [] }) {
+function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = [], allowWhatsAppShare = false }) {
   const [amount, setAmount] = useState("");
   const [commission, setCommission] = useState("");
   const [tip, setTip] = useState("");
@@ -35,6 +36,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] =
     useState("");
+  const [lastTripShareText, setLastTripShareText] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
   const savingLockRef = useRef(false);
@@ -181,7 +183,7 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
         throw new Error("El total pagado no puede ser menor que el importe del viaje.");
       }
 
-      await onSubmit({
+      const submittedTrip = {
         // El servidor guarda el total cobrado y descuenta la propina para
         // obtener la facturación real. Así, viaje 25 + pagó 27,50 conserva
         // 25 de facturación y registra 2,50 de propina.
@@ -191,7 +193,9 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
         commissionCompanyId: commissionCompanyId || null,
         tip: numericTip,
         note: note.trim() || null,
-      });
+      };
+
+      const createdTrip = await onSubmit(submittedTrip);
 
       const paymentLabel =
         paymentType === "cash"
@@ -205,6 +209,17 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
           ? `✓ Viaje ${amount} € · propina ${numericTip.toFixed(2)} €`
           : `✓ ${amount} € guardado en ${paymentLabel}`
       );
+
+      if (allowWhatsAppShare) {
+        setLastTripShareText(buildTripWhatsAppText({
+          fareAmount: numericAmount,
+          paymentType,
+          commission: createdTrip?.commission ?? numericCommission,
+          commissionCompanyName: createdTrip?.commissionCompanyName ?? selectedCommissionCompany?.name ?? "",
+          tip: numericTip,
+          cashPaid: numericCashPaid,
+        }));
+      }
 
       resetForm();
 
@@ -385,6 +400,22 @@ function QuickTripForm({ onSubmit, nextTripNumber = null, commissionCompanies = 
           <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-semibold text-emerald-300">
             {successMessage}
           </p>
+        )}
+
+        {allowWhatsAppShare && lastTripShareText && (
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-emerald-300">Mensaje preparado</p>
+            <p className="mt-2 font-black text-white">{lastTripShareText}</p>
+            <button
+              type="button"
+              onClick={() => shareTripWithWhatsApp(lastTripShareText).catch((error) => {
+                if (error?.name !== "AbortError") setError("No se pudo abrir WhatsApp.");
+              })}
+              className="mt-3 w-full rounded-xl bg-emerald-400 px-4 py-3 font-black text-slate-950 transition active:scale-[0.98]"
+            >
+              Enviar a Cuenta 249 Mati por WhatsApp
+            </button>
+          </div>
         )}
 
         {error && (
