@@ -4,6 +4,7 @@ const {
 } = require("../services/organizationSetupService");
 
 const LIC249_SETUP = {
+  allowDriverOnly: true,
   organization: {
     name: "Lic249",
     slug: "lic249",
@@ -17,14 +18,6 @@ const LIC249_SETUP = {
       fuelCalculationMode: "ACTUAL_LOAD",
       settlementMode: "MONTHLY_50_50",
       driverShareBasisPoints: 5000,
-    },
-    {
-      username: "jose.revilla",
-      displayName: "José Revilla",
-      isOwner: true,
-      isDriver: true,
-      fuelCalculationMode: "ACTUAL_LOAD",
-      settlementMode: "NONE",
     },
   ],
   vehicle: {

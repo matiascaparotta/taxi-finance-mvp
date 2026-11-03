@@ -86,9 +86,9 @@ const createFakeRepository = () => {
   };
 };
 
-test("prepara Lic249 con Matías, José y el vehículo compartido", async () => {
+test("prepara Lic249 únicamente con la cuenta de Matías", async () => {
   const repository = createFakeRepository();
-  const passwords = ["temporal-matias", "temporal-jose"];
+  const passwords = ["temporal-matias"];
   const result = await provisionOrganization(LIC249_SETUP, {
     repository,
     passwordGenerator: () => passwords.shift(),
@@ -99,33 +99,25 @@ test("prepara Lic249 con Matías, José y el vehículo compartido", async () => 
   assert.equal(result.vehicle.name, "Taxi Lic249");
   assert.deepEqual(
     result.users.map((user) => user.username),
-    ["mati.caparotta", "jose.revilla"]
+    ["mati.caparotta"]
   );
   assert.deepEqual(
     result.users.map((user) => user.temporaryPassword),
-    ["temporal-matias", "temporal-jose"]
+    ["temporal-matias"]
   );
 
   const matias = repository.state.users.find(
     (user) => user.username === "mati.caparotta"
   );
-  const jose = repository.state.users.find(
-    (user) => user.username === "jose.revilla"
-  );
   const matiasMembership = repository.state.memberships.find(
     (membership) => membership.userId === matias.id
-  );
-  const joseMembership = repository.state.memberships.find(
-    (membership) => membership.userId === jose.id
   );
 
   assert.equal(matiasMembership.isOwner, false);
   assert.equal(matiasMembership.isDriver, true);
   assert.equal(matiasMembership.settlementMode, "MONTHLY_50_50");
   assert.equal(matiasMembership.driverShareBasisPoints, 5000);
-  assert.equal(joseMembership.isOwner, true);
-  assert.equal(joseMembership.isDriver, true);
-  assert.equal(joseMembership.settlementMode, "NONE");
+  assert.equal(repository.state.users.some((user) => user.username === "jose.revilla"), false);
 });
 
 test("prepara Lic1315 con David como propietario y Alberto como conductor", async () => {
@@ -190,10 +182,10 @@ test("puede repetirse sin duplicar ni cambiar contraseñas", async () => {
     dependencies
   );
 
-  assert.equal(generatedPasswords, 2);
+  assert.equal(generatedPasswords, 1);
   assert.equal(repository.state.organizations.length, 1);
-  assert.equal(repository.state.users.length, 2);
-  assert.equal(repository.state.memberships.length, 2);
+  assert.equal(repository.state.users.length, 1);
+  assert.equal(repository.state.memberships.length, 1);
   assert.equal(repository.state.vehicles.length, 1);
   assert.ok(
     secondResult.users.every(
@@ -215,6 +207,7 @@ test("exige tarifa positiva para combustible por distancia", () => {
 
 test("exige al menos un propietario en la organización", () => {
   const setup = structuredClone(LIC249_SETUP);
+  setup.allowDriverOnly = false;
   setup.users.forEach((user) => {
     user.isOwner = false;
   });
