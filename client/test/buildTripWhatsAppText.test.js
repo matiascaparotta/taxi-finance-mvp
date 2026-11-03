@@ -27,9 +27,9 @@ test("incluye las propinas de tarjeta descontadas del efectivo", () => {
   );
 });
 
-test("explica cuánto pagó el cliente cuando dejó propina en efectivo", () => {
+test("mantiene privada la propina pagada en efectivo", () => {
   assert.equal(
     buildTripWhatsAppText({ fareAmount: 25, paymentType: "cash", tip: 2.5, cashPaid: 27.5 }),
-    "25,00 E (propina 2,50 · pagó 27,50 efectivo)"
+    "25,00 E"
   );
 });

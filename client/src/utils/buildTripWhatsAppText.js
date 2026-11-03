@@ -10,7 +10,6 @@ export const buildTripWhatsAppText = ({
   commission = 0,
   commissionCompanyName = "",
   tip = 0,
-  cashPaid = 0,
 }) => {
   const paymentCode = paymentType === "cash" ? "E" : "D";
   const adjustments = [];
@@ -21,14 +20,8 @@ export const buildTripWhatsAppText = ({
     );
   }
 
-  if (Number(tip) > 0) {
-    if (paymentType === "card") {
-      adjustments.push(`−${formatCompactMoney(tip)} efectivo · propina`);
-    } else {
-      adjustments.push(
-        `propina ${formatCompactMoney(tip)} · pagó ${formatCompactMoney(cashPaid || Number(fareAmount) + Number(tip))} efectivo`
-      );
-    }
+  if (Number(tip) > 0 && paymentType === "card") {
+    adjustments.push(`−${formatCompactMoney(tip)} efectivo · propina`);
   }
 
   return `${formatCompactMoney(fareAmount)} ${paymentCode}${adjustments.length ? ` (${adjustments.join("; ")})` : ""}`;

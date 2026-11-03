@@ -393,6 +393,8 @@ function MonthlySettlementPage({ currentUser = null }) {
     return [...months].sort().reverse();
   }, [history, selectedMonth]);
 
+  const usesDirectMatiasClose = settlement?.organizationName === "Lic249";
+
   const saveSettings = async (settingsConfirmed = false) => {
     try {
       setIsSaving(true);
@@ -734,7 +736,7 @@ function MonthlySettlementPage({ currentUser = null }) {
 
       {showMonthSettings && <Card>
         <div className="flex items-start justify-between gap-4">
-          <div><h3 className="text-lg font-bold">Datos del mes</h3><p className="mt-1 text-sm text-slate-400">Podés actualizarlos durante el mes. Confirmalos cuando recibas la nómina definitiva.</p></div>
+          <div><h3 className="text-lg font-bold">Datos del mes</h3><p className="mt-1 text-sm text-slate-400">{usesDirectMatiasClose ? "Podés actualizarlos durante el mes. Matías los confirma definitivamente al cerrar la liquidación." : "Podés actualizarlos durante el mes. Confirmalos cuando recibas la nómina definitiva."}</p></div>
           {settlement.status !== "IN_PROGRESS" && settlement.settings.settingsConfirmed && <span className="text-xs font-bold text-emerald-300">Revisados ✓</span>}
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -747,7 +749,7 @@ function MonthlySettlementPage({ currentUser = null }) {
           <div><p className="text-xs text-slate-500">Seguridad Social por día</p><p className="mt-1 text-xl font-black">{formatCurrency(previewDailySocialSecurity)}</p></div>
           <div className="col-span-2 sm:col-span-1"><p className="text-xs text-sky-300">Seguridad Social aplicada hasta hoy</p><p className="mt-1 text-xl font-black text-white">{formatCurrency(previewAppliedSocialSecurity)}</p></div>
         </div>
-        {settlement.canEditSettings && <div className="mt-5 grid gap-3 sm:grid-cols-2"><button type="button" disabled={isSaving} onClick={() => saveSettings(false)} className="rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950 disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar cambios"}</button>{settlement.status !== "IN_PROGRESS" && <button type="button" disabled={isSaving} onClick={() => saveSettings(true)} className="rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200 disabled:opacity-50">Confirmar datos definitivos</button>}</div>}
+        {settlement.canEditSettings && <div className="mt-5 grid gap-3 sm:grid-cols-2"><button type="button" disabled={isSaving} onClick={() => saveSettings(false)} className="rounded-2xl bg-emerald-400 px-5 py-4 font-bold text-slate-950 disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar cambios"}</button>{!usesDirectMatiasClose && settlement.status !== "IN_PROGRESS" && <button type="button" disabled={isSaving} onClick={() => saveSettings(true)} className="rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200 disabled:opacity-50">Confirmar datos definitivos</button>}</div>}
       </Card>}
 
       {!showMonthSettings && <Card>
@@ -767,7 +769,7 @@ function MonthlySettlementPage({ currentUser = null }) {
 
       {!showMonthSettings && !owner && settlement.canClose && <button type="button" onClick={() => setShowClose(true)} className="w-full rounded-2xl border border-sky-500/50 bg-sky-500/10 px-5 py-4 font-bold text-sky-200">Cerrar liquidación del mes</button>}
       {!showMonthSettings && settlement.status === "CLOSED" && <MonthlySettlementShareButton settlement={settlement} />}
-      {showClose && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-5"><div className="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-6"><h3 className="text-xl font-black">Cerrar {monthLabel(selectedMonth)}</h3><p className="mt-3 text-sm text-slate-300">Los importes quedarán protegidos como una fotografía definitiva del mes.</p><label className="mt-5 block text-sm font-bold">Escribe CERRAR<input value={confirmation} onChange={(e) => setConfirmation(e.target.value.toUpperCase())} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /></label><button type="button" disabled={isSaving} onClick={closeMonth} className="mt-5 w-full rounded-2xl bg-sky-400 px-5 py-4 font-black text-slate-950 disabled:opacity-50">Confirmar cierre</button><button type="button" onClick={() => setShowClose(false)} className="mt-3 w-full rounded-2xl border border-slate-700 px-5 py-4 font-bold">Volver</button></div></div>}
+      {showClose && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-5"><div className="w-full max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-6"><h3 className="text-xl font-black">Cerrar {monthLabel(selectedMonth)}</h3><p className="mt-3 text-sm text-slate-300">{usesDirectMatiasClose ? "Matías confirmará los datos y los importes quedarán protegidos como el informe definitivo del mes." : "Los importes quedarán protegidos como una fotografía definitiva del mes."}</p><label className="mt-5 block text-sm font-bold">Escribe CERRAR<input value={confirmation} onChange={(e) => setConfirmation(e.target.value.toUpperCase())} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" /></label><button type="button" disabled={isSaving} onClick={closeMonth} className="mt-5 w-full rounded-2xl bg-sky-400 px-5 py-4 font-black text-slate-950 disabled:opacity-50">{usesDirectMatiasClose ? "Confirmar y generar informe" : "Confirmar cierre"}</button><button type="button" onClick={() => setShowClose(false)} className="mt-3 w-full rounded-2xl border border-slate-700 px-5 py-4 font-bold">Volver</button></div></div>}
     </section>
   );
 }

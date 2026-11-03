@@ -33,3 +33,10 @@ test("ofrece una ruta liviana de meses antes del parámetro dinámico", () => {
   assert.ok(availableIndex < monthIndex);
   assert.match(service, /const listAvailableMonths/);
 });
+
+test("Lic249 permite que Matías confirme los datos al cerrar el informe", () => {
+  assert.match(service, /usesDirectMatiasClose/);
+  assert.match(service, /settingsConfirmed: true/);
+  assert.match(service, /actorUserId: Number\(auth\.userId\)/);
+  assert.match(service, /usesDirectMatiasClose\(auth\) \|\| settings\.settingsConfirmed/);
+});

@@ -15,6 +15,7 @@ const DEFAULTS = {
 };
 
 const isOwner = (auth) => Boolean(auth?.roles?.isOwner ?? auth?.isOwner);
+const usesDirectMatiasClose = (auth) => auth?.organizationName === "Lic249";
 
 const requirePersonalAccess = (auth) => {
   if (auth?.accessMode !== "user") {
@@ -145,7 +146,7 @@ const buildMonthlySettlement = async (month, auth, requestedDriverId) => {
     canClose:
       Number(auth.userId) === driver.id &&
       !current &&
-      settings.settingsConfirmed &&
+      (usesDirectMatiasClose(auth) || settings.settingsConfirmed) &&
       workDays.length > 0,
   };
 };
@@ -215,9 +216,22 @@ const closeMonthlySettlement = async (month, input, auth) => {
   if (input?.confirmation !== "CERRAR") {
     throw new Error("Escribe CERRAR para confirmar");
   }
-  const result = await buildMonthlySettlement(month, auth, driver.id);
+  let result = await buildMonthlySettlement(month, auth, driver.id);
   if (!result.canClose) {
     throw new Error("Revisa y confirma primero los datos mensuales");
+  }
+  if (usesDirectMatiasClose(auth)) {
+    await repository.saveSettings({
+      organizationId: Number(auth.organizationId),
+      driverUserId: driver.id,
+      month,
+      expectedWorkDays: result.settings.expectedWorkDays,
+      socialSecurity: result.settings.socialSecurity,
+      payrollTransfer: result.settings.payrollTransfer,
+      settingsConfirmed: true,
+      actorUserId: Number(auth.userId),
+    });
+    result = await buildMonthlySettlement(month, auth, driver.id);
   }
   const snapshot = { ...result, status: "CLOSED", canEditSettings: false, canClose: false };
   await repository.closeSettlement({

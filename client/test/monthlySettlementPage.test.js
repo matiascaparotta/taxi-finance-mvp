@@ -41,6 +41,12 @@ test("permite guardar datos provisionales y confirmarlos al finalizar el mes", (
   assert.match(page, /previewAppliedSocialSecurity/);
 });
 
+test("Lic249 permite que Matías confirme y genere el informe en un único cierre", () => {
+  assert.match(page, /usesDirectMatiasClose/);
+  assert.match(page, /Matías los confirma definitivamente al cerrar la liquidación/);
+  assert.match(page, /Confirmar y generar informe/);
+});
+
 test("el resultado indica correctamente quién entrega el dinero", () => {
   assert.match(page, /Matías entrega a José/);
   assert.match(page, /José entrega a Matías/);
