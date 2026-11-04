@@ -508,18 +508,25 @@ function MonthlySettlementPage({ currentUser = null }) {
 
         {error && <Card className="border-red-500/30"><p className="text-sm text-red-300">{error}</p></Card>}
 
-        <Card className="border-emerald-500/25">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">{monthLabel(selectedMonth)}</p>
-          <h2 className="mt-2 text-2xl font-black">{calculation.workedDays} jornadas cerradas</h2>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Facturación</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.rawRevenue)}</p></div>
-            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
-            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-lg font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
-            <div className="rounded-2xl bg-emerald-500/10 p-4"><p className="text-xs text-emerald-300">Ganancia promedio diaria</p><p className="mt-1 text-lg font-black">{formatCurrency(dailyDriverEarningAverage)}</p></div>
+        <Card className="overflow-hidden border-emerald-500/25">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">{monthLabel(selectedMonth)}</p>
+              <h2 className="mt-2 text-2xl font-black">{calculation.workedDays} jornadas cerradas</h2>
+            </div>
           </div>
-          <div className="mt-4 rounded-2xl bg-emerald-500/10 p-4">
-            <div className="flex items-center justify-between gap-4"><p className="text-sm text-emerald-200">Combustible registrado</p><p className="font-black">{formatCurrency(calculation.fuelOwn)}</p></div>
-            <div className="mt-3 flex items-center justify-between gap-4 border-t border-emerald-500/20 pt-3"><p className="font-bold text-white">Facturación menos combustible</p><p className="text-xl font-black">{formatCurrency(calculation.netRevenueForSplit)}</p></div>
+          <div className="mt-5 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/25 to-slate-950 p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-300">Facturación total</p>
+            <p className="mt-2 text-4xl font-black tracking-tight text-white">{formatCurrency(calculation.rawRevenue)}</p>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Efectivo</p><p className="mt-1 text-xl font-black">{formatCurrency(calculation.cashGenerated)}</p></div>
+            <div className="rounded-2xl bg-slate-950/70 p-4"><p className="text-xs text-slate-500">Datáfono</p><p className="mt-1 text-xl font-black">{formatCurrency(calculation.cardGenerated)}</p></div>
+          </div>
+          <div className="mt-3 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 p-4">
+            <p className="text-xs font-bold text-emerald-300">Ganancia promedio diaria</p>
+            <p className="mt-1 text-2xl font-black text-white">{formatCurrency(dailyDriverEarningAverage)}</p>
+            <p className="mt-1 text-xs text-slate-400">Promedio de lo que gana Alberto por jornada cerrada.</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-2xl bg-sky-500/10 p-4"><p className="text-xs text-sky-300">Comisiones</p><p className="mt-1 text-xl font-black">{formatCurrency(settlement.salariedMetrics?.commission)}</p></div>
@@ -531,7 +538,7 @@ function MonthlySettlementPage({ currentUser = null }) {
         {dailyMonth && (
           <Card className="border-sky-500/25">
             <p className="text-xs font-bold tracking-[0.16em] text-sky-300">
-              LIQUIDACIÓN DIARIA DEL MES
+              LIQUIDACIÓN DEL MES
             </p>
             <p className="mt-2 text-sm text-slate-400">
               Suma exacta de {dailyMonth.workedDays} cierres diarios. No se recalculan importes.
@@ -542,22 +549,14 @@ function MonthlySettlementPage({ currentUser = null }) {
               <MoneyRow label="Seguridad Social" value={-dailyMonth.socialSecurity} />
               <MoneyRow label="Gasolina" value={-dailyMonth.fuelCost} />
               <MoneyRow label="Base repartida" value={dailyMonth.distributableBase} emphasis />
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-emerald-500/10 p-4">
-                <p className="text-xs text-emerald-300">Ganancia de Alberto</p>
-                <p className="mt-1 text-xl font-black">{formatCurrency(dailyMonth.driverShare)}</p>
-              </div>
-              <div className="rounded-2xl bg-sky-500/10 p-4">
-                <p className="text-xs text-sky-300">Ganancia del jefe</p>
-                <p className="mt-1 text-xl font-black">{formatCurrency(dailyMonth.ownerShare)}</p>
-              </div>
-            </div>
-
-            <div className="mt-3 divide-y divide-slate-800 rounded-2xl border border-slate-800 px-4">
+              <MoneyRow label="Ganancia de Alberto" value={dailyMonth.driverShare} emphasis />
+              <MoneyRow label="Parte del jefe" value={dailyMonth.ownerShare} />
               <MoneyRow label="Reintegro de gasolina" value={dailyMonth.reimbursableFuel} />
               <MoneyRow label="Total correspondiente a Alberto" value={dailyMonth.driverEntitlement} emphasis />
+            </div>
+
+            <p className="mt-5 text-xs font-bold tracking-[0.16em] text-emerald-300">MOVIMIENTOS DEL MES</p>
+            <div className="mt-3 divide-y divide-slate-800 rounded-2xl border border-slate-800 px-4">
               {Number(dailyMonth.ownerAdjustment || 0) > 0 && <MoneyRow label="Cuentas externas a favor del jefe" value={-dailyMonth.ownerAdjustment} />}
               <MoneyRow label="Saldos generados este mes" value={dailyMonth.dailyBalance} />
               <MoneyRow label="Recibido del jefe este mes" value={-dailyMonth.paymentsReceived} />

@@ -69,8 +69,11 @@ test("Alberto recibe un resumen mensual propio sin el reparto de Lic249", () => 
   assert.match(page, /Tus jornadas y tu facturación del mes/);
   assert.match(page, /Ganancia promedio diaria/);
   assert.match(page, /dailyMonth\.driverShare/);
-  assert.match(page, /Facturación menos combustible/);
-  assert.match(page, /LIQUIDACIÓN DIARIA DEL MES/);
+  assert.doesNotMatch(page, /Combustible registrado/);
+  assert.doesNotMatch(page, /Facturación menos combustible/);
+  assert.match(page, /LIQUIDACIÓN DEL MES/);
+  assert.match(page, /MOVIMIENTOS DEL MES/);
+  assert.match(page, /Promedio de lo que gana Alberto por jornada cerrada/);
   assert.match(page, /Saldo pendiente actual/i);
   assert.match(page, /Recibido del jefe este mes/);
   assert.match(page, /Mis jornadas del mes/);
