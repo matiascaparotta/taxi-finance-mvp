@@ -330,7 +330,11 @@ function WorkDayDetailPage() {
                       {Number(trip.tip || 0) > 0 && `${trip.paymentType === "cash" ? "Pagó" : "Cobrado"} ${formatCurrency(trip.amount)} · Propina ${formatCurrency(trip.tip)}`}
                     </p>
                   )}
-                  {trip.note && <p className="mt-2 text-xs text-slate-500">{trip.note}</p>}
+                  {trip.note?.trim() && (
+                    <p className="mt-2 rounded-lg border border-slate-700/80 bg-slate-950/60 px-3 py-2 text-xs leading-relaxed text-slate-300">
+                      <span className="font-bold text-slate-200">Nota:</span> {trip.note.trim()}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

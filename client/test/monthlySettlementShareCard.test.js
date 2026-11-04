@@ -26,6 +26,12 @@ test("la tarjeta contiene el cierre esencial de Matías y José", () => {
   assert.match(generator, /deliveryToOwner/);
 });
 
+test("la tarjeta compartida mantiene las propinas fuera del informe", () => {
+  assert.doesNotMatch(generator, /Propina personal/);
+  assert.doesNotMatch(generator, /salariedMetrics\?\.tip/);
+  assert.doesNotMatch(generator, /day\.tip/);
+});
+
 test("comparte la imagen y conserva una descarga alternativa", () => {
   assert.match(component, /navigator\.share/);
   assert.match(component, /navigator\.canShare/);

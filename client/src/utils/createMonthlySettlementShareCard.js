@@ -129,8 +129,6 @@ export async function createMonthlySettlementShareCard(settlement) {
 
   const calculation = settlement.calculation;
   const settlementRows = [
-    ["Efectivo", calculation.cashGenerated],
-    ["Datáfono", calculation.cardGenerated],
     ["Gasolina de Matías", -calculation.fuelOwn],
     ["Seguridad Social", -calculation.socialSecurityApplied],
     ["Base neta para repartir", calculation.distributableBase],
@@ -146,7 +144,7 @@ export async function createMonthlySettlementShareCard(settlement) {
     ["Efectivo disponible", calculation.cashAvailable],
     ["Pendiente para Matías", -calculation.pendingForDriver],
   ];
-  const height = 1840;
+  const height = 2040;
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   canvas.width = WIDTH;
@@ -158,19 +156,27 @@ export async function createMonthlySettlementShareCard(settlement) {
   context.fillStyle = background;
   context.fillRect(0, 0, WIDTH, height);
 
-  drawText(context, DEFAULT_ORGANIZATION_NAME, WIDTH / 2, 55, "700 30px Arial", COLORS.emerald, "center");
-  drawText(context, "LIQUIDACIÓN MENSUAL", WIDTH / 2, 104, "700 52px Arial", COLORS.text, "center");
-  drawText(context, monthName(settlement.month).toUpperCase(), WIDTH / 2, 178, "700 29px Arial", COLORS.muted, "center");
+  drawText(context, DEFAULT_ORGANIZATION_NAME, 70, 55, "700 30px Arial", COLORS.emerald);
+  drawText(context, "LIQUIDACIÓN MENSUAL", 70, 104, "700 51px Arial", COLORS.text);
+  drawPanel(context, 728, 65, 282, 70);
+  drawText(context, monthName(settlement.month).toUpperCase(), 869, 87, "700 22px Arial", COLORS.text, "center");
+  drawText(context, `${calculation.workedDays} jornadas · ${calculation.tripCount} viajes`, 70, 178, "700 23px Arial", COLORS.muted);
 
-  drawPanel(context, 70, 250, 940, 145, true);
-  drawText(context, "FACTURACIÓN TOTAL", 110, 282, "700 23px Arial", COLORS.emerald);
-  drawText(context, formatCurrency(calculation.rawRevenue), 110, 323, "700 47px Arial", COLORS.text);
-  drawText(context, `${calculation.workedDays} jornadas · ${calculation.tripCount} viajes`, 970, 334, "700 23px Arial", COLORS.muted, "right");
+  drawPanel(context, 70, 235, 940, 165, true);
+  drawText(context, "FACTURACIÓN TOTAL", WIDTH / 2, 267, "700 23px Arial", COLORS.emerald, "center");
+  drawText(context, formatCurrency(calculation.rawRevenue), WIDTH / 2, 310, "700 56px Arial", COLORS.text, "center");
 
-  drawText(context, "LIQUIDACIÓN MENSUAL", 70, 438, "700 25px Arial", COLORS.emerald);
-  drawPanel(context, 70, 485, 940, 680);
+  drawPanel(context, 70, 435, 450, 140);
+  drawText(context, "EFECTIVO", 105, 464, "700 22px Arial", COLORS.muted);
+  drawText(context, formatCurrency(calculation.cashGenerated), 105, 505, "700 40px Arial", COLORS.text);
+  drawPanel(context, 540, 435, 470, 140);
+  drawText(context, "DATÁFONO", 575, 464, "700 22px Arial", COLORS.muted);
+  drawText(context, formatCurrency(calculation.cardGenerated), 575, 505, "700 40px Arial", COLORS.text);
+
+  drawText(context, "CÓMO SE REPARTE", 70, 625, "700 25px Arial", COLORS.emerald);
+  drawPanel(context, 70, 672, 940, 585);
   settlementRows.forEach(([label, value], index) => {
-    const top = 513 + index * 69;
+    const top = 700 + index * 69;
     const highlighted = label.includes("Base neta") || label.includes("Ganancia neta");
     drawText(context, label, 110, top, highlighted ? "700 27px Arial" : "400 26px Arial", highlighted ? COLORS.text : COLORS.muted);
     drawText(context, formatCurrency(value), 970, top, "700 29px Arial", highlighted ? COLORS.emerald : COLORS.text, "right");
@@ -184,10 +190,10 @@ export async function createMonthlySettlementShareCard(settlement) {
     }
   });
 
-  drawText(context, "CIERRE DE CAJA", 70, 1215, "700 25px Arial", COLORS.sky);
-  drawPanel(context, 70, 1262, 940, 390);
+  drawText(context, "CIERRE DE CAJA", 70, 1307, "700 25px Arial", COLORS.sky);
+  drawPanel(context, 70, 1354, 940, 390);
   cashClosingRows.forEach(([label, value], index) => {
-    const top = 1290 + index * 68;
+    const top = 1382 + index * 68;
     const highlighted = label === "Efectivo disponible";
     drawText(context, label, 110, top, highlighted ? "700 27px Arial" : "400 26px Arial", highlighted ? COLORS.text : COLORS.muted);
     drawText(context, formatCurrency(value), 970, top, "700 29px Arial", highlighted ? COLORS.sky : COLORS.text, "right");
@@ -201,11 +207,12 @@ export async function createMonthlySettlementShareCard(settlement) {
     }
   });
 
-  drawPanel(context, 70, 1685, 940, 105, true);
+  drawPanel(context, 70, 1794, 940, 150, true);
   const deliveryLabel = calculation.deliveryToOwner >= 0 ? "MATÍAS ENTREGA A JOSÉ" : "JOSÉ ENTREGA A MATÍAS";
-  drawText(context, deliveryLabel, 110, 1718, "700 24px Arial", COLORS.emerald);
-  drawText(context, formatCurrency(Math.abs(calculation.deliveryToOwner)), 970, 1705, "700 43px Arial", COLORS.text, "right");
+  drawText(context, "RESULTADO FINAL", 110, 1825, "700 21px Arial", COLORS.emerald);
+  drawText(context, deliveryLabel, 110, 1865, "700 25px Arial", COLORS.text);
+  drawText(context, formatCurrency(Math.abs(calculation.deliveryToOwner)), 970, 1852, "700 47px Arial", COLORS.text, "right");
 
-  drawText(context, "Liquidación cerrada · Generado con TaxFin", WIDTH / 2, 1805, "400 21px Arial", COLORS.muted, "center");
+  drawText(context, "Liquidación cerrada · Generado con TaxFin", WIDTH / 2, 1980, "400 21px Arial", COLORS.muted, "center");
   return canvasToBlob(canvas);
 }

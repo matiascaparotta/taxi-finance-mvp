@@ -9,6 +9,22 @@ const ticket = fs.readFileSync(
   path.resolve(testDirectory, "../src/components/WorkDayTicket.jsx"),
   "utf8"
 );
+const activeTrip = fs.readFileSync(
+  path.resolve(testDirectory, "../src/components/ActiveTripCard.jsx"),
+  "utf8"
+);
+const liveDetail = fs.readFileSync(
+  path.resolve(testDirectory, "../src/pages/WorkDayDetailPage.jsx"),
+  "utf8"
+);
+const sharedCard = fs.readFileSync(
+  path.resolve(testDirectory, "../src/utils/createWorkDayShareCard.js"),
+  "utf8"
+);
+const sharedText = fs.readFileSync(
+  path.resolve(testDirectory, "../src/utils/buildWorkDaySummaryText.js"),
+  "utf8"
+);
 
 test("prioriza la facturación y mantiene la corrección como acción secundaria", () => {
   assert.match(ticket, /Facturación total/);
@@ -27,4 +43,15 @@ test("muestra el total privado de propinas dentro de la jornada", () => {
   assert.match(ticket, /const totalTip = Number\(summary\.tip \|\| 0\)/);
   assert.match(ticket, /Propina personal/);
   assert.match(ticket, /No se comparte en el resumen/);
+});
+
+test("muestra las notas internas en los detalles de Matías y Alberto", () => {
+  assert.match(ticket, /Nota:<\/span> \{note\}/);
+  assert.match(activeTrip, /Nota:<\/span> \{note\}/);
+  assert.match(liveDetail, /Nota:<\/span> \{trip\.note\.trim\(\)\}/);
+});
+
+test("mantiene las notas privadas fuera de los resúmenes compartidos", () => {
+  assert.doesNotMatch(sharedCard, /trip\.note/);
+  assert.doesNotMatch(sharedText, /trip\.note/);
 });

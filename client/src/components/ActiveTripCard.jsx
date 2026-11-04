@@ -6,6 +6,7 @@ function ActiveTripCard({ trip, time, onClick }) {
   const chargedAmount = Number(trip.amount || 0);
   const fareAmount = Math.max(0, chargedAmount - tip);
   const hasAdjustments = commission > 0 || tip > 0;
+  const note = trip.note?.trim();
 
   return (
     <button
@@ -33,7 +34,7 @@ function ActiveTripCard({ trip, time, onClick }) {
         </span>
       </div>
 
-      {hasAdjustments && (
+      {(hasAdjustments || note) && (
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-800 pt-3 text-sm">
           {commission > 0 && (
             <p className="text-slate-300">
@@ -56,6 +57,12 @@ function ActiveTripCard({ trip, time, onClick }) {
               <strong className="text-white">
                 {formatCurrency(tip)}
               </strong>
+            </p>
+          )}
+
+          {note && (
+            <p className="w-full rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2 text-xs leading-relaxed text-slate-300">
+              <span className="font-bold text-slate-200">Nota:</span> {note}
             </p>
           )}
         </div>

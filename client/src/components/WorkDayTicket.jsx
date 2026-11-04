@@ -65,6 +65,7 @@ function WorkDayTicket({
     const chargedAmount = Number(trip.amount || 0);
     const fareAmount = Math.max(0, chargedAmount - tip);
     const hasAdjustments = commission > 0 || tip > 0;
+    const note = trip.note?.trim();
 
     return (
       <div className="grid grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-3 py-3.5 sm:grid-cols-[4rem_minmax(0,1fr)_auto_auto]">
@@ -77,10 +78,15 @@ function WorkDayTicket({
             {trip.paymentType === "cash" ? "Efectivo" : "Datáfono"}
           </p>
           {hasAdjustments && (
-            <p className="mt-1 truncate text-xs text-sky-300">
+            <p className="mt-1 text-xs text-sky-300">
               {commission > 0 && `Comisión ${formatCurrency(commission)}${trip.commissionCompanyName ? ` · ${trip.commissionCompanyName}` : ""}`}
               {commission > 0 && tip > 0 && " · "}
               {tip > 0 && `${trip.paymentType === "cash" ? "Pagó" : "Cobrado"} ${formatCurrency(chargedAmount)} · Propina ${formatCurrency(tip)}`}
+            </p>
+          )}
+          {note && (
+            <p className="mt-1.5 rounded-lg border border-slate-700/80 bg-slate-950/60 px-2.5 py-2 text-xs leading-relaxed text-slate-300">
+              <span className="font-bold text-slate-200">Nota:</span> {note}
             </p>
           )}
         </div>
